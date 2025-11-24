@@ -1,16 +1,32 @@
-# sloth
+# Sloth 🦥
 
-A new Flutter project.
+A playground app for experimenting the whitenoise crate, using [WhiteNoise Flutter repo](https://github.com/marmot-protocol/whitenoise) as reference.
+ 
+## 🏗️ Stack
 
-## Getting Started
+- **Flutter** - Cross-platform UI framework
+- **Rust** - "Backend" logic via the whitenoise crate
+- **flutter_rust_bridge** - Dart ↔ Rust integration
+- **whitenoise crate** - Secure messaging with MLS and Nostr protocols
 
-This project is a starting point for a Flutter application.
 
-A few resources to get you started if this is your first Flutter project:
+### Prerequisites
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- [Flutter SDK](https://docs.flutter.dev/get-started/install) (3.24.x or later)
+- [Rust](https://rustup.rs/) (latest stable)
+- [Just](https://github.com/casey/just) - `cargo install just`
+- flutter_rust_bridge_codegen - `cargo install flutter_rust_bridge_codegen`
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+
+## 🛠️ Commands
+```bash
+# Install dependencies
+just deps              # Install both Flutter and Rust deps
+just deps-flutter      # Flutter dependencies only
+just deps-rust         # Rust dependencies only
+```
+## 📚 Resources
+
+- [Flutter Docs](https://docs.flutter.dev/)
+- [White Noise Rust crate](https://github.com/marmot-protocol/whitenoise-rs)
+- [White Noise Flutter](https://github.com/marmot-protocol/whitenoise)

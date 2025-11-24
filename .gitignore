@@ -46,3 +46,12 @@ app.*.map.json
 
 # FVM Version Cache
 .fvm/
+
+
+# Rust documentation build cache
+rust/tmp_docs/
+RUST_FFI_GUIDE.md
+# Generated Cargo config (auto-generated per environment)
+rust/.cargo/config.toml
+# Rust build artifacts (Cargo/rust-analyzer)
+target/

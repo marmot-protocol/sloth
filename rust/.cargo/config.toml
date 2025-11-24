@@ -1,0 +1,20 @@
+[target.aarch64-linux-android]
+ar = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ar"
+linker = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/aarch64-linux-android33-clang"
+
+[target.armv7-linux-androideabi]
+ar = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ar"
+linker = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi33-clang"
+
+[env]
+CC_armv7_linux_androideabi = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi33-clang"
+CXX_armv7_linux_androideabi = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/armv7a-linux-androideabi33-clang++"
+AR_armv7_linux_androideabi = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ar"
+
+[target.i686-linux-android]
+ar = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ar"
+linker = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/i686-linux-android33-clang"
+
+[target.x86_64-linux-android]
+ar = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/llvm-ar"
+linker = "/Users/mariajosefinaalliendeizquierdo/Library/Android/sdk/ndk/27.0.12077973/toolchains/llvm/prebuilt/darwin-x86_64/bin/x86_64-linux-android33-clang"
