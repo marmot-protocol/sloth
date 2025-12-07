@@ -3,22 +3,22 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
 import '../frb_generated.dart';
 import 'accounts.dart';
 import 'error.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`
+Future<RelayType> relayTypeNip65() => RustLib.instance.api.crateApiRelaysRelayTypeNip65();
 
+Future<RelayType> relayTypeInbox() => RustLib.instance.api.crateApiRelaysRelayTypeInbox();
 
-            Future<RelayType>  relayTypeNip65() => RustLib.instance.api.crateApiRelaysRelayTypeNip65();
+Future<RelayType> relayTypeKeyPackage() => RustLib.instance.api.crateApiRelaysRelayTypeKeyPackage();
 
-Future<RelayType>  relayTypeInbox() => RustLib.instance.api.crateApiRelaysRelayTypeInbox();
-
-Future<RelayType>  relayTypeKeyPackage() => RustLib.instance.api.crateApiRelaysRelayTypeKeyPackage();
-
-Future<List<(String,String)>>  getAccountRelayStatuses({required String pubkey }) => RustLib.instance.api.crateApiRelaysGetAccountRelayStatuses(pubkey: pubkey);
+Future<List<(String, String)>> getAccountRelayStatuses({required String pubkey}) =>
+    RustLib.instance.api.crateApiRelaysGetAccountRelayStatuses(pubkey: pubkey);
 
 /// Ensures all subscriptions (global and all accounts) are operational.
 ///
@@ -39,30 +39,29 @@ Future<List<(String,String)>>  getAccountRelayStatuses({required String pubkey }
 ///
 /// - `Ok(())`: Completed all checks (some may have failed, check logs)
 /// - `Err(_)`: Only on catastrophic failures (e.g., database connection lost)
-Future<void>  ensureAllSubscriptions() => RustLib.instance.api.crateApiRelaysEnsureAllSubscriptions();
+Future<void> ensureAllSubscriptions() =>
+    RustLib.instance.api.crateApiRelaysEnsureAllSubscriptions();
 
-            class Relay  {
-                final String url;
-final DateTime createdAt;
-final DateTime updatedAt;
+class Relay {
+  final String url;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-                const Relay({required this.url ,required this.createdAt ,required this.updatedAt ,});
+  const Relay({
+    required this.url,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
-                
-                
+  @override
+  int get hashCode => url.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
 
-                
-        @override
-        int get hashCode => url.hashCode^createdAt.hashCode^updatedAt.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is Relay &&
-                runtimeType == other.runtimeType
-                && url == other.url&& createdAt == other.createdAt&& updatedAt == other.updatedAt;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Relay &&
+          runtimeType == other.runtimeType &&
+          url == other.url &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+}

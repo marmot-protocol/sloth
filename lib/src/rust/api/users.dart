@@ -3,48 +3,63 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
 import '../frb_generated.dart';
 import 'accounts.dart';
 import 'error.dart';
 import 'metadata.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'relays.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `fmt`, `from`
+Future<User> getUser({required String pubkey, required bool blockingDataSync}) =>
+    RustLib.instance.api.crateApiUsersGetUser(pubkey: pubkey, blockingDataSync: blockingDataSync);
 
+Future<FlutterMetadata> userMetadata({required String pubkey, required bool blockingDataSync}) =>
+    RustLib.instance.api.crateApiUsersUserMetadata(
+      pubkey: pubkey,
+      blockingDataSync: blockingDataSync,
+    );
 
-            Future<User>  getUser({required String pubkey , required bool blockingDataSync }) => RustLib.instance.api.crateApiUsersGetUser(pubkey: pubkey, blockingDataSync: blockingDataSync);
+Future<List<Relay>> userRelays({
+  required String pubkey,
+  required RelayType relayType,
+  required bool blockingDataSync,
+}) => RustLib.instance.api.crateApiUsersUserRelays(
+  pubkey: pubkey,
+  relayType: relayType,
+  blockingDataSync: blockingDataSync,
+);
 
-Future<FlutterMetadata>  userMetadata({required String pubkey , required bool blockingDataSync }) => RustLib.instance.api.crateApiUsersUserMetadata(pubkey: pubkey, blockingDataSync: blockingDataSync);
+Future<bool> userHasKeyPackage({required String pubkey, required bool blockingDataSync}) => RustLib
+    .instance
+    .api
+    .crateApiUsersUserHasKeyPackage(pubkey: pubkey, blockingDataSync: blockingDataSync);
 
-Future<List<Relay>>  userRelays({required String pubkey , required RelayType relayType , required bool blockingDataSync }) => RustLib.instance.api.crateApiUsersUserRelays(pubkey: pubkey, relayType: relayType, blockingDataSync: blockingDataSync);
+class User {
+  final String pubkey;
+  final FlutterMetadata metadata;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-Future<bool>  userHasKeyPackage({required String pubkey , required bool blockingDataSync }) => RustLib.instance.api.crateApiUsersUserHasKeyPackage(pubkey: pubkey, blockingDataSync: blockingDataSync);
+  const User({
+    required this.pubkey,
+    required this.metadata,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
-            class User  {
-                final String pubkey;
-final FlutterMetadata metadata;
-final DateTime createdAt;
-final DateTime updatedAt;
+  @override
+  int get hashCode => pubkey.hashCode ^ metadata.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
 
-                const User({required this.pubkey ,required this.metadata ,required this.createdAt ,required this.updatedAt ,});
-
-                
-                
-
-                
-        @override
-        int get hashCode => pubkey.hashCode^metadata.hashCode^createdAt.hashCode^updatedAt.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is User &&
-                runtimeType == other.runtimeType
-                && pubkey == other.pubkey&& metadata == other.metadata&& createdAt == other.createdAt&& updatedAt == other.updatedAt;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is User &&
+          runtimeType == other.runtimeType &&
+          pubkey == other.pubkey &&
+          metadata == other.metadata &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+}

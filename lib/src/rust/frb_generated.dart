@@ -3,6 +3,11 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'dart:async';
+import 'dart:convert';
+
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
 import 'api.dart';
 import 'api/accounts.dart';
 import 'api/error.dart';
@@ -14,3442 +19,4877 @@ import 'api/relays.dart';
 import 'api/users.dart';
 import 'api/utils.dart';
 import 'api/welcomes.dart';
-import 'dart:async';
-import 'dart:convert';
 import 'frb_generated.dart';
 import 'frb_generated.io.dart' if (dart.library.js_interop) 'frb_generated.web.dart';
 import 'lib.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+/// Main entrypoint of the Rust API
+class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
+  @internal
+  static final instance = RustLib._();
+
+  RustLib._();
+
+  /// Initialize flutter_rust_bridge
+  static Future<void> init({
+    RustLibApi? api,
+    BaseHandler? handler,
+    ExternalLibrary? externalLibrary,
+    bool forceSameCodegenVersion = true,
+  }) async {
+    await instance.initImpl(
+      api: api,
+      handler: handler,
+      externalLibrary: externalLibrary,
+      forceSameCodegenVersion: forceSameCodegenVersion,
+    );
+  }
+
+  /// Initialize flutter_rust_bridge in mock mode.
+  /// No libraries for FFI are loaded.
+  static void initMock({
+    required RustLibApi api,
+  }) {
+    instance.initMockImpl(
+      api: api,
+    );
+  }
+
+  /// Dispose flutter_rust_bridge
+  ///
+  /// The call to this function is optional, since flutter_rust_bridge (and everything else)
+  /// is automatically disposed when the app stops.
+  static void dispose() => instance.disposeImpl();
+
+  @override
+  ApiImplConstructor<RustLibApiImpl, RustLibWire> get apiImplConstructor => RustLibApiImpl.new;
+
+  @override
+  WireConstructor<RustLibWire> get wireConstructor => RustLibWire.fromExternalLibrary;
+
+  @override
+  Future<void> executeRustInitializers() async {}
+
+  @override
+  ExternalLibraryLoaderConfig get defaultExternalLibraryLoaderConfig =>
+      kDefaultExternalLibraryLoaderConfig;
+
+  @override
+  String get codegenVersion => '2.11.1';
+
+  @override
+  int get rustContentHash => -481785978;
+
+  static const kDefaultExternalLibraryLoaderConfig = ExternalLibraryLoaderConfig(
+    stem: 'rust_lib_whitenoise',
+    ioDirectory: 'rust/target/release/',
+    webPrefix: 'pkg/',
+  );
+}
+
+abstract class RustLibApi extends BaseApi {
+  Future<void> crateApiWelcomesAcceptWelcome({
+    required String pubkey,
+    required String welcomeEventId,
+  });
 
-                /// Main entrypoint of the Rust API
-                class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
-                  @internal
-                  static final instance = RustLib._();
+  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey});
 
-                  RustLib._();
+  Future<FlutterEvent?> crateApiAccountsAccountKeyPackage({required String pubkey});
 
-                  /// Initialize flutter_rust_bridge
-                  static Future<void> init({
-                    RustLibApi? api,
-                    BaseHandler? handler,
-                    ExternalLibrary? externalLibrary,
-                    bool forceSameCodegenVersion = true,
-                  }) async {
-                    await instance.initImpl(
-                      api: api,
-                      handler: handler,
-                      externalLibrary: externalLibrary,
-                      forceSameCodegenVersion: forceSameCodegenVersion,
-                    );
-                  }
+  Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({required String accountPubkey});
 
-                  /// Initialize flutter_rust_bridge in mock mode.
-                  /// No libraries for FFI are loaded.
-                  static void initMock({
-                    required RustLibApi api,
-                  }) {
-                    instance.initMockImpl(
-                      api: api,
-                    );
-                  }
+  Future<FlutterMetadata> crateApiAccountsAccountMetadata({required String pubkey});
+
+  Future<List<Relay>> crateApiAccountsAccountRelays({
+    required String pubkey,
+    required RelayType relayType,
+  });
+
+  Future<List<Group>> crateApiGroupsActiveGroups({required String pubkey});
+
+  Future<void> crateApiAccountsAddAccountRelay({
+    required String pubkey,
+    required String url,
+    required RelayType relayType,
+  });
 
-                  /// Dispose flutter_rust_bridge
-                  ///
-                  /// The call to this function is optional, since flutter_rust_bridge (and everything else)
-                  /// is automatically disposed when the app stops.
-                  static void dispose() => instance.disposeImpl();
+  Future<void> crateApiGroupsAddMembersToGroup({
+    required String pubkey,
+    required String groupId,
+    required List<String> memberPubkeys,
+  });
 
-                  @override
-                  ApiImplConstructor<RustLibApiImpl, RustLibWire> get apiImplConstructor => RustLibApiImpl.new;
+  Future<String> crateApiErrorApiErrorErrorType({required ApiError that});
 
-                  @override
-                  WireConstructor<RustLibWire> get wireConstructor => RustLibWire.fromExternalLibrary;
+  Future<String> crateApiErrorApiErrorMessageText({required ApiError that});
 
-                  @override
-                  Future<void> executeRustInitializers() async {
-                    
-                  }
+  Future<Group> crateApiGroupsCreateGroup({
+    required String creatorPubkey,
+    required List<String> memberPubkeys,
+    required List<String> adminPubkeys,
+    required String groupName,
+    required String groupDescription,
+    required GroupType groupType,
+  });
 
-                  @override
-                  ExternalLibraryLoaderConfig get defaultExternalLibraryLoaderConfig => kDefaultExternalLibraryLoaderConfig;
+  Future<Account> crateApiAccountsCreateIdentity();
 
-                  @override
-                  String get codegenVersion => '2.11.1';
+  Future<WhitenoiseConfig> crateApiCreateWhitenoiseConfig({
+    required String dataDir,
+    required String logsDir,
+  });
 
-                  @override
-                  int get rustContentHash => -481785978;
+  Future<void> crateApiWelcomesDeclineWelcome({
+    required String pubkey,
+    required String welcomeEventId,
+  });
 
-                  static const kDefaultExternalLibraryLoaderConfig = ExternalLibraryLoaderConfig(
-                    stem: 'rust_lib_whitenoise',
-                    ioDirectory: 'rust/target/release/',
-                    webPrefix: 'pkg/',
-                  );
-                }
-                
+  Future<bool> crateApiAccountsDeleteAccountKeyPackage({
+    required String accountPubkey,
+    required String keyPackageId,
+  });
 
-                abstract class RustLibApi extends BaseApi {
-                  Future<void> crateApiWelcomesAcceptWelcome({required String pubkey , required String welcomeEventId });
+  Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({required String accountPubkey});
 
-Future<List<User>> crateApiAccountsAccountFollows({required String pubkey });
+  Future<void> crateApiDeleteAllData();
 
-Future<FlutterEvent?> crateApiAccountsAccountKeyPackage({required String pubkey });
+  Future<MediaFile> crateApiMediaFilesDownloadChatMedia({
+    required String accountPubkey,
+    required String groupId,
+    required String originalFileHash,
+  });
 
-Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({required String accountPubkey });
+  Future<void> crateApiRelaysEnsureAllSubscriptions();
 
-Future<FlutterMetadata> crateApiAccountsAccountMetadata({required String pubkey });
+  Future<String> crateApiAccountsExportAccountNsec({required String pubkey});
 
-Future<List<Relay>> crateApiAccountsAccountRelays({required String pubkey , required RelayType relayType });
+  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
+    required String pubkey,
+    required String groupId,
+  });
 
-Future<List<Group>> crateApiGroupsActiveGroups({required String pubkey });
+  Future<Welcome> crateApiWelcomesFindWelcomeByEventId({
+    required String pubkey,
+    required String welcomeEventId,
+  });
 
-Future<void> crateApiAccountsAddAccountRelay({required String pubkey , required String url , required RelayType relayType });
+  Future<void> crateApiAccountsFollowUser({
+    required String accountPubkey,
+    required String userToFollowPubkey,
+  });
 
-Future<void> crateApiGroupsAddMembersToGroup({required String pubkey , required String groupId , required List<String> memberPubkeys });
+  Future<Account> crateApiAccountsGetAccount({required String pubkey});
 
-Future<String> crateApiErrorApiErrorErrorType({required ApiError that });
+  Future<List<(String, String)>> crateApiRelaysGetAccountRelayStatuses({required String pubkey});
 
-Future<String> crateApiErrorApiErrorMessageText({required ApiError that });
+  Future<List<Account>> crateApiAccountsGetAccounts();
 
-Future<Group> crateApiGroupsCreateGroup({required String creatorPubkey , required List<String> memberPubkeys , required List<String> adminPubkeys , required String groupName , required String groupDescription , required GroupType groupType });
+  Future<AppSettings> crateApiGetAppSettings();
 
-Future<Account> crateApiAccountsCreateIdentity();
+  Future<String> crateApiUtilsGetDefaultBlossomServerUrl();
 
-Future<WhitenoiseConfig> crateApiCreateWhitenoiseConfig({required String dataDir , required String logsDir });
+  Future<Group> crateApiGroupsGetGroup({required String accountPubkey, required String groupId});
 
-Future<void> crateApiWelcomesDeclineWelcome({required String pubkey , required String welcomeEventId });
+  Future<String?> crateApiGroupsGetGroupImagePath({
+    required String accountPubkey,
+    required String groupId,
+  });
 
-Future<bool> crateApiAccountsDeleteAccountKeyPackage({required String accountPubkey , required String keyPackageId });
+  Future<GroupInformation> crateApiGroupsGetGroupInformation({
+    required String accountPubkey,
+    required String groupId,
+  });
 
-Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({required String accountPubkey });
+  Future<List<GroupInformation>> crateApiGroupsGetGroupsInformations({
+    required String accountPubkey,
+    required List<String> groupIds,
+  });
 
-Future<void> crateApiDeleteAllData();
+  Future<User> crateApiUsersGetUser({required String pubkey, required bool blockingDataSync});
 
-Future<MediaFile> crateApiMediaFilesDownloadChatMedia({required String accountPubkey , required String groupId , required String originalFileHash });
+  Future<List<String>> crateApiGroupsGroupAdmins({required String pubkey, required String groupId});
 
-Future<void> crateApiRelaysEnsureAllSubscriptions();
+  Future<GroupType> crateApiGroupsGroupGroupType({
+    required Group that,
+    required String accountPubkey,
+  });
 
-Future<String> crateApiAccountsExportAccountNsec({required String pubkey });
+  Future<GroupId> crateApiUtilsGroupIdFromString({required String groupId});
 
-Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({required String pubkey , required String groupId });
+  Future<String> crateApiUtilsGroupIdToString({required GroupId groupId});
 
-Future<Welcome> crateApiWelcomesFindWelcomeByEventId({required String pubkey , required String welcomeEventId });
+  Future<bool> crateApiGroupsGroupIsDirectMessageType({
+    required Group that,
+    required String accountPubkey,
+  });
 
-Future<void> crateApiAccountsFollowUser({required String accountPubkey , required String userToFollowPubkey });
+  Future<bool> crateApiGroupsGroupIsGroupType({required Group that, required String accountPubkey});
 
-Future<Account> crateApiAccountsGetAccount({required String pubkey });
+  Future<List<String>> crateApiGroupsGroupMembers({
+    required String pubkey,
+    required String groupId,
+  });
 
-Future<List<(String,String)>> crateApiRelaysGetAccountRelayStatuses({required String pubkey });
+  Future<void> crateApiGroupsGroupUpdateGroupData({
+    required Group that,
+    required String accountPubkey,
+    required FlutterGroupDataUpdate groupData,
+  });
 
-Future<List<Account>> crateApiAccountsGetAccounts();
+  String crateApiUtilsHexPubkeyFromNpub({required String npub});
 
-Future<AppSettings> crateApiGetAppSettings();
+  Future<void> crateApiInitializeWhitenoise({required WhitenoiseConfig config});
 
-Future<String> crateApiUtilsGetDefaultBlossomServerUrl();
+  Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey});
 
-Future<Group> crateApiGroupsGetGroup({required String accountPubkey , required String groupId });
+  Future<void> crateApiAccountsLogout({required String pubkey});
 
-Future<String?> crateApiGroupsGetGroupImagePath({required String accountPubkey , required String groupId });
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey});
 
-Future<GroupInformation> crateApiGroupsGetGroupInformation({required String accountPubkey , required String groupId });
+  Future<List<Welcome>> crateApiWelcomesPendingWelcomes({required String pubkey});
 
-Future<List<GroupInformation>> crateApiGroupsGetGroupsInformations({required String accountPubkey , required List<String> groupIds });
+  Future<void> crateApiAccountsPublishAccountKeyPackage({required String accountPubkey});
 
-Future<User> crateApiUsersGetUser({required String pubkey , required bool blockingDataSync });
+  Future<RelayType> crateApiRelaysRelayTypeInbox();
 
-Future<List<String>> crateApiGroupsGroupAdmins({required String pubkey , required String groupId });
+  Future<RelayType> crateApiRelaysRelayTypeKeyPackage();
 
-Future<GroupType> crateApiGroupsGroupGroupType({required Group that , required String accountPubkey });
+  Future<RelayType> crateApiRelaysRelayTypeNip65();
 
-Future<GroupId> crateApiUtilsGroupIdFromString({required String groupId });
+  Future<RelayUrl> crateApiUtilsRelayUrlFromString({required String url});
 
-Future<String> crateApiUtilsGroupIdToString({required GroupId groupId });
+  Future<void> crateApiAccountsRemoveAccountRelay({
+    required String pubkey,
+    required String url,
+    required RelayType relayType,
+  });
 
-Future<bool> crateApiGroupsGroupIsDirectMessageType({required Group that , required String accountPubkey });
+  Future<void> crateApiGroupsRemoveMembersFromGroup({
+    required String pubkey,
+    required String groupId,
+    required List<String> memberPubkeys,
+  });
 
-Future<bool> crateApiGroupsGroupIsGroupType({required Group that , required String accountPubkey });
+  Future<MessageWithTokens> crateApiMessagesSendMessageToGroup({
+    required String pubkey,
+    required String groupId,
+    required String message,
+    required int kind,
+    List<Tag>? tags,
+  });
 
-Future<List<String>> crateApiGroupsGroupMembers({required String pubkey , required String groupId });
+  Future<String> crateApiUtilsStringFromRelayUrl({required RelayUrl relayUrl});
 
-Future<void> crateApiGroupsGroupUpdateGroupData({required Group that , required String accountPubkey , required FlutterGroupDataUpdate groupData });
+  Future<Tag> crateApiUtilsTagFromVec({required List<String> vec});
 
-String crateApiUtilsHexPubkeyFromNpub({required String npub });
+  Future<void> crateApiAccountsUnfollowUser({
+    required String accountPubkey,
+    required String userToUnfollowPubkey,
+  });
 
-Future<void> crateApiInitializeWhitenoise({required WhitenoiseConfig config });
+  Future<void> crateApiAccountsUpdateAccountMetadata({
+    required String pubkey,
+    required FlutterMetadata metadata,
+  });
 
-Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey });
+  Future<void> crateApiUpdateThemeMode({required ThemeMode themeMode});
 
-Future<void> crateApiAccountsLogout({required String pubkey });
+  Future<String> crateApiAccountsUploadAccountProfilePicture({
+    required String pubkey,
+    required String serverUrl,
+    required String filePath,
+    required String imageType,
+  });
 
-String crateApiUtilsNpubFromHexPubkey({required String hexPubkey });
+  Future<MediaFile> crateApiMediaFilesUploadChatMedia({
+    required String accountPubkey,
+    required String groupId,
+    required String filePath,
+  });
 
-Future<List<Welcome>> crateApiWelcomesPendingWelcomes({required String pubkey });
+  Future<UploadGroupImageResult> crateApiGroupsUploadGroupImage({
+    required String accountPubkey,
+    required String groupId,
+    required String filePath,
+    required String serverUrl,
+  });
 
-Future<void> crateApiAccountsPublishAccountKeyPackage({required String accountPubkey });
+  Future<bool> crateApiUsersUserHasKeyPackage({
+    required String pubkey,
+    required bool blockingDataSync,
+  });
 
-Future<RelayType> crateApiRelaysRelayTypeInbox();
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required String pubkey,
+    required bool blockingDataSync,
+  });
 
-Future<RelayType> crateApiRelaysRelayTypeKeyPackage();
+  Future<List<Relay>> crateApiUsersUserRelays({
+    required String pubkey,
+    required RelayType relayType,
+    required bool blockingDataSync,
+  });
 
-Future<RelayType> crateApiRelaysRelayTypeNip65();
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_AppSettings;
 
-Future<RelayUrl> crateApiUtilsRelayUrlFromString({required String url });
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_AppSettings;
 
-Future<void> crateApiAccountsRemoveAccountRelay({required String pubkey , required String url , required RelayType relayType });
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_AppSettingsPtr;
 
-Future<void> crateApiGroupsRemoveMembersFromGroup({required String pubkey , required String groupId , required List<String> memberPubkeys });
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_GroupId;
 
-Future<MessageWithTokens> crateApiMessagesSendMessageToGroup({required String pubkey , required String groupId , required String message , required int kind , List<Tag>? tags });
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_GroupId;
 
-Future<String> crateApiUtilsStringFromRelayUrl({required RelayUrl relayUrl });
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_GroupIdPtr;
 
-Future<Tag> crateApiUtilsTagFromVec({required List<String> vec });
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayType;
 
-Future<void> crateApiAccountsUnfollowUser({required String accountPubkey , required String userToUnfollowPubkey });
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayType;
 
-Future<void> crateApiAccountsUpdateAccountMetadata({required String pubkey , required FlutterMetadata metadata });
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayTypePtr;
 
-Future<void> crateApiUpdateThemeMode({required ThemeMode themeMode });
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayUrl;
 
-Future<String> crateApiAccountsUploadAccountProfilePicture({required String pubkey , required String serverUrl , required String filePath , required String imageType });
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayUrl;
 
-Future<MediaFile> crateApiMediaFilesUploadChatMedia({required String accountPubkey , required String groupId , required String filePath });
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayUrlPtr;
 
-Future<UploadGroupImageResult> crateApiGroupsUploadGroupImage({required String accountPubkey , required String groupId , required String filePath , required String serverUrl });
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Tag;
 
-Future<bool> crateApiUsersUserHasKeyPackage({required String pubkey , required bool blockingDataSync });
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Tag;
 
-Future<FlutterMetadata> crateApiUsersUserMetadata({required String pubkey , required bool blockingDataSync });
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TagPtr;
 
-Future<List<Relay>> crateApiUsersUserRelays({required String pubkey , required RelayType relayType , required bool blockingDataSync });
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_ThemeMode;
 
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_AppSettings;
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_ThemeMode;
 
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_AppSettings;
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ThemeModePtr;
+}
 
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_AppSettingsPtr;
+class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
+  RustLibApiImpl({
+    required super.handler,
+    required super.wire,
+    required super.generalizedFrbRustBinding,
+    required super.portManager,
+  });
 
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_GroupId;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_GroupId;
-
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_GroupIdPtr;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayType;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayType;
-
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayTypePtr;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayUrl;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayUrl;
-
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayUrlPtr;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Tag;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Tag;
-
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TagPtr;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_ThemeMode;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_ThemeMode;
-
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ThemeModePtr;
-
-
-                }
-                
-
-                class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
-                  RustLibApiImpl({
-                    required super.handler,
-                    required super.wire,
-                    required super.generalizedFrbRustBinding,
-                    required super.portManager,
-                  });
-
-                  @override Future<void> crateApiWelcomesAcceptWelcome({required String pubkey , required String welcomeEventId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(welcomeEventId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiWelcomesAcceptWelcome({
+    required String pubkey,
+    required String welcomeEventId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(welcomeEventId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 1, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiWelcomesAcceptWelcomeConstMeta,
-            argValues: [pubkey, welcomeEventId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiWelcomesAcceptWelcomeConstMeta,
+        argValues: [pubkey, welcomeEventId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiWelcomesAcceptWelcomeConstMeta => const TaskConstMeta(
+    debugName: 'accept_welcome',
+    argNames: ['pubkey', 'welcomeEventId'],
+  );
 
-        TaskConstMeta get kCrateApiWelcomesAcceptWelcomeConstMeta => const TaskConstMeta(
-            debugName: "accept_welcome",
-            argNames: ["pubkey", "welcomeEventId"],
-        );
-        
-
-@override Future<List<User>> crateApiAccountsAccountFollows({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 2, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_user,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsAccountFollowsConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsAccountFollowsConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsAccountFollowsConstMeta => const TaskConstMeta(
+    debugName: 'account_follows',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsAccountFollowsConstMeta => const TaskConstMeta(
-            debugName: "account_follows",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<FlutterEvent?> crateApiAccountsAccountKeyPackage({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<FlutterEvent?> crateApiAccountsAccountKeyPackage({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 3, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_opt_box_autoadd_flutter_event,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsAccountKeyPackageConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsAccountKeyPackageConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsAccountKeyPackageConstMeta => const TaskConstMeta(
+    debugName: 'account_key_package',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsAccountKeyPackageConstMeta => const TaskConstMeta(
-            debugName: "account_key_package",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({required String accountPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({required String accountPubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 4, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_flutter_event,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsAccountKeyPackagesConstMeta,
-            argValues: [accountPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsAccountKeyPackagesConstMeta,
+        argValues: [accountPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsAccountKeyPackagesConstMeta => const TaskConstMeta(
+    debugName: 'account_key_packages',
+    argNames: ['accountPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsAccountKeyPackagesConstMeta => const TaskConstMeta(
-            debugName: "account_key_packages",
-            argNames: ["accountPubkey"],
-        );
-        
-
-@override Future<FlutterMetadata> crateApiAccountsAccountMetadata({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<FlutterMetadata> crateApiAccountsAccountMetadata({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 5, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_flutter_metadata,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsAccountMetadataConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsAccountMetadataConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsAccountMetadataConstMeta => const TaskConstMeta(
+    debugName: 'account_metadata',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsAccountMetadataConstMeta => const TaskConstMeta(
-            debugName: "account_metadata",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<List<Relay>> crateApiAccountsAccountRelays({required String pubkey , required RelayType relayType })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(relayType, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<Relay>> crateApiAccountsAccountRelays({
+    required String pubkey,
+    required RelayType relayType,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+            relayType,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 6, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_relay,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsAccountRelaysConstMeta,
-            argValues: [pubkey, relayType],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsAccountRelaysConstMeta,
+        argValues: [pubkey, relayType],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsAccountRelaysConstMeta => const TaskConstMeta(
+    debugName: 'account_relays',
+    argNames: ['pubkey', 'relayType'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsAccountRelaysConstMeta => const TaskConstMeta(
-            debugName: "account_relays",
-            argNames: ["pubkey", "relayType"],
-        );
-        
-
-@override Future<List<Group>> crateApiGroupsActiveGroups({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<Group>> crateApiGroupsActiveGroups({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 7, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_group,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsActiveGroupsConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsActiveGroupsConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsActiveGroupsConstMeta => const TaskConstMeta(
+    debugName: 'active_groups',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsActiveGroupsConstMeta => const TaskConstMeta(
-            debugName: "active_groups",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<void> crateApiAccountsAddAccountRelay({required String pubkey , required String url , required RelayType relayType })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(url, serializer);
-sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(relayType, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsAddAccountRelay({
+    required String pubkey,
+    required String url,
+    required RelayType relayType,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(url, serializer);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+            relayType,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 8, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsAddAccountRelayConstMeta,
-            argValues: [pubkey, url, relayType],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsAddAccountRelayConstMeta,
+        argValues: [pubkey, url, relayType],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsAddAccountRelayConstMeta => const TaskConstMeta(
+    debugName: 'add_account_relay',
+    argNames: ['pubkey', 'url', 'relayType'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsAddAccountRelayConstMeta => const TaskConstMeta(
-            debugName: "add_account_relay",
-            argNames: ["pubkey", "url", "relayType"],
-        );
-        
-
-@override Future<void> crateApiGroupsAddMembersToGroup({required String pubkey , required String groupId , required List<String> memberPubkeys })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(groupId, serializer);
-sse_encode_list_String(memberPubkeys, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiGroupsAddMembersToGroup({
+    required String pubkey,
+    required String groupId,
+    required List<String> memberPubkeys,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          sse_encode_list_String(memberPubkeys, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 9, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsAddMembersToGroupConstMeta,
-            argValues: [pubkey, groupId, memberPubkeys],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsAddMembersToGroupConstMeta,
+        argValues: [pubkey, groupId, memberPubkeys],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsAddMembersToGroupConstMeta => const TaskConstMeta(
+    debugName: 'add_members_to_group',
+    argNames: ['pubkey', 'groupId', 'memberPubkeys'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsAddMembersToGroupConstMeta => const TaskConstMeta(
-            debugName: "add_members_to_group",
-            argNames: ["pubkey", "groupId", "memberPubkeys"],
-        );
-        
-
-@override Future<String> crateApiErrorApiErrorErrorType({required ApiError that })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_api_error(that, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiErrorApiErrorErrorType({required ApiError that}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_api_error(that, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 10, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiErrorApiErrorErrorTypeConstMeta,
-            argValues: [that],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiErrorApiErrorErrorTypeConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiErrorApiErrorErrorTypeConstMeta => const TaskConstMeta(
+    debugName: 'api_error_error_type',
+    argNames: ['that'],
+  );
 
-        TaskConstMeta get kCrateApiErrorApiErrorErrorTypeConstMeta => const TaskConstMeta(
-            debugName: "api_error_error_type",
-            argNames: ["that"],
-        );
-        
-
-@override Future<String> crateApiErrorApiErrorMessageText({required ApiError that })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_api_error(that, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiErrorApiErrorMessageText({required ApiError that}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_api_error(that, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 11, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiErrorApiErrorMessageTextConstMeta,
-            argValues: [that],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiErrorApiErrorMessageTextConstMeta,
+        argValues: [that],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiErrorApiErrorMessageTextConstMeta => const TaskConstMeta(
+    debugName: 'api_error_message_text',
+    argNames: ['that'],
+  );
 
-        TaskConstMeta get kCrateApiErrorApiErrorMessageTextConstMeta => const TaskConstMeta(
-            debugName: "api_error_message_text",
-            argNames: ["that"],
-        );
-        
-
-@override Future<Group> crateApiGroupsCreateGroup({required String creatorPubkey , required List<String> memberPubkeys , required List<String> adminPubkeys , required String groupName , required String groupDescription , required GroupType groupType })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(creatorPubkey, serializer);
-sse_encode_list_String(memberPubkeys, serializer);
-sse_encode_list_String(adminPubkeys, serializer);
-sse_encode_String(groupName, serializer);
-sse_encode_String(groupDescription, serializer);
-sse_encode_group_type(groupType, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<Group> crateApiGroupsCreateGroup({
+    required String creatorPubkey,
+    required List<String> memberPubkeys,
+    required List<String> adminPubkeys,
+    required String groupName,
+    required String groupDescription,
+    required GroupType groupType,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(creatorPubkey, serializer);
+          sse_encode_list_String(memberPubkeys, serializer);
+          sse_encode_list_String(adminPubkeys, serializer);
+          sse_encode_String(groupName, serializer);
+          sse_encode_String(groupDescription, serializer);
+          sse_encode_group_type(groupType, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 12, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_group,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsCreateGroupConstMeta,
-            argValues: [creatorPubkey, memberPubkeys, adminPubkeys, groupName, groupDescription, groupType],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsCreateGroupConstMeta,
+        argValues: [
+          creatorPubkey,
+          memberPubkeys,
+          adminPubkeys,
+          groupName,
+          groupDescription,
+          groupType,
+        ],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsCreateGroupConstMeta => const TaskConstMeta(
+    debugName: 'create_group',
+    argNames: [
+      'creatorPubkey',
+      'memberPubkeys',
+      'adminPubkeys',
+      'groupName',
+      'groupDescription',
+      'groupType',
+    ],
+  );
 
-        TaskConstMeta get kCrateApiGroupsCreateGroupConstMeta => const TaskConstMeta(
-            debugName: "create_group",
-            argNames: ["creatorPubkey", "memberPubkeys", "adminPubkeys", "groupName", "groupDescription", "groupType"],
-        );
-        
-
-@override Future<Account> crateApiAccountsCreateIdentity()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<Account> crateApiAccountsCreateIdentity() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 13, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_account,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsCreateIdentityConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsCreateIdentityConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsCreateIdentityConstMeta => const TaskConstMeta(
+    debugName: 'create_identity',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiAccountsCreateIdentityConstMeta => const TaskConstMeta(
-            debugName: "create_identity",
-            argNames: [],
-        );
-        
-
-@override Future<WhitenoiseConfig> crateApiCreateWhitenoiseConfig({required String dataDir , required String logsDir })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(dataDir, serializer);
-sse_encode_String(logsDir, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<WhitenoiseConfig> crateApiCreateWhitenoiseConfig({
+    required String dataDir,
+    required String logsDir,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(dataDir, serializer);
+          sse_encode_String(logsDir, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 14, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_whitenoise_config,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiCreateWhitenoiseConfigConstMeta,
-            argValues: [dataDir, logsDir],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiCreateWhitenoiseConfigConstMeta,
+        argValues: [dataDir, logsDir],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiCreateWhitenoiseConfigConstMeta => const TaskConstMeta(
+    debugName: 'create_whitenoise_config',
+    argNames: ['dataDir', 'logsDir'],
+  );
 
-        TaskConstMeta get kCrateApiCreateWhitenoiseConfigConstMeta => const TaskConstMeta(
-            debugName: "create_whitenoise_config",
-            argNames: ["dataDir", "logsDir"],
-        );
-        
-
-@override Future<void> crateApiWelcomesDeclineWelcome({required String pubkey , required String welcomeEventId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(welcomeEventId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiWelcomesDeclineWelcome({
+    required String pubkey,
+    required String welcomeEventId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(welcomeEventId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 15, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiWelcomesDeclineWelcomeConstMeta,
-            argValues: [pubkey, welcomeEventId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiWelcomesDeclineWelcomeConstMeta,
+        argValues: [pubkey, welcomeEventId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiWelcomesDeclineWelcomeConstMeta => const TaskConstMeta(
+    debugName: 'decline_welcome',
+    argNames: ['pubkey', 'welcomeEventId'],
+  );
 
-        TaskConstMeta get kCrateApiWelcomesDeclineWelcomeConstMeta => const TaskConstMeta(
-            debugName: "decline_welcome",
-            argNames: ["pubkey", "welcomeEventId"],
-        );
-        
-
-@override Future<bool> crateApiAccountsDeleteAccountKeyPackage({required String accountPubkey , required String keyPackageId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(keyPackageId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<bool> crateApiAccountsDeleteAccountKeyPackage({
+    required String accountPubkey,
+    required String keyPackageId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(keyPackageId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 16, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsDeleteAccountKeyPackageConstMeta,
-            argValues: [accountPubkey, keyPackageId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsDeleteAccountKeyPackageConstMeta,
+        argValues: [accountPubkey, keyPackageId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsDeleteAccountKeyPackageConstMeta => const TaskConstMeta(
+    debugName: 'delete_account_key_package',
+    argNames: ['accountPubkey', 'keyPackageId'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsDeleteAccountKeyPackageConstMeta => const TaskConstMeta(
-            debugName: "delete_account_key_package",
-            argNames: ["accountPubkey", "keyPackageId"],
-        );
-        
-
-@override Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({required String accountPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({required String accountPubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 17, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_usize,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsDeleteAccountKeyPackagesConstMeta,
-            argValues: [accountPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsDeleteAccountKeyPackagesConstMeta,
+        argValues: [accountPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsDeleteAccountKeyPackagesConstMeta => const TaskConstMeta(
+    debugName: 'delete_account_key_packages',
+    argNames: ['accountPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsDeleteAccountKeyPackagesConstMeta => const TaskConstMeta(
-            debugName: "delete_account_key_packages",
-            argNames: ["accountPubkey"],
-        );
-        
-
-@override Future<void> crateApiDeleteAllData()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiDeleteAllData() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 18, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiDeleteAllDataConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiDeleteAllDataConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiDeleteAllDataConstMeta => const TaskConstMeta(
+    debugName: 'delete_all_data',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiDeleteAllDataConstMeta => const TaskConstMeta(
-            debugName: "delete_all_data",
-            argNames: [],
-        );
-        
-
-@override Future<MediaFile> crateApiMediaFilesDownloadChatMedia({required String accountPubkey , required String groupId , required String originalFileHash })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(groupId, serializer);
-sse_encode_String(originalFileHash, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<MediaFile> crateApiMediaFilesDownloadChatMedia({
+    required String accountPubkey,
+    required String groupId,
+    required String originalFileHash,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          sse_encode_String(originalFileHash, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 19, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_media_file,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiMediaFilesDownloadChatMediaConstMeta,
-            argValues: [accountPubkey, groupId, originalFileHash],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiMediaFilesDownloadChatMediaConstMeta,
+        argValues: [accountPubkey, groupId, originalFileHash],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiMediaFilesDownloadChatMediaConstMeta => const TaskConstMeta(
+    debugName: 'download_chat_media',
+    argNames: ['accountPubkey', 'groupId', 'originalFileHash'],
+  );
 
-        TaskConstMeta get kCrateApiMediaFilesDownloadChatMediaConstMeta => const TaskConstMeta(
-            debugName: "download_chat_media",
-            argNames: ["accountPubkey", "groupId", "originalFileHash"],
-        );
-        
-
-@override Future<void> crateApiRelaysEnsureAllSubscriptions()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiRelaysEnsureAllSubscriptions() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 20, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiRelaysEnsureAllSubscriptionsConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiRelaysEnsureAllSubscriptionsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiRelaysEnsureAllSubscriptionsConstMeta => const TaskConstMeta(
+    debugName: 'ensure_all_subscriptions',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiRelaysEnsureAllSubscriptionsConstMeta => const TaskConstMeta(
-            debugName: "ensure_all_subscriptions",
-            argNames: [],
-        );
-        
-
-@override Future<String> crateApiAccountsExportAccountNsec({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 21, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsExportAccountNsecConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsExportAccountNsecConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsExportAccountNsecConstMeta => const TaskConstMeta(
+    debugName: 'export_account_nsec',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsExportAccountNsecConstMeta => const TaskConstMeta(
-            debugName: "export_account_nsec",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({required String pubkey , required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
+    required String pubkey,
+    required String groupId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 22, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_chat_message,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiMessagesFetchAggregatedMessagesForGroupConstMeta,
-            argValues: [pubkey, groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiMessagesFetchAggregatedMessagesForGroupConstMeta,
+        argValues: [pubkey, groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiMessagesFetchAggregatedMessagesForGroupConstMeta =>
+      const TaskConstMeta(
+        debugName: 'fetch_aggregated_messages_for_group',
+        argNames: ['pubkey', 'groupId'],
+      );
 
-        TaskConstMeta get kCrateApiMessagesFetchAggregatedMessagesForGroupConstMeta => const TaskConstMeta(
-            debugName: "fetch_aggregated_messages_for_group",
-            argNames: ["pubkey", "groupId"],
-        );
-        
-
-@override Future<Welcome> crateApiWelcomesFindWelcomeByEventId({required String pubkey , required String welcomeEventId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(welcomeEventId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<Welcome> crateApiWelcomesFindWelcomeByEventId({
+    required String pubkey,
+    required String welcomeEventId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(welcomeEventId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 23, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_welcome,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiWelcomesFindWelcomeByEventIdConstMeta,
-            argValues: [pubkey, welcomeEventId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiWelcomesFindWelcomeByEventIdConstMeta,
+        argValues: [pubkey, welcomeEventId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiWelcomesFindWelcomeByEventIdConstMeta => const TaskConstMeta(
+    debugName: 'find_welcome_by_event_id',
+    argNames: ['pubkey', 'welcomeEventId'],
+  );
 
-        TaskConstMeta get kCrateApiWelcomesFindWelcomeByEventIdConstMeta => const TaskConstMeta(
-            debugName: "find_welcome_by_event_id",
-            argNames: ["pubkey", "welcomeEventId"],
-        );
-        
-
-@override Future<void> crateApiAccountsFollowUser({required String accountPubkey , required String userToFollowPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(userToFollowPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsFollowUser({
+    required String accountPubkey,
+    required String userToFollowPubkey,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(userToFollowPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 24, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsFollowUserConstMeta,
-            argValues: [accountPubkey, userToFollowPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsFollowUserConstMeta,
+        argValues: [accountPubkey, userToFollowPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsFollowUserConstMeta => const TaskConstMeta(
+    debugName: 'follow_user',
+    argNames: ['accountPubkey', 'userToFollowPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsFollowUserConstMeta => const TaskConstMeta(
-            debugName: "follow_user",
-            argNames: ["accountPubkey", "userToFollowPubkey"],
-        );
-        
-
-@override Future<Account> crateApiAccountsGetAccount({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 25, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_account,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsGetAccountConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsGetAccountConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsGetAccountConstMeta => const TaskConstMeta(
+    debugName: 'get_account',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsGetAccountConstMeta => const TaskConstMeta(
-            debugName: "get_account",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<List<(String,String)>> crateApiRelaysGetAccountRelayStatuses({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<(String, String)>> crateApiRelaysGetAccountRelayStatuses({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 26, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_record_string_string,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiRelaysGetAccountRelayStatusesConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiRelaysGetAccountRelayStatusesConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiRelaysGetAccountRelayStatusesConstMeta => const TaskConstMeta(
+    debugName: 'get_account_relay_statuses',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiRelaysGetAccountRelayStatusesConstMeta => const TaskConstMeta(
-            debugName: "get_account_relay_statuses",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<List<Account>> crateApiAccountsGetAccounts()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<Account>> crateApiAccountsGetAccounts() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 27, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_account,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsGetAccountsConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsGetAccountsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsGetAccountsConstMeta => const TaskConstMeta(
+    debugName: 'get_accounts',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiAccountsGetAccountsConstMeta => const TaskConstMeta(
-            debugName: "get_accounts",
-            argNames: [],
-        );
-        
-
-@override Future<AppSettings> crateApiGetAppSettings()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings,
+  @override
+  Future<AppSettings> crateApiGetAppSettings() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 28, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGetAppSettingsConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGetAppSettingsConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGetAppSettingsConstMeta => const TaskConstMeta(
+    debugName: 'get_app_settings',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiGetAppSettingsConstMeta => const TaskConstMeta(
-            debugName: "get_app_settings",
-            argNames: [],
-        );
-        
-
-@override Future<String> crateApiUtilsGetDefaultBlossomServerUrl()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiUtilsGetDefaultBlossomServerUrl() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 29, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiUtilsGetDefaultBlossomServerUrlConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsGetDefaultBlossomServerUrlConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsGetDefaultBlossomServerUrlConstMeta => const TaskConstMeta(
+    debugName: 'get_default_blossom_server_url',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiUtilsGetDefaultBlossomServerUrlConstMeta => const TaskConstMeta(
-            debugName: "get_default_blossom_server_url",
-            argNames: [],
-        );
-        
-
-@override Future<Group> crateApiGroupsGetGroup({required String accountPubkey , required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<Group> crateApiGroupsGetGroup({required String accountPubkey, required String groupId}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 30, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_group,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGetGroupConstMeta,
-            argValues: [accountPubkey, groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGetGroupConstMeta,
+        argValues: [accountPubkey, groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGetGroupConstMeta => const TaskConstMeta(
+    debugName: 'get_group',
+    argNames: ['accountPubkey', 'groupId'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGetGroupConstMeta => const TaskConstMeta(
-            debugName: "get_group",
-            argNames: ["accountPubkey", "groupId"],
-        );
-        
-
-@override Future<String?> crateApiGroupsGetGroupImagePath({required String accountPubkey , required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String?> crateApiGroupsGetGroupImagePath({
+    required String accountPubkey,
+    required String groupId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 31, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_opt_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGetGroupImagePathConstMeta,
-            argValues: [accountPubkey, groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGetGroupImagePathConstMeta,
+        argValues: [accountPubkey, groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGetGroupImagePathConstMeta => const TaskConstMeta(
+    debugName: 'get_group_image_path',
+    argNames: ['accountPubkey', 'groupId'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGetGroupImagePathConstMeta => const TaskConstMeta(
-            debugName: "get_group_image_path",
-            argNames: ["accountPubkey", "groupId"],
-        );
-        
-
-@override Future<GroupInformation> crateApiGroupsGetGroupInformation({required String accountPubkey , required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<GroupInformation> crateApiGroupsGetGroupInformation({
+    required String accountPubkey,
+    required String groupId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 32, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_group_information,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGetGroupInformationConstMeta,
-            argValues: [accountPubkey, groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGetGroupInformationConstMeta,
+        argValues: [accountPubkey, groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGetGroupInformationConstMeta => const TaskConstMeta(
+    debugName: 'get_group_information',
+    argNames: ['accountPubkey', 'groupId'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGetGroupInformationConstMeta => const TaskConstMeta(
-            debugName: "get_group_information",
-            argNames: ["accountPubkey", "groupId"],
-        );
-        
-
-@override Future<List<GroupInformation>> crateApiGroupsGetGroupsInformations({required String accountPubkey , required List<String> groupIds })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_list_String(groupIds, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<GroupInformation>> crateApiGroupsGetGroupsInformations({
+    required String accountPubkey,
+    required List<String> groupIds,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_list_String(groupIds, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 33, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_group_information,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGetGroupsInformationsConstMeta,
-            argValues: [accountPubkey, groupIds],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGetGroupsInformationsConstMeta,
+        argValues: [accountPubkey, groupIds],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGetGroupsInformationsConstMeta => const TaskConstMeta(
+    debugName: 'get_groups_informations',
+    argNames: ['accountPubkey', 'groupIds'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGetGroupsInformationsConstMeta => const TaskConstMeta(
-            debugName: "get_groups_informations",
-            argNames: ["accountPubkey", "groupIds"],
-        );
-        
-
-@override Future<User> crateApiUsersGetUser({required String pubkey , required bool blockingDataSync })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_bool(blockingDataSync, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<User> crateApiUsersGetUser({required String pubkey, required bool blockingDataSync}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_bool(blockingDataSync, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 34, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_user,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUsersGetUserConstMeta,
-            argValues: [pubkey, blockingDataSync],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUsersGetUserConstMeta,
+        argValues: [pubkey, blockingDataSync],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUsersGetUserConstMeta => const TaskConstMeta(
+    debugName: 'get_user',
+    argNames: ['pubkey', 'blockingDataSync'],
+  );
 
-        TaskConstMeta get kCrateApiUsersGetUserConstMeta => const TaskConstMeta(
-            debugName: "get_user",
-            argNames: ["pubkey", "blockingDataSync"],
-        );
-        
-
-@override Future<List<String>> crateApiGroupsGroupAdmins({required String pubkey , required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<String>> crateApiGroupsGroupAdmins({
+    required String pubkey,
+    required String groupId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 35, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGroupAdminsConstMeta,
-            argValues: [pubkey, groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGroupAdminsConstMeta,
+        argValues: [pubkey, groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGroupAdminsConstMeta => const TaskConstMeta(
+    debugName: 'group_admins',
+    argNames: ['pubkey', 'groupId'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGroupAdminsConstMeta => const TaskConstMeta(
-            debugName: "group_admins",
-            argNames: ["pubkey", "groupId"],
-        );
-        
-
-@override Future<GroupType> crateApiGroupsGroupGroupType({required Group that , required String accountPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_group(that, serializer);
-sse_encode_String(accountPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<GroupType> crateApiGroupsGroupGroupType({
+    required Group that,
+    required String accountPubkey,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_group(that, serializer);
+          sse_encode_String(accountPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 36, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_group_type,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGroupGroupTypeConstMeta,
-            argValues: [that, accountPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGroupGroupTypeConstMeta,
+        argValues: [that, accountPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGroupGroupTypeConstMeta => const TaskConstMeta(
+    debugName: 'group_group_type',
+    argNames: ['that', 'accountPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGroupGroupTypeConstMeta => const TaskConstMeta(
-            debugName: "group_group_type",
-            argNames: ["that", "accountPubkey"],
-        );
-        
-
-@override Future<GroupId> crateApiUtilsGroupIdFromString({required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId,
+  @override
+  Future<GroupId> crateApiUtilsGroupIdFromString({required String groupId}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 37, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUtilsGroupIdFromStringConstMeta,
-            argValues: [groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsGroupIdFromStringConstMeta,
+        argValues: [groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsGroupIdFromStringConstMeta => const TaskConstMeta(
+    debugName: 'group_id_from_string',
+    argNames: ['groupId'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsGroupIdFromStringConstMeta => const TaskConstMeta(
-            debugName: "group_id_from_string",
-            argNames: ["groupId"],
-        );
-        
-
-@override Future<String> crateApiUtilsGroupIdToString({required GroupId groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiUtilsGroupIdToString({required GroupId groupId}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+            groupId,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 38, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiUtilsGroupIdToStringConstMeta,
-            argValues: [groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsGroupIdToStringConstMeta,
+        argValues: [groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsGroupIdToStringConstMeta => const TaskConstMeta(
+    debugName: 'group_id_to_string',
+    argNames: ['groupId'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsGroupIdToStringConstMeta => const TaskConstMeta(
-            debugName: "group_id_to_string",
-            argNames: ["groupId"],
-        );
-        
-
-@override Future<bool> crateApiGroupsGroupIsDirectMessageType({required Group that , required String accountPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_group(that, serializer);
-sse_encode_String(accountPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<bool> crateApiGroupsGroupIsDirectMessageType({
+    required Group that,
+    required String accountPubkey,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_group(that, serializer);
+          sse_encode_String(accountPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 39, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGroupIsDirectMessageTypeConstMeta,
-            argValues: [that, accountPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGroupIsDirectMessageTypeConstMeta,
+        argValues: [that, accountPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGroupIsDirectMessageTypeConstMeta => const TaskConstMeta(
+    debugName: 'group_is_direct_message_type',
+    argNames: ['that', 'accountPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGroupIsDirectMessageTypeConstMeta => const TaskConstMeta(
-            debugName: "group_is_direct_message_type",
-            argNames: ["that", "accountPubkey"],
-        );
-        
-
-@override Future<bool> crateApiGroupsGroupIsGroupType({required Group that , required String accountPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_group(that, serializer);
-sse_encode_String(accountPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<bool> crateApiGroupsGroupIsGroupType({
+    required Group that,
+    required String accountPubkey,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_group(that, serializer);
+          sse_encode_String(accountPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 40, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGroupIsGroupTypeConstMeta,
-            argValues: [that, accountPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGroupIsGroupTypeConstMeta,
+        argValues: [that, accountPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGroupIsGroupTypeConstMeta => const TaskConstMeta(
+    debugName: 'group_is_group_type',
+    argNames: ['that', 'accountPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGroupIsGroupTypeConstMeta => const TaskConstMeta(
-            debugName: "group_is_group_type",
-            argNames: ["that", "accountPubkey"],
-        );
-        
-
-@override Future<List<String>> crateApiGroupsGroupMembers({required String pubkey , required String groupId })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(groupId, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<String>> crateApiGroupsGroupMembers({
+    required String pubkey,
+    required String groupId,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 41, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGroupMembersConstMeta,
-            argValues: [pubkey, groupId],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGroupMembersConstMeta,
+        argValues: [pubkey, groupId],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGroupMembersConstMeta => const TaskConstMeta(
+    debugName: 'group_members',
+    argNames: ['pubkey', 'groupId'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGroupMembersConstMeta => const TaskConstMeta(
-            debugName: "group_members",
-            argNames: ["pubkey", "groupId"],
-        );
-        
-
-@override Future<void> crateApiGroupsGroupUpdateGroupData({required Group that , required String accountPubkey , required FlutterGroupDataUpdate groupData })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_group(that, serializer);
-sse_encode_String(accountPubkey, serializer);
-sse_encode_box_autoadd_flutter_group_data_update(groupData, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiGroupsGroupUpdateGroupData({
+    required Group that,
+    required String accountPubkey,
+    required FlutterGroupDataUpdate groupData,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_group(that, serializer);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_box_autoadd_flutter_group_data_update(groupData, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 42, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsGroupUpdateGroupDataConstMeta,
-            argValues: [that, accountPubkey, groupData],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsGroupUpdateGroupDataConstMeta,
+        argValues: [that, accountPubkey, groupData],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsGroupUpdateGroupDataConstMeta => const TaskConstMeta(
+    debugName: 'group_update_group_data',
+    argNames: ['that', 'accountPubkey', 'groupData'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsGroupUpdateGroupDataConstMeta => const TaskConstMeta(
-            debugName: "group_update_group_data",
-            argNames: ["that", "accountPubkey", "groupData"],
-        );
-        
-
-@override String crateApiUtilsHexPubkeyFromNpub({required String npub })  { return handler.executeSync(SyncTask(
-            callFfi: () {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(npub, serializer);
-            return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  String crateApiUtilsHexPubkeyFromNpub({required String npub}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(npub, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 43)!;
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUtilsHexPubkeyFromNpubConstMeta,
-            argValues: [npub],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsHexPubkeyFromNpubConstMeta,
+        argValues: [npub],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsHexPubkeyFromNpubConstMeta => const TaskConstMeta(
+    debugName: 'hex_pubkey_from_npub',
+    argNames: ['npub'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsHexPubkeyFromNpubConstMeta => const TaskConstMeta(
-            debugName: "hex_pubkey_from_npub",
-            argNames: ["npub"],
-        );
-        
-
-@override Future<void> crateApiInitializeWhitenoise({required WhitenoiseConfig config })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_box_autoadd_whitenoise_config(config, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiInitializeWhitenoise({required WhitenoiseConfig config}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_box_autoadd_whitenoise_config(config, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 44, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiInitializeWhitenoiseConstMeta,
-            argValues: [config],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiInitializeWhitenoiseConstMeta,
+        argValues: [config],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiInitializeWhitenoiseConstMeta => const TaskConstMeta(
+    debugName: 'initialize_whitenoise',
+    argNames: ['config'],
+  );
 
-        TaskConstMeta get kCrateApiInitializeWhitenoiseConstMeta => const TaskConstMeta(
-            debugName: "initialize_whitenoise",
-            argNames: ["config"],
-        );
-        
-
-@override Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(nsecOrHexPrivkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(nsecOrHexPrivkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 45, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_account,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsLoginConstMeta,
-            argValues: [nsecOrHexPrivkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsLoginConstMeta,
+        argValues: [nsecOrHexPrivkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsLoginConstMeta => const TaskConstMeta(
+    debugName: 'login',
+    argNames: ['nsecOrHexPrivkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsLoginConstMeta => const TaskConstMeta(
-            debugName: "login",
-            argNames: ["nsecOrHexPrivkey"],
-        );
-        
-
-@override Future<void> crateApiAccountsLogout({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsLogout({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 46, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsLogoutConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsLogoutConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsLogoutConstMeta => const TaskConstMeta(
+    debugName: 'logout',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsLogoutConstMeta => const TaskConstMeta(
-            debugName: "logout",
-            argNames: ["pubkey"],
-        );
-        
-
-@override String crateApiUtilsNpubFromHexPubkey({required String hexPubkey })  { return handler.executeSync(SyncTask(
-            callFfi: () {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(hexPubkey, serializer);
-            return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    return handler.executeSync(
+      SyncTask(
+        callFfi: () {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(hexPubkey, serializer);
+          return pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 47)!;
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUtilsNpubFromHexPubkeyConstMeta,
-            argValues: [hexPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsNpubFromHexPubkeyConstMeta,
+        argValues: [hexPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsNpubFromHexPubkeyConstMeta => const TaskConstMeta(
+    debugName: 'npub_from_hex_pubkey',
+    argNames: ['hexPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsNpubFromHexPubkeyConstMeta => const TaskConstMeta(
-            debugName: "npub_from_hex_pubkey",
-            argNames: ["hexPubkey"],
-        );
-        
-
-@override Future<List<Welcome>> crateApiWelcomesPendingWelcomes({required String pubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<Welcome>> crateApiWelcomesPendingWelcomes({required String pubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 48, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_welcome,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiWelcomesPendingWelcomesConstMeta,
-            argValues: [pubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiWelcomesPendingWelcomesConstMeta,
+        argValues: [pubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiWelcomesPendingWelcomesConstMeta => const TaskConstMeta(
+    debugName: 'pending_welcomes',
+    argNames: ['pubkey'],
+  );
 
-        TaskConstMeta get kCrateApiWelcomesPendingWelcomesConstMeta => const TaskConstMeta(
-            debugName: "pending_welcomes",
-            argNames: ["pubkey"],
-        );
-        
-
-@override Future<void> crateApiAccountsPublishAccountKeyPackage({required String accountPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsPublishAccountKeyPackage({required String accountPubkey}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 49, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsPublishAccountKeyPackageConstMeta,
-            argValues: [accountPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsPublishAccountKeyPackageConstMeta,
+        argValues: [accountPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsPublishAccountKeyPackageConstMeta => const TaskConstMeta(
+    debugName: 'publish_account_key_package',
+    argNames: ['accountPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsPublishAccountKeyPackageConstMeta => const TaskConstMeta(
-            debugName: "publish_account_key_package",
-            argNames: ["accountPubkey"],
-        );
-        
-
-@override Future<RelayType> crateApiRelaysRelayTypeInbox()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType,
+  @override
+  Future<RelayType> crateApiRelaysRelayTypeInbox() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 50, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiRelaysRelayTypeInboxConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiRelaysRelayTypeInboxConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiRelaysRelayTypeInboxConstMeta => const TaskConstMeta(
+    debugName: 'relay_type_inbox',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiRelaysRelayTypeInboxConstMeta => const TaskConstMeta(
-            debugName: "relay_type_inbox",
-            argNames: [],
-        );
-        
-
-@override Future<RelayType> crateApiRelaysRelayTypeKeyPackage()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType,
+  @override
+  Future<RelayType> crateApiRelaysRelayTypeKeyPackage() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 51, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiRelaysRelayTypeKeyPackageConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiRelaysRelayTypeKeyPackageConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiRelaysRelayTypeKeyPackageConstMeta => const TaskConstMeta(
+    debugName: 'relay_type_key_package',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiRelaysRelayTypeKeyPackageConstMeta => const TaskConstMeta(
-            debugName: "relay_type_key_package",
-            argNames: [],
-        );
-        
-
-@override Future<RelayType> crateApiRelaysRelayTypeNip65()  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType,
+  @override
+  Future<RelayType> crateApiRelaysRelayTypeNip65() {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 52, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiRelaysRelayTypeNip65ConstMeta,
-            argValues: [],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiRelaysRelayTypeNip65ConstMeta,
+        argValues: [],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiRelaysRelayTypeNip65ConstMeta => const TaskConstMeta(
+    debugName: 'relay_type_nip65',
+    argNames: [],
+  );
 
-        TaskConstMeta get kCrateApiRelaysRelayTypeNip65ConstMeta => const TaskConstMeta(
-            debugName: "relay_type_nip65",
-            argNames: [],
-        );
-        
-
-@override Future<RelayUrl> crateApiUtilsRelayUrlFromString({required String url })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(url, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl,
+  @override
+  Future<RelayUrl> crateApiUtilsRelayUrlFromString({required String url}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(url, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 53, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUtilsRelayUrlFromStringConstMeta,
-            argValues: [url],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsRelayUrlFromStringConstMeta,
+        argValues: [url],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsRelayUrlFromStringConstMeta => const TaskConstMeta(
+    debugName: 'relay_url_from_string',
+    argNames: ['url'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsRelayUrlFromStringConstMeta => const TaskConstMeta(
-            debugName: "relay_url_from_string",
-            argNames: ["url"],
-        );
-        
-
-@override Future<void> crateApiAccountsRemoveAccountRelay({required String pubkey , required String url , required RelayType relayType })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(url, serializer);
-sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(relayType, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsRemoveAccountRelay({
+    required String pubkey,
+    required String url,
+    required RelayType relayType,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(url, serializer);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+            relayType,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 54, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsRemoveAccountRelayConstMeta,
-            argValues: [pubkey, url, relayType],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsRemoveAccountRelayConstMeta,
+        argValues: [pubkey, url, relayType],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsRemoveAccountRelayConstMeta => const TaskConstMeta(
+    debugName: 'remove_account_relay',
+    argNames: ['pubkey', 'url', 'relayType'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsRemoveAccountRelayConstMeta => const TaskConstMeta(
-            debugName: "remove_account_relay",
-            argNames: ["pubkey", "url", "relayType"],
-        );
-        
-
-@override Future<void> crateApiGroupsRemoveMembersFromGroup({required String pubkey , required String groupId , required List<String> memberPubkeys })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(groupId, serializer);
-sse_encode_list_String(memberPubkeys, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiGroupsRemoveMembersFromGroup({
+    required String pubkey,
+    required String groupId,
+    required List<String> memberPubkeys,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          sse_encode_list_String(memberPubkeys, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 55, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsRemoveMembersFromGroupConstMeta,
-            argValues: [pubkey, groupId, memberPubkeys],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsRemoveMembersFromGroupConstMeta,
+        argValues: [pubkey, groupId, memberPubkeys],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsRemoveMembersFromGroupConstMeta => const TaskConstMeta(
+    debugName: 'remove_members_from_group',
+    argNames: ['pubkey', 'groupId', 'memberPubkeys'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsRemoveMembersFromGroupConstMeta => const TaskConstMeta(
-            debugName: "remove_members_from_group",
-            argNames: ["pubkey", "groupId", "memberPubkeys"],
-        );
-        
-
-@override Future<MessageWithTokens> crateApiMessagesSendMessageToGroup({required String pubkey , required String groupId , required String message , required int kind , List<Tag>? tags })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(groupId, serializer);
-sse_encode_String(message, serializer);
-sse_encode_u_16(kind, serializer);
-sse_encode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(tags, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<MessageWithTokens> crateApiMessagesSendMessageToGroup({
+    required String pubkey,
+    required String groupId,
+    required String message,
+    required int kind,
+    List<Tag>? tags,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          sse_encode_String(message, serializer);
+          sse_encode_u_16(kind, serializer);
+          sse_encode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+            tags,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 56, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_message_with_tokens,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiMessagesSendMessageToGroupConstMeta,
-            argValues: [pubkey, groupId, message, kind, tags],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiMessagesSendMessageToGroupConstMeta,
+        argValues: [pubkey, groupId, message, kind, tags],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiMessagesSendMessageToGroupConstMeta => const TaskConstMeta(
+    debugName: 'send_message_to_group',
+    argNames: ['pubkey', 'groupId', 'message', 'kind', 'tags'],
+  );
 
-        TaskConstMeta get kCrateApiMessagesSendMessageToGroupConstMeta => const TaskConstMeta(
-            debugName: "send_message_to_group",
-            argNames: ["pubkey", "groupId", "message", "kind", "tags"],
-        );
-        
-
-@override Future<String> crateApiUtilsStringFromRelayUrl({required RelayUrl relayUrl })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(relayUrl, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiUtilsStringFromRelayUrl({required RelayUrl relayUrl}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+            relayUrl,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 57, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: null,
-        )
-        ,
-            constMeta: kCrateApiUtilsStringFromRelayUrlConstMeta,
-            argValues: [relayUrl],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsStringFromRelayUrlConstMeta,
+        argValues: [relayUrl],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsStringFromRelayUrlConstMeta => const TaskConstMeta(
+    debugName: 'string_from_relay_url',
+    argNames: ['relayUrl'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsStringFromRelayUrlConstMeta => const TaskConstMeta(
-            debugName: "string_from_relay_url",
-            argNames: ["relayUrl"],
-        );
-        
-
-@override Future<Tag> crateApiUtilsTagFromVec({required List<String> vec })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_list_String(vec, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
-          decodeSuccessData: sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag,
+  @override
+  Future<Tag> crateApiUtilsTagFromVec({required List<String> vec}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_list_String(vec, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 58, port: port_);
+        },
+        codec: SseCodec(
+          decodeSuccessData:
+              sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUtilsTagFromVecConstMeta,
-            argValues: [vec],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUtilsTagFromVecConstMeta,
+        argValues: [vec],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUtilsTagFromVecConstMeta => const TaskConstMeta(
+    debugName: 'tag_from_vec',
+    argNames: ['vec'],
+  );
 
-        TaskConstMeta get kCrateApiUtilsTagFromVecConstMeta => const TaskConstMeta(
-            debugName: "tag_from_vec",
-            argNames: ["vec"],
-        );
-        
-
-@override Future<void> crateApiAccountsUnfollowUser({required String accountPubkey , required String userToUnfollowPubkey })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(userToUnfollowPubkey, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsUnfollowUser({
+    required String accountPubkey,
+    required String userToUnfollowPubkey,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(userToUnfollowPubkey, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 59, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsUnfollowUserConstMeta,
-            argValues: [accountPubkey, userToUnfollowPubkey],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsUnfollowUserConstMeta,
+        argValues: [accountPubkey, userToUnfollowPubkey],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsUnfollowUserConstMeta => const TaskConstMeta(
+    debugName: 'unfollow_user',
+    argNames: ['accountPubkey', 'userToUnfollowPubkey'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsUnfollowUserConstMeta => const TaskConstMeta(
-            debugName: "unfollow_user",
-            argNames: ["accountPubkey", "userToUnfollowPubkey"],
-        );
-        
-
-@override Future<void> crateApiAccountsUpdateAccountMetadata({required String pubkey , required FlutterMetadata metadata })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_box_autoadd_flutter_metadata(metadata, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiAccountsUpdateAccountMetadata({
+    required String pubkey,
+    required FlutterMetadata metadata,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_box_autoadd_flutter_metadata(metadata, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 60, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsUpdateAccountMetadataConstMeta,
-            argValues: [pubkey, metadata],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsUpdateAccountMetadataConstMeta,
+        argValues: [pubkey, metadata],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsUpdateAccountMetadataConstMeta => const TaskConstMeta(
+    debugName: 'update_account_metadata',
+    argNames: ['pubkey', 'metadata'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsUpdateAccountMetadataConstMeta => const TaskConstMeta(
-            debugName: "update_account_metadata",
-            argNames: ["pubkey", "metadata"],
-        );
-        
-
-@override Future<void> crateApiUpdateThemeMode({required ThemeMode themeMode })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(themeMode, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<void> crateApiUpdateThemeMode({required ThemeMode themeMode}) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+            themeMode,
+            serializer,
+          );
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 61, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_unit,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUpdateThemeModeConstMeta,
-            argValues: [themeMode],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUpdateThemeModeConstMeta,
+        argValues: [themeMode],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUpdateThemeModeConstMeta => const TaskConstMeta(
+    debugName: 'update_theme_mode',
+    argNames: ['themeMode'],
+  );
 
-        TaskConstMeta get kCrateApiUpdateThemeModeConstMeta => const TaskConstMeta(
-            debugName: "update_theme_mode",
-            argNames: ["themeMode"],
-        );
-        
-
-@override Future<String> crateApiAccountsUploadAccountProfilePicture({required String pubkey , required String serverUrl , required String filePath , required String imageType })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_String(serverUrl, serializer);
-sse_encode_String(filePath, serializer);
-sse_encode_String(imageType, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<String> crateApiAccountsUploadAccountProfilePicture({
+    required String pubkey,
+    required String serverUrl,
+    required String filePath,
+    required String imageType,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_String(serverUrl, serializer);
+          sse_encode_String(filePath, serializer);
+          sse_encode_String(imageType, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 62, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_String,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiAccountsUploadAccountProfilePictureConstMeta,
-            argValues: [pubkey, serverUrl, filePath, imageType],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiAccountsUploadAccountProfilePictureConstMeta,
+        argValues: [pubkey, serverUrl, filePath, imageType],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiAccountsUploadAccountProfilePictureConstMeta => const TaskConstMeta(
+    debugName: 'upload_account_profile_picture',
+    argNames: ['pubkey', 'serverUrl', 'filePath', 'imageType'],
+  );
 
-        TaskConstMeta get kCrateApiAccountsUploadAccountProfilePictureConstMeta => const TaskConstMeta(
-            debugName: "upload_account_profile_picture",
-            argNames: ["pubkey", "serverUrl", "filePath", "imageType"],
-        );
-        
-
-@override Future<MediaFile> crateApiMediaFilesUploadChatMedia({required String accountPubkey , required String groupId , required String filePath })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(groupId, serializer);
-sse_encode_String(filePath, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<MediaFile> crateApiMediaFilesUploadChatMedia({
+    required String accountPubkey,
+    required String groupId,
+    required String filePath,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          sse_encode_String(filePath, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 63, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_media_file,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiMediaFilesUploadChatMediaConstMeta,
-            argValues: [accountPubkey, groupId, filePath],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiMediaFilesUploadChatMediaConstMeta,
+        argValues: [accountPubkey, groupId, filePath],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiMediaFilesUploadChatMediaConstMeta => const TaskConstMeta(
+    debugName: 'upload_chat_media',
+    argNames: ['accountPubkey', 'groupId', 'filePath'],
+  );
 
-        TaskConstMeta get kCrateApiMediaFilesUploadChatMediaConstMeta => const TaskConstMeta(
-            debugName: "upload_chat_media",
-            argNames: ["accountPubkey", "groupId", "filePath"],
-        );
-        
-
-@override Future<UploadGroupImageResult> crateApiGroupsUploadGroupImage({required String accountPubkey , required String groupId , required String filePath , required String serverUrl })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(accountPubkey, serializer);
-sse_encode_String(groupId, serializer);
-sse_encode_String(filePath, serializer);
-sse_encode_String(serverUrl, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<UploadGroupImageResult> crateApiGroupsUploadGroupImage({
+    required String accountPubkey,
+    required String groupId,
+    required String filePath,
+    required String serverUrl,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(accountPubkey, serializer);
+          sse_encode_String(groupId, serializer);
+          sse_encode_String(filePath, serializer);
+          sse_encode_String(serverUrl, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 64, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_upload_group_image_result,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiGroupsUploadGroupImageConstMeta,
-            argValues: [accountPubkey, groupId, filePath, serverUrl],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiGroupsUploadGroupImageConstMeta,
+        argValues: [accountPubkey, groupId, filePath, serverUrl],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiGroupsUploadGroupImageConstMeta => const TaskConstMeta(
+    debugName: 'upload_group_image',
+    argNames: ['accountPubkey', 'groupId', 'filePath', 'serverUrl'],
+  );
 
-        TaskConstMeta get kCrateApiGroupsUploadGroupImageConstMeta => const TaskConstMeta(
-            debugName: "upload_group_image",
-            argNames: ["accountPubkey", "groupId", "filePath", "serverUrl"],
-        );
-        
-
-@override Future<bool> crateApiUsersUserHasKeyPackage({required String pubkey , required bool blockingDataSync })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_bool(blockingDataSync, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<bool> crateApiUsersUserHasKeyPackage({
+    required String pubkey,
+    required bool blockingDataSync,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_bool(blockingDataSync, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 65, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_bool,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUsersUserHasKeyPackageConstMeta,
-            argValues: [pubkey, blockingDataSync],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUsersUserHasKeyPackageConstMeta,
+        argValues: [pubkey, blockingDataSync],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUsersUserHasKeyPackageConstMeta => const TaskConstMeta(
+    debugName: 'user_has_key_package',
+    argNames: ['pubkey', 'blockingDataSync'],
+  );
 
-        TaskConstMeta get kCrateApiUsersUserHasKeyPackageConstMeta => const TaskConstMeta(
-            debugName: "user_has_key_package",
-            argNames: ["pubkey", "blockingDataSync"],
-        );
-        
-
-@override Future<FlutterMetadata> crateApiUsersUserMetadata({required String pubkey , required bool blockingDataSync })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_bool(blockingDataSync, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required String pubkey,
+    required bool blockingDataSync,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_bool(blockingDataSync, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 66, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_flutter_metadata,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUsersUserMetadataConstMeta,
-            argValues: [pubkey, blockingDataSync],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUsersUserMetadataConstMeta,
+        argValues: [pubkey, blockingDataSync],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUsersUserMetadataConstMeta => const TaskConstMeta(
+    debugName: 'user_metadata',
+    argNames: ['pubkey', 'blockingDataSync'],
+  );
 
-        TaskConstMeta get kCrateApiUsersUserMetadataConstMeta => const TaskConstMeta(
-            debugName: "user_metadata",
-            argNames: ["pubkey", "blockingDataSync"],
-        );
-        
-
-@override Future<List<Relay>> crateApiUsersUserRelays({required String pubkey , required RelayType relayType , required bool blockingDataSync })  { return handler.executeNormal(NormalTask(
-            callFfi: (port_) {
-              
-            final serializer = SseSerializer(generalizedFrbRustBinding);sse_encode_String(pubkey, serializer);
-sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(relayType, serializer);
-sse_encode_bool(blockingDataSync, serializer);
-            pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67, port: port_);
-            
-            },
-            codec: 
-        SseCodec(
+  @override
+  Future<List<Relay>> crateApiUsersUserRelays({
+    required String pubkey,
+    required RelayType relayType,
+    required bool blockingDataSync,
+  }) {
+    return handler.executeNormal(
+      NormalTask(
+        callFfi: (port_) {
+          final serializer = SseSerializer(generalizedFrbRustBinding);
+          sse_encode_String(pubkey, serializer);
+          sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+            relayType,
+            serializer,
+          );
+          sse_encode_bool(blockingDataSync, serializer);
+          pdeCallFfi(generalizedFrbRustBinding, serializer, funcId: 67, port: port_);
+        },
+        codec: SseCodec(
           decodeSuccessData: sse_decode_list_relay,
           decodeErrorData: sse_decode_api_error,
-        )
-        ,
-            constMeta: kCrateApiUsersUserRelaysConstMeta,
-            argValues: [pubkey, relayType, blockingDataSync],
-            apiImpl: this,
-        )); }
+        ),
+        constMeta: kCrateApiUsersUserRelaysConstMeta,
+        argValues: [pubkey, relayType, blockingDataSync],
+        apiImpl: this,
+      ),
+    );
+  }
 
+  TaskConstMeta get kCrateApiUsersUserRelaysConstMeta => const TaskConstMeta(
+    debugName: 'user_relays',
+    argNames: ['pubkey', 'relayType', 'blockingDataSync'],
+  );
 
-        TaskConstMeta get kCrateApiUsersUserRelaysConstMeta => const TaskConstMeta(
-            debugName: "user_relays",
-            argNames: ["pubkey", "relayType", "blockingDataSync"],
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_AppSettings => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings;
+
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_AppSettings => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings;
+
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_GroupId => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId;
+
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_GroupId => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId;
+
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayType => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType;
+
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayType => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType;
+
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayUrl => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl;
+
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayUrl => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl;
+
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Tag => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag;
+
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Tag => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag;
+
+  RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_ThemeMode => wire
+      .rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode;
+
+  RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_ThemeMode => wire
+      .rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode;
+
+  @protected
+  AppSettings
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return AppSettingsImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  GroupId
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return GroupIdImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RelayType
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RelayTypeImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RelayUrl
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RelayUrlImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  Tag dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TagImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ThemeMode
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ThemeModeImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  GroupId dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return GroupIdImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RelayUrl
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RelayUrlImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  DateTime dco_decode_Chrono_Utc(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeTimestamp(ts: dco_decode_i_64(raw).toInt(), isUtc: true);
+  }
+
+  @protected
+  Map<String, String> dco_decode_Map_String_String_None(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return Map.fromEntries(
+      dco_decode_list_record_string_string(raw).map((e) => MapEntry(e.$1, e.$2)),
+    );
+  }
+
+  @protected
+  AppSettings dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return AppSettingsImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  GroupId dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return GroupIdImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RelayType dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RelayTypeImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  RelayUrl dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return RelayUrlImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  Tag dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return TagImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  ThemeMode dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ThemeModeImpl.frbInternalDcoDecode(raw as List<dynamic>);
+  }
+
+  @protected
+  String dco_decode_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as String;
+  }
+
+  @protected
+  Account dco_decode_account(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return Account(
+      pubkey: dco_decode_String(arr[0]),
+      lastSyncedAt: dco_decode_opt_box_autoadd_Chrono_Utc(arr[1]),
+      createdAt: dco_decode_Chrono_Utc(arr[2]),
+      updatedAt: dco_decode_Chrono_Utc(arr[3]),
+    );
+  }
+
+  @protected
+  ApiError dco_decode_api_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return ApiError_Whitenoise(
+          message: dco_decode_String(raw[1]),
         );
-        
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_AppSettings => wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_AppSettings => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_GroupId => wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_GroupId => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayType => wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayType => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_RelayUrl => wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_RelayUrl => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_Tag => wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_Tag => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag;
-
-RustArcIncrementStrongCountFnType get rust_arc_increment_strong_count_ThemeMode => wire.rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode;
-
-RustArcDecrementStrongCountFnType get rust_arc_decrement_strong_count_ThemeMode => wire.rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode;
-
-
-
-                  @protected AppSettings dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return AppSettingsImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected GroupId dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return GroupIdImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected RelayType dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return RelayTypeImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected RelayUrl dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return RelayUrlImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected Tag dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return TagImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected ThemeMode dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return ThemeModeImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected GroupId dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return GroupIdImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected RelayUrl dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return RelayUrlImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected DateTime dco_decode_Chrono_Utc(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dcoDecodeTimestamp(ts: dco_decode_i_64(raw).toInt(), isUtc: true); }
-
-@protected Map<String, String> dco_decode_Map_String_String_None(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return Map.fromEntries(dco_decode_list_record_string_string(raw).map((e) => MapEntry(e.$1, e.$2))); }
-
-@protected AppSettings dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return AppSettingsImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected GroupId dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return GroupIdImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected RelayType dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return RelayTypeImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected RelayUrl dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return RelayUrlImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected Tag dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return TagImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected ThemeMode dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return ThemeModeImpl.frbInternalDcoDecode(raw as List<dynamic>); }
-
-@protected String dco_decode_String(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as String; }
-
-@protected Account dco_decode_account(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
-                return Account(pubkey: dco_decode_String(arr[0]),
-lastSyncedAt: dco_decode_opt_box_autoadd_Chrono_Utc(arr[1]),
-createdAt: dco_decode_Chrono_Utc(arr[2]),
-updatedAt: dco_decode_Chrono_Utc(arr[3]),); }
-
-@protected ApiError dco_decode_api_error(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-switch (raw[0]) {
-                case 0: return ApiError_Whitenoise(message: dco_decode_String(raw[1]),);
-case 1: return ApiError_InvalidKey(message: dco_decode_String(raw[1]),);
-case 2: return ApiError_NostrUrl(message: dco_decode_String(raw[1]),);
-case 3: return ApiError_NostrTag(message: dco_decode_String(raw[1]),);
-case 4: return ApiError_NostrEvent(message: dco_decode_String(raw[1]),);
-case 5: return ApiError_NostrParse(message: dco_decode_String(raw[1]),);
-case 6: return ApiError_NostrHex(message: dco_decode_String(raw[1]),);
-case 7: return ApiError_Other(message: dco_decode_String(raw[1]),);
-                default: throw Exception("unreachable");
-            } }
-
-@protected bool dco_decode_bool(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as bool; }
-
-@protected DateTime dco_decode_box_autoadd_Chrono_Utc(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_Chrono_Utc(raw); }
-
-@protected ApiError dco_decode_box_autoadd_api_error(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_api_error(raw); }
-
-@protected FileMetadata dco_decode_box_autoadd_file_metadata(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_file_metadata(raw); }
-
-@protected FlutterEvent dco_decode_box_autoadd_flutter_event(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_flutter_event(raw); }
-
-@protected FlutterGroupDataUpdate dco_decode_box_autoadd_flutter_group_data_update(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_flutter_group_data_update(raw); }
-
-@protected FlutterMetadata dco_decode_box_autoadd_flutter_metadata(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_flutter_metadata(raw); }
-
-@protected Group dco_decode_box_autoadd_group(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_group(raw); }
-
-@protected WhitenoiseConfig dco_decode_box_autoadd_whitenoise_config(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dco_decode_whitenoise_config(raw); }
-
-@protected ChatMessage dco_decode_chat_message(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 12) throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
-                return ChatMessage(id: dco_decode_String(arr[0]),
-pubkey: dco_decode_String(arr[1]),
-content: dco_decode_String(arr[2]),
-createdAt: dco_decode_Chrono_Utc(arr[3]),
-tags: dco_decode_list_String(arr[4]),
-isReply: dco_decode_bool(arr[5]),
-replyToId: dco_decode_opt_String(arr[6]),
-isDeleted: dco_decode_bool(arr[7]),
-contentTokens: dco_decode_list_serializable_token(arr[8]),
-reactions: dco_decode_reaction_summary(arr[9]),
-mediaAttachments: dco_decode_list_media_file(arr[10]),
-kind: dco_decode_u_16(arr[11]),); }
-
-@protected EmojiReaction dco_decode_emoji_reaction(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-                return EmojiReaction(emoji: dco_decode_String(arr[0]),
-count: dco_decode_u_64(arr[1]),
-users: dco_decode_list_String(arr[2]),); }
-
-@protected FileMetadata dco_decode_file_metadata(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-                return FileMetadata(originalFilename: dco_decode_opt_String(arr[0]),
-dimensions: dco_decode_opt_String(arr[1]),
-blurhash: dco_decode_opt_String(arr[2]),); }
-
-@protected FlutterEvent dco_decode_flutter_event(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
-                return FlutterEvent(id: dco_decode_String(arr[0]),
-pubkey: dco_decode_String(arr[1]),
-createdAt: dco_decode_Chrono_Utc(arr[2]),
-kind: dco_decode_u_16(arr[3]),
-tags: dco_decode_list_String(arr[4]),
-content: dco_decode_String(arr[5]),); }
-
-@protected FlutterGroupDataUpdate dco_decode_flutter_group_data_update(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 7) throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
-                return FlutterGroupDataUpdate(name: dco_decode_opt_String(arr[0]),
-description: dco_decode_opt_String(arr[1]),
-relays: dco_decode_opt_list_String(arr[2]),
-admins: dco_decode_opt_list_String(arr[3]),
-imageKey: dco_decode_opt_u_8_array_32(arr[4]),
-imageHash: dco_decode_opt_u_8_array_32(arr[5]),
-imageNonce: dco_decode_opt_u_8_array_12(arr[6]),); }
-
-@protected FlutterMetadata dco_decode_flutter_metadata(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 10) throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
-                return FlutterMetadata(name: dco_decode_opt_String(arr[0]),
-displayName: dco_decode_opt_String(arr[1]),
-about: dco_decode_opt_String(arr[2]),
-picture: dco_decode_opt_String(arr[3]),
-banner: dco_decode_opt_String(arr[4]),
-website: dco_decode_opt_String(arr[5]),
-nip05: dco_decode_opt_String(arr[6]),
-lud06: dco_decode_opt_String(arr[7]),
-lud16: dco_decode_opt_String(arr[8]),
-custom: dco_decode_Map_String_String_None(arr[9]),); }
-
-@protected Group dco_decode_group(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 11) throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
-                return Group(mlsGroupId: dco_decode_String(arr[0]),
-nostrGroupId: dco_decode_String(arr[1]),
-name: dco_decode_String(arr[2]),
-description: dco_decode_String(arr[3]),
-imageHash: dco_decode_opt_u_8_array_32(arr[4]),
-imageKey: dco_decode_opt_u_8_array_32(arr[5]),
-adminPubkeys: dco_decode_list_String(arr[6]),
-lastMessageId: dco_decode_opt_String(arr[7]),
-lastMessageAt: dco_decode_opt_box_autoadd_Chrono_Utc(arr[8]),
-epoch: dco_decode_u_64(arr[9]),
-state: dco_decode_group_state(arr[10]),); }
-
-@protected GroupInformation dco_decode_group_information(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
-                return GroupInformation(mlsGroupId: dco_decode_String(arr[0]),
-groupType: dco_decode_group_type(arr[1]),
-createdAt: dco_decode_Chrono_Utc(arr[2]),
-updatedAt: dco_decode_Chrono_Utc(arr[3]),); }
-
-@protected GroupState dco_decode_group_state(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return GroupState.values[raw as int]; }
-
-@protected GroupType dco_decode_group_type(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return GroupType.values[raw as int]; }
-
-@protected int dco_decode_i_32(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as int; }
-
-@protected PlatformInt64 dco_decode_i_64(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dcoDecodeI64(raw); }
-
-@protected List<Tag> dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag).toList(); }
-
-@protected List<String> dco_decode_list_String(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_String).toList(); }
-
-@protected List<Account> dco_decode_list_account(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_account).toList(); }
-
-@protected List<ChatMessage> dco_decode_list_chat_message(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_chat_message).toList(); }
-
-@protected List<EmojiReaction> dco_decode_list_emoji_reaction(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_emoji_reaction).toList(); }
-
-@protected List<FlutterEvent> dco_decode_list_flutter_event(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_flutter_event).toList(); }
-
-@protected List<Group> dco_decode_list_group(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_group).toList(); }
-
-@protected List<GroupInformation> dco_decode_list_group_information(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_group_information).toList(); }
-
-@protected List<MediaFile> dco_decode_list_media_file(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_media_file).toList(); }
-
-@protected Uint8List dco_decode_list_prim_u_8_strict(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as Uint8List; }
-
-@protected List<(String,String)> dco_decode_list_record_string_string(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_record_string_string).toList(); }
-
-@protected List<Relay> dco_decode_list_relay(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_relay).toList(); }
-
-@protected List<SerializableToken> dco_decode_list_serializable_token(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_serializable_token).toList(); }
-
-@protected List<User> dco_decode_list_user(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_user).toList(); }
-
-@protected List<UserReaction> dco_decode_list_user_reaction(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_user_reaction).toList(); }
-
-@protected List<Welcome> dco_decode_list_welcome(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return (raw as List<dynamic>).map(dco_decode_welcome).toList(); }
-
-@protected MediaFile dco_decode_media_file(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 12) throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
-                return MediaFile(id: dco_decode_String(arr[0]),
-mlsGroupId: dco_decode_String(arr[1]),
-accountPubkey: dco_decode_String(arr[2]),
-filePath: dco_decode_String(arr[3]),
-originalFileHash: dco_decode_opt_String(arr[4]),
-encryptedFileHash: dco_decode_String(arr[5]),
-mimeType: dco_decode_String(arr[6]),
-mediaType: dco_decode_String(arr[7]),
-blossomUrl: dco_decode_String(arr[8]),
-nostrKey: dco_decode_String(arr[9]),
-fileMetadata: dco_decode_opt_box_autoadd_file_metadata(arr[10]),
-createdAt: dco_decode_Chrono_Utc(arr[11]),); }
-
-@protected MessageWithTokens dco_decode_message_with_tokens(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
-                return MessageWithTokens(id: dco_decode_String(arr[0]),
-pubkey: dco_decode_String(arr[1]),
-kind: dco_decode_u_16(arr[2]),
-createdAt: dco_decode_Chrono_Utc(arr[3]),
-content: dco_decode_opt_String(arr[4]),
-tokens: dco_decode_list_serializable_token(arr[5]),); }
-
-@protected String? dco_decode_opt_String(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_String(raw); }
-
-@protected DateTime? dco_decode_opt_box_autoadd_Chrono_Utc(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_box_autoadd_Chrono_Utc(raw); }
-
-@protected FileMetadata? dco_decode_opt_box_autoadd_file_metadata(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_box_autoadd_file_metadata(raw); }
-
-@protected FlutterEvent? dco_decode_opt_box_autoadd_flutter_event(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_box_autoadd_flutter_event(raw); }
-
-@protected List<Tag>? dco_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(raw); }
-
-@protected List<String>? dco_decode_opt_list_String(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_list_String(raw); }
-
-@protected U8Array12? dco_decode_opt_u_8_array_12(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_u_8_array_12(raw); }
-
-@protected U8Array32? dco_decode_opt_u_8_array_32(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw == null ? null : dco_decode_u_8_array_32(raw); }
-
-@protected ReactionSummary dco_decode_reaction_summary(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-                return ReactionSummary(byEmoji: dco_decode_list_emoji_reaction(arr[0]),
-userReactions: dco_decode_list_user_reaction(arr[1]),); }
-
-@protected (String,String) dco_decode_record_string_string(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-            if (arr.length != 2) {
-                throw Exception('Expected 2 elements, got ${arr.length}');
-            }
-            return (dco_decode_String(arr[0]),dco_decode_String(arr[1]),); }
-
-@protected Relay dco_decode_relay(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-                return Relay(url: dco_decode_String(arr[0]),
-createdAt: dco_decode_Chrono_Utc(arr[1]),
-updatedAt: dco_decode_Chrono_Utc(arr[2]),); }
-
-@protected SerializableToken dco_decode_serializable_token(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-                return SerializableToken(tokenType: dco_decode_String(arr[0]),
-content: dco_decode_opt_String(arr[1]),); }
-
-@protected int dco_decode_u_16(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as int; }
-
-@protected int dco_decode_u_32(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as int; }
-
-@protected BigInt dco_decode_u_64(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dcoDecodeU64(raw); }
-
-@protected int dco_decode_u_8(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return raw as int; }
-
-@protected U8Array12 dco_decode_u_8_array_12(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return U8Array12(dco_decode_list_prim_u_8_strict(raw)); }
-
-@protected U8Array32 dco_decode_u_8_array_32(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return U8Array32(dco_decode_list_prim_u_8_strict(raw)); }
-
-@protected void dco_decode_unit(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return; }
-
-@protected UploadGroupImageResult dco_decode_upload_group_image_result(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-                return UploadGroupImageResult(encryptedHash: dco_decode_u_8_array_32(arr[0]),
-imageKey: dco_decode_u_8_array_32(arr[1]),
-imageNonce: dco_decode_u_8_array_12(arr[2]),); }
-
-@protected User dco_decode_user(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
-                return User(pubkey: dco_decode_String(arr[0]),
-metadata: dco_decode_flutter_metadata(arr[1]),
-createdAt: dco_decode_Chrono_Utc(arr[2]),
-updatedAt: dco_decode_Chrono_Utc(arr[3]),); }
-
-@protected UserReaction dco_decode_user_reaction(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
-                return UserReaction(user: dco_decode_String(arr[0]),
-emoji: dco_decode_String(arr[1]),
-createdAt: dco_decode_Chrono_Utc(arr[2]),); }
-
-@protected BigInt dco_decode_usize(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return dcoDecodeU64(raw); }
-
-@protected Welcome dco_decode_welcome(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 11) throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
-                return Welcome(id: dco_decode_String(arr[0]),
-mlsGroupId: dco_decode_String(arr[1]),
-nostrGroupId: dco_decode_String(arr[2]),
-groupName: dco_decode_String(arr[3]),
-groupDescription: dco_decode_String(arr[4]),
-groupAdminPubkeys: dco_decode_list_String(arr[5]),
-groupRelays: dco_decode_list_String(arr[6]),
-welcomer: dco_decode_String(arr[7]),
-memberCount: dco_decode_u_32(arr[8]),
-state: dco_decode_welcome_state(arr[9]),
-createdAt: dco_decode_u_64(arr[10]),); }
-
-@protected WelcomeState dco_decode_welcome_state(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-return WelcomeState.values[raw as int]; }
-
-@protected WhitenoiseConfig dco_decode_whitenoise_config(dynamic raw){ // Codec=Dco (DartCObject based), see doc to use other codecs
-final arr = raw as List<dynamic>;
-                if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
-                return WhitenoiseConfig(dataDir: dco_decode_String(arr[0]),
-logsDir: dco_decode_String(arr[1]),); }
-
-@protected AppSettings sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return AppSettingsImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected GroupId sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return GroupIdImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected RelayType sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return RelayTypeImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected RelayUrl sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return RelayUrlImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected Tag sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return TagImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected ThemeMode sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return ThemeModeImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected GroupId sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return GroupIdImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected RelayUrl sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return RelayUrlImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected DateTime sse_decode_Chrono_Utc(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_i_64(deserializer);
-        return DateTime.fromMicrosecondsSinceEpoch(inner.toInt(), isUtc: true); }
-
-@protected Map<String, String> sse_decode_Map_String_String_None(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_list_record_string_string(deserializer);
-        return Map.fromEntries(inner.map((e) => MapEntry(e.$1, e.$2))); }
-
-@protected AppSettings sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return AppSettingsImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected GroupId sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return GroupIdImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected RelayType sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return RelayTypeImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected RelayUrl sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return RelayUrlImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected Tag sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return TagImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected ThemeMode sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return ThemeModeImpl.frbInternalSseDecode(sse_decode_usize(deserializer), sse_decode_i_32(deserializer)); }
-
-@protected String sse_decode_String(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_list_prim_u_8_strict(deserializer);
-        return utf8.decoder.convert(inner); }
-
-@protected Account sse_decode_account(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_pubkey = sse_decode_String(deserializer);
-var var_lastSyncedAt = sse_decode_opt_box_autoadd_Chrono_Utc(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_updatedAt = sse_decode_Chrono_Utc(deserializer);
-return Account(pubkey: var_pubkey, lastSyncedAt: var_lastSyncedAt, createdAt: var_createdAt, updatedAt: var_updatedAt); }
-
-@protected ApiError sse_decode_api_error(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            var tag_ = sse_decode_i_32(deserializer);
-            switch (tag_) { case 0: var var_message = sse_decode_String(deserializer);
-return ApiError_Whitenoise(message: var_message);case 1: var var_message = sse_decode_String(deserializer);
-return ApiError_InvalidKey(message: var_message);case 2: var var_message = sse_decode_String(deserializer);
-return ApiError_NostrUrl(message: var_message);case 3: var var_message = sse_decode_String(deserializer);
-return ApiError_NostrTag(message: var_message);case 4: var var_message = sse_decode_String(deserializer);
-return ApiError_NostrEvent(message: var_message);case 5: var var_message = sse_decode_String(deserializer);
-return ApiError_NostrParse(message: var_message);case 6: var var_message = sse_decode_String(deserializer);
-return ApiError_NostrHex(message: var_message);case 7: var var_message = sse_decode_String(deserializer);
-return ApiError_Other(message: var_message); default: throw UnimplementedError(''); }
-             }
-
-@protected bool sse_decode_bool(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getUint8() != 0; }
-
-@protected DateTime sse_decode_box_autoadd_Chrono_Utc(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_Chrono_Utc(deserializer)); }
-
-@protected ApiError sse_decode_box_autoadd_api_error(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_api_error(deserializer)); }
-
-@protected FileMetadata sse_decode_box_autoadd_file_metadata(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_file_metadata(deserializer)); }
-
-@protected FlutterEvent sse_decode_box_autoadd_flutter_event(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_flutter_event(deserializer)); }
-
-@protected FlutterGroupDataUpdate sse_decode_box_autoadd_flutter_group_data_update(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_flutter_group_data_update(deserializer)); }
-
-@protected FlutterMetadata sse_decode_box_autoadd_flutter_metadata(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_flutter_metadata(deserializer)); }
-
-@protected Group sse_decode_box_autoadd_group(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_group(deserializer)); }
-
-@protected WhitenoiseConfig sse_decode_box_autoadd_whitenoise_config(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return (sse_decode_whitenoise_config(deserializer)); }
-
-@protected ChatMessage sse_decode_chat_message(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_id = sse_decode_String(deserializer);
-var var_pubkey = sse_decode_String(deserializer);
-var var_content = sse_decode_String(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_tags = sse_decode_list_String(deserializer);
-var var_isReply = sse_decode_bool(deserializer);
-var var_replyToId = sse_decode_opt_String(deserializer);
-var var_isDeleted = sse_decode_bool(deserializer);
-var var_contentTokens = sse_decode_list_serializable_token(deserializer);
-var var_reactions = sse_decode_reaction_summary(deserializer);
-var var_mediaAttachments = sse_decode_list_media_file(deserializer);
-var var_kind = sse_decode_u_16(deserializer);
-return ChatMessage(id: var_id, pubkey: var_pubkey, content: var_content, createdAt: var_createdAt, tags: var_tags, isReply: var_isReply, replyToId: var_replyToId, isDeleted: var_isDeleted, contentTokens: var_contentTokens, reactions: var_reactions, mediaAttachments: var_mediaAttachments, kind: var_kind); }
-
-@protected EmojiReaction sse_decode_emoji_reaction(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_emoji = sse_decode_String(deserializer);
-var var_count = sse_decode_u_64(deserializer);
-var var_users = sse_decode_list_String(deserializer);
-return EmojiReaction(emoji: var_emoji, count: var_count, users: var_users); }
-
-@protected FileMetadata sse_decode_file_metadata(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_originalFilename = sse_decode_opt_String(deserializer);
-var var_dimensions = sse_decode_opt_String(deserializer);
-var var_blurhash = sse_decode_opt_String(deserializer);
-return FileMetadata(originalFilename: var_originalFilename, dimensions: var_dimensions, blurhash: var_blurhash); }
-
-@protected FlutterEvent sse_decode_flutter_event(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_id = sse_decode_String(deserializer);
-var var_pubkey = sse_decode_String(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_kind = sse_decode_u_16(deserializer);
-var var_tags = sse_decode_list_String(deserializer);
-var var_content = sse_decode_String(deserializer);
-return FlutterEvent(id: var_id, pubkey: var_pubkey, createdAt: var_createdAt, kind: var_kind, tags: var_tags, content: var_content); }
-
-@protected FlutterGroupDataUpdate sse_decode_flutter_group_data_update(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_name = sse_decode_opt_String(deserializer);
-var var_description = sse_decode_opt_String(deserializer);
-var var_relays = sse_decode_opt_list_String(deserializer);
-var var_admins = sse_decode_opt_list_String(deserializer);
-var var_imageKey = sse_decode_opt_u_8_array_32(deserializer);
-var var_imageHash = sse_decode_opt_u_8_array_32(deserializer);
-var var_imageNonce = sse_decode_opt_u_8_array_12(deserializer);
-return FlutterGroupDataUpdate(name: var_name, description: var_description, relays: var_relays, admins: var_admins, imageKey: var_imageKey, imageHash: var_imageHash, imageNonce: var_imageNonce); }
-
-@protected FlutterMetadata sse_decode_flutter_metadata(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_name = sse_decode_opt_String(deserializer);
-var var_displayName = sse_decode_opt_String(deserializer);
-var var_about = sse_decode_opt_String(deserializer);
-var var_picture = sse_decode_opt_String(deserializer);
-var var_banner = sse_decode_opt_String(deserializer);
-var var_website = sse_decode_opt_String(deserializer);
-var var_nip05 = sse_decode_opt_String(deserializer);
-var var_lud06 = sse_decode_opt_String(deserializer);
-var var_lud16 = sse_decode_opt_String(deserializer);
-var var_custom = sse_decode_Map_String_String_None(deserializer);
-return FlutterMetadata(name: var_name, displayName: var_displayName, about: var_about, picture: var_picture, banner: var_banner, website: var_website, nip05: var_nip05, lud06: var_lud06, lud16: var_lud16, custom: var_custom); }
-
-@protected Group sse_decode_group(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_mlsGroupId = sse_decode_String(deserializer);
-var var_nostrGroupId = sse_decode_String(deserializer);
-var var_name = sse_decode_String(deserializer);
-var var_description = sse_decode_String(deserializer);
-var var_imageHash = sse_decode_opt_u_8_array_32(deserializer);
-var var_imageKey = sse_decode_opt_u_8_array_32(deserializer);
-var var_adminPubkeys = sse_decode_list_String(deserializer);
-var var_lastMessageId = sse_decode_opt_String(deserializer);
-var var_lastMessageAt = sse_decode_opt_box_autoadd_Chrono_Utc(deserializer);
-var var_epoch = sse_decode_u_64(deserializer);
-var var_state = sse_decode_group_state(deserializer);
-return Group(mlsGroupId: var_mlsGroupId, nostrGroupId: var_nostrGroupId, name: var_name, description: var_description, imageHash: var_imageHash, imageKey: var_imageKey, adminPubkeys: var_adminPubkeys, lastMessageId: var_lastMessageId, lastMessageAt: var_lastMessageAt, epoch: var_epoch, state: var_state); }
-
-@protected GroupInformation sse_decode_group_information(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_mlsGroupId = sse_decode_String(deserializer);
-var var_groupType = sse_decode_group_type(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_updatedAt = sse_decode_Chrono_Utc(deserializer);
-return GroupInformation(mlsGroupId: var_mlsGroupId, groupType: var_groupType, createdAt: var_createdAt, updatedAt: var_updatedAt); }
-
-@protected GroupState sse_decode_group_state(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_i_32(deserializer);
-        return GroupState.values[inner]; }
-
-@protected GroupType sse_decode_group_type(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_i_32(deserializer);
-        return GroupType.values[inner]; }
-
-@protected int sse_decode_i_32(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getInt32(); }
-
-@protected PlatformInt64 sse_decode_i_64(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getPlatformInt64(); }
-
-@protected List<Tag> sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <Tag>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(deserializer)); }
-        return ans_;
-         }
-
-@protected List<String> sse_decode_list_String(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <String>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_String(deserializer)); }
-        return ans_;
-         }
-
-@protected List<Account> sse_decode_list_account(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <Account>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_account(deserializer)); }
-        return ans_;
-         }
-
-@protected List<ChatMessage> sse_decode_list_chat_message(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <ChatMessage>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_chat_message(deserializer)); }
-        return ans_;
-         }
-
-@protected List<EmojiReaction> sse_decode_list_emoji_reaction(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <EmojiReaction>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_emoji_reaction(deserializer)); }
-        return ans_;
-         }
-
-@protected List<FlutterEvent> sse_decode_list_flutter_event(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <FlutterEvent>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_flutter_event(deserializer)); }
-        return ans_;
-         }
-
-@protected List<Group> sse_decode_list_group(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <Group>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_group(deserializer)); }
-        return ans_;
-         }
-
-@protected List<GroupInformation> sse_decode_list_group_information(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <GroupInformation>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_group_information(deserializer)); }
-        return ans_;
-         }
-
-@protected List<MediaFile> sse_decode_list_media_file(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <MediaFile>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_media_file(deserializer)); }
-        return ans_;
-         }
-
-@protected Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var len_ = sse_decode_i_32(deserializer);
-                return deserializer.buffer.getUint8List(len_); }
-
-@protected List<(String,String)> sse_decode_list_record_string_string(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <(String,String)>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_record_string_string(deserializer)); }
-        return ans_;
-         }
-
-@protected List<Relay> sse_decode_list_relay(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <Relay>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_relay(deserializer)); }
-        return ans_;
-         }
-
-@protected List<SerializableToken> sse_decode_list_serializable_token(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <SerializableToken>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_serializable_token(deserializer)); }
-        return ans_;
-         }
-
-@protected List<User> sse_decode_list_user(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <User>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_user(deserializer)); }
-        return ans_;
-         }
-
-@protected List<UserReaction> sse_decode_list_user_reaction(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <UserReaction>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_user_reaction(deserializer)); }
-        return ans_;
-         }
-
-@protected List<Welcome> sse_decode_list_welcome(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-        var len_ = sse_decode_i_32(deserializer);
-        var ans_ = <Welcome>[];
-        for (var idx_ = 0; idx_ < len_; ++idx_) { ans_.add(sse_decode_welcome(deserializer)); }
-        return ans_;
-         }
-
-@protected MediaFile sse_decode_media_file(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_id = sse_decode_String(deserializer);
-var var_mlsGroupId = sse_decode_String(deserializer);
-var var_accountPubkey = sse_decode_String(deserializer);
-var var_filePath = sse_decode_String(deserializer);
-var var_originalFileHash = sse_decode_opt_String(deserializer);
-var var_encryptedFileHash = sse_decode_String(deserializer);
-var var_mimeType = sse_decode_String(deserializer);
-var var_mediaType = sse_decode_String(deserializer);
-var var_blossomUrl = sse_decode_String(deserializer);
-var var_nostrKey = sse_decode_String(deserializer);
-var var_fileMetadata = sse_decode_opt_box_autoadd_file_metadata(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-return MediaFile(id: var_id, mlsGroupId: var_mlsGroupId, accountPubkey: var_accountPubkey, filePath: var_filePath, originalFileHash: var_originalFileHash, encryptedFileHash: var_encryptedFileHash, mimeType: var_mimeType, mediaType: var_mediaType, blossomUrl: var_blossomUrl, nostrKey: var_nostrKey, fileMetadata: var_fileMetadata, createdAt: var_createdAt); }
-
-@protected MessageWithTokens sse_decode_message_with_tokens(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_id = sse_decode_String(deserializer);
-var var_pubkey = sse_decode_String(deserializer);
-var var_kind = sse_decode_u_16(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_content = sse_decode_opt_String(deserializer);
-var var_tokens = sse_decode_list_serializable_token(deserializer);
-return MessageWithTokens(id: var_id, pubkey: var_pubkey, kind: var_kind, createdAt: var_createdAt, content: var_content, tokens: var_tokens); }
-
-@protected String? sse_decode_opt_String(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_String(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected DateTime? sse_decode_opt_box_autoadd_Chrono_Utc(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_box_autoadd_Chrono_Utc(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected FileMetadata? sse_decode_opt_box_autoadd_file_metadata(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_box_autoadd_file_metadata(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected FlutterEvent? sse_decode_opt_box_autoadd_flutter_event(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_box_autoadd_flutter_event(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected List<Tag>? sse_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected List<String>? sse_decode_opt_list_String(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_list_String(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected U8Array12? sse_decode_opt_u_8_array_12(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_u_8_array_12(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected U8Array32? sse_decode_opt_u_8_array_32(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-            if (sse_decode_bool(deserializer)) {
-                return (sse_decode_u_8_array_32(deserializer));
-            } else {
-                return null;
-            }
-             }
-
-@protected ReactionSummary sse_decode_reaction_summary(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_byEmoji = sse_decode_list_emoji_reaction(deserializer);
-var var_userReactions = sse_decode_list_user_reaction(deserializer);
-return ReactionSummary(byEmoji: var_byEmoji, userReactions: var_userReactions); }
-
-@protected (String,String) sse_decode_record_string_string(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_field0 = sse_decode_String(deserializer);
-var var_field1 = sse_decode_String(deserializer);
-return (var_field0, var_field1); }
-
-@protected Relay sse_decode_relay(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_url = sse_decode_String(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_updatedAt = sse_decode_Chrono_Utc(deserializer);
-return Relay(url: var_url, createdAt: var_createdAt, updatedAt: var_updatedAt); }
-
-@protected SerializableToken sse_decode_serializable_token(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_tokenType = sse_decode_String(deserializer);
-var var_content = sse_decode_opt_String(deserializer);
-return SerializableToken(tokenType: var_tokenType, content: var_content); }
-
-@protected int sse_decode_u_16(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getUint16(); }
-
-@protected int sse_decode_u_32(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getUint32(); }
-
-@protected BigInt sse_decode_u_64(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getBigUint64(); }
-
-@protected int sse_decode_u_8(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getUint8(); }
-
-@protected U8Array12 sse_decode_u_8_array_12(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_list_prim_u_8_strict(deserializer);
-        return U8Array12(inner); }
-
-@protected U8Array32 sse_decode_u_8_array_32(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_list_prim_u_8_strict(deserializer);
-        return U8Array32(inner); }
-
-@protected void sse_decode_unit(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
- }
-
-@protected UploadGroupImageResult sse_decode_upload_group_image_result(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_encryptedHash = sse_decode_u_8_array_32(deserializer);
-var var_imageKey = sse_decode_u_8_array_32(deserializer);
-var var_imageNonce = sse_decode_u_8_array_12(deserializer);
-return UploadGroupImageResult(encryptedHash: var_encryptedHash, imageKey: var_imageKey, imageNonce: var_imageNonce); }
-
-@protected User sse_decode_user(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_pubkey = sse_decode_String(deserializer);
-var var_metadata = sse_decode_flutter_metadata(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-var var_updatedAt = sse_decode_Chrono_Utc(deserializer);
-return User(pubkey: var_pubkey, metadata: var_metadata, createdAt: var_createdAt, updatedAt: var_updatedAt); }
-
-@protected UserReaction sse_decode_user_reaction(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_user = sse_decode_String(deserializer);
-var var_emoji = sse_decode_String(deserializer);
-var var_createdAt = sse_decode_Chrono_Utc(deserializer);
-return UserReaction(user: var_user, emoji: var_emoji, createdAt: var_createdAt); }
-
-@protected BigInt sse_decode_usize(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-return deserializer.buffer.getBigUint64(); }
-
-@protected Welcome sse_decode_welcome(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_id = sse_decode_String(deserializer);
-var var_mlsGroupId = sse_decode_String(deserializer);
-var var_nostrGroupId = sse_decode_String(deserializer);
-var var_groupName = sse_decode_String(deserializer);
-var var_groupDescription = sse_decode_String(deserializer);
-var var_groupAdminPubkeys = sse_decode_list_String(deserializer);
-var var_groupRelays = sse_decode_list_String(deserializer);
-var var_welcomer = sse_decode_String(deserializer);
-var var_memberCount = sse_decode_u_32(deserializer);
-var var_state = sse_decode_welcome_state(deserializer);
-var var_createdAt = sse_decode_u_64(deserializer);
-return Welcome(id: var_id, mlsGroupId: var_mlsGroupId, nostrGroupId: var_nostrGroupId, groupName: var_groupName, groupDescription: var_groupDescription, groupAdminPubkeys: var_groupAdminPubkeys, groupRelays: var_groupRelays, welcomer: var_welcomer, memberCount: var_memberCount, state: var_state, createdAt: var_createdAt); }
-
-@protected WelcomeState sse_decode_welcome_state(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var inner = sse_decode_i_32(deserializer);
-        return WelcomeState.values[inner]; }
-
-@protected WhitenoiseConfig sse_decode_whitenoise_config(SseDeserializer deserializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-var var_dataDir = sse_decode_String(deserializer);
-var var_logsDir = sse_decode_String(deserializer);
-return WhitenoiseConfig(dataDir: var_dataDir, logsDir: var_logsDir); }
-
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(AppSettings self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as AppSettingsImpl).frbInternalSseEncode(move: true), serializer); }
-
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(GroupId self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(move: true), serializer); }
-
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(RelayType self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as RelayTypeImpl).frbInternalSseEncode(move: true), serializer); }
-
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(RelayUrl self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(move: true), serializer); }
-
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(Tag self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as TagImpl).frbInternalSseEncode(move: true), serializer); }
-
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(ThemeMode self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as ThemeModeImpl).frbInternalSseEncode(move: true), serializer); }
-
-@protected void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(GroupId self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(move: false), serializer); }
-
-@protected void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(RelayUrl self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(move: false), serializer); }
-
-@protected void sse_encode_Chrono_Utc(DateTime self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_64(PlatformInt64Util.from(self.microsecondsSinceEpoch), serializer); }
-
-@protected void sse_encode_Map_String_String_None(Map<String, String> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_list_record_string_string(self.entries.map((e) => (e.key, e.value)).toList(), serializer); }
-
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(AppSettings self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as AppSettingsImpl).frbInternalSseEncode(move: null), serializer); }
-
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(GroupId self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(move: null), serializer); }
-
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(RelayType self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as RelayTypeImpl).frbInternalSseEncode(move: null), serializer); }
-
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(RelayUrl self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(move: null), serializer); }
-
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(Tag self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as TagImpl).frbInternalSseEncode(move: null), serializer); }
-
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(ThemeMode self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_usize((self as ThemeModeImpl).frbInternalSseEncode(move: null), serializer); }
-
-@protected void sse_encode_String(String self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer); }
-
-@protected void sse_encode_account(Account self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.pubkey, serializer);
-sse_encode_opt_box_autoadd_Chrono_Utc(self.lastSyncedAt, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_Chrono_Utc(self.updatedAt, serializer);
- }
-
-@protected void sse_encode_api_error(ApiError self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-switch (self) { case ApiError_Whitenoise(message: final message): sse_encode_i_32(0, serializer); sse_encode_String(message, serializer);
-case ApiError_InvalidKey(message: final message): sse_encode_i_32(1, serializer); sse_encode_String(message, serializer);
-case ApiError_NostrUrl(message: final message): sse_encode_i_32(2, serializer); sse_encode_String(message, serializer);
-case ApiError_NostrTag(message: final message): sse_encode_i_32(3, serializer); sse_encode_String(message, serializer);
-case ApiError_NostrEvent(message: final message): sse_encode_i_32(4, serializer); sse_encode_String(message, serializer);
-case ApiError_NostrParse(message: final message): sse_encode_i_32(5, serializer); sse_encode_String(message, serializer);
-case ApiError_NostrHex(message: final message): sse_encode_i_32(6, serializer); sse_encode_String(message, serializer);
-case ApiError_Other(message: final message): sse_encode_i_32(7, serializer); sse_encode_String(message, serializer);
-  } }
-
-@protected void sse_encode_bool(bool self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putUint8(self ? 1 : 0); }
-
-@protected void sse_encode_box_autoadd_Chrono_Utc(DateTime self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_Chrono_Utc(self, serializer); }
-
-@protected void sse_encode_box_autoadd_api_error(ApiError self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_api_error(self, serializer); }
-
-@protected void sse_encode_box_autoadd_file_metadata(FileMetadata self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_file_metadata(self, serializer); }
-
-@protected void sse_encode_box_autoadd_flutter_event(FlutterEvent self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_flutter_event(self, serializer); }
-
-@protected void sse_encode_box_autoadd_flutter_group_data_update(FlutterGroupDataUpdate self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_flutter_group_data_update(self, serializer); }
-
-@protected void sse_encode_box_autoadd_flutter_metadata(FlutterMetadata self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_flutter_metadata(self, serializer); }
-
-@protected void sse_encode_box_autoadd_group(Group self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_group(self, serializer); }
-
-@protected void sse_encode_box_autoadd_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_whitenoise_config(self, serializer); }
-
-@protected void sse_encode_chat_message(ChatMessage self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.id, serializer);
-sse_encode_String(self.pubkey, serializer);
-sse_encode_String(self.content, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_list_String(self.tags, serializer);
-sse_encode_bool(self.isReply, serializer);
-sse_encode_opt_String(self.replyToId, serializer);
-sse_encode_bool(self.isDeleted, serializer);
-sse_encode_list_serializable_token(self.contentTokens, serializer);
-sse_encode_reaction_summary(self.reactions, serializer);
-sse_encode_list_media_file(self.mediaAttachments, serializer);
-sse_encode_u_16(self.kind, serializer);
- }
-
-@protected void sse_encode_emoji_reaction(EmojiReaction self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.emoji, serializer);
-sse_encode_u_64(self.count, serializer);
-sse_encode_list_String(self.users, serializer);
- }
-
-@protected void sse_encode_file_metadata(FileMetadata self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_opt_String(self.originalFilename, serializer);
-sse_encode_opt_String(self.dimensions, serializer);
-sse_encode_opt_String(self.blurhash, serializer);
- }
-
-@protected void sse_encode_flutter_event(FlutterEvent self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.id, serializer);
-sse_encode_String(self.pubkey, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_u_16(self.kind, serializer);
-sse_encode_list_String(self.tags, serializer);
-sse_encode_String(self.content, serializer);
- }
-
-@protected void sse_encode_flutter_group_data_update(FlutterGroupDataUpdate self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_opt_String(self.name, serializer);
-sse_encode_opt_String(self.description, serializer);
-sse_encode_opt_list_String(self.relays, serializer);
-sse_encode_opt_list_String(self.admins, serializer);
-sse_encode_opt_u_8_array_32(self.imageKey, serializer);
-sse_encode_opt_u_8_array_32(self.imageHash, serializer);
-sse_encode_opt_u_8_array_12(self.imageNonce, serializer);
- }
-
-@protected void sse_encode_flutter_metadata(FlutterMetadata self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_opt_String(self.name, serializer);
-sse_encode_opt_String(self.displayName, serializer);
-sse_encode_opt_String(self.about, serializer);
-sse_encode_opt_String(self.picture, serializer);
-sse_encode_opt_String(self.banner, serializer);
-sse_encode_opt_String(self.website, serializer);
-sse_encode_opt_String(self.nip05, serializer);
-sse_encode_opt_String(self.lud06, serializer);
-sse_encode_opt_String(self.lud16, serializer);
-sse_encode_Map_String_String_None(self.custom, serializer);
- }
-
-@protected void sse_encode_group(Group self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.mlsGroupId, serializer);
-sse_encode_String(self.nostrGroupId, serializer);
-sse_encode_String(self.name, serializer);
-sse_encode_String(self.description, serializer);
-sse_encode_opt_u_8_array_32(self.imageHash, serializer);
-sse_encode_opt_u_8_array_32(self.imageKey, serializer);
-sse_encode_list_String(self.adminPubkeys, serializer);
-sse_encode_opt_String(self.lastMessageId, serializer);
-sse_encode_opt_box_autoadd_Chrono_Utc(self.lastMessageAt, serializer);
-sse_encode_u_64(self.epoch, serializer);
-sse_encode_group_state(self.state, serializer);
- }
-
-@protected void sse_encode_group_information(GroupInformation self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.mlsGroupId, serializer);
-sse_encode_group_type(self.groupType, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_Chrono_Utc(self.updatedAt, serializer);
- }
-
-@protected void sse_encode_group_state(GroupState self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.index, serializer); }
-
-@protected void sse_encode_group_type(GroupType self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.index, serializer); }
-
-@protected void sse_encode_i_32(int self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putInt32(self); }
-
-@protected void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putPlatformInt64(self); }
-
-@protected void sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(List<Tag> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(item, serializer); } }
-
-@protected void sse_encode_list_String(List<String> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_String(item, serializer); } }
-
-@protected void sse_encode_list_account(List<Account> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_account(item, serializer); } }
-
-@protected void sse_encode_list_chat_message(List<ChatMessage> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_chat_message(item, serializer); } }
-
-@protected void sse_encode_list_emoji_reaction(List<EmojiReaction> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_emoji_reaction(item, serializer); } }
-
-@protected void sse_encode_list_flutter_event(List<FlutterEvent> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_flutter_event(item, serializer); } }
-
-@protected void sse_encode_list_group(List<Group> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_group(item, serializer); } }
-
-@protected void sse_encode_list_group_information(List<GroupInformation> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_group_information(item, serializer); } }
-
-@protected void sse_encode_list_media_file(List<MediaFile> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_media_file(item, serializer); } }
-
-@protected void sse_encode_list_prim_u_8_strict(Uint8List self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-                    serializer.buffer.putUint8List(self); }
-
-@protected void sse_encode_list_record_string_string(List<(String,String)> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_record_string_string(item, serializer); } }
-
-@protected void sse_encode_list_relay(List<Relay> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_relay(item, serializer); } }
-
-@protected void sse_encode_list_serializable_token(List<SerializableToken> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_serializable_token(item, serializer); } }
-
-@protected void sse_encode_list_user(List<User> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_user(item, serializer); } }
-
-@protected void sse_encode_list_user_reaction(List<UserReaction> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_user_reaction(item, serializer); } }
-
-@protected void sse_encode_list_welcome(List<Welcome> self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.length, serializer);
-        for (final item in self) { sse_encode_welcome(item, serializer); } }
-
-@protected void sse_encode_media_file(MediaFile self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.id, serializer);
-sse_encode_String(self.mlsGroupId, serializer);
-sse_encode_String(self.accountPubkey, serializer);
-sse_encode_String(self.filePath, serializer);
-sse_encode_opt_String(self.originalFileHash, serializer);
-sse_encode_String(self.encryptedFileHash, serializer);
-sse_encode_String(self.mimeType, serializer);
-sse_encode_String(self.mediaType, serializer);
-sse_encode_String(self.blossomUrl, serializer);
-sse_encode_String(self.nostrKey, serializer);
-sse_encode_opt_box_autoadd_file_metadata(self.fileMetadata, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
- }
-
-@protected void sse_encode_message_with_tokens(MessageWithTokens self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.id, serializer);
-sse_encode_String(self.pubkey, serializer);
-sse_encode_u_16(self.kind, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_opt_String(self.content, serializer);
-sse_encode_list_serializable_token(self.tokens, serializer);
- }
-
-@protected void sse_encode_opt_String(String? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_String(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_box_autoadd_Chrono_Utc(DateTime? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_box_autoadd_Chrono_Utc(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_box_autoadd_file_metadata(FileMetadata? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_box_autoadd_file_metadata(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_box_autoadd_flutter_event(FlutterEvent? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_box_autoadd_flutter_event(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(List<Tag>? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_list_String(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_u_8_array_12(U8Array12? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_u_8_array_12(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_opt_u_8_array_32(U8Array32? self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-
-                sse_encode_bool(self != null, serializer);
-                if (self != null) {
-                    sse_encode_u_8_array_32(self, serializer);
-                }
-                 }
-
-@protected void sse_encode_reaction_summary(ReactionSummary self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_list_emoji_reaction(self.byEmoji, serializer);
-sse_encode_list_user_reaction(self.userReactions, serializer);
- }
-
-@protected void sse_encode_record_string_string((String,String) self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.$1, serializer);
-sse_encode_String(self.$2, serializer);
- }
-
-@protected void sse_encode_relay(Relay self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.url, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_Chrono_Utc(self.updatedAt, serializer);
- }
-
-@protected void sse_encode_serializable_token(SerializableToken self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.tokenType, serializer);
-sse_encode_opt_String(self.content, serializer);
- }
-
-@protected void sse_encode_u_16(int self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putUint16(self); }
-
-@protected void sse_encode_u_32(int self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putUint32(self); }
-
-@protected void sse_encode_u_64(BigInt self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putBigUint64(self); }
-
-@protected void sse_encode_u_8(int self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putUint8(self); }
-
-@protected void sse_encode_u_8_array_12(U8Array12 self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_list_prim_u_8_strict(self.inner, serializer); }
-
-@protected void sse_encode_u_8_array_32(U8Array32 self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_list_prim_u_8_strict(self.inner, serializer); }
-
-@protected void sse_encode_unit(void self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
- }
-
-@protected void sse_encode_upload_group_image_result(UploadGroupImageResult self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_u_8_array_32(self.encryptedHash, serializer);
-sse_encode_u_8_array_32(self.imageKey, serializer);
-sse_encode_u_8_array_12(self.imageNonce, serializer);
- }
-
-@protected void sse_encode_user(User self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.pubkey, serializer);
-sse_encode_flutter_metadata(self.metadata, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
-sse_encode_Chrono_Utc(self.updatedAt, serializer);
- }
-
-@protected void sse_encode_user_reaction(UserReaction self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.user, serializer);
-sse_encode_String(self.emoji, serializer);
-sse_encode_Chrono_Utc(self.createdAt, serializer);
- }
-
-@protected void sse_encode_usize(BigInt self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-serializer.buffer.putBigUint64(self); }
-
-@protected void sse_encode_welcome(Welcome self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.id, serializer);
-sse_encode_String(self.mlsGroupId, serializer);
-sse_encode_String(self.nostrGroupId, serializer);
-sse_encode_String(self.groupName, serializer);
-sse_encode_String(self.groupDescription, serializer);
-sse_encode_list_String(self.groupAdminPubkeys, serializer);
-sse_encode_list_String(self.groupRelays, serializer);
-sse_encode_String(self.welcomer, serializer);
-sse_encode_u_32(self.memberCount, serializer);
-sse_encode_welcome_state(self.state, serializer);
-sse_encode_u_64(self.createdAt, serializer);
- }
-
-@protected void sse_encode_welcome_state(WelcomeState self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_i_32(self.index, serializer); }
-
-@protected void sse_encode_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer){ // Codec=Sse (Serialization based), see doc to use other codecs
-sse_encode_String(self.dataDir, serializer);
-sse_encode_String(self.logsDir, serializer);
- }
-                }
-                
-
-            @sealed class AppSettingsImpl extends RustOpaque implements AppSettings {
-                // Not to be used by end users
-                AppSettingsImpl.frbInternalDcoDecode(List<dynamic> wire):
-                    super.frbInternalDcoDecode(wire, _kStaticData);
-
-                // Not to be used by end users
-                AppSettingsImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative):
-                    super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-                static final _kStaticData = RustArcStaticData(
-                    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_AppSettings,
-                    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_AppSettings,
-                    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_AppSettingsPtr,
-                );
-
-                
-            }
-            @sealed class GroupIdImpl extends RustOpaque implements GroupId {
-                // Not to be used by end users
-                GroupIdImpl.frbInternalDcoDecode(List<dynamic> wire):
-                    super.frbInternalDcoDecode(wire, _kStaticData);
-
-                // Not to be used by end users
-                GroupIdImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative):
-                    super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-                static final _kStaticData = RustArcStaticData(
-                    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_GroupId,
-                    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_GroupId,
-                    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_GroupIdPtr,
-                );
-
-                
-            }
-            @sealed class RelayTypeImpl extends RustOpaque implements RelayType {
-                // Not to be used by end users
-                RelayTypeImpl.frbInternalDcoDecode(List<dynamic> wire):
-                    super.frbInternalDcoDecode(wire, _kStaticData);
-
-                // Not to be used by end users
-                RelayTypeImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative):
-                    super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-                static final _kStaticData = RustArcStaticData(
-                    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_RelayType,
-                    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_RelayType,
-                    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_RelayTypePtr,
-                );
-
-                
-            }
-            @sealed class RelayUrlImpl extends RustOpaque implements RelayUrl {
-                // Not to be used by end users
-                RelayUrlImpl.frbInternalDcoDecode(List<dynamic> wire):
-                    super.frbInternalDcoDecode(wire, _kStaticData);
-
-                // Not to be used by end users
-                RelayUrlImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative):
-                    super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-                static final _kStaticData = RustArcStaticData(
-                    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_RelayUrl,
-                    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_RelayUrl,
-                    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_RelayUrlPtr,
-                );
-
-                
-            }
-            @sealed class TagImpl extends RustOpaque implements Tag {
-                // Not to be used by end users
-                TagImpl.frbInternalDcoDecode(List<dynamic> wire):
-                    super.frbInternalDcoDecode(wire, _kStaticData);
-
-                // Not to be used by end users
-                TagImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative):
-                    super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-                static final _kStaticData = RustArcStaticData(
-                    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_Tag,
-                    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_Tag,
-                    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_TagPtr,
-                );
-
-                
-            }
-            @sealed class ThemeModeImpl extends RustOpaque implements ThemeMode {
-                // Not to be used by end users
-                ThemeModeImpl.frbInternalDcoDecode(List<dynamic> wire):
-                    super.frbInternalDcoDecode(wire, _kStaticData);
-
-                // Not to be used by end users
-                ThemeModeImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative):
-                    super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
-
-                static final _kStaticData = RustArcStaticData(
-                    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_ThemeMode,
-                    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_ThemeMode,
-                    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_ThemeModePtr,
-                );
-
-                
-            }
+      case 1:
+        return ApiError_InvalidKey(
+          message: dco_decode_String(raw[1]),
+        );
+      case 2:
+        return ApiError_NostrUrl(
+          message: dco_decode_String(raw[1]),
+        );
+      case 3:
+        return ApiError_NostrTag(
+          message: dco_decode_String(raw[1]),
+        );
+      case 4:
+        return ApiError_NostrEvent(
+          message: dco_decode_String(raw[1]),
+        );
+      case 5:
+        return ApiError_NostrParse(
+          message: dco_decode_String(raw[1]),
+        );
+      case 6:
+        return ApiError_NostrHex(
+          message: dco_decode_String(raw[1]),
+        );
+      case 7:
+        return ApiError_Other(
+          message: dco_decode_String(raw[1]),
+        );
+      default:
+        throw Exception('unreachable');
+    }
+  }
+
+  @protected
+  bool dco_decode_bool(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as bool;
+  }
+
+  @protected
+  DateTime dco_decode_box_autoadd_Chrono_Utc(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_Chrono_Utc(raw);
+  }
+
+  @protected
+  ApiError dco_decode_box_autoadd_api_error(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_api_error(raw);
+  }
+
+  @protected
+  FileMetadata dco_decode_box_autoadd_file_metadata(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_file_metadata(raw);
+  }
+
+  @protected
+  FlutterEvent dco_decode_box_autoadd_flutter_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_flutter_event(raw);
+  }
+
+  @protected
+  FlutterGroupDataUpdate dco_decode_box_autoadd_flutter_group_data_update(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_flutter_group_data_update(raw);
+  }
+
+  @protected
+  FlutterMetadata dco_decode_box_autoadd_flutter_metadata(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_flutter_metadata(raw);
+  }
+
+  @protected
+  Group dco_decode_box_autoadd_group(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_group(raw);
+  }
+
+  @protected
+  WhitenoiseConfig dco_decode_box_autoadd_whitenoise_config(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_whitenoise_config(raw);
+  }
+
+  @protected
+  ChatMessage dco_decode_chat_message(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 12) throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
+    return ChatMessage(
+      id: dco_decode_String(arr[0]),
+      pubkey: dco_decode_String(arr[1]),
+      content: dco_decode_String(arr[2]),
+      createdAt: dco_decode_Chrono_Utc(arr[3]),
+      tags: dco_decode_list_String(arr[4]),
+      isReply: dco_decode_bool(arr[5]),
+      replyToId: dco_decode_opt_String(arr[6]),
+      isDeleted: dco_decode_bool(arr[7]),
+      contentTokens: dco_decode_list_serializable_token(arr[8]),
+      reactions: dco_decode_reaction_summary(arr[9]),
+      mediaAttachments: dco_decode_list_media_file(arr[10]),
+      kind: dco_decode_u_16(arr[11]),
+    );
+  }
+
+  @protected
+  EmojiReaction dco_decode_emoji_reaction(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return EmojiReaction(
+      emoji: dco_decode_String(arr[0]),
+      count: dco_decode_u_64(arr[1]),
+      users: dco_decode_list_String(arr[2]),
+    );
+  }
+
+  @protected
+  FileMetadata dco_decode_file_metadata(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return FileMetadata(
+      originalFilename: dco_decode_opt_String(arr[0]),
+      dimensions: dco_decode_opt_String(arr[1]),
+      blurhash: dco_decode_opt_String(arr[2]),
+    );
+  }
+
+  @protected
+  FlutterEvent dco_decode_flutter_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return FlutterEvent(
+      id: dco_decode_String(arr[0]),
+      pubkey: dco_decode_String(arr[1]),
+      createdAt: dco_decode_Chrono_Utc(arr[2]),
+      kind: dco_decode_u_16(arr[3]),
+      tags: dco_decode_list_String(arr[4]),
+      content: dco_decode_String(arr[5]),
+    );
+  }
+
+  @protected
+  FlutterGroupDataUpdate dco_decode_flutter_group_data_update(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 7) throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
+    return FlutterGroupDataUpdate(
+      name: dco_decode_opt_String(arr[0]),
+      description: dco_decode_opt_String(arr[1]),
+      relays: dco_decode_opt_list_String(arr[2]),
+      admins: dco_decode_opt_list_String(arr[3]),
+      imageKey: dco_decode_opt_u_8_array_32(arr[4]),
+      imageHash: dco_decode_opt_u_8_array_32(arr[5]),
+      imageNonce: dco_decode_opt_u_8_array_12(arr[6]),
+    );
+  }
+
+  @protected
+  FlutterMetadata dco_decode_flutter_metadata(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 10) throw Exception('unexpected arr length: expect 10 but see ${arr.length}');
+    return FlutterMetadata(
+      name: dco_decode_opt_String(arr[0]),
+      displayName: dco_decode_opt_String(arr[1]),
+      about: dco_decode_opt_String(arr[2]),
+      picture: dco_decode_opt_String(arr[3]),
+      banner: dco_decode_opt_String(arr[4]),
+      website: dco_decode_opt_String(arr[5]),
+      nip05: dco_decode_opt_String(arr[6]),
+      lud06: dco_decode_opt_String(arr[7]),
+      lud16: dco_decode_opt_String(arr[8]),
+      custom: dco_decode_Map_String_String_None(arr[9]),
+    );
+  }
+
+  @protected
+  Group dco_decode_group(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 11) throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    return Group(
+      mlsGroupId: dco_decode_String(arr[0]),
+      nostrGroupId: dco_decode_String(arr[1]),
+      name: dco_decode_String(arr[2]),
+      description: dco_decode_String(arr[3]),
+      imageHash: dco_decode_opt_u_8_array_32(arr[4]),
+      imageKey: dco_decode_opt_u_8_array_32(arr[5]),
+      adminPubkeys: dco_decode_list_String(arr[6]),
+      lastMessageId: dco_decode_opt_String(arr[7]),
+      lastMessageAt: dco_decode_opt_box_autoadd_Chrono_Utc(arr[8]),
+      epoch: dco_decode_u_64(arr[9]),
+      state: dco_decode_group_state(arr[10]),
+    );
+  }
+
+  @protected
+  GroupInformation dco_decode_group_information(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return GroupInformation(
+      mlsGroupId: dco_decode_String(arr[0]),
+      groupType: dco_decode_group_type(arr[1]),
+      createdAt: dco_decode_Chrono_Utc(arr[2]),
+      updatedAt: dco_decode_Chrono_Utc(arr[3]),
+    );
+  }
+
+  @protected
+  GroupState dco_decode_group_state(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return GroupState.values[raw as int];
+  }
+
+  @protected
+  GroupType dco_decode_group_type(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return GroupType.values[raw as int];
+  }
+
+  @protected
+  int dco_decode_i_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  PlatformInt64 dco_decode_i_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeI64(raw);
+  }
+
+  @protected
+  List<Tag>
+  dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>)
+        .map(
+          dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag,
+        )
+        .toList();
+  }
+
+  @protected
+  List<String> dco_decode_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_String).toList();
+  }
+
+  @protected
+  List<Account> dco_decode_list_account(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_account).toList();
+  }
+
+  @protected
+  List<ChatMessage> dco_decode_list_chat_message(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_chat_message).toList();
+  }
+
+  @protected
+  List<EmojiReaction> dco_decode_list_emoji_reaction(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_emoji_reaction).toList();
+  }
+
+  @protected
+  List<FlutterEvent> dco_decode_list_flutter_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_flutter_event).toList();
+  }
+
+  @protected
+  List<Group> dco_decode_list_group(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_group).toList();
+  }
+
+  @protected
+  List<GroupInformation> dco_decode_list_group_information(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_group_information).toList();
+  }
+
+  @protected
+  List<MediaFile> dco_decode_list_media_file(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_media_file).toList();
+  }
+
+  @protected
+  Uint8List dco_decode_list_prim_u_8_strict(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as Uint8List;
+  }
+
+  @protected
+  List<(String, String)> dco_decode_list_record_string_string(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_record_string_string).toList();
+  }
+
+  @protected
+  List<Relay> dco_decode_list_relay(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_relay).toList();
+  }
+
+  @protected
+  List<SerializableToken> dco_decode_list_serializable_token(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_serializable_token).toList();
+  }
+
+  @protected
+  List<User> dco_decode_list_user(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_user).toList();
+  }
+
+  @protected
+  List<UserReaction> dco_decode_list_user_reaction(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_user_reaction).toList();
+  }
+
+  @protected
+  List<Welcome> dco_decode_list_welcome(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_welcome).toList();
+  }
+
+  @protected
+  MediaFile dco_decode_media_file(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 12) throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
+    return MediaFile(
+      id: dco_decode_String(arr[0]),
+      mlsGroupId: dco_decode_String(arr[1]),
+      accountPubkey: dco_decode_String(arr[2]),
+      filePath: dco_decode_String(arr[3]),
+      originalFileHash: dco_decode_opt_String(arr[4]),
+      encryptedFileHash: dco_decode_String(arr[5]),
+      mimeType: dco_decode_String(arr[6]),
+      mediaType: dco_decode_String(arr[7]),
+      blossomUrl: dco_decode_String(arr[8]),
+      nostrKey: dco_decode_String(arr[9]),
+      fileMetadata: dco_decode_opt_box_autoadd_file_metadata(arr[10]),
+      createdAt: dco_decode_Chrono_Utc(arr[11]),
+    );
+  }
+
+  @protected
+  MessageWithTokens dco_decode_message_with_tokens(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    return MessageWithTokens(
+      id: dco_decode_String(arr[0]),
+      pubkey: dco_decode_String(arr[1]),
+      kind: dco_decode_u_16(arr[2]),
+      createdAt: dco_decode_Chrono_Utc(arr[3]),
+      content: dco_decode_opt_String(arr[4]),
+      tokens: dco_decode_list_serializable_token(arr[5]),
+    );
+  }
+
+  @protected
+  String? dco_decode_opt_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_String(raw);
+  }
+
+  @protected
+  DateTime? dco_decode_opt_box_autoadd_Chrono_Utc(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_Chrono_Utc(raw);
+  }
+
+  @protected
+  FileMetadata? dco_decode_opt_box_autoadd_file_metadata(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_file_metadata(raw);
+  }
+
+  @protected
+  FlutterEvent? dco_decode_opt_box_autoadd_flutter_event(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_box_autoadd_flutter_event(raw);
+  }
+
+  @protected
+  List<Tag>?
+  dco_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    dynamic raw,
+  ) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null
+        ? null
+        : dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+            raw,
+          );
+  }
+
+  @protected
+  List<String>? dco_decode_opt_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_list_String(raw);
+  }
+
+  @protected
+  U8Array12? dco_decode_opt_u_8_array_12(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_u_8_array_12(raw);
+  }
+
+  @protected
+  U8Array32? dco_decode_opt_u_8_array_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw == null ? null : dco_decode_u_8_array_32(raw);
+  }
+
+  @protected
+  ReactionSummary dco_decode_reaction_summary(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return ReactionSummary(
+      byEmoji: dco_decode_list_emoji_reaction(arr[0]),
+      userReactions: dco_decode_list_user_reaction(arr[1]),
+    );
+  }
+
+  @protected
+  (String, String) dco_decode_record_string_string(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) {
+      throw Exception('Expected 2 elements, got ${arr.length}');
+    }
+    return (
+      dco_decode_String(arr[0]),
+      dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  Relay dco_decode_relay(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return Relay(
+      url: dco_decode_String(arr[0]),
+      createdAt: dco_decode_Chrono_Utc(arr[1]),
+      updatedAt: dco_decode_Chrono_Utc(arr[2]),
+    );
+  }
+
+  @protected
+  SerializableToken dco_decode_serializable_token(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return SerializableToken(
+      tokenType: dco_decode_String(arr[0]),
+      content: dco_decode_opt_String(arr[1]),
+    );
+  }
+
+  @protected
+  int dco_decode_u_16(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  int dco_decode_u_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  BigInt dco_decode_u_64(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
+  }
+
+  @protected
+  int dco_decode_u_8(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return raw as int;
+  }
+
+  @protected
+  U8Array12 dco_decode_u_8_array_12(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return U8Array12(dco_decode_list_prim_u_8_strict(raw));
+  }
+
+  @protected
+  U8Array32 dco_decode_u_8_array_32(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return U8Array32(dco_decode_list_prim_u_8_strict(raw));
+  }
+
+  @protected
+  void dco_decode_unit(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return;
+  }
+
+  @protected
+  UploadGroupImageResult dco_decode_upload_group_image_result(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return UploadGroupImageResult(
+      encryptedHash: dco_decode_u_8_array_32(arr[0]),
+      imageKey: dco_decode_u_8_array_32(arr[1]),
+      imageNonce: dco_decode_u_8_array_12(arr[2]),
+    );
+  }
+
+  @protected
+  User dco_decode_user(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
+    return User(
+      pubkey: dco_decode_String(arr[0]),
+      metadata: dco_decode_flutter_metadata(arr[1]),
+      createdAt: dco_decode_Chrono_Utc(arr[2]),
+      updatedAt: dco_decode_Chrono_Utc(arr[3]),
+    );
+  }
+
+  @protected
+  UserReaction dco_decode_user_reaction(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    return UserReaction(
+      user: dco_decode_String(arr[0]),
+      emoji: dco_decode_String(arr[1]),
+      createdAt: dco_decode_Chrono_Utc(arr[2]),
+    );
+  }
+
+  @protected
+  BigInt dco_decode_usize(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dcoDecodeU64(raw);
+  }
+
+  @protected
+  Welcome dco_decode_welcome(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 11) throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    return Welcome(
+      id: dco_decode_String(arr[0]),
+      mlsGroupId: dco_decode_String(arr[1]),
+      nostrGroupId: dco_decode_String(arr[2]),
+      groupName: dco_decode_String(arr[3]),
+      groupDescription: dco_decode_String(arr[4]),
+      groupAdminPubkeys: dco_decode_list_String(arr[5]),
+      groupRelays: dco_decode_list_String(arr[6]),
+      welcomer: dco_decode_String(arr[7]),
+      memberCount: dco_decode_u_32(arr[8]),
+      state: dco_decode_welcome_state(arr[9]),
+      createdAt: dco_decode_u_64(arr[10]),
+    );
+  }
+
+  @protected
+  WelcomeState dco_decode_welcome_state(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return WelcomeState.values[raw as int];
+  }
+
+  @protected
+  WhitenoiseConfig dco_decode_whitenoise_config(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return WhitenoiseConfig(
+      dataDir: dco_decode_String(arr[0]),
+      logsDir: dco_decode_String(arr[1]),
+    );
+  }
+
+  @protected
+  AppSettings
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return AppSettingsImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  GroupId
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return GroupIdImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RelayType
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RelayTypeImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RelayUrl
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RelayUrlImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  Tag sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return TagImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  ThemeMode
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ThemeModeImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  GroupId sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return GroupIdImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RelayUrl
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RelayUrlImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  DateTime sse_decode_Chrono_Utc(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_64(deserializer);
+    return DateTime.fromMicrosecondsSinceEpoch(inner.toInt(), isUtc: true);
+  }
+
+  @protected
+  Map<String, String> sse_decode_Map_String_String_None(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_list_record_string_string(deserializer);
+    return Map.fromEntries(inner.map((e) => MapEntry(e.$1, e.$2)));
+  }
+
+  @protected
+  AppSettings sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return AppSettingsImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  GroupId sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return GroupIdImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RelayType sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RelayTypeImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  RelayUrl sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return RelayUrlImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  Tag sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return TagImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  ThemeMode sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return ThemeModeImpl.frbInternalSseDecode(
+      sse_decode_usize(deserializer),
+      sse_decode_i_32(deserializer),
+    );
+  }
+
+  @protected
+  String sse_decode_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_list_prim_u_8_strict(deserializer);
+    return utf8.decoder.convert(inner);
+  }
+
+  @protected
+  Account sse_decode_account(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_pubkey = sse_decode_String(deserializer);
+    final var_lastSyncedAt = sse_decode_opt_box_autoadd_Chrono_Utc(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_updatedAt = sse_decode_Chrono_Utc(deserializer);
+    return Account(
+      pubkey: var_pubkey,
+      lastSyncedAt: var_lastSyncedAt,
+      createdAt: var_createdAt,
+      updatedAt: var_updatedAt,
+    );
+  }
+
+  @protected
+  ApiError sse_decode_api_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_Whitenoise(message: var_message);
+      case 1:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_InvalidKey(message: var_message);
+      case 2:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_NostrUrl(message: var_message);
+      case 3:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_NostrTag(message: var_message);
+      case 4:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_NostrEvent(message: var_message);
+      case 5:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_NostrParse(message: var_message);
+      case 6:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_NostrHex(message: var_message);
+      case 7:
+        final var_message = sse_decode_String(deserializer);
+        return ApiError_Other(message: var_message);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  bool sse_decode_bool(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint8() != 0;
+  }
+
+  @protected
+  DateTime sse_decode_box_autoadd_Chrono_Utc(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_Chrono_Utc(deserializer));
+  }
+
+  @protected
+  ApiError sse_decode_box_autoadd_api_error(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_api_error(deserializer));
+  }
+
+  @protected
+  FileMetadata sse_decode_box_autoadd_file_metadata(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_file_metadata(deserializer));
+  }
+
+  @protected
+  FlutterEvent sse_decode_box_autoadd_flutter_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_flutter_event(deserializer));
+  }
+
+  @protected
+  FlutterGroupDataUpdate sse_decode_box_autoadd_flutter_group_data_update(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_flutter_group_data_update(deserializer));
+  }
+
+  @protected
+  FlutterMetadata sse_decode_box_autoadd_flutter_metadata(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_flutter_metadata(deserializer));
+  }
+
+  @protected
+  Group sse_decode_box_autoadd_group(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_group(deserializer));
+  }
+
+  @protected
+  WhitenoiseConfig sse_decode_box_autoadd_whitenoise_config(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_whitenoise_config(deserializer));
+  }
+
+  @protected
+  ChatMessage sse_decode_chat_message(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_id = sse_decode_String(deserializer);
+    final var_pubkey = sse_decode_String(deserializer);
+    final var_content = sse_decode_String(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_tags = sse_decode_list_String(deserializer);
+    final var_isReply = sse_decode_bool(deserializer);
+    final var_replyToId = sse_decode_opt_String(deserializer);
+    final var_isDeleted = sse_decode_bool(deserializer);
+    final var_contentTokens = sse_decode_list_serializable_token(deserializer);
+    final var_reactions = sse_decode_reaction_summary(deserializer);
+    final var_mediaAttachments = sse_decode_list_media_file(deserializer);
+    final var_kind = sse_decode_u_16(deserializer);
+    return ChatMessage(
+      id: var_id,
+      pubkey: var_pubkey,
+      content: var_content,
+      createdAt: var_createdAt,
+      tags: var_tags,
+      isReply: var_isReply,
+      replyToId: var_replyToId,
+      isDeleted: var_isDeleted,
+      contentTokens: var_contentTokens,
+      reactions: var_reactions,
+      mediaAttachments: var_mediaAttachments,
+      kind: var_kind,
+    );
+  }
+
+  @protected
+  EmojiReaction sse_decode_emoji_reaction(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_emoji = sse_decode_String(deserializer);
+    final var_count = sse_decode_u_64(deserializer);
+    final var_users = sse_decode_list_String(deserializer);
+    return EmojiReaction(emoji: var_emoji, count: var_count, users: var_users);
+  }
+
+  @protected
+  FileMetadata sse_decode_file_metadata(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_originalFilename = sse_decode_opt_String(deserializer);
+    final var_dimensions = sse_decode_opt_String(deserializer);
+    final var_blurhash = sse_decode_opt_String(deserializer);
+    return FileMetadata(
+      originalFilename: var_originalFilename,
+      dimensions: var_dimensions,
+      blurhash: var_blurhash,
+    );
+  }
+
+  @protected
+  FlutterEvent sse_decode_flutter_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_id = sse_decode_String(deserializer);
+    final var_pubkey = sse_decode_String(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_kind = sse_decode_u_16(deserializer);
+    final var_tags = sse_decode_list_String(deserializer);
+    final var_content = sse_decode_String(deserializer);
+    return FlutterEvent(
+      id: var_id,
+      pubkey: var_pubkey,
+      createdAt: var_createdAt,
+      kind: var_kind,
+      tags: var_tags,
+      content: var_content,
+    );
+  }
+
+  @protected
+  FlutterGroupDataUpdate sse_decode_flutter_group_data_update(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_name = sse_decode_opt_String(deserializer);
+    final var_description = sse_decode_opt_String(deserializer);
+    final var_relays = sse_decode_opt_list_String(deserializer);
+    final var_admins = sse_decode_opt_list_String(deserializer);
+    final var_imageKey = sse_decode_opt_u_8_array_32(deserializer);
+    final var_imageHash = sse_decode_opt_u_8_array_32(deserializer);
+    final var_imageNonce = sse_decode_opt_u_8_array_12(deserializer);
+    return FlutterGroupDataUpdate(
+      name: var_name,
+      description: var_description,
+      relays: var_relays,
+      admins: var_admins,
+      imageKey: var_imageKey,
+      imageHash: var_imageHash,
+      imageNonce: var_imageNonce,
+    );
+  }
+
+  @protected
+  FlutterMetadata sse_decode_flutter_metadata(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_name = sse_decode_opt_String(deserializer);
+    final var_displayName = sse_decode_opt_String(deserializer);
+    final var_about = sse_decode_opt_String(deserializer);
+    final var_picture = sse_decode_opt_String(deserializer);
+    final var_banner = sse_decode_opt_String(deserializer);
+    final var_website = sse_decode_opt_String(deserializer);
+    final var_nip05 = sse_decode_opt_String(deserializer);
+    final var_lud06 = sse_decode_opt_String(deserializer);
+    final var_lud16 = sse_decode_opt_String(deserializer);
+    final var_custom = sse_decode_Map_String_String_None(deserializer);
+    return FlutterMetadata(
+      name: var_name,
+      displayName: var_displayName,
+      about: var_about,
+      picture: var_picture,
+      banner: var_banner,
+      website: var_website,
+      nip05: var_nip05,
+      lud06: var_lud06,
+      lud16: var_lud16,
+      custom: var_custom,
+    );
+  }
+
+  @protected
+  Group sse_decode_group(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_mlsGroupId = sse_decode_String(deserializer);
+    final var_nostrGroupId = sse_decode_String(deserializer);
+    final var_name = sse_decode_String(deserializer);
+    final var_description = sse_decode_String(deserializer);
+    final var_imageHash = sse_decode_opt_u_8_array_32(deserializer);
+    final var_imageKey = sse_decode_opt_u_8_array_32(deserializer);
+    final var_adminPubkeys = sse_decode_list_String(deserializer);
+    final var_lastMessageId = sse_decode_opt_String(deserializer);
+    final var_lastMessageAt = sse_decode_opt_box_autoadd_Chrono_Utc(deserializer);
+    final var_epoch = sse_decode_u_64(deserializer);
+    final var_state = sse_decode_group_state(deserializer);
+    return Group(
+      mlsGroupId: var_mlsGroupId,
+      nostrGroupId: var_nostrGroupId,
+      name: var_name,
+      description: var_description,
+      imageHash: var_imageHash,
+      imageKey: var_imageKey,
+      adminPubkeys: var_adminPubkeys,
+      lastMessageId: var_lastMessageId,
+      lastMessageAt: var_lastMessageAt,
+      epoch: var_epoch,
+      state: var_state,
+    );
+  }
+
+  @protected
+  GroupInformation sse_decode_group_information(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_mlsGroupId = sse_decode_String(deserializer);
+    final var_groupType = sse_decode_group_type(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_updatedAt = sse_decode_Chrono_Utc(deserializer);
+    return GroupInformation(
+      mlsGroupId: var_mlsGroupId,
+      groupType: var_groupType,
+      createdAt: var_createdAt,
+      updatedAt: var_updatedAt,
+    );
+  }
+
+  @protected
+  GroupState sse_decode_group_state(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_32(deserializer);
+    return GroupState.values[inner];
+  }
+
+  @protected
+  GroupType sse_decode_group_type(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_32(deserializer);
+    return GroupType.values[inner];
+  }
+
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getInt32();
+  }
+
+  @protected
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getPlatformInt64();
+  }
+
+  @protected
+  List<Tag>
+  sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <Tag>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(
+        sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+          deserializer,
+        ),
+      );
+    }
+    return ans_;
+  }
+
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <String>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_String(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<Account> sse_decode_list_account(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <Account>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_account(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<ChatMessage> sse_decode_list_chat_message(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <ChatMessage>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_chat_message(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<EmojiReaction> sse_decode_list_emoji_reaction(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <EmojiReaction>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_emoji_reaction(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<FlutterEvent> sse_decode_list_flutter_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <FlutterEvent>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_flutter_event(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<Group> sse_decode_list_group(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <Group>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_group(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<GroupInformation> sse_decode_list_group_information(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <GroupInformation>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_group_information(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<MediaFile> sse_decode_list_media_file(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <MediaFile>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_media_file(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final len_ = sse_decode_i_32(deserializer);
+    return deserializer.buffer.getUint8List(len_);
+  }
+
+  @protected
+  List<(String, String)> sse_decode_list_record_string_string(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <(String, String)>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_record_string_string(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<Relay> sse_decode_list_relay(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <Relay>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_relay(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<SerializableToken> sse_decode_list_serializable_token(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <SerializableToken>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_serializable_token(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<User> sse_decode_list_user(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <User>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_user(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<UserReaction> sse_decode_list_user_reaction(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <UserReaction>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_user_reaction(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<Welcome> sse_decode_list_welcome(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <Welcome>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_welcome(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  MediaFile sse_decode_media_file(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_id = sse_decode_String(deserializer);
+    final var_mlsGroupId = sse_decode_String(deserializer);
+    final var_accountPubkey = sse_decode_String(deserializer);
+    final var_filePath = sse_decode_String(deserializer);
+    final var_originalFileHash = sse_decode_opt_String(deserializer);
+    final var_encryptedFileHash = sse_decode_String(deserializer);
+    final var_mimeType = sse_decode_String(deserializer);
+    final var_mediaType = sse_decode_String(deserializer);
+    final var_blossomUrl = sse_decode_String(deserializer);
+    final var_nostrKey = sse_decode_String(deserializer);
+    final var_fileMetadata = sse_decode_opt_box_autoadd_file_metadata(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    return MediaFile(
+      id: var_id,
+      mlsGroupId: var_mlsGroupId,
+      accountPubkey: var_accountPubkey,
+      filePath: var_filePath,
+      originalFileHash: var_originalFileHash,
+      encryptedFileHash: var_encryptedFileHash,
+      mimeType: var_mimeType,
+      mediaType: var_mediaType,
+      blossomUrl: var_blossomUrl,
+      nostrKey: var_nostrKey,
+      fileMetadata: var_fileMetadata,
+      createdAt: var_createdAt,
+    );
+  }
+
+  @protected
+  MessageWithTokens sse_decode_message_with_tokens(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_id = sse_decode_String(deserializer);
+    final var_pubkey = sse_decode_String(deserializer);
+    final var_kind = sse_decode_u_16(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_content = sse_decode_opt_String(deserializer);
+    final var_tokens = sse_decode_list_serializable_token(deserializer);
+    return MessageWithTokens(
+      id: var_id,
+      pubkey: var_pubkey,
+      kind: var_kind,
+      createdAt: var_createdAt,
+      content: var_content,
+      tokens: var_tokens,
+    );
+  }
+
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  DateTime? sse_decode_opt_box_autoadd_Chrono_Utc(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_Chrono_Utc(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  FileMetadata? sse_decode_opt_box_autoadd_file_metadata(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_file_metadata(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  FlutterEvent? sse_decode_opt_box_autoadd_flutter_event(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_box_autoadd_flutter_event(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  List<Tag>?
+  sse_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+        deserializer,
+      ));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  List<String>? sse_decode_opt_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_list_String(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  U8Array12? sse_decode_opt_u_8_array_12(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_u_8_array_12(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  U8Array32? sse_decode_opt_u_8_array_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    if (sse_decode_bool(deserializer)) {
+      return (sse_decode_u_8_array_32(deserializer));
+    } else {
+      return null;
+    }
+  }
+
+  @protected
+  ReactionSummary sse_decode_reaction_summary(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_byEmoji = sse_decode_list_emoji_reaction(deserializer);
+    final var_userReactions = sse_decode_list_user_reaction(deserializer);
+    return ReactionSummary(byEmoji: var_byEmoji, userReactions: var_userReactions);
+  }
+
+  @protected
+  (String, String) sse_decode_record_string_string(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_field0 = sse_decode_String(deserializer);
+    final var_field1 = sse_decode_String(deserializer);
+    return (var_field0, var_field1);
+  }
+
+  @protected
+  Relay sse_decode_relay(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_url = sse_decode_String(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_updatedAt = sse_decode_Chrono_Utc(deserializer);
+    return Relay(url: var_url, createdAt: var_createdAt, updatedAt: var_updatedAt);
+  }
+
+  @protected
+  SerializableToken sse_decode_serializable_token(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_tokenType = sse_decode_String(deserializer);
+    final var_content = sse_decode_opt_String(deserializer);
+    return SerializableToken(tokenType: var_tokenType, content: var_content);
+  }
+
+  @protected
+  int sse_decode_u_16(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint16();
+  }
+
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint32();
+  }
+
+  @protected
+  BigInt sse_decode_u_64(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
+  }
+
+  @protected
+  int sse_decode_u_8(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getUint8();
+  }
+
+  @protected
+  U8Array12 sse_decode_u_8_array_12(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_list_prim_u_8_strict(deserializer);
+    return U8Array12(inner);
+  }
+
+  @protected
+  U8Array32 sse_decode_u_8_array_32(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_list_prim_u_8_strict(deserializer);
+    return U8Array32(inner);
+  }
+
+  @protected
+  void sse_decode_unit(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  UploadGroupImageResult sse_decode_upload_group_image_result(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_encryptedHash = sse_decode_u_8_array_32(deserializer);
+    final var_imageKey = sse_decode_u_8_array_32(deserializer);
+    final var_imageNonce = sse_decode_u_8_array_12(deserializer);
+    return UploadGroupImageResult(
+      encryptedHash: var_encryptedHash,
+      imageKey: var_imageKey,
+      imageNonce: var_imageNonce,
+    );
+  }
+
+  @protected
+  User sse_decode_user(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_pubkey = sse_decode_String(deserializer);
+    final var_metadata = sse_decode_flutter_metadata(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    final var_updatedAt = sse_decode_Chrono_Utc(deserializer);
+    return User(
+      pubkey: var_pubkey,
+      metadata: var_metadata,
+      createdAt: var_createdAt,
+      updatedAt: var_updatedAt,
+    );
+  }
+
+  @protected
+  UserReaction sse_decode_user_reaction(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_user = sse_decode_String(deserializer);
+    final var_emoji = sse_decode_String(deserializer);
+    final var_createdAt = sse_decode_Chrono_Utc(deserializer);
+    return UserReaction(user: var_user, emoji: var_emoji, createdAt: var_createdAt);
+  }
+
+  @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return deserializer.buffer.getBigUint64();
+  }
+
+  @protected
+  Welcome sse_decode_welcome(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_id = sse_decode_String(deserializer);
+    final var_mlsGroupId = sse_decode_String(deserializer);
+    final var_nostrGroupId = sse_decode_String(deserializer);
+    final var_groupName = sse_decode_String(deserializer);
+    final var_groupDescription = sse_decode_String(deserializer);
+    final var_groupAdminPubkeys = sse_decode_list_String(deserializer);
+    final var_groupRelays = sse_decode_list_String(deserializer);
+    final var_welcomer = sse_decode_String(deserializer);
+    final var_memberCount = sse_decode_u_32(deserializer);
+    final var_state = sse_decode_welcome_state(deserializer);
+    final var_createdAt = sse_decode_u_64(deserializer);
+    return Welcome(
+      id: var_id,
+      mlsGroupId: var_mlsGroupId,
+      nostrGroupId: var_nostrGroupId,
+      groupName: var_groupName,
+      groupDescription: var_groupDescription,
+      groupAdminPubkeys: var_groupAdminPubkeys,
+      groupRelays: var_groupRelays,
+      welcomer: var_welcomer,
+      memberCount: var_memberCount,
+      state: var_state,
+      createdAt: var_createdAt,
+    );
+  }
+
+  @protected
+  WelcomeState sse_decode_welcome_state(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_32(deserializer);
+    return WelcomeState.values[inner];
+  }
+
+  @protected
+  WhitenoiseConfig sse_decode_whitenoise_config(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_dataDir = sse_decode_String(deserializer);
+    final var_logsDir = sse_decode_String(deserializer);
+    return WhitenoiseConfig(dataDir: var_dataDir, logsDir: var_logsDir);
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    AppSettings self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as AppSettingsImpl).frbInternalSseEncode(move: true), serializer);
+  }
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    GroupId self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    RelayType self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as RelayTypeImpl).frbInternalSseEncode(move: true), serializer);
+  }
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    RelayUrl self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(move: true), serializer);
+  }
+
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    Tag self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as TagImpl).frbInternalSseEncode(move: true), serializer);
+  }
+
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    ThemeMode self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as ThemeModeImpl).frbInternalSseEncode(move: true), serializer);
+  }
+
+  @protected
+  void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    GroupId self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(move: false), serializer);
+  }
+
+  @protected
+  void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    RelayUrl self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(move: false), serializer);
+  }
+
+  @protected
+  void sse_encode_Chrono_Utc(DateTime self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_64(PlatformInt64Util.from(self.microsecondsSinceEpoch), serializer);
+  }
+
+  @protected
+  void sse_encode_Map_String_String_None(Map<String, String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_record_string_string(
+      self.entries.map((e) => (e.key, e.value)).toList(),
+      serializer,
+    );
+  }
+
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    AppSettings self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as AppSettingsImpl).frbInternalSseEncode(), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    GroupId self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    RelayType self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as RelayTypeImpl).frbInternalSseEncode(), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    RelayUrl self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    Tag self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as TagImpl).frbInternalSseEncode(), serializer);
+  }
+
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    ThemeMode self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_usize((self as ThemeModeImpl).frbInternalSseEncode(), serializer);
+  }
+
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_prim_u_8_strict(utf8.encoder.convert(self), serializer);
+  }
+
+  @protected
+  void sse_encode_account(Account self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.pubkey, serializer);
+    sse_encode_opt_box_autoadd_Chrono_Utc(self.lastSyncedAt, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_Chrono_Utc(self.updatedAt, serializer);
+  }
+
+  @protected
+  void sse_encode_api_error(ApiError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case ApiError_Whitenoise(message: final message):
+        sse_encode_i_32(0, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_InvalidKey(message: final message):
+        sse_encode_i_32(1, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_NostrUrl(message: final message):
+        sse_encode_i_32(2, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_NostrTag(message: final message):
+        sse_encode_i_32(3, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_NostrEvent(message: final message):
+        sse_encode_i_32(4, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_NostrParse(message: final message):
+        sse_encode_i_32(5, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_NostrHex(message: final message):
+        sse_encode_i_32(6, serializer);
+        sse_encode_String(message, serializer);
+      case ApiError_Other(message: final message):
+        sse_encode_i_32(7, serializer);
+        sse_encode_String(message, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self ? 1 : 0);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_Chrono_Utc(DateTime self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_Chrono_Utc(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_api_error(ApiError self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_api_error(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_file_metadata(FileMetadata self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_file_metadata(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_flutter_event(FlutterEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_flutter_event(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_flutter_group_data_update(
+    FlutterGroupDataUpdate self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_flutter_group_data_update(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_flutter_metadata(FlutterMetadata self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_flutter_metadata(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_group(Group self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_group(self, serializer);
+  }
+
+  @protected
+  void sse_encode_box_autoadd_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_whitenoise_config(self, serializer);
+  }
+
+  @protected
+  void sse_encode_chat_message(ChatMessage self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.pubkey, serializer);
+    sse_encode_String(self.content, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_list_String(self.tags, serializer);
+    sse_encode_bool(self.isReply, serializer);
+    sse_encode_opt_String(self.replyToId, serializer);
+    sse_encode_bool(self.isDeleted, serializer);
+    sse_encode_list_serializable_token(self.contentTokens, serializer);
+    sse_encode_reaction_summary(self.reactions, serializer);
+    sse_encode_list_media_file(self.mediaAttachments, serializer);
+    sse_encode_u_16(self.kind, serializer);
+  }
+
+  @protected
+  void sse_encode_emoji_reaction(EmojiReaction self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.emoji, serializer);
+    sse_encode_u_64(self.count, serializer);
+    sse_encode_list_String(self.users, serializer);
+  }
+
+  @protected
+  void sse_encode_file_metadata(FileMetadata self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.originalFilename, serializer);
+    sse_encode_opt_String(self.dimensions, serializer);
+    sse_encode_opt_String(self.blurhash, serializer);
+  }
+
+  @protected
+  void sse_encode_flutter_event(FlutterEvent self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.pubkey, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_u_16(self.kind, serializer);
+    sse_encode_list_String(self.tags, serializer);
+    sse_encode_String(self.content, serializer);
+  }
+
+  @protected
+  void sse_encode_flutter_group_data_update(FlutterGroupDataUpdate self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.name, serializer);
+    sse_encode_opt_String(self.description, serializer);
+    sse_encode_opt_list_String(self.relays, serializer);
+    sse_encode_opt_list_String(self.admins, serializer);
+    sse_encode_opt_u_8_array_32(self.imageKey, serializer);
+    sse_encode_opt_u_8_array_32(self.imageHash, serializer);
+    sse_encode_opt_u_8_array_12(self.imageNonce, serializer);
+  }
+
+  @protected
+  void sse_encode_flutter_metadata(FlutterMetadata self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_opt_String(self.name, serializer);
+    sse_encode_opt_String(self.displayName, serializer);
+    sse_encode_opt_String(self.about, serializer);
+    sse_encode_opt_String(self.picture, serializer);
+    sse_encode_opt_String(self.banner, serializer);
+    sse_encode_opt_String(self.website, serializer);
+    sse_encode_opt_String(self.nip05, serializer);
+    sse_encode_opt_String(self.lud06, serializer);
+    sse_encode_opt_String(self.lud16, serializer);
+    sse_encode_Map_String_String_None(self.custom, serializer);
+  }
+
+  @protected
+  void sse_encode_group(Group self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.mlsGroupId, serializer);
+    sse_encode_String(self.nostrGroupId, serializer);
+    sse_encode_String(self.name, serializer);
+    sse_encode_String(self.description, serializer);
+    sse_encode_opt_u_8_array_32(self.imageHash, serializer);
+    sse_encode_opt_u_8_array_32(self.imageKey, serializer);
+    sse_encode_list_String(self.adminPubkeys, serializer);
+    sse_encode_opt_String(self.lastMessageId, serializer);
+    sse_encode_opt_box_autoadd_Chrono_Utc(self.lastMessageAt, serializer);
+    sse_encode_u_64(self.epoch, serializer);
+    sse_encode_group_state(self.state, serializer);
+  }
+
+  @protected
+  void sse_encode_group_information(GroupInformation self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.mlsGroupId, serializer);
+    sse_encode_group_type(self.groupType, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_Chrono_Utc(self.updatedAt, serializer);
+  }
+
+  @protected
+  void sse_encode_group_state(GroupState self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_group_type(GroupType self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putInt32(self);
+  }
+
+  @protected
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putPlatformInt64(self);
+  }
+
+  @protected
+  void sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    List<Tag> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+        item,
+        serializer,
+      );
+    }
+  }
+
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_String(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_account(List<Account> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_account(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_chat_message(List<ChatMessage> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_chat_message(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_emoji_reaction(List<EmojiReaction> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_emoji_reaction(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_flutter_event(List<FlutterEvent> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_flutter_event(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_group(List<Group> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_group(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_group_information(List<GroupInformation> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_group_information(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_media_file(List<MediaFile> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_media_file(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_prim_u_8_strict(Uint8List self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    serializer.buffer.putUint8List(self);
+  }
+
+  @protected
+  void sse_encode_list_record_string_string(List<(String, String)> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_record_string_string(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_relay(List<Relay> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_relay(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_serializable_token(List<SerializableToken> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_serializable_token(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_user(List<User> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_user(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_user_reaction(List<UserReaction> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_user_reaction(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_welcome(List<Welcome> self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_welcome(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_media_file(MediaFile self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.mlsGroupId, serializer);
+    sse_encode_String(self.accountPubkey, serializer);
+    sse_encode_String(self.filePath, serializer);
+    sse_encode_opt_String(self.originalFileHash, serializer);
+    sse_encode_String(self.encryptedFileHash, serializer);
+    sse_encode_String(self.mimeType, serializer);
+    sse_encode_String(self.mediaType, serializer);
+    sse_encode_String(self.blossomUrl, serializer);
+    sse_encode_String(self.nostrKey, serializer);
+    sse_encode_opt_box_autoadd_file_metadata(self.fileMetadata, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+  }
+
+  @protected
+  void sse_encode_message_with_tokens(MessageWithTokens self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.pubkey, serializer);
+    sse_encode_u_16(self.kind, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_opt_String(self.content, serializer);
+    sse_encode_list_serializable_token(self.tokens, serializer);
+  }
+
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_Chrono_Utc(DateTime? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_Chrono_Utc(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_file_metadata(FileMetadata? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_file_metadata(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_box_autoadd_flutter_event(FlutterEvent? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_box_autoadd_flutter_event(self, serializer);
+    }
+  }
+
+  @protected
+  void
+  sse_encode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    List<Tag>? self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+        self,
+        serializer,
+      );
+    }
+  }
+
+  @protected
+  void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_list_String(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_u_8_array_12(U8Array12? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_u_8_array_12(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_opt_u_8_array_32(U8Array32? self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    sse_encode_bool(self != null, serializer);
+    if (self != null) {
+      sse_encode_u_8_array_32(self, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_reaction_summary(ReactionSummary self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_emoji_reaction(self.byEmoji, serializer);
+    sse_encode_list_user_reaction(self.userReactions, serializer);
+  }
+
+  @protected
+  void sse_encode_record_string_string((String, String) self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.$1, serializer);
+    sse_encode_String(self.$2, serializer);
+  }
+
+  @protected
+  void sse_encode_relay(Relay self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.url, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_Chrono_Utc(self.updatedAt, serializer);
+  }
+
+  @protected
+  void sse_encode_serializable_token(SerializableToken self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.tokenType, serializer);
+    sse_encode_opt_String(self.content, serializer);
+  }
+
+  @protected
+  void sse_encode_u_16(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint16(self);
+  }
+
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint32(self);
+  }
+
+  @protected
+  void sse_encode_u_64(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putBigUint64(self);
+  }
+
+  @protected
+  void sse_encode_u_8(int self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putUint8(self);
+  }
+
+  @protected
+  void sse_encode_u_8_array_12(U8Array12 self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_prim_u_8_strict(self.inner, serializer);
+  }
+
+  @protected
+  void sse_encode_u_8_array_32(U8Array32 self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_list_prim_u_8_strict(self.inner, serializer);
+  }
+
+  @protected
+  void sse_encode_unit(void self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+  }
+
+  @protected
+  void sse_encode_upload_group_image_result(UploadGroupImageResult self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_u_8_array_32(self.encryptedHash, serializer);
+    sse_encode_u_8_array_32(self.imageKey, serializer);
+    sse_encode_u_8_array_12(self.imageNonce, serializer);
+  }
+
+  @protected
+  void sse_encode_user(User self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.pubkey, serializer);
+    sse_encode_flutter_metadata(self.metadata, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+    sse_encode_Chrono_Utc(self.updatedAt, serializer);
+  }
+
+  @protected
+  void sse_encode_user_reaction(UserReaction self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.user, serializer);
+    sse_encode_String(self.emoji, serializer);
+    sse_encode_Chrono_Utc(self.createdAt, serializer);
+  }
+
+  @protected
+  void sse_encode_usize(BigInt self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    serializer.buffer.putBigUint64(self);
+  }
+
+  @protected
+  void sse_encode_welcome(Welcome self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.id, serializer);
+    sse_encode_String(self.mlsGroupId, serializer);
+    sse_encode_String(self.nostrGroupId, serializer);
+    sse_encode_String(self.groupName, serializer);
+    sse_encode_String(self.groupDescription, serializer);
+    sse_encode_list_String(self.groupAdminPubkeys, serializer);
+    sse_encode_list_String(self.groupRelays, serializer);
+    sse_encode_String(self.welcomer, serializer);
+    sse_encode_u_32(self.memberCount, serializer);
+    sse_encode_welcome_state(self.state, serializer);
+    sse_encode_u_64(self.createdAt, serializer);
+  }
+
+  @protected
+  void sse_encode_welcome_state(WelcomeState self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
+  }
+
+  @protected
+  void sse_encode_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.dataDir, serializer);
+    sse_encode_String(self.logsDir, serializer);
+  }
+}
+
+@sealed
+class AppSettingsImpl extends RustOpaque implements AppSettings {
+  // Not to be used by end users
+  AppSettingsImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  AppSettingsImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_AppSettings,
+    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_AppSettings,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_AppSettingsPtr,
+  );
+}
+
+@sealed
+class GroupIdImpl extends RustOpaque implements GroupId {
+  // Not to be used by end users
+  GroupIdImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  GroupIdImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_GroupId,
+    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_GroupId,
+    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_GroupIdPtr,
+  );
+}
+
+@sealed
+class RelayTypeImpl extends RustOpaque implements RelayType {
+  // Not to be used by end users
+  RelayTypeImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  RelayTypeImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_RelayType,
+    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_RelayType,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_RelayTypePtr,
+  );
+}
+
+@sealed
+class RelayUrlImpl extends RustOpaque implements RelayUrl {
+  // Not to be used by end users
+  RelayUrlImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  RelayUrlImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_RelayUrl,
+    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_RelayUrl,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_RelayUrlPtr,
+  );
+}
+
+@sealed
+class TagImpl extends RustOpaque implements Tag {
+  // Not to be used by end users
+  TagImpl.frbInternalDcoDecode(List<dynamic> wire) : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  TagImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_Tag,
+    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_Tag,
+    rustArcDecrementStrongCountPtr: RustLib.instance.api.rust_arc_decrement_strong_count_TagPtr,
+  );
+}
+
+@sealed
+class ThemeModeImpl extends RustOpaque implements ThemeMode {
+  // Not to be used by end users
+  ThemeModeImpl.frbInternalDcoDecode(List<dynamic> wire)
+    : super.frbInternalDcoDecode(wire, _kStaticData);
+
+  // Not to be used by end users
+  ThemeModeImpl.frbInternalSseDecode(BigInt ptr, int externalSizeOnNative)
+    : super.frbInternalSseDecode(ptr, externalSizeOnNative, _kStaticData);
+
+  static final _kStaticData = RustArcStaticData(
+    rustArcIncrementStrongCount: RustLib.instance.api.rust_arc_increment_strong_count_ThemeMode,
+    rustArcDecrementStrongCount: RustLib.instance.api.rust_arc_decrement_strong_count_ThemeMode,
+    rustArcDecrementStrongCountPtr:
+        RustLib.instance.api.rust_arc_decrement_strong_count_ThemeModePtr,
+  );
+}

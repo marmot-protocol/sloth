@@ -3,117 +3,174 @@
 
 // ignore_for_file: invalid_use_of_internal_member, unused_import, unnecessary_import
 
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
+
 import '../frb_generated.dart';
 import 'error.dart';
 import 'metadata.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'relays.dart';
 import 'users.dart';
 
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`, `from`, `from`
 
-            // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`, `from`, `from`
+Future<List<Account>> getAccounts() => RustLib.instance.api.crateApiAccountsGetAccounts();
 
+Future<Account> getAccount({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsGetAccount(pubkey: pubkey);
 
-            Future<List<Account>>  getAccounts() => RustLib.instance.api.crateApiAccountsGetAccounts();
+Future<Account> createIdentity() => RustLib.instance.api.crateApiAccountsCreateIdentity();
 
-Future<Account>  getAccount({required String pubkey }) => RustLib.instance.api.crateApiAccountsGetAccount(pubkey: pubkey);
+Future<Account> login({required String nsecOrHexPrivkey}) =>
+    RustLib.instance.api.crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
 
-Future<Account>  createIdentity() => RustLib.instance.api.crateApiAccountsCreateIdentity();
+Future<void> logout({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsLogout(pubkey: pubkey);
 
-Future<Account>  login({required String nsecOrHexPrivkey }) => RustLib.instance.api.crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
+Future<String> exportAccountNsec({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsExportAccountNsec(pubkey: pubkey);
 
-Future<void>  logout({required String pubkey }) => RustLib.instance.api.crateApiAccountsLogout(pubkey: pubkey);
+Future<FlutterMetadata> accountMetadata({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsAccountMetadata(pubkey: pubkey);
 
-Future<String>  exportAccountNsec({required String pubkey }) => RustLib.instance.api.crateApiAccountsExportAccountNsec(pubkey: pubkey);
+Future<void> updateAccountMetadata({required String pubkey, required FlutterMetadata metadata}) =>
+    RustLib.instance.api.crateApiAccountsUpdateAccountMetadata(pubkey: pubkey, metadata: metadata);
 
-Future<FlutterMetadata>  accountMetadata({required String pubkey }) => RustLib.instance.api.crateApiAccountsAccountMetadata(pubkey: pubkey);
+Future<String> uploadAccountProfilePicture({
+  required String pubkey,
+  required String serverUrl,
+  required String filePath,
+  required String imageType,
+}) => RustLib.instance.api.crateApiAccountsUploadAccountProfilePicture(
+  pubkey: pubkey,
+  serverUrl: serverUrl,
+  filePath: filePath,
+  imageType: imageType,
+);
 
-Future<void>  updateAccountMetadata({required String pubkey , required FlutterMetadata metadata }) => RustLib.instance.api.crateApiAccountsUpdateAccountMetadata(pubkey: pubkey, metadata: metadata);
+Future<List<Relay>> accountRelays({required String pubkey, required RelayType relayType}) =>
+    RustLib.instance.api.crateApiAccountsAccountRelays(pubkey: pubkey, relayType: relayType);
 
-Future<String>  uploadAccountProfilePicture({required String pubkey , required String serverUrl , required String filePath , required String imageType }) => RustLib.instance.api.crateApiAccountsUploadAccountProfilePicture(pubkey: pubkey, serverUrl: serverUrl, filePath: filePath, imageType: imageType);
+Future<void> addAccountRelay({
+  required String pubkey,
+  required String url,
+  required RelayType relayType,
+}) => RustLib.instance.api.crateApiAccountsAddAccountRelay(
+  pubkey: pubkey,
+  url: url,
+  relayType: relayType,
+);
 
-Future<List<Relay>>  accountRelays({required String pubkey , required RelayType relayType }) => RustLib.instance.api.crateApiAccountsAccountRelays(pubkey: pubkey, relayType: relayType);
+Future<void> removeAccountRelay({
+  required String pubkey,
+  required String url,
+  required RelayType relayType,
+}) => RustLib.instance.api.crateApiAccountsRemoveAccountRelay(
+  pubkey: pubkey,
+  url: url,
+  relayType: relayType,
+);
 
-Future<void>  addAccountRelay({required String pubkey , required String url , required RelayType relayType }) => RustLib.instance.api.crateApiAccountsAddAccountRelay(pubkey: pubkey, url: url, relayType: relayType);
+Future<FlutterEvent?> accountKeyPackage({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsAccountKeyPackage(pubkey: pubkey);
 
-Future<void>  removeAccountRelay({required String pubkey , required String url , required RelayType relayType }) => RustLib.instance.api.crateApiAccountsRemoveAccountRelay(pubkey: pubkey, url: url, relayType: relayType);
+Future<List<FlutterEvent>> accountKeyPackages({required String accountPubkey}) =>
+    RustLib.instance.api.crateApiAccountsAccountKeyPackages(accountPubkey: accountPubkey);
 
-Future<FlutterEvent?>  accountKeyPackage({required String pubkey }) => RustLib.instance.api.crateApiAccountsAccountKeyPackage(pubkey: pubkey);
+Future<void> publishAccountKeyPackage({required String accountPubkey}) =>
+    RustLib.instance.api.crateApiAccountsPublishAccountKeyPackage(accountPubkey: accountPubkey);
 
-Future<List<FlutterEvent>>  accountKeyPackages({required String accountPubkey }) => RustLib.instance.api.crateApiAccountsAccountKeyPackages(accountPubkey: accountPubkey);
+Future<bool> deleteAccountKeyPackage({
+  required String accountPubkey,
+  required String keyPackageId,
+}) => RustLib.instance.api.crateApiAccountsDeleteAccountKeyPackage(
+  accountPubkey: accountPubkey,
+  keyPackageId: keyPackageId,
+);
 
-Future<void>  publishAccountKeyPackage({required String accountPubkey }) => RustLib.instance.api.crateApiAccountsPublishAccountKeyPackage(accountPubkey: accountPubkey);
+Future<BigInt> deleteAccountKeyPackages({required String accountPubkey}) =>
+    RustLib.instance.api.crateApiAccountsDeleteAccountKeyPackages(accountPubkey: accountPubkey);
 
-Future<bool>  deleteAccountKeyPackage({required String accountPubkey , required String keyPackageId }) => RustLib.instance.api.crateApiAccountsDeleteAccountKeyPackage(accountPubkey: accountPubkey, keyPackageId: keyPackageId);
+Future<List<User>> accountFollows({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsAccountFollows(pubkey: pubkey);
 
-Future<BigInt>  deleteAccountKeyPackages({required String accountPubkey }) => RustLib.instance.api.crateApiAccountsDeleteAccountKeyPackages(accountPubkey: accountPubkey);
+Future<void> followUser({required String accountPubkey, required String userToFollowPubkey}) =>
+    RustLib.instance.api.crateApiAccountsFollowUser(
+      accountPubkey: accountPubkey,
+      userToFollowPubkey: userToFollowPubkey,
+    );
 
-Future<List<User>>  accountFollows({required String pubkey }) => RustLib.instance.api.crateApiAccountsAccountFollows(pubkey: pubkey);
+Future<void> unfollowUser({required String accountPubkey, required String userToUnfollowPubkey}) =>
+    RustLib.instance.api.crateApiAccountsUnfollowUser(
+      accountPubkey: accountPubkey,
+      userToUnfollowPubkey: userToUnfollowPubkey,
+    );
 
-Future<void>  followUser({required String accountPubkey , required String userToFollowPubkey }) => RustLib.instance.api.crateApiAccountsFollowUser(accountPubkey: accountPubkey, userToFollowPubkey: userToFollowPubkey);
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RelayType>>
+abstract class RelayType implements RustOpaqueInterface {}
 
-Future<void>  unfollowUser({required String accountPubkey , required String userToUnfollowPubkey }) => RustLib.instance.api.crateApiAccountsUnfollowUser(accountPubkey: accountPubkey, userToUnfollowPubkey: userToUnfollowPubkey);
+class Account {
+  final String pubkey;
+  final DateTime? lastSyncedAt;
+  final DateTime createdAt;
+  final DateTime updatedAt;
 
-            
-                // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RelayType>>
-                abstract class RelayType implements RustOpaqueInterface {
-                    
+  const Account({
+    required this.pubkey,
+    this.lastSyncedAt,
+    required this.createdAt,
+    required this.updatedAt,
+  });
 
-                    
-                }
-                
+  @override
+  int get hashCode =>
+      pubkey.hashCode ^ lastSyncedAt.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
 
-class Account  {
-                final String pubkey;
-final DateTime? lastSyncedAt;
-final DateTime createdAt;
-final DateTime updatedAt;
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is Account &&
+          runtimeType == other.runtimeType &&
+          pubkey == other.pubkey &&
+          lastSyncedAt == other.lastSyncedAt &&
+          createdAt == other.createdAt &&
+          updatedAt == other.updatedAt;
+}
 
-                const Account({required this.pubkey ,this.lastSyncedAt ,required this.createdAt ,required this.updatedAt ,});
+class FlutterEvent {
+  final String id;
+  final String pubkey;
+  final DateTime createdAt;
+  final int kind;
+  final List<String> tags;
+  final String content;
 
-                
-                
+  const FlutterEvent({
+    required this.id,
+    required this.pubkey,
+    required this.createdAt,
+    required this.kind,
+    required this.tags,
+    required this.content,
+  });
 
-                
-        @override
-        int get hashCode => pubkey.hashCode^lastSyncedAt.hashCode^createdAt.hashCode^updatedAt.hashCode;
-        
+  @override
+  int get hashCode =>
+      id.hashCode ^
+      pubkey.hashCode ^
+      createdAt.hashCode ^
+      kind.hashCode ^
+      tags.hashCode ^
+      content.hashCode;
 
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is Account &&
-                runtimeType == other.runtimeType
-                && pubkey == other.pubkey&& lastSyncedAt == other.lastSyncedAt&& createdAt == other.createdAt&& updatedAt == other.updatedAt;
-        
-            }
-
-class FlutterEvent  {
-                final String id;
-final String pubkey;
-final DateTime createdAt;
-final int kind;
-final List<String> tags;
-final String content;
-
-                const FlutterEvent({required this.id ,required this.pubkey ,required this.createdAt ,required this.kind ,required this.tags ,required this.content ,});
-
-                
-                
-
-                
-        @override
-        int get hashCode => id.hashCode^pubkey.hashCode^createdAt.hashCode^kind.hashCode^tags.hashCode^content.hashCode;
-        
-
-                
-        @override
-        bool operator ==(Object other) =>
-            identical(this, other) ||
-            other is FlutterEvent &&
-                runtimeType == other.runtimeType
-                && id == other.id&& pubkey == other.pubkey&& createdAt == other.createdAt&& kind == other.kind&& tags == other.tags&& content == other.content;
-        
-            }
-            
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is FlutterEvent &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          pubkey == other.pubkey &&
+          createdAt == other.createdAt &&
+          kind == other.kind &&
+          tags == other.tags &&
+          content == other.content;
+}

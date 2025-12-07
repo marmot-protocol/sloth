@@ -1,14 +1,17 @@
 # Sloth 🦥
 
-A playground app for experimenting the whitenoise crate, using [WhiteNoise Flutter repo](https://github.com/marmot-protocol/whitenoise) as reference.
- 
+A playground messaging app for experimenting with the [whitenoise rust crate 🦀](https://github.com/marmot-protocol/whitenoise-rs), which uses the [marmot protocol 🦫](https://github.com/marmot-protocol/marmot) to build secure messaging with MLS and Nostr
+
+
+**Why sloth?**
+Cause sloths are slow but efficient, and you can find them in Costa Rica 🤙
+
+
 ## 🏗️ Stack
-
-- **Flutter** - Cross-platform UI framework
-- **Rust** - "Backend" logic via the whitenoise crate
-- **flutter_rust_bridge** - Dart ↔ Rust integration
-- **whitenoise crate** - Secure messaging with MLS and Nostr protocols
-
+- [Flutter](https://docs.flutter.dev/)
+- Rust
+- flutter_rust_bridge - Dart ↔ Rust integration
+- [whitenoise rust crate 🦀](https://github.com/marmot-protocol/whitenoise-rs)
 
 ### Prerequisites
 
@@ -26,7 +29,6 @@ just deps-flutter      # Flutter dependencies only
 just deps-rust         # Rust dependencies only
 ```
 ## 📚 Resources
-
 - [Flutter Docs](https://docs.flutter.dev/)
 - [White Noise Rust crate](https://github.com/marmot-protocol/whitenoise-rs)
 - [White Noise Flutter](https://github.com/marmot-protocol/whitenoise)

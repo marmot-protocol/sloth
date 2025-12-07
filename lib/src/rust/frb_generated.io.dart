@@ -3,6 +3,12 @@
 
 // ignore_for_file: unused_import, unused_element, unnecessary_import, duplicate_ignore, invalid_use_of_internal_member, annotate_overrides, non_constant_identifier_names, curly_braces_in_flow_control_structures, prefer_const_literals_to_create_immutables, unused_field
 
+import 'dart:async';
+import 'dart:convert';
+import 'dart:ffi' as ffi;
+
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
+
 import 'api.dart';
 import 'api/accounts.dart';
 import 'api/error.dart';
@@ -14,693 +20,1140 @@ import 'api/relays.dart';
 import 'api/users.dart';
 import 'api/utils.dart';
 import 'api/welcomes.dart';
-import 'dart:async';
-import 'dart:convert';
-import 'dart:ffi' as ffi;
 import 'frb_generated.dart';
 import 'lib.dart';
-import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 
+abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
+  RustLibApiImplPlatform({
+    required super.handler,
+    required super.wire,
+    required super.generalizedFrbRustBinding,
+    required super.portManager,
+  });
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_AppSettingsPtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_GroupIdPtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayTypePtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayUrlPtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TagPtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr;
+
+  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ThemeModePtr => wire
+      ._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr;
+
+  @protected
+  AppSettings
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    dynamic raw,
+  );
+
+  @protected
+  GroupId
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    dynamic raw,
+  );
+
+  @protected
+  RelayType
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    dynamic raw,
+  );
 
+  @protected
+  RelayUrl
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    dynamic raw,
+  );
 
+  @protected
+  Tag dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    dynamic raw,
+  );
 
-                abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
-                  RustLibApiImplPlatform({
-                    required super.handler,
-                    required super.wire,
-                    required super.generalizedFrbRustBinding,
-                    required super.portManager,
-                  });
+  @protected
+  ThemeMode
+  dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    dynamic raw,
+  );
 
-                  CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_AppSettingsPtr => wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr;
+  @protected
+  GroupId dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    dynamic raw,
+  );
 
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_GroupIdPtr => wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr;
+  @protected
+  RelayUrl
+  dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    dynamic raw,
+  );
 
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayTypePtr => wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr;
+  @protected
+  DateTime dco_decode_Chrono_Utc(dynamic raw);
 
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_RelayUrlPtr => wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr;
+  @protected
+  Map<String, String> dco_decode_Map_String_String_None(dynamic raw);
 
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_TagPtr => wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr;
+  @protected
+  AppSettings dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    dynamic raw,
+  );
 
-CrossPlatformFinalizerArg get rust_arc_decrement_strong_count_ThemeModePtr => wire._rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr;
+  @protected
+  GroupId dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    dynamic raw,
+  );
 
+  @protected
+  RelayType dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    dynamic raw,
+  );
 
+  @protected
+  RelayUrl dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    dynamic raw,
+  );
 
-                  @protected AppSettings dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(dynamic raw);
+  @protected
+  Tag dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw);
 
-@protected GroupId dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(dynamic raw);
+  @protected
+  ThemeMode dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    dynamic raw,
+  );
 
-@protected RelayType dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(dynamic raw);
+  @protected
+  String dco_decode_String(dynamic raw);
 
-@protected RelayUrl dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(dynamic raw);
+  @protected
+  Account dco_decode_account(dynamic raw);
 
-@protected Tag dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw);
+  @protected
+  ApiError dco_decode_api_error(dynamic raw);
 
-@protected ThemeMode dco_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(dynamic raw);
+  @protected
+  bool dco_decode_bool(dynamic raw);
 
-@protected GroupId dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(dynamic raw);
+  @protected
+  DateTime dco_decode_box_autoadd_Chrono_Utc(dynamic raw);
 
-@protected RelayUrl dco_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(dynamic raw);
+  @protected
+  ApiError dco_decode_box_autoadd_api_error(dynamic raw);
 
-@protected DateTime dco_decode_Chrono_Utc(dynamic raw);
+  @protected
+  FileMetadata dco_decode_box_autoadd_file_metadata(dynamic raw);
 
-@protected Map<String, String> dco_decode_Map_String_String_None(dynamic raw);
+  @protected
+  FlutterEvent dco_decode_box_autoadd_flutter_event(dynamic raw);
 
-@protected AppSettings dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(dynamic raw);
+  @protected
+  FlutterGroupDataUpdate dco_decode_box_autoadd_flutter_group_data_update(dynamic raw);
 
-@protected GroupId dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(dynamic raw);
+  @protected
+  FlutterMetadata dco_decode_box_autoadd_flutter_metadata(dynamic raw);
 
-@protected RelayType dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(dynamic raw);
+  @protected
+  Group dco_decode_box_autoadd_group(dynamic raw);
 
-@protected RelayUrl dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(dynamic raw);
+  @protected
+  WhitenoiseConfig dco_decode_box_autoadd_whitenoise_config(dynamic raw);
 
-@protected Tag dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw);
+  @protected
+  ChatMessage dco_decode_chat_message(dynamic raw);
 
-@protected ThemeMode dco_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(dynamic raw);
+  @protected
+  EmojiReaction dco_decode_emoji_reaction(dynamic raw);
 
-@protected String dco_decode_String(dynamic raw);
+  @protected
+  FileMetadata dco_decode_file_metadata(dynamic raw);
 
-@protected Account dco_decode_account(dynamic raw);
+  @protected
+  FlutterEvent dco_decode_flutter_event(dynamic raw);
 
-@protected ApiError dco_decode_api_error(dynamic raw);
+  @protected
+  FlutterGroupDataUpdate dco_decode_flutter_group_data_update(dynamic raw);
 
-@protected bool dco_decode_bool(dynamic raw);
+  @protected
+  FlutterMetadata dco_decode_flutter_metadata(dynamic raw);
 
-@protected DateTime dco_decode_box_autoadd_Chrono_Utc(dynamic raw);
+  @protected
+  Group dco_decode_group(dynamic raw);
 
-@protected ApiError dco_decode_box_autoadd_api_error(dynamic raw);
+  @protected
+  GroupInformation dco_decode_group_information(dynamic raw);
 
-@protected FileMetadata dco_decode_box_autoadd_file_metadata(dynamic raw);
+  @protected
+  GroupState dco_decode_group_state(dynamic raw);
 
-@protected FlutterEvent dco_decode_box_autoadd_flutter_event(dynamic raw);
+  @protected
+  GroupType dco_decode_group_type(dynamic raw);
 
-@protected FlutterGroupDataUpdate dco_decode_box_autoadd_flutter_group_data_update(dynamic raw);
+  @protected
+  int dco_decode_i_32(dynamic raw);
 
-@protected FlutterMetadata dco_decode_box_autoadd_flutter_metadata(dynamic raw);
+  @protected
+  PlatformInt64 dco_decode_i_64(dynamic raw);
 
-@protected Group dco_decode_box_autoadd_group(dynamic raw);
+  @protected
+  List<Tag>
+  dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    dynamic raw,
+  );
 
-@protected WhitenoiseConfig dco_decode_box_autoadd_whitenoise_config(dynamic raw);
+  @protected
+  List<String> dco_decode_list_String(dynamic raw);
 
-@protected ChatMessage dco_decode_chat_message(dynamic raw);
+  @protected
+  List<Account> dco_decode_list_account(dynamic raw);
 
-@protected EmojiReaction dco_decode_emoji_reaction(dynamic raw);
+  @protected
+  List<ChatMessage> dco_decode_list_chat_message(dynamic raw);
 
-@protected FileMetadata dco_decode_file_metadata(dynamic raw);
+  @protected
+  List<EmojiReaction> dco_decode_list_emoji_reaction(dynamic raw);
 
-@protected FlutterEvent dco_decode_flutter_event(dynamic raw);
+  @protected
+  List<FlutterEvent> dco_decode_list_flutter_event(dynamic raw);
 
-@protected FlutterGroupDataUpdate dco_decode_flutter_group_data_update(dynamic raw);
+  @protected
+  List<Group> dco_decode_list_group(dynamic raw);
 
-@protected FlutterMetadata dco_decode_flutter_metadata(dynamic raw);
+  @protected
+  List<GroupInformation> dco_decode_list_group_information(dynamic raw);
 
-@protected Group dco_decode_group(dynamic raw);
+  @protected
+  List<MediaFile> dco_decode_list_media_file(dynamic raw);
 
-@protected GroupInformation dco_decode_group_information(dynamic raw);
+  @protected
+  Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
 
-@protected GroupState dco_decode_group_state(dynamic raw);
+  @protected
+  List<(String, String)> dco_decode_list_record_string_string(dynamic raw);
 
-@protected GroupType dco_decode_group_type(dynamic raw);
+  @protected
+  List<Relay> dco_decode_list_relay(dynamic raw);
 
-@protected int dco_decode_i_32(dynamic raw);
+  @protected
+  List<SerializableToken> dco_decode_list_serializable_token(dynamic raw);
 
-@protected PlatformInt64 dco_decode_i_64(dynamic raw);
+  @protected
+  List<User> dco_decode_list_user(dynamic raw);
 
-@protected List<Tag> dco_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw);
+  @protected
+  List<UserReaction> dco_decode_list_user_reaction(dynamic raw);
 
-@protected List<String> dco_decode_list_String(dynamic raw);
+  @protected
+  List<Welcome> dco_decode_list_welcome(dynamic raw);
 
-@protected List<Account> dco_decode_list_account(dynamic raw);
+  @protected
+  MediaFile dco_decode_media_file(dynamic raw);
 
-@protected List<ChatMessage> dco_decode_list_chat_message(dynamic raw);
+  @protected
+  MessageWithTokens dco_decode_message_with_tokens(dynamic raw);
 
-@protected List<EmojiReaction> dco_decode_list_emoji_reaction(dynamic raw);
+  @protected
+  String? dco_decode_opt_String(dynamic raw);
 
-@protected List<FlutterEvent> dco_decode_list_flutter_event(dynamic raw);
+  @protected
+  DateTime? dco_decode_opt_box_autoadd_Chrono_Utc(dynamic raw);
 
-@protected List<Group> dco_decode_list_group(dynamic raw);
+  @protected
+  FileMetadata? dco_decode_opt_box_autoadd_file_metadata(dynamic raw);
 
-@protected List<GroupInformation> dco_decode_list_group_information(dynamic raw);
+  @protected
+  FlutterEvent? dco_decode_opt_box_autoadd_flutter_event(dynamic raw);
 
-@protected List<MediaFile> dco_decode_list_media_file(dynamic raw);
+  @protected
+  List<Tag>?
+  dco_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    dynamic raw,
+  );
 
-@protected Uint8List dco_decode_list_prim_u_8_strict(dynamic raw);
+  @protected
+  List<String>? dco_decode_opt_list_String(dynamic raw);
 
-@protected List<(String,String)> dco_decode_list_record_string_string(dynamic raw);
+  @protected
+  U8Array12? dco_decode_opt_u_8_array_12(dynamic raw);
 
-@protected List<Relay> dco_decode_list_relay(dynamic raw);
+  @protected
+  U8Array32? dco_decode_opt_u_8_array_32(dynamic raw);
 
-@protected List<SerializableToken> dco_decode_list_serializable_token(dynamic raw);
+  @protected
+  ReactionSummary dco_decode_reaction_summary(dynamic raw);
 
-@protected List<User> dco_decode_list_user(dynamic raw);
+  @protected
+  (String, String) dco_decode_record_string_string(dynamic raw);
 
-@protected List<UserReaction> dco_decode_list_user_reaction(dynamic raw);
+  @protected
+  Relay dco_decode_relay(dynamic raw);
 
-@protected List<Welcome> dco_decode_list_welcome(dynamic raw);
+  @protected
+  SerializableToken dco_decode_serializable_token(dynamic raw);
 
-@protected MediaFile dco_decode_media_file(dynamic raw);
+  @protected
+  int dco_decode_u_16(dynamic raw);
 
-@protected MessageWithTokens dco_decode_message_with_tokens(dynamic raw);
+  @protected
+  int dco_decode_u_32(dynamic raw);
 
-@protected String? dco_decode_opt_String(dynamic raw);
+  @protected
+  BigInt dco_decode_u_64(dynamic raw);
 
-@protected DateTime? dco_decode_opt_box_autoadd_Chrono_Utc(dynamic raw);
+  @protected
+  int dco_decode_u_8(dynamic raw);
 
-@protected FileMetadata? dco_decode_opt_box_autoadd_file_metadata(dynamic raw);
+  @protected
+  U8Array12 dco_decode_u_8_array_12(dynamic raw);
 
-@protected FlutterEvent? dco_decode_opt_box_autoadd_flutter_event(dynamic raw);
+  @protected
+  U8Array32 dco_decode_u_8_array_32(dynamic raw);
 
-@protected List<Tag>? dco_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(dynamic raw);
+  @protected
+  void dco_decode_unit(dynamic raw);
 
-@protected List<String>? dco_decode_opt_list_String(dynamic raw);
+  @protected
+  UploadGroupImageResult dco_decode_upload_group_image_result(dynamic raw);
 
-@protected U8Array12? dco_decode_opt_u_8_array_12(dynamic raw);
+  @protected
+  User dco_decode_user(dynamic raw);
 
-@protected U8Array32? dco_decode_opt_u_8_array_32(dynamic raw);
+  @protected
+  UserReaction dco_decode_user_reaction(dynamic raw);
 
-@protected ReactionSummary dco_decode_reaction_summary(dynamic raw);
+  @protected
+  BigInt dco_decode_usize(dynamic raw);
 
-@protected (String,String) dco_decode_record_string_string(dynamic raw);
+  @protected
+  Welcome dco_decode_welcome(dynamic raw);
 
-@protected Relay dco_decode_relay(dynamic raw);
+  @protected
+  WelcomeState dco_decode_welcome_state(dynamic raw);
 
-@protected SerializableToken dco_decode_serializable_token(dynamic raw);
+  @protected
+  WhitenoiseConfig dco_decode_whitenoise_config(dynamic raw);
 
-@protected int dco_decode_u_16(dynamic raw);
+  @protected
+  AppSettings
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    SseDeserializer deserializer,
+  );
 
-@protected int dco_decode_u_32(dynamic raw);
+  @protected
+  GroupId
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    SseDeserializer deserializer,
+  );
 
-@protected BigInt dco_decode_u_64(dynamic raw);
+  @protected
+  RelayType
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    SseDeserializer deserializer,
+  );
 
-@protected int dco_decode_u_8(dynamic raw);
+  @protected
+  RelayUrl
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    SseDeserializer deserializer,
+  );
 
-@protected U8Array12 dco_decode_u_8_array_12(dynamic raw);
+  @protected
+  Tag sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  );
 
-@protected U8Array32 dco_decode_u_8_array_32(dynamic raw);
+  @protected
+  ThemeMode
+  sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    SseDeserializer deserializer,
+  );
 
-@protected void dco_decode_unit(dynamic raw);
+  @protected
+  GroupId sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    SseDeserializer deserializer,
+  );
 
-@protected UploadGroupImageResult dco_decode_upload_group_image_result(dynamic raw);
+  @protected
+  RelayUrl
+  sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    SseDeserializer deserializer,
+  );
 
-@protected User dco_decode_user(dynamic raw);
+  @protected
+  DateTime sse_decode_Chrono_Utc(SseDeserializer deserializer);
 
-@protected UserReaction dco_decode_user_reaction(dynamic raw);
+  @protected
+  Map<String, String> sse_decode_Map_String_String_None(SseDeserializer deserializer);
 
-@protected BigInt dco_decode_usize(dynamic raw);
+  @protected
+  AppSettings sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    SseDeserializer deserializer,
+  );
 
-@protected Welcome dco_decode_welcome(dynamic raw);
+  @protected
+  GroupId sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    SseDeserializer deserializer,
+  );
 
-@protected WelcomeState dco_decode_welcome_state(dynamic raw);
+  @protected
+  RelayType sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    SseDeserializer deserializer,
+  );
 
-@protected WhitenoiseConfig dco_decode_whitenoise_config(dynamic raw);
+  @protected
+  RelayUrl sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    SseDeserializer deserializer,
+  );
 
-@protected AppSettings sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(SseDeserializer deserializer);
+  @protected
+  Tag sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  );
 
-@protected GroupId sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(SseDeserializer deserializer);
+  @protected
+  ThemeMode sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    SseDeserializer deserializer,
+  );
 
-@protected RelayType sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(SseDeserializer deserializer);
+  @protected
+  String sse_decode_String(SseDeserializer deserializer);
 
-@protected RelayUrl sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(SseDeserializer deserializer);
+  @protected
+  Account sse_decode_account(SseDeserializer deserializer);
 
-@protected Tag sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer);
+  @protected
+  ApiError sse_decode_api_error(SseDeserializer deserializer);
 
-@protected ThemeMode sse_decode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(SseDeserializer deserializer);
+  @protected
+  bool sse_decode_bool(SseDeserializer deserializer);
 
-@protected GroupId sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(SseDeserializer deserializer);
+  @protected
+  DateTime sse_decode_box_autoadd_Chrono_Utc(SseDeserializer deserializer);
 
-@protected RelayUrl sse_decode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(SseDeserializer deserializer);
+  @protected
+  ApiError sse_decode_box_autoadd_api_error(SseDeserializer deserializer);
 
-@protected DateTime sse_decode_Chrono_Utc(SseDeserializer deserializer);
+  @protected
+  FileMetadata sse_decode_box_autoadd_file_metadata(SseDeserializer deserializer);
 
-@protected Map<String, String> sse_decode_Map_String_String_None(SseDeserializer deserializer);
+  @protected
+  FlutterEvent sse_decode_box_autoadd_flutter_event(SseDeserializer deserializer);
 
-@protected AppSettings sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(SseDeserializer deserializer);
+  @protected
+  FlutterGroupDataUpdate sse_decode_box_autoadd_flutter_group_data_update(
+    SseDeserializer deserializer,
+  );
 
-@protected GroupId sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(SseDeserializer deserializer);
+  @protected
+  FlutterMetadata sse_decode_box_autoadd_flutter_metadata(SseDeserializer deserializer);
 
-@protected RelayType sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(SseDeserializer deserializer);
+  @protected
+  Group sse_decode_box_autoadd_group(SseDeserializer deserializer);
 
-@protected RelayUrl sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(SseDeserializer deserializer);
+  @protected
+  WhitenoiseConfig sse_decode_box_autoadd_whitenoise_config(SseDeserializer deserializer);
 
-@protected Tag sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer);
+  @protected
+  ChatMessage sse_decode_chat_message(SseDeserializer deserializer);
 
-@protected ThemeMode sse_decode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(SseDeserializer deserializer);
+  @protected
+  EmojiReaction sse_decode_emoji_reaction(SseDeserializer deserializer);
 
-@protected String sse_decode_String(SseDeserializer deserializer);
+  @protected
+  FileMetadata sse_decode_file_metadata(SseDeserializer deserializer);
 
-@protected Account sse_decode_account(SseDeserializer deserializer);
+  @protected
+  FlutterEvent sse_decode_flutter_event(SseDeserializer deserializer);
 
-@protected ApiError sse_decode_api_error(SseDeserializer deserializer);
+  @protected
+  FlutterGroupDataUpdate sse_decode_flutter_group_data_update(SseDeserializer deserializer);
 
-@protected bool sse_decode_bool(SseDeserializer deserializer);
+  @protected
+  FlutterMetadata sse_decode_flutter_metadata(SseDeserializer deserializer);
 
-@protected DateTime sse_decode_box_autoadd_Chrono_Utc(SseDeserializer deserializer);
+  @protected
+  Group sse_decode_group(SseDeserializer deserializer);
 
-@protected ApiError sse_decode_box_autoadd_api_error(SseDeserializer deserializer);
+  @protected
+  GroupInformation sse_decode_group_information(SseDeserializer deserializer);
 
-@protected FileMetadata sse_decode_box_autoadd_file_metadata(SseDeserializer deserializer);
+  @protected
+  GroupState sse_decode_group_state(SseDeserializer deserializer);
 
-@protected FlutterEvent sse_decode_box_autoadd_flutter_event(SseDeserializer deserializer);
+  @protected
+  GroupType sse_decode_group_type(SseDeserializer deserializer);
 
-@protected FlutterGroupDataUpdate sse_decode_box_autoadd_flutter_group_data_update(SseDeserializer deserializer);
+  @protected
+  int sse_decode_i_32(SseDeserializer deserializer);
 
-@protected FlutterMetadata sse_decode_box_autoadd_flutter_metadata(SseDeserializer deserializer);
+  @protected
+  PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
 
-@protected Group sse_decode_box_autoadd_group(SseDeserializer deserializer);
+  @protected
+  List<Tag>
+  sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  );
 
-@protected WhitenoiseConfig sse_decode_box_autoadd_whitenoise_config(SseDeserializer deserializer);
+  @protected
+  List<String> sse_decode_list_String(SseDeserializer deserializer);
 
-@protected ChatMessage sse_decode_chat_message(SseDeserializer deserializer);
+  @protected
+  List<Account> sse_decode_list_account(SseDeserializer deserializer);
 
-@protected EmojiReaction sse_decode_emoji_reaction(SseDeserializer deserializer);
+  @protected
+  List<ChatMessage> sse_decode_list_chat_message(SseDeserializer deserializer);
 
-@protected FileMetadata sse_decode_file_metadata(SseDeserializer deserializer);
+  @protected
+  List<EmojiReaction> sse_decode_list_emoji_reaction(SseDeserializer deserializer);
 
-@protected FlutterEvent sse_decode_flutter_event(SseDeserializer deserializer);
+  @protected
+  List<FlutterEvent> sse_decode_list_flutter_event(SseDeserializer deserializer);
 
-@protected FlutterGroupDataUpdate sse_decode_flutter_group_data_update(SseDeserializer deserializer);
+  @protected
+  List<Group> sse_decode_list_group(SseDeserializer deserializer);
 
-@protected FlutterMetadata sse_decode_flutter_metadata(SseDeserializer deserializer);
+  @protected
+  List<GroupInformation> sse_decode_list_group_information(SseDeserializer deserializer);
 
-@protected Group sse_decode_group(SseDeserializer deserializer);
+  @protected
+  List<MediaFile> sse_decode_list_media_file(SseDeserializer deserializer);
 
-@protected GroupInformation sse_decode_group_information(SseDeserializer deserializer);
+  @protected
+  Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
 
-@protected GroupState sse_decode_group_state(SseDeserializer deserializer);
+  @protected
+  List<(String, String)> sse_decode_list_record_string_string(SseDeserializer deserializer);
 
-@protected GroupType sse_decode_group_type(SseDeserializer deserializer);
+  @protected
+  List<Relay> sse_decode_list_relay(SseDeserializer deserializer);
 
-@protected int sse_decode_i_32(SseDeserializer deserializer);
+  @protected
+  List<SerializableToken> sse_decode_list_serializable_token(SseDeserializer deserializer);
 
-@protected PlatformInt64 sse_decode_i_64(SseDeserializer deserializer);
+  @protected
+  List<User> sse_decode_list_user(SseDeserializer deserializer);
 
-@protected List<Tag> sse_decode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer);
+  @protected
+  List<UserReaction> sse_decode_list_user_reaction(SseDeserializer deserializer);
 
-@protected List<String> sse_decode_list_String(SseDeserializer deserializer);
+  @protected
+  List<Welcome> sse_decode_list_welcome(SseDeserializer deserializer);
 
-@protected List<Account> sse_decode_list_account(SseDeserializer deserializer);
+  @protected
+  MediaFile sse_decode_media_file(SseDeserializer deserializer);
 
-@protected List<ChatMessage> sse_decode_list_chat_message(SseDeserializer deserializer);
+  @protected
+  MessageWithTokens sse_decode_message_with_tokens(SseDeserializer deserializer);
 
-@protected List<EmojiReaction> sse_decode_list_emoji_reaction(SseDeserializer deserializer);
+  @protected
+  String? sse_decode_opt_String(SseDeserializer deserializer);
 
-@protected List<FlutterEvent> sse_decode_list_flutter_event(SseDeserializer deserializer);
+  @protected
+  DateTime? sse_decode_opt_box_autoadd_Chrono_Utc(SseDeserializer deserializer);
 
-@protected List<Group> sse_decode_list_group(SseDeserializer deserializer);
+  @protected
+  FileMetadata? sse_decode_opt_box_autoadd_file_metadata(SseDeserializer deserializer);
 
-@protected List<GroupInformation> sse_decode_list_group_information(SseDeserializer deserializer);
+  @protected
+  FlutterEvent? sse_decode_opt_box_autoadd_flutter_event(SseDeserializer deserializer);
 
-@protected List<MediaFile> sse_decode_list_media_file(SseDeserializer deserializer);
+  @protected
+  List<Tag>?
+  sse_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    SseDeserializer deserializer,
+  );
 
-@protected Uint8List sse_decode_list_prim_u_8_strict(SseDeserializer deserializer);
+  @protected
+  List<String>? sse_decode_opt_list_String(SseDeserializer deserializer);
 
-@protected List<(String,String)> sse_decode_list_record_string_string(SseDeserializer deserializer);
+  @protected
+  U8Array12? sse_decode_opt_u_8_array_12(SseDeserializer deserializer);
 
-@protected List<Relay> sse_decode_list_relay(SseDeserializer deserializer);
+  @protected
+  U8Array32? sse_decode_opt_u_8_array_32(SseDeserializer deserializer);
 
-@protected List<SerializableToken> sse_decode_list_serializable_token(SseDeserializer deserializer);
+  @protected
+  ReactionSummary sse_decode_reaction_summary(SseDeserializer deserializer);
 
-@protected List<User> sse_decode_list_user(SseDeserializer deserializer);
+  @protected
+  (String, String) sse_decode_record_string_string(SseDeserializer deserializer);
 
-@protected List<UserReaction> sse_decode_list_user_reaction(SseDeserializer deserializer);
+  @protected
+  Relay sse_decode_relay(SseDeserializer deserializer);
 
-@protected List<Welcome> sse_decode_list_welcome(SseDeserializer deserializer);
+  @protected
+  SerializableToken sse_decode_serializable_token(SseDeserializer deserializer);
 
-@protected MediaFile sse_decode_media_file(SseDeserializer deserializer);
+  @protected
+  int sse_decode_u_16(SseDeserializer deserializer);
 
-@protected MessageWithTokens sse_decode_message_with_tokens(SseDeserializer deserializer);
+  @protected
+  int sse_decode_u_32(SseDeserializer deserializer);
 
-@protected String? sse_decode_opt_String(SseDeserializer deserializer);
+  @protected
+  BigInt sse_decode_u_64(SseDeserializer deserializer);
 
-@protected DateTime? sse_decode_opt_box_autoadd_Chrono_Utc(SseDeserializer deserializer);
+  @protected
+  int sse_decode_u_8(SseDeserializer deserializer);
 
-@protected FileMetadata? sse_decode_opt_box_autoadd_file_metadata(SseDeserializer deserializer);
+  @protected
+  U8Array12 sse_decode_u_8_array_12(SseDeserializer deserializer);
 
-@protected FlutterEvent? sse_decode_opt_box_autoadd_flutter_event(SseDeserializer deserializer);
+  @protected
+  U8Array32 sse_decode_u_8_array_32(SseDeserializer deserializer);
 
-@protected List<Tag>? sse_decode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(SseDeserializer deserializer);
+  @protected
+  void sse_decode_unit(SseDeserializer deserializer);
 
-@protected List<String>? sse_decode_opt_list_String(SseDeserializer deserializer);
+  @protected
+  UploadGroupImageResult sse_decode_upload_group_image_result(SseDeserializer deserializer);
 
-@protected U8Array12? sse_decode_opt_u_8_array_12(SseDeserializer deserializer);
+  @protected
+  User sse_decode_user(SseDeserializer deserializer);
 
-@protected U8Array32? sse_decode_opt_u_8_array_32(SseDeserializer deserializer);
+  @protected
+  UserReaction sse_decode_user_reaction(SseDeserializer deserializer);
 
-@protected ReactionSummary sse_decode_reaction_summary(SseDeserializer deserializer);
+  @protected
+  BigInt sse_decode_usize(SseDeserializer deserializer);
 
-@protected (String,String) sse_decode_record_string_string(SseDeserializer deserializer);
+  @protected
+  Welcome sse_decode_welcome(SseDeserializer deserializer);
 
-@protected Relay sse_decode_relay(SseDeserializer deserializer);
+  @protected
+  WelcomeState sse_decode_welcome_state(SseDeserializer deserializer);
 
-@protected SerializableToken sse_decode_serializable_token(SseDeserializer deserializer);
+  @protected
+  WhitenoiseConfig sse_decode_whitenoise_config(SseDeserializer deserializer);
 
-@protected int sse_decode_u_16(SseDeserializer deserializer);
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    AppSettings self,
+    SseSerializer serializer,
+  );
 
-@protected int sse_decode_u_32(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    GroupId self,
+    SseSerializer serializer,
+  );
 
-@protected BigInt sse_decode_u_64(SseDeserializer deserializer);
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    RelayType self,
+    SseSerializer serializer,
+  );
 
-@protected int sse_decode_u_8(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    RelayUrl self,
+    SseSerializer serializer,
+  );
 
-@protected U8Array12 sse_decode_u_8_array_12(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    Tag self,
+    SseSerializer serializer,
+  );
 
-@protected U8Array32 sse_decode_u_8_array_32(SseDeserializer deserializer);
+  @protected
+  void
+  sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    ThemeMode self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_decode_unit(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    GroupId self,
+    SseSerializer serializer,
+  );
 
-@protected UploadGroupImageResult sse_decode_upload_group_image_result(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    RelayUrl self,
+    SseSerializer serializer,
+  );
 
-@protected User sse_decode_user(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Chrono_Utc(DateTime self, SseSerializer serializer);
 
-@protected UserReaction sse_decode_user_reaction(SseDeserializer deserializer);
+  @protected
+  void sse_encode_Map_String_String_None(Map<String, String> self, SseSerializer serializer);
 
-@protected BigInt sse_decode_usize(SseDeserializer deserializer);
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    AppSettings self,
+    SseSerializer serializer,
+  );
 
-@protected Welcome sse_decode_welcome(SseDeserializer deserializer);
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    GroupId self,
+    SseSerializer serializer,
+  );
 
-@protected WelcomeState sse_decode_welcome_state(SseDeserializer deserializer);
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    RelayType self,
+    SseSerializer serializer,
+  );
 
-@protected WhitenoiseConfig sse_decode_whitenoise_config(SseDeserializer deserializer);
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    RelayUrl self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(AppSettings self, SseSerializer serializer);
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    Tag self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(GroupId self, SseSerializer serializer);
+  @protected
+  void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    ThemeMode self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(RelayType self, SseSerializer serializer);
+  @protected
+  void sse_encode_String(String self, SseSerializer serializer);
 
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(RelayUrl self, SseSerializer serializer);
+  @protected
+  void sse_encode_account(Account self, SseSerializer serializer);
 
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(Tag self, SseSerializer serializer);
+  @protected
+  void sse_encode_api_error(ApiError self, SseSerializer serializer);
 
-@protected void sse_encode_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(ThemeMode self, SseSerializer serializer);
+  @protected
+  void sse_encode_bool(bool self, SseSerializer serializer);
 
-@protected void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(GroupId self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_Chrono_Utc(DateTime self, SseSerializer serializer);
 
-@protected void sse_encode_Auto_Ref_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(RelayUrl self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_api_error(ApiError self, SseSerializer serializer);
 
-@protected void sse_encode_Chrono_Utc(DateTime self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_file_metadata(FileMetadata self, SseSerializer serializer);
 
-@protected void sse_encode_Map_String_String_None(Map<String, String> self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_flutter_event(FlutterEvent self, SseSerializer serializer);
 
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(AppSettings self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_flutter_group_data_update(
+    FlutterGroupDataUpdate self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(GroupId self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_flutter_metadata(FlutterMetadata self, SseSerializer serializer);
 
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(RelayType self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_group(Group self, SseSerializer serializer);
 
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(RelayUrl self, SseSerializer serializer);
+  @protected
+  void sse_encode_box_autoadd_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer);
 
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(Tag self, SseSerializer serializer);
+  @protected
+  void sse_encode_chat_message(ChatMessage self, SseSerializer serializer);
 
-@protected void sse_encode_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(ThemeMode self, SseSerializer serializer);
+  @protected
+  void sse_encode_emoji_reaction(EmojiReaction self, SseSerializer serializer);
 
-@protected void sse_encode_String(String self, SseSerializer serializer);
+  @protected
+  void sse_encode_file_metadata(FileMetadata self, SseSerializer serializer);
 
-@protected void sse_encode_account(Account self, SseSerializer serializer);
+  @protected
+  void sse_encode_flutter_event(FlutterEvent self, SseSerializer serializer);
 
-@protected void sse_encode_api_error(ApiError self, SseSerializer serializer);
+  @protected
+  void sse_encode_flutter_group_data_update(FlutterGroupDataUpdate self, SseSerializer serializer);
 
-@protected void sse_encode_bool(bool self, SseSerializer serializer);
+  @protected
+  void sse_encode_flutter_metadata(FlutterMetadata self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_Chrono_Utc(DateTime self, SseSerializer serializer);
+  @protected
+  void sse_encode_group(Group self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_api_error(ApiError self, SseSerializer serializer);
+  @protected
+  void sse_encode_group_information(GroupInformation self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_file_metadata(FileMetadata self, SseSerializer serializer);
+  @protected
+  void sse_encode_group_state(GroupState self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_flutter_event(FlutterEvent self, SseSerializer serializer);
+  @protected
+  void sse_encode_group_type(GroupType self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_flutter_group_data_update(FlutterGroupDataUpdate self, SseSerializer serializer);
+  @protected
+  void sse_encode_i_32(int self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_flutter_metadata(FlutterMetadata self, SseSerializer serializer);
+  @protected
+  void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
 
-@protected void sse_encode_box_autoadd_group(Group self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    List<Tag> self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_encode_box_autoadd_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_String(List<String> self, SseSerializer serializer);
 
-@protected void sse_encode_chat_message(ChatMessage self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_account(List<Account> self, SseSerializer serializer);
 
-@protected void sse_encode_emoji_reaction(EmojiReaction self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_chat_message(List<ChatMessage> self, SseSerializer serializer);
 
-@protected void sse_encode_file_metadata(FileMetadata self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_emoji_reaction(List<EmojiReaction> self, SseSerializer serializer);
 
-@protected void sse_encode_flutter_event(FlutterEvent self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_flutter_event(List<FlutterEvent> self, SseSerializer serializer);
 
-@protected void sse_encode_flutter_group_data_update(FlutterGroupDataUpdate self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_group(List<Group> self, SseSerializer serializer);
 
-@protected void sse_encode_flutter_metadata(FlutterMetadata self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_group_information(List<GroupInformation> self, SseSerializer serializer);
 
-@protected void sse_encode_group(Group self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_media_file(List<MediaFile> self, SseSerializer serializer);
 
-@protected void sse_encode_group_information(GroupInformation self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_prim_u_8_strict(Uint8List self, SseSerializer serializer);
 
-@protected void sse_encode_group_state(GroupState self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_record_string_string(List<(String, String)> self, SseSerializer serializer);
 
-@protected void sse_encode_group_type(GroupType self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_relay(List<Relay> self, SseSerializer serializer);
 
-@protected void sse_encode_i_32(int self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_serializable_token(List<SerializableToken> self, SseSerializer serializer);
 
-@protected void sse_encode_i_64(PlatformInt64 self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_user(List<User> self, SseSerializer serializer);
 
-@protected void sse_encode_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(List<Tag> self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_user_reaction(List<UserReaction> self, SseSerializer serializer);
 
-@protected void sse_encode_list_String(List<String> self, SseSerializer serializer);
+  @protected
+  void sse_encode_list_welcome(List<Welcome> self, SseSerializer serializer);
 
-@protected void sse_encode_list_account(List<Account> self, SseSerializer serializer);
+  @protected
+  void sse_encode_media_file(MediaFile self, SseSerializer serializer);
 
-@protected void sse_encode_list_chat_message(List<ChatMessage> self, SseSerializer serializer);
+  @protected
+  void sse_encode_message_with_tokens(MessageWithTokens self, SseSerializer serializer);
 
-@protected void sse_encode_list_emoji_reaction(List<EmojiReaction> self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_String(String? self, SseSerializer serializer);
 
-@protected void sse_encode_list_flutter_event(List<FlutterEvent> self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_box_autoadd_Chrono_Utc(DateTime? self, SseSerializer serializer);
 
-@protected void sse_encode_list_group(List<Group> self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_box_autoadd_file_metadata(FileMetadata? self, SseSerializer serializer);
 
-@protected void sse_encode_list_group_information(List<GroupInformation> self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_box_autoadd_flutter_event(FlutterEvent? self, SseSerializer serializer);
 
-@protected void sse_encode_list_media_file(List<MediaFile> self, SseSerializer serializer);
+  @protected
+  void
+  sse_encode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    List<Tag>? self,
+    SseSerializer serializer,
+  );
 
-@protected void sse_encode_list_prim_u_8_strict(Uint8List self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer);
 
-@protected void sse_encode_list_record_string_string(List<(String,String)> self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_u_8_array_12(U8Array12? self, SseSerializer serializer);
 
-@protected void sse_encode_list_relay(List<Relay> self, SseSerializer serializer);
+  @protected
+  void sse_encode_opt_u_8_array_32(U8Array32? self, SseSerializer serializer);
 
-@protected void sse_encode_list_serializable_token(List<SerializableToken> self, SseSerializer serializer);
+  @protected
+  void sse_encode_reaction_summary(ReactionSummary self, SseSerializer serializer);
 
-@protected void sse_encode_list_user(List<User> self, SseSerializer serializer);
+  @protected
+  void sse_encode_record_string_string((String, String) self, SseSerializer serializer);
 
-@protected void sse_encode_list_user_reaction(List<UserReaction> self, SseSerializer serializer);
+  @protected
+  void sse_encode_relay(Relay self, SseSerializer serializer);
 
-@protected void sse_encode_list_welcome(List<Welcome> self, SseSerializer serializer);
+  @protected
+  void sse_encode_serializable_token(SerializableToken self, SseSerializer serializer);
 
-@protected void sse_encode_media_file(MediaFile self, SseSerializer serializer);
+  @protected
+  void sse_encode_u_16(int self, SseSerializer serializer);
 
-@protected void sse_encode_message_with_tokens(MessageWithTokens self, SseSerializer serializer);
+  @protected
+  void sse_encode_u_32(int self, SseSerializer serializer);
 
-@protected void sse_encode_opt_String(String? self, SseSerializer serializer);
+  @protected
+  void sse_encode_u_64(BigInt self, SseSerializer serializer);
 
-@protected void sse_encode_opt_box_autoadd_Chrono_Utc(DateTime? self, SseSerializer serializer);
+  @protected
+  void sse_encode_u_8(int self, SseSerializer serializer);
 
-@protected void sse_encode_opt_box_autoadd_file_metadata(FileMetadata? self, SseSerializer serializer);
+  @protected
+  void sse_encode_u_8_array_12(U8Array12 self, SseSerializer serializer);
 
-@protected void sse_encode_opt_box_autoadd_flutter_event(FlutterEvent? self, SseSerializer serializer);
+  @protected
+  void sse_encode_u_8_array_32(U8Array32 self, SseSerializer serializer);
 
-@protected void sse_encode_opt_list_Auto_Owned_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(List<Tag>? self, SseSerializer serializer);
+  @protected
+  void sse_encode_unit(void self, SseSerializer serializer);
 
-@protected void sse_encode_opt_list_String(List<String>? self, SseSerializer serializer);
+  @protected
+  void sse_encode_upload_group_image_result(UploadGroupImageResult self, SseSerializer serializer);
 
-@protected void sse_encode_opt_u_8_array_12(U8Array12? self, SseSerializer serializer);
+  @protected
+  void sse_encode_user(User self, SseSerializer serializer);
 
-@protected void sse_encode_opt_u_8_array_32(U8Array32? self, SseSerializer serializer);
+  @protected
+  void sse_encode_user_reaction(UserReaction self, SseSerializer serializer);
 
-@protected void sse_encode_reaction_summary(ReactionSummary self, SseSerializer serializer);
+  @protected
+  void sse_encode_usize(BigInt self, SseSerializer serializer);
 
-@protected void sse_encode_record_string_string((String,String) self, SseSerializer serializer);
+  @protected
+  void sse_encode_welcome(Welcome self, SseSerializer serializer);
 
-@protected void sse_encode_relay(Relay self, SseSerializer serializer);
+  @protected
+  void sse_encode_welcome_state(WelcomeState self, SseSerializer serializer);
 
-@protected void sse_encode_serializable_token(SerializableToken self, SseSerializer serializer);
-
-@protected void sse_encode_u_16(int self, SseSerializer serializer);
-
-@protected void sse_encode_u_32(int self, SseSerializer serializer);
-
-@protected void sse_encode_u_64(BigInt self, SseSerializer serializer);
-
-@protected void sse_encode_u_8(int self, SseSerializer serializer);
-
-@protected void sse_encode_u_8_array_12(U8Array12 self, SseSerializer serializer);
-
-@protected void sse_encode_u_8_array_32(U8Array32 self, SseSerializer serializer);
-
-@protected void sse_encode_unit(void self, SseSerializer serializer);
-
-@protected void sse_encode_upload_group_image_result(UploadGroupImageResult self, SseSerializer serializer);
-
-@protected void sse_encode_user(User self, SseSerializer serializer);
-
-@protected void sse_encode_user_reaction(UserReaction self, SseSerializer serializer);
-
-@protected void sse_encode_usize(BigInt self, SseSerializer serializer);
-
-@protected void sse_encode_welcome(Welcome self, SseSerializer serializer);
-
-@protected void sse_encode_welcome_state(WelcomeState self, SseSerializer serializer);
-
-@protected void sse_encode_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer);
-                }
-                
-
+  @protected
+  void sse_encode_whitenoise_config(WhitenoiseConfig self, SseSerializer serializer);
+}
 
 // Section: wire_class
 
+class RustLibWire implements BaseWire {
+  factory RustLibWire.fromExternalLibrary(ExternalLibrary lib) =>
+      RustLibWire(lib.ffiDynamicLibrary);
 
-        class RustLibWire implements BaseWire {
+  /// Holds the symbol lookup function.
+  final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName) _lookup;
 
-            factory RustLibWire.fromExternalLibrary(ExternalLibrary lib) =>
-              RustLibWire(lib.ffiDynamicLibrary);
-        
-            /// Holds the symbol lookup function.
-            final ffi.Pointer<T> Function<T extends ffi.NativeType>(String symbolName)
-                _lookup;
-  
-            /// The symbols are looked up in [dynamicLibrary].
-            RustLibWire(ffi.DynamicLibrary dynamicLibrary)
-                : _lookup = dynamicLibrary.lookup;
+  /// The symbols are looked up in [dynamicLibrary].
+  RustLibWire(ffi.DynamicLibrary dynamicLibrary) : _lookup = dynamicLibrary.lookup;
 
-            
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
-                ptr,
-              );
-            }
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+      ptr,
+    );
+  }
 
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings');
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings = _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
-                ptr,
-              );
-            }
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings',
+      );
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings');
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings = _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
-                ptr,
-              );
-            }
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings(
+      ptr,
+    );
+  }
 
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId');
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId = _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
-                ptr,
-              );
-            }
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings',
+      );
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettings =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerAppSettingsPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId');
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId = _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
-                ptr,
-              );
-            }
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+      ptr,
+    );
+  }
 
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType');
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType = _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
-                ptr,
-              );
-            }
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId',
+      );
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType');
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType = _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
-                ptr,
-              );
-            }
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId(
+      ptr,
+    );
+  }
 
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl');
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl = _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
-                ptr,
-              );
-            }
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId',
+      );
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupId =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerGroupIdPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl');
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl = _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
-                ptr,
-              );
-            }
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+      ptr,
+    );
+  }
 
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag');
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag = _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
-                ptr,
-              );
-            }
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType',
+      );
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag');
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag = _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
-                ptr,
-              );
-            }
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType(
+      ptr,
+    );
+  }
 
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode');
-            late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode = _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-            void rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
-              ffi.Pointer<ffi.Void> ptr,
-            ) {
-              return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
-                ptr,
-              );
-            }
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType',
+      );
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayType =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayTypePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
 
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr = _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>('frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode');
-            late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode = _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr.asFunction<void Function(ffi.Pointer<ffi.Void>)>();
-            
-        }
-        
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl',
+      );
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl',
+      );
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrl =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerRelayUrlPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag',
+      );
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag',
+      );
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTag =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerTagPtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+  rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode',
+      );
+  late final _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode =
+      _rust_arc_increment_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+
+  void
+  rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+    ffi.Pointer<ffi.Void> ptr,
+  ) {
+    return _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode(
+      ptr,
+    );
+  }
+
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr =
+      _lookup<ffi.NativeFunction<ffi.Void Function(ffi.Pointer<ffi.Void>)>>(
+        'frbgen_sloth_rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode',
+      );
+  late final _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeMode =
+      _rust_arc_decrement_strong_count_RustOpaque_flutter_rust_bridgefor_generatedRustAutoOpaqueInnerThemeModePtr
+          .asFunction<void Function(ffi.Pointer<ffi.Void>)>();
+}
