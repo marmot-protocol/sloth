@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Color, BuildContext, Theme, Brightness, ThemeData;
+import 'package:flutter/material.dart';
 
 typedef ThemeColors = ({Color primary, Color secondary, Color tertiary});
 

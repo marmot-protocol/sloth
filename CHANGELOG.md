@@ -8,9 +8,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
-- Theme setup [PR #1](https://github.com/josefinalliende/sloth/pull/1)
-- CI github action [PR #2](https://github.com/josefinalliende/sloth/pull/2)
-- Dependabot action [PR #3](https://github.com/josefinalliende/sloth/pull/3)
+- Theme setup [PR #1](https://github.com/marmot-protocol/sloth/pull/1)
+- CI github action [PR #2](https://github.com/marmot-protocol/sloth/pull/2)
+- Dependabot action [PR #3](https://github.com/marmot-protocol/sloth/pull/3)
+- Base components [PR #4](https://github.com/marmot-protocol/sloth/pull/4)
 
 ### Changed
 
