@@ -101,17 +101,22 @@ analyze:
 # Format Dart code
 format-dart:
     @echo "💅 Formatting Dart code..."
-    dart format lib/ integration_test/
+    dart format lib/ test/
 
 # Check Dart code formatting (CI-style check)
 check-dart-format:
     @echo "🔍 Checking Dart code formatting..."
-    dart format --set-exit-if-changed lib/ integration_test/
+    dart format --set-exit-if-changed lib/ test/
 
 # Test Flutter code
 test-flutter:
     @echo "🧪 Testing Flutter code..."
     @if [ -d "test" ]; then flutter test; else echo "No test directory found. Create tests in test/ directory."; fi
+
+coverage min="80":
+    @echo "🧪 Running Flutter tests with coverage..."
+    flutter test --coverage && \
+        ./scripts/check-coverage.sh --min {{min}}; \
 
 # ==============================================================================
 # CLEANING

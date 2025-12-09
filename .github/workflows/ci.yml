@@ -7,59 +7,11 @@ on:
     branches: [master]
 
 jobs:
-  setup:
-    name: Setup
+  lint-and-test:
+    name: Lint and test
     runs-on: ubuntu-latest
-
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      with:
-        fetch-depth: 0
-
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: '3.38.4'
-        channel: 'stable'
-        cache: true
-
-    - name: Setup Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        components: rustfmt, clippy
-
-    - name: Cache Flutter dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.pub-cache
-          ${{ runner.workspace }}/.pub-cache
-        key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-pub-cache-
-
-    - name: Cache Rust dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          rust/target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-
-
-    - name: Install Flutter dependencies
-      run: flutter pub get
-
-    - name: Install Rust dependencies
-      run: cd rust && cargo fetch
-
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    needs: setup
+    outputs:
+      coverage: ${{ steps.coverage.outputs.percentage }}
 
     steps:
     - name: Checkout code
@@ -110,63 +62,137 @@ jobs:
       run: cd rust && cargo fmt --check
 
     - name: Check Dart formatting
-      run: dart format --set-exit-if-changed lib/ integration_test/
+      run: dart format --set-exit-if-changed lib/ test/
 
     - name: Rust linting (Clippy)
       run: cd rust && cargo clippy --package rust_lib_whitenoise -- -D warnings
 
-    - name: Flutter analyze (errors only)
+    - name: Flutter analyze
       run: flutter analyze --fatal-infos
 
-  test:
-    name: Test
+    - name: Run Flutter tests
+      run: flutter test --coverage
+
+    - name: Extract coverage percentage
+      id: coverage
+      run: |
+        chmod +x scripts/check-coverage.sh
+        COVERAGE=$(./scripts/check-coverage.sh coverage/lcov.info)
+        echo "percentage=$COVERAGE" >> "$GITHUB_OUTPUT"
+        echo "Current coverage: $COVERAGE%"
+
+  coverage:
+    name: Coverage
+    if: github.event_name == 'pull_request'
+    needs: lint-and-test
     runs-on: ubuntu-latest
-    needs: setup
+    permissions:
+      contents: read
+      pull-requests: write
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    - name: Get master branch coverage
+      id: master_coverage
+      run: |
+        echo "🔍 Searching for baseline from master branch..."
+
+        # Get the latest completed CI workflow run ID from master
+        RUN_ID=$(gh run list \
+          --repo ${{ github.repository }} \
+          --workflow=ci.yml \
+          --branch master \
+          --status completed \
+          --limit 1 \
+          --json databaseId \
+          --jq '.[0].databaseId')
+
+        if [ -z "$RUN_ID" ] || [ "$RUN_ID" = "null" ]; then
+          echo "baseline=0" >> "$GITHUB_OUTPUT"
+          echo "⚠️  No completed CI run found on master"
+          exit 0
+        fi
+
+        echo "Found workflow run ID: $RUN_ID"
+
+        # Download the baseline artifact
+        if gh run download "$RUN_ID" \
+          --repo ${{ github.repository }} \
+          --name coverage-baseline \
+          --dir master-coverage; then
+
+          if [ -f master-coverage/coverage-baseline.txt ]; then
+            MASTER_COV=$(cat master-coverage/coverage-baseline.txt)
+            echo "baseline=$MASTER_COV" >> "$GITHUB_OUTPUT"
+            echo "✓ Master branch coverage: $MASTER_COV%"
+          else
+            echo "baseline=0" >> "$GITHUB_OUTPUT"
+            echo "⚠️  Baseline file not found in artifact"
+          fi
+        else
+          echo "baseline=0" >> "$GITHUB_OUTPUT"
+          echo "⚠️  Failed to download baseline artifact"
+        fi
+      env:
+        GH_TOKEN: ${{ github.token }}
+
+    - name: Compare coverage
+      if: steps.master_coverage.outputs.baseline != '0'
+      run: |
+        CURRENT=${{ needs.lint-and-test.outputs.coverage }}
+        BASELINE=${{ steps.master_coverage.outputs.baseline }}
+
+        echo "=== Coverage Comparison ==="
+        echo "Master branch: $BASELINE%"
+        echo "This PR:       $CURRENT%"
+
+        DIFF=$(awk "BEGIN {printf \"%.2f\", $CURRENT - $BASELINE}")
+
+        if (( $(awk "BEGIN {print ($CURRENT < $BASELINE)}") )); then
+          echo "❌ Coverage decreased by ${DIFF#-}%"
+          echo "::error::Coverage regression detected. Coverage decreased from $BASELINE% to $CURRENT% ($DIFF%)"
+          exit 1
+        elif (( $(awk "BEGIN {print ($CURRENT > $BASELINE)}") )); then
+          echo "✅ Coverage improved by $DIFF%"
+        else
+          echo "✅ Coverage maintained at $BASELINE%"
+        fi
+
+    - name: Comment PR with coverage change
+      if: always() && steps.master_coverage.outputs.baseline != '0'
+      uses: actions/github-script@v7
       with:
-        fetch-depth: 0
+        script: |
+          const current = parseFloat('${{ needs.lint-and-test.outputs.coverage }}');
+          const baseline = parseFloat('${{ steps.master_coverage.outputs.baseline }}');
+          const diff = (current - baseline).toFixed(2);
 
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
+          let emoji = current > baseline ? '✅' : current < baseline ? '❌' : '➡️';
+
+          const body = `## ${emoji} Coverage: ${baseline}% → ${current}% (${diff > 0 ? '+' : ''}${diff}%)`;
+
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: body
+          });
+
+  coverage-baseline:
+    name: Coverage Baseline
+    if: github.event_name == 'push'
+    needs: lint-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Save coverage baseline
+      run: |
+        mkdir -p coverage-baseline
+        echo "${{ needs.lint-and-test.outputs.coverage }}" > coverage-baseline/coverage-baseline.txt
+        echo "Saved baseline: ${{ needs.lint-and-test.outputs.coverage }}%"
+
+    - name: Upload coverage baseline
+      uses: actions/upload-artifact@v4
       with:
-        flutter-version: '3.38.4'
-        channel: 'stable'
-        cache: true
-
-    - name: Setup Rust
-      uses: dtolnay/rust-toolchain@stable
-      with:
-        components: rustfmt, clippy
-
-    - name: Cache Flutter dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.pub-cache
-          ${{ runner.workspace }}/.pub-cache
-        key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-pub-cache-
-
-    - name: Cache Rust dependencies
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.cargo/registry
-          ~/.cargo/git
-          rust/target
-        key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
-        restore-keys: |
-          ${{ runner.os }}-cargo-
-
-    - name: Install Flutter dependencies
-      run: flutter pub get
-
-    - name: Install Rust dependencies
-      run: cd rust && cargo fetch
-
-    - name: Run Flutter tests
-      run: flutter test
+        name: coverage-baseline
+        path: coverage-baseline/coverage-baseline.txt
+        retention-days: 90
