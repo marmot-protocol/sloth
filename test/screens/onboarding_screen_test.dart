@@ -1,0 +1,113 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/routes.dart';
+import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/screens/settings_screen.dart';
+import 'package:sloth/screens/wip_screen.dart';
+import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/frb_generated.dart';
+
+class _MockApi implements RustLibApi {
+  @override
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required bool blockingDataSync,
+    required String pubkey,
+  }) async => const FlutterMetadata(custom: {});
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+class _MockAuthNotifier extends AuthNotifier {
+  @override
+  Future<String?> build() async {
+    state = const AsyncData('test_pubkey');
+    return 'test_pubkey';
+  }
+}
+
+void main() {
+  setUpAll(() => RustLib.initMock(api: _MockApi()));
+
+  Future<void> pumpOnboardingScreen(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
+        child: ScreenUtilInit(
+          designSize: const Size(390, 844),
+          builder: (_, _) => Consumer(
+            builder: (context, ref, _) {
+              return MaterialApp.router(routerConfig: Routes.build(ref));
+            },
+          ),
+        ),
+      ),
+    );
+    Routes.goToOnboarding(tester.element(find.byType(Scaffold)));
+    await tester.pumpAndSettle();
+  }
+
+  group('OnboardingScreen', () {
+    testWidgets('displays profile ready message', (tester) async {
+      await pumpOnboardingScreen(tester);
+      expect(find.text('Your profile is ready!'), findsOneWidget);
+    });
+
+    testWidgets('displays description text', (tester) async {
+      await pumpOnboardingScreen(tester);
+      expect(
+        find.text('Start a conversation by adding friends or sharing your profile.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('tapping close icon navigates to chat list', (tester) async {
+      await pumpOnboardingScreen(tester);
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping outside slate navigates to chat list', (tester) async {
+      await pumpOnboardingScreen(tester);
+      await tester.tap(find.byKey(const Key('onboarding_background')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping Share your profile navigates to WIP screen', (tester) async {
+      await pumpOnboardingScreen(tester);
+      await tester.tap(find.text('Share your profile'));
+      await tester.pumpAndSettle();
+      expect(find.byType(WipScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping Start a chat navigates to WIP screen', (tester) async {
+      await pumpOnboardingScreen(tester);
+      await tester.tap(find.text('Start a chat'));
+      await tester.pumpAndSettle();
+      expect(find.byType(WipScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping avatar navigates to settings', (tester) async {
+      await pumpOnboardingScreen(tester);
+      await tester.tap(find.byKey(const Key('avatar_button')));
+      await tester.pumpAndSettle();
+      expect(find.byType(SettingsScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping chat icon navigates to WIP screen', (tester) async {
+      await pumpOnboardingScreen(tester);
+      await tester.tap(find.byKey(const Key('chat_add_button')));
+      await tester.pumpAndSettle();
+      expect(find.byType(WipScreen), findsOneWidget);
+    });
+  });
+}
