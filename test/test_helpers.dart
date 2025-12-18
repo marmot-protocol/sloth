@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart' show WidgetTester;
 
-/// Mounts a hook and returns a getter for its current value.
 Future<T Function()> mountHook<T>(
   WidgetTester tester,
   T Function() useHook,

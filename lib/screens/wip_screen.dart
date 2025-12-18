@@ -5,6 +5,7 @@ import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
+import 'package:sloth/widgets/wn_screen_header.dart' show WnScreenHeader;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 
 class WipScreen extends StatelessWidget {
@@ -23,30 +24,7 @@ class WipScreen extends StatelessWidget {
               spacing: 16.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
-                  children: [
-                    Text(
-                      'Sloths working',
-                      style: TextStyle(
-                        color: colors.foregroundPrimary,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                    GestureDetector(
-                      key: const Key('close_button'),
-                      onTap: () => Routes.goBack(context),
-                      child: Icon(
-                        Icons.close,
-                        color: colors.foregroundPrimary,
-                        size: 24.w,
-                      ),
-                    ),
-                  ],
-                ),
+                const WnScreenHeader(title: 'Sloths working'),
                 Expanded(
                   child: Center(
                     child: Column(

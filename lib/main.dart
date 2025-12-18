@@ -17,7 +17,6 @@ Future<void> main() async {
   await RustLib.init();
   await _initializeWhitenoise();
 
-  // Create container and initialize auth BEFORE runApp
   final container = ProviderContainer();
   await container.read(authProvider.future);
 

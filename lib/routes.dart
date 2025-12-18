@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
+import 'package:sloth/screens/developer_settings_screen.dart' show DeveloperSettingsScreen;
 import 'package:sloth/screens/donate_screen.dart' show DonateScreen;
 import 'package:sloth/screens/home_screen.dart' show HomeScreen;
 import 'package:sloth/screens/login_screen.dart' show LoginScreen;
@@ -22,6 +23,7 @@ abstract final class Routes {
   static const _donate = '/donate';
   static const _wip = '/wip';
   static const _onboarding = '/onboarding';
+  static const _developerSettings = '/developer-settings';
   static const _publicRoutes = {_home, _login, _signup};
 
   static GoRouter build(WidgetRef ref) {
@@ -91,6 +93,13 @@ abstract final class Routes {
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
             child: const OnboardingScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _developerSettings,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const DeveloperSettingsScreen(),
           ),
         ),
       ],
@@ -163,5 +172,9 @@ abstract final class Routes {
 
   static void goToOnboarding(BuildContext context) {
     GoRouter.of(context).go(_onboarding);
+  }
+
+  static void pushToDeveloperSettings(BuildContext context) {
+    GoRouter.of(context).push(_developerSettings);
   }
 }

@@ -9,6 +9,7 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
 class SettingsScreen extends HookConsumerWidget {
@@ -33,27 +34,7 @@ class SettingsScreen extends HookConsumerWidget {
               spacing: 16.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Settings',
-                      style: TextStyle(
-                        color: colors.foregroundPrimary,
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    GestureDetector(
-                      onTap: () => Routes.goBack(context),
-                      child: Icon(
-                        Icons.close,
-                        color: colors.foregroundPrimary,
-                        size: 24.w,
-                      ),
-                    ),
-                  ],
-                ),
+                const WnScreenHeader(title: 'Settings'),
                 Center(
                   child: Row(
                     spacing: 8.w,
@@ -116,6 +97,11 @@ class SettingsScreen extends HookConsumerWidget {
                   svgPath: 'assets/svgs/favorite.svg',
                   label: 'Donate to White Noise',
                   onTap: () => Routes.pushToDonate(context),
+                ),
+                _SettingsTile(
+                  svgPath: 'assets/svgs/development.svg',
+                  label: 'Developer settings',
+                  onTap: () => Routes.pushToDeveloperSettings(context),
                 ),
                 _SettingsTile(
                   svgPath: 'assets/svgs/logout.svg',

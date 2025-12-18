@@ -49,13 +49,13 @@ class OnboardingScreen extends ConsumerWidget {
                             ),
                           ),
                         ),
-                        GestureDetector(
-                          onTap: () => Routes.goToChatList(context),
-                          child: Icon(
+                        IconButton(
+                          onPressed: () => Routes.goToChatList(context),
+                          icon: Icon(
                             Icons.close,
-                            size: 20.w,
                             color: colors.foregroundTertiary,
                           ),
+                          iconSize: 20.w,
                         ),
                       ],
                     ),

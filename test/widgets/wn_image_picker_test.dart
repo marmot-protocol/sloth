@@ -127,7 +127,6 @@ void main() {
 
         expect(find.byKey(const Key('image_picker_animation')), findsOneWidget);
 
-        // Complete the 500ms delay timer
         await tester.pump(const Duration(milliseconds: 500));
       });
 
@@ -148,7 +147,6 @@ void main() {
 
         expect(selectedPath, equals(fakePath));
 
-        // Complete the 500ms delay timer
         await tester.pump(const Duration(milliseconds: 500));
       });
 

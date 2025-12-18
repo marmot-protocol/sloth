@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/extensions/build_context.dart';
-import 'package:sloth/routes.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
 class DonateScreen extends StatelessWidget {
@@ -27,30 +27,7 @@ class DonateScreen extends StatelessWidget {
               spacing: 24.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        'Donate to White Noise',
-                        style: TextStyle(
-                          color: colors.foregroundPrimary,
-                          fontSize: 16.sp,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                    ),
-                    GestureDetector(
-                      key: const Key('close_button'),
-                      onTap: () => Routes.goBack(context),
-                      child: Icon(
-                        Icons.close,
-                        color: colors.foregroundPrimary,
-                        size: 24.w,
-                      ),
-                    ),
-                  ],
-                ),
+                const WnScreenHeader(title: 'Donate to White Noise'),
                 Text(
                   'As a not-for-profit, White Noise exists solely for your privacy and freedom, not for profit. Your support keeps us independent and uncompromised.',
                   style: TextStyle(

@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/screens/login_screen.dart';
@@ -330,6 +331,34 @@ void main() {
         ],
       );
       Routes.pushToDonate(getContext(tester));
+      await tester.pumpAndSettle();
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
+    });
+  });
+
+  group('pushToDeveloperSettings', () {
+    testWidgets('navigates to Developer Settings', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToDeveloperSettings(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(DeveloperSettingsScreen), findsOneWidget);
+    });
+
+    testWidgets('does not reset navigation stack', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToDeveloperSettings(getContext(tester));
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();

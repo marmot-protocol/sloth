@@ -75,11 +75,9 @@ useSignup(WidgetRef ref) {
     state.value = state.value.copyWith(isLoading: true, clearError: true);
 
     try {
-      // Create identity
       final pubkey = await ref.read(authProvider.notifier).signup();
       final profileService = ProfileService(pubkey);
 
-      // Upload image if selected
       String? pictureUrl;
       if (state.value.selectedImagePath != null) {
         pictureUrl = await profileService.uploadProfilePicture(
@@ -87,7 +85,6 @@ useSignup(WidgetRef ref) {
         );
       }
 
-      // Update profile
       await profileService.updateProfile(
         displayName: displayName.trim(),
         about: bio?.isNotEmpty == true ? bio : null,

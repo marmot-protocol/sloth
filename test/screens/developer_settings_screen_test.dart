@@ -1,0 +1,139 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/routes.dart';
+import 'package:sloth/screens/developer_settings_screen.dart';
+import 'package:sloth/src/rust/api/accounts.dart';
+import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/frb_generated.dart';
+
+import '../mocks/mock_secure_storage.dart';
+
+class _MockApi implements RustLibApi {
+  List<FlutterEvent> keyPackages = [];
+
+  @override
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required bool blockingDataSync,
+    required String pubkey,
+  }) async => const FlutterMetadata(name: 'Test', custom: {});
+
+  @override
+  Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({
+    required String accountPubkey,
+  }) async => keyPackages;
+
+  @override
+  Future<void> crateApiAccountsPublishAccountKeyPackage({
+    required String accountPubkey,
+  }) async {}
+
+  @override
+  Future<bool> crateApiAccountsDeleteAccountKeyPackage({
+    required String accountPubkey,
+    required String keyPackageId,
+  }) async => true;
+
+  @override
+  Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({
+    required String accountPubkey,
+  }) async => BigInt.from(keyPackages.length);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+class _MockAuthNotifier extends AuthNotifier {
+  @override
+  Future<String?> build() async {
+    state = const AsyncData('test_pubkey');
+    return 'test_pubkey';
+  }
+}
+
+void main() {
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.keyPackages = [];
+  });
+
+  Future<void> pumpScreen(WidgetTester tester) async {
+    tester.view.physicalSize = const Size(390, 844);
+    tester.view.devicePixelRatio = 1.0;
+    addTearDown(tester.view.reset);
+
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          authProvider.overrideWith(() => _MockAuthNotifier()),
+          secureStorageProvider.overrideWithValue(MockSecureStorage()),
+        ],
+        child: ScreenUtilInit(
+          designSize: const Size(390, 844),
+          builder: (_, _) => Consumer(
+            builder: (context, ref, _) {
+              return MaterialApp.router(routerConfig: Routes.build(ref));
+            },
+          ),
+        ),
+      ),
+    );
+    Routes.pushToDeveloperSettings(tester.element(find.byType(Scaffold)));
+    await tester.pumpAndSettle();
+  }
+
+  group('DeveloperSettingsScreen', () {
+    testWidgets('displays Developer Settings title', (tester) async {
+      await pumpScreen(tester);
+      expect(find.text('Developer Settings'), findsOneWidget);
+    });
+
+    testWidgets('displays action buttons', (tester) async {
+      await pumpScreen(tester);
+      expect(find.text('Publish New Key Package'), findsOneWidget);
+      expect(find.text('Refresh Key Packages'), findsOneWidget);
+      expect(find.text('Delete All Key Packages'), findsOneWidget);
+    });
+
+    testWidgets('displays key packages count', (tester) async {
+      await pumpScreen(tester);
+      expect(find.text('Key Packages (0)'), findsOneWidget);
+    });
+
+    testWidgets('displays empty state when no packages', (tester) async {
+      await pumpScreen(tester);
+      expect(find.text('No key packages found'), findsOneWidget);
+    });
+
+    testWidgets('displays key packages when available', (tester) async {
+      mockApi.keyPackages = [
+        FlutterEvent(
+          id: 'pkg1',
+          pubkey: 'test',
+          createdAt: DateTime.now(),
+          kind: 443,
+          tags: [],
+          content: '',
+        ),
+      ];
+
+      await pumpScreen(tester);
+      expect(find.text('Package 1'), findsOneWidget);
+    });
+
+    testWidgets('tapping close icon returns to previous screen', (tester) async {
+      await pumpScreen(tester);
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+      expect(find.byType(DeveloperSettingsScreen), findsNothing);
+    });
+  });
+}
