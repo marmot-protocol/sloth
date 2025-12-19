@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:sloth/extensions/build_context.dart';
-import 'package:sloth/utils/formatting.dart' show formatInitials;
+import 'package:sloth/widgets/wn_initials_avatar.dart';
 
 class WnAvatar extends StatelessWidget {
   const WnAvatar({
@@ -47,7 +46,7 @@ class WnAvatar extends StatelessWidget {
               child: imageWithBorder,
             );
           },
-          errorBuilder: (context, error, stackTrace) => _InitialsAvatar(
+          errorBuilder: (context, error, stackTrace) => WnInitialsAvatar(
             displayName: displayName,
             size: avatarSize,
           ),
@@ -55,53 +54,6 @@ class WnAvatar extends StatelessWidget {
       );
     }
 
-    return _InitialsAvatar(displayName: displayName, size: avatarSize);
-  }
-}
-
-class _InitialsAvatar extends StatelessWidget {
-  const _InitialsAvatar({
-    this.displayName,
-    required this.size,
-  });
-
-  final String? displayName;
-  final double size;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final initials = formatInitials(displayName);
-
-    return Container(
-      width: size,
-      height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.foregroundTertiary, width: 1.5),
-      ),
-      child: Center(
-        child: initials != null
-            ? Text(
-                initials,
-                style: TextStyle(
-                  color: colors.foregroundSecondary,
-                  fontSize: size * 0.4,
-                  fontWeight: FontWeight.w600,
-                ),
-              )
-            : SvgPicture.asset(
-                key: const Key('avatar_fallback_icon'),
-                'assets/svgs/user.svg',
-                width: size * 0.4,
-                height: size * 0.4,
-                colorFilter: ColorFilter.mode(
-                  colors.foregroundSecondary,
-                  BlendMode.srcIn,
-                ),
-              ),
-      ),
-    );
+    return WnInitialsAvatar(displayName: displayName, size: avatarSize);
   }
 }
