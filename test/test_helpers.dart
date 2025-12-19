@@ -1,7 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show Consumer, ProviderScope;
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
-import 'package:flutter_test/flutter_test.dart' show WidgetTester;
+import 'package:flutter_test/flutter_test.dart' show WidgetTester, addTearDown;
+import 'package:sloth/routes.dart';
+
+const testDesignSize = Size(390, 844);
+
+void setUpTestView(WidgetTester tester) {
+  tester.view.physicalSize = testDesignSize;
+  tester.view.devicePixelRatio = 1.0;
+  addTearDown(tester.view.reset);
+}
+
+Future<void> mountTestApp(
+  WidgetTester tester, {
+  List overrides = const [],
+}) async {
+  setUpTestView(tester);
+  await tester.pumpWidget(
+    ProviderScope(
+      overrides: [...overrides],
+      child: ScreenUtilInit(
+        designSize: testDesignSize,
+        builder: (_, _) => Consumer(
+          builder: (context, ref, _) {
+            return MaterialApp.router(routerConfig: Routes.build(ref));
+          },
+        ),
+      ),
+    ),
+  );
+}
 
 Future<T Function()> mountHook<T>(
   WidgetTester tester,
@@ -28,7 +58,7 @@ class _HookTestWidget<T> extends HookWidget {
 
 Future<void> mountWidget(Widget child, WidgetTester tester) async {
   final widget = ScreenUtilInit(
-    designSize: const Size(390, 844),
+    designSize: testDesignSize,
     builder: (_, _) {
       return MaterialApp(
         home: Scaffold(body: child),
@@ -40,7 +70,7 @@ Future<void> mountWidget(Widget child, WidgetTester tester) async {
 
 Future<void> mountStackedWidget(Widget child, WidgetTester tester) async {
   final widget = ScreenUtilInit(
-    designSize: const Size(390, 844),
+    designSize: testDesignSize,
     builder: (_, _) {
       return MaterialApp(
         home: Scaffold(body: Stack(children: [child])),

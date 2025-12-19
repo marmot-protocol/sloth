@@ -13,6 +13,7 @@ import 'package:sloth/screens/login_screen.dart' show LoginScreen;
 import 'package:sloth/screens/onboarding_screen.dart' show OnboardingScreen;
 import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/signup_screen.dart' show SignupScreen;
+import 'package:sloth/screens/welcome_screen.dart' show WelcomeScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
 
 abstract final class Routes {
@@ -25,6 +26,8 @@ abstract final class Routes {
   static const _wip = '/wip';
   static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
+  static const _welcome = '/welcomes/:welcomeId';
+
   static const _publicRoutes = {_home, _login, _signup};
 
   static GoRouter build(WidgetRef ref) {
@@ -104,6 +107,14 @@ abstract final class Routes {
             child: const DeveloperSettingsScreen(),
           ),
         ),
+        GoRoute(
+          name: 'welcome',
+          path: _welcome,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: WelcomeScreen(welcomeId: state.pathParameters['welcomeId']!),
+          ),
+        ),
       ],
     );
   }
@@ -178,5 +189,9 @@ abstract final class Routes {
 
   static void pushToDeveloperSettings(BuildContext context) {
     GoRouter.of(context).push(_developerSettings);
+  }
+
+  static void pushToWelcome(BuildContext context, String welcomeId) {
+    GoRouter.of(context).pushNamed('welcome', pathParameters: {'welcomeId': welcomeId});
   }
 }

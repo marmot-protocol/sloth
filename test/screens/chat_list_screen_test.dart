@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
 import 'package:sloth/screens/settings_screen.dart';
+import 'package:sloth/screens/welcome_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/welcomes.dart';
@@ -12,6 +11,8 @@ import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_welcome_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
+
+import '../test_helpers.dart';
 
 Welcome _welcome(String id) => Welcome(
   id: id,
@@ -74,22 +75,9 @@ void main() {
   });
 
   Future<void> pumpChatListScreen(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
-        child: ScreenUtilInit(
-          designSize: const Size(390, 844),
-          builder: (_, _) => Consumer(
-            builder: (context, ref, _) {
-              return MaterialApp.router(routerConfig: Routes.build(ref));
-            },
-          ),
-        ),
-      ),
+    await mountTestApp(
+      tester,
+      overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
     );
     await tester.pumpAndSettle();
   }
@@ -143,34 +131,34 @@ void main() {
         expect(_api.welcomesCallCount, greaterThan(callsBefore));
       });
     });
-  });
 
-  group('with welcomes', () {
-    setUp(() => _api.welcomes = [_welcome('w1'), _welcome('w2')]);
+    group('with welcomes', () {
+      setUp(() => _api.welcomes = [_welcome('w1'), _welcome('w2')]);
 
-    testWidgets('shows welcome tiles', (tester) async {
-      await pumpChatListScreen(tester);
-      expect(find.byType(ChatListWelcomeTile), findsNWidgets(2));
-    });
+      testWidgets('shows welcome tiles', (tester) async {
+        await pumpChatListScreen(tester);
+        expect(find.byType(ChatListWelcomeTile), findsNWidgets(2));
+      });
 
-    testWidgets('hides empty state', (tester) async {
-      await pumpChatListScreen(tester);
-      expect(find.text('No chats yet'), findsNothing);
-    });
+      testWidgets('hides empty state', (tester) async {
+        await pumpChatListScreen(tester);
+        expect(find.text('No chats yet'), findsNothing);
+      });
 
-    testWidgets('tapping tile navigates to WIP screen', (tester) async {
-      await pumpChatListScreen(tester);
-      await tester.tap(find.byType(ChatListWelcomeTile).first);
-      await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
-    });
+      testWidgets('tapping tile navigates to welcome screen', (tester) async {
+        await pumpChatListScreen(tester);
+        await tester.tap(find.byType(ChatListWelcomeTile).first);
+        await tester.pumpAndSettle();
+        expect(find.byType(WelcomeScreen), findsOneWidget);
+      });
 
-    testWidgets('pull to refresh triggers refetch', (tester) async {
-      await pumpChatListScreen(tester);
-      final callsBefore = _api.welcomesCallCount;
-      await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
-      await tester.pumpAndSettle();
-      expect(_api.welcomesCallCount, greaterThan(callsBefore));
+      testWidgets('pull to refresh triggers refetch', (tester) async {
+        await pumpChatListScreen(tester);
+        final callsBefore = _api.welcomesCallCount;
+        await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
+        await tester.pumpAndSettle();
+        expect(_api.welcomesCallCount, greaterThan(callsBefore));
+      });
     });
   });
 }

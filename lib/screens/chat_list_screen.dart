@@ -103,7 +103,7 @@ class ChatListScreen extends HookConsumerWidget {
           return ChatListWelcomeTile(
             welcome: welcome,
             onTap: () {
-              Routes.pushToWip(context);
+              Routes.pushToWelcome(context, welcome.id);
             },
           );
         },

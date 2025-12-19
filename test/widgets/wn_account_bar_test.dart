@@ -9,6 +9,8 @@ import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../test_helpers.dart';
+
 class _MockApi implements RustLibApi {
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -32,15 +34,13 @@ void main() {
   setUpAll(() => RustLib.initMock(api: _MockApi()));
 
   Future<void> pumpChatListScreen(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+    setUpTestView(tester);
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
         child: ScreenUtilInit(
-          designSize: const Size(390, 844),
+          designSize: testDesignSize,
           builder: (_, _) => Consumer(
             builder: (context, ref, _) {
               return MaterialApp.router(routerConfig: Routes.build(ref));

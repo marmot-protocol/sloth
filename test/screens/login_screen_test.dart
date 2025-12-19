@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
@@ -8,6 +7,8 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+
+import '../test_helpers.dart';
 
 class _MockRustLibApi implements RustLibApi {
   @override
@@ -55,24 +56,11 @@ void main() {
   late _MockAuthNotifier mockAuth;
 
   Future<void> pumpLoginScreen(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-
     mockAuth = _MockAuthNotifier();
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [authProvider.overrideWith(() => mockAuth)],
-        child: ScreenUtilInit(
-          designSize: const Size(390, 844),
-          builder: (_, _) => Consumer(
-            builder: (context, ref, _) {
-              return MaterialApp.router(routerConfig: Routes.build(ref));
-            },
-          ),
-        ),
-      ),
+    await mountTestApp(
+      tester,
+      overrides: [authProvider.overrideWith(() => mockAuth)],
     );
 
     Routes.pushToLogin(tester.element(find.byType(Scaffold)));

@@ -1,16 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
+import '../test_helpers.dart';
 
 class _MockApi implements RustLibApi {
   @override
@@ -51,27 +52,14 @@ void main() {
   late _MockAuthNotifier mockAuth;
 
   Future<void> pumpSettingsScreen(WidgetTester tester) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
-
     mockAuth = _MockAuthNotifier();
 
-    await tester.pumpWidget(
-      ProviderScope(
-        overrides: [
-          authProvider.overrideWith(() => mockAuth),
-          secureStorageProvider.overrideWithValue(MockSecureStorage()),
-        ],
-        child: ScreenUtilInit(
-          designSize: const Size(390, 844),
-          builder: (_, _) => Consumer(
-            builder: (context, ref, _) {
-              return MaterialApp.router(routerConfig: Routes.build(ref));
-            },
-          ),
-        ),
-      ),
+    await mountTestApp(
+      tester,
+      overrides: [
+        authProvider.overrideWith(() => mockAuth),
+        secureStorageProvider.overrideWithValue(MockSecureStorage()),
+      ],
     );
     Routes.pushToSettings(tester.element(find.byType(Scaffold)));
     await tester.pumpAndSettle();
@@ -135,6 +123,15 @@ void main() {
       await tester.tap(find.text('Sign out'));
       await tester.pump();
       expect(mockAuth.logoutCalled, isTrue);
+    });
+
+    testWidgets('tapping Developer settings navigates to Developer settings screen', (
+      tester,
+    ) async {
+      await pumpSettingsScreen(tester);
+      await tester.tap(find.text('Developer settings'));
+      await tester.pumpAndSettle();
+      expect(find.byType(DeveloperSettingsScreen), findsOneWidget);
     });
   });
 }

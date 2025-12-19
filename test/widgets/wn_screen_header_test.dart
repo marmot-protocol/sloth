@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sloth/widgets/wn_screen_header.dart' show WnScreenHeader;
-import '../test_helpers.dart' show mountWidget;
+import '../test_helpers.dart';
 
 void main() {
   group('WnScreenHeader', () {
@@ -32,7 +32,7 @@ void main() {
       testWidgets('close button navigates back', (tester) async {
         await tester.pumpWidget(
           ScreenUtilInit(
-            designSize: const Size(390, 844),
+            designSize: testDesignSize,
             builder: (_, _) => MaterialApp.router(routerConfig: router),
           ),
         );

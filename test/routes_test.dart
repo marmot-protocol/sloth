@@ -12,8 +12,11 @@ import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
+import 'package:sloth/screens/welcome_screen.dart' show WelcomeScreen;
 import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/api/welcomes.dart' show Welcome, WelcomeState;
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'test_helpers.dart';
 
 class _MockRustLibApi implements RustLibApi {
   @override
@@ -26,6 +29,26 @@ class _MockRustLibApi implements RustLibApi {
       displayName: 'Test Display Name',
       about: 'Test bio',
       custom: {},
+    );
+  }
+
+  @override
+  Future<Welcome> crateApiWelcomesFindWelcomeByEventId({
+    required String pubkey,
+    required String welcomeEventId,
+  }) async {
+    return Welcome(
+      id: welcomeEventId,
+      mlsGroupId: '',
+      nostrGroupId: '',
+      groupName: '',
+      groupDescription: '',
+      groupAdminPubkeys: const [],
+      groupRelays: const [],
+      welcomer: '',
+      memberCount: 0,
+      state: WelcomeState.pending,
+      createdAt: BigInt.zero,
     );
   }
 
@@ -51,15 +74,13 @@ void main() {
     WidgetTester tester, {
     List overrides = const [],
   }) async {
-    tester.view.physicalSize = const Size(390, 844);
-    tester.view.devicePixelRatio = 1.0;
-    addTearDown(tester.view.reset);
+    setUpTestView(tester);
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [...overrides],
         child: ScreenUtilInit(
-          designSize: const Size(390, 844),
+          designSize: testDesignSize,
           builder: (_, _) => Consumer(
             builder: (context, ref, _) {
               router = Routes.build(ref);
@@ -359,6 +380,34 @@ void main() {
         ],
       );
       Routes.pushToDeveloperSettings(getContext(tester));
+      await tester.pumpAndSettle();
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
+    });
+  });
+
+  group('pushToWelcome', () {
+    testWidgets('pushes WelcomeScreen onto stack', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToWelcome(getContext(tester), 'test-id');
+      await tester.pumpAndSettle();
+      expect(find.byType(WelcomeScreen), findsOneWidget);
+    });
+
+    testWidgets('does not reset navigation stack', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToWelcome(getContext(tester), 'test-id');
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();
