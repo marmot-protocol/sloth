@@ -151,6 +151,17 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(LoginScreen), findsOneWidget);
     });
+
+    group('when navigation stack is empty', () {
+      testWidgets('navigates to HomeScreen', (tester) async {
+        await pumpRouter(tester);
+        Routes.goToChatList(getContext(tester));
+        await tester.pumpAndSettle();
+        Routes.goBack(getContext(tester));
+        await tester.pumpAndSettle();
+        expect(find.byType(HomeScreen), findsOneWidget);
+      });
+    });
   });
 
   group('goToHome', () {
@@ -169,9 +180,13 @@ void main() {
       await tester.pumpAndSettle();
       Routes.pushToSignup(getContext(tester));
       await tester.pumpAndSettle();
+      Routes.pushToChatList(getContext(tester));
+      await tester.pumpAndSettle();
       Routes.goToHome(getContext(tester));
       await tester.pumpAndSettle();
-      expect(() => Routes.goBack(getContext(tester)), throwsA(isA<GoError>()));
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
   });
 
@@ -213,7 +228,9 @@ void main() {
       await tester.pumpAndSettle();
       Routes.goToLogin(getContext(tester));
       await tester.pumpAndSettle();
-      expect(() => Routes.goBack(getContext(tester)), throwsA(isA<GoError>()));
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
   });
 
@@ -251,7 +268,9 @@ void main() {
       await tester.pumpAndSettle();
       Routes.goToSignup(getContext(tester));
       await tester.pumpAndSettle();
-      expect(() => Routes.goBack(getContext(tester)), throwsA(isA<GoError>()));
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(HomeScreen), findsOneWidget);
     });
   });
 

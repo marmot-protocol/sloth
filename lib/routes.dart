@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart'
-    show BuildContext, CurvedAnimation, Curves, FadeTransition, Widget;
+    show BuildContext, CurvedAnimation, Curves, FadeTransition, Widget, Navigator;
 import 'package:flutter_riverpod/flutter_riverpod.dart' show WidgetRef;
 import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
@@ -136,7 +136,11 @@ abstract final class Routes {
   }
 
   static void goBack(BuildContext context) {
-    GoRouter.of(context).pop();
+    if (Navigator.canPop(context)) {
+      GoRouter.of(context).pop();
+    } else {
+      GoRouter.of(context).go(_home);
+    }
   }
 
   static void goToHome(BuildContext context) {
