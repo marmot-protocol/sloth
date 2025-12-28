@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
@@ -13,6 +14,8 @@ import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
 import 'package:sloth/screens/welcome_screen.dart' show WelcomeScreen;
+import 'package:sloth/src/rust/api/groups.dart';
+import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/welcomes.dart' show Welcome, WelcomeState;
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -50,6 +53,45 @@ class _MockRustLibApi implements RustLibApi {
       state: WelcomeState.pending,
       createdAt: BigInt.zero,
     );
+  }
+
+  @override
+  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
+    required String groupId,
+  }) async* {
+    yield const MessageStreamItem.initialSnapshot(messages: []);
+  }
+
+  @override
+  Future<Group> crateApiGroupsGetGroup({
+    required String accountPubkey,
+    required String groupId,
+  }) async {
+    return Group(
+      mlsGroupId: groupId,
+      nostrGroupId: '',
+      name: 'Test Group',
+      description: '',
+      adminPubkeys: const [],
+      epoch: BigInt.zero,
+      state: GroupState.active,
+    );
+  }
+
+  @override
+  Future<bool> crateApiGroupsGroupIsDirectMessageType({
+    required Group that,
+    required String accountPubkey,
+  }) async {
+    return false;
+  }
+
+  @override
+  Future<String?> crateApiGroupsGetGroupImagePath({
+    required String accountPubkey,
+    required String groupId,
+  }) async {
+    return null;
   }
 
   @override
@@ -427,6 +469,36 @@ void main() {
         ],
       );
       Routes.pushToWelcome(getContext(tester), 'test-id');
+      await tester.pumpAndSettle();
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
+    });
+  });
+
+  group('goToChat', () {
+    testWidgets('navigates to ChatScreen', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.goToChat(getContext(tester), 'test-group-id');
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatScreen), findsOneWidget);
+    });
+
+    testWidgets('resets navigation stack', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToSettings(getContext(tester));
+      await tester.pumpAndSettle();
+      Routes.goToChat(getContext(tester), 'test-group-id');
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();
