@@ -4,8 +4,11 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/error_screen.dart';
 import 'package:sloth/screens/welcome_screen.dart';
+import 'package:sloth/src/rust/api/groups.dart';
+import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/welcomes.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -88,6 +91,45 @@ class _MockApi implements RustLibApi {
   @override
   Future<List<Welcome>> crateApiWelcomesPendingWelcomes({required String pubkey}) {
     return Future.value([]);
+  }
+
+  @override
+  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
+    required String groupId,
+  }) async* {
+    yield const MessageStreamItem.initialSnapshot(messages: []);
+  }
+
+  @override
+  Future<Group> crateApiGroupsGetGroup({
+    required String accountPubkey,
+    required String groupId,
+  }) async {
+    return Group(
+      mlsGroupId: groupId,
+      nostrGroupId: '',
+      name: 'Test Group',
+      description: '',
+      adminPubkeys: const [],
+      epoch: BigInt.zero,
+      state: GroupState.active,
+    );
+  }
+
+  @override
+  Future<bool> crateApiGroupsGroupIsDirectMessageType({
+    required Group that,
+    required String accountPubkey,
+  }) async {
+    return false;
+  }
+
+  @override
+  Future<String?> crateApiGroupsGetGroupImagePath({
+    required String accountPubkey,
+    required String groupId,
+  }) async {
+    return null;
   }
 
   @override
@@ -220,12 +262,12 @@ void main() {
         expect(_api.acceptCalled, isTrue);
       });
 
-      testWidgets('navigates to chat list on success', (tester) async {
+      testWidgets('navigates to chat screen on success', (tester) async {
         await pumpInviteScreen(tester);
         await tester.tap(find.text('Accept'));
         await tester.pumpAndSettle();
 
-        expect(find.byType(ChatListScreen), findsOneWidget);
+        expect(find.byType(ChatScreen), findsOneWidget);
       });
 
       testWidgets('shows snackbar on error', (tester) async {
@@ -248,7 +290,7 @@ void main() {
         expect(_api.declineCalled, isTrue);
       });
 
-      testWidgets('navigates to chat list on success', (tester) async {
+      testWidgets('navigates to chat screen on success', (tester) async {
         await pumpInviteScreen(tester);
         await tester.tap(find.text('Decline'));
         await tester.pumpAndSettle();

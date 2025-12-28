@@ -67,7 +67,7 @@ class WelcomeScreen extends HookConsumerWidget {
           welcomeEventId: welcomeId,
         );
         if (context.mounted) {
-          Routes.goToChatList(context);
+          Routes.goToChat(context, welcome.mlsGroupId);
         }
       } catch (e) {
         if (context.mounted) {
