@@ -15,6 +15,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Coverage CI check [PR #5](https://github.com/marmot-protocol/sloth/pull/5)
 - Auth, routing and main screens [PR #6](https://github.com/marmot-protocol/sloth/pull/6)
 - Developer settings screen  [PR #8](https://github.com/marmot-protocol/sloth/pull/8)
+- Chat screen with streams [PR #12](https://github.com/marmot-protocol/sloth/pull/12)
+
 
 ### Changed
 

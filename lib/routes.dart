@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart'
 import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
+import 'package:sloth/screens/chat_screen.dart' show ChatScreen;
 import 'package:sloth/screens/developer_settings_screen.dart' show DeveloperSettingsScreen;
 import 'package:sloth/screens/donate_screen.dart' show DonateScreen;
 import 'package:sloth/screens/home_screen.dart' show HomeScreen;
@@ -27,7 +28,7 @@ abstract final class Routes {
   static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
   static const _welcome = '/welcomes/:welcomeId';
-
+  static const _chat = '/chats/:groupId';
   static const _publicRoutes = {_home, _login, _signup};
 
   static GoRouter build(WidgetRef ref) {
@@ -115,6 +116,14 @@ abstract final class Routes {
             child: WelcomeScreen(welcomeId: state.pathParameters['welcomeId']!),
           ),
         ),
+        GoRoute(
+          name: 'chat',
+          path: _chat,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: ChatScreen(groupId: state.pathParameters['groupId']!),
+          ),
+        ),
       ],
     );
   }
@@ -197,5 +206,9 @@ abstract final class Routes {
 
   static void pushToWelcome(BuildContext context, String welcomeId) {
     GoRouter.of(context).pushNamed('welcome', pathParameters: {'welcomeId': welcomeId});
+  }
+
+  static void goToChat(BuildContext context, String groupId) {
+    GoRouter.of(context).goNamed('chat', pathParameters: {'groupId': groupId});
   }
 }
