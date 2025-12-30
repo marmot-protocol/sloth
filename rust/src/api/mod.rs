@@ -65,9 +65,10 @@ pub mod relays;
 pub mod users;
 pub mod utils;
 pub use utils::{group_id_from_string, group_id_to_string};
-pub mod welcomes;
+pub mod account_groups;
 
 // Re-export everything
+pub use account_groups::*;
 pub use accounts::*;
 pub use error::*;
 pub use groups::*;
@@ -77,7 +78,6 @@ pub use metadata::*;
 pub use relays::*;
 pub use users::*;
 pub use utils::*;
-pub use welcomes::*;
 
 #[frb]
 pub async fn initialize_whitenoise(config: WhitenoiseConfig) -> Result<(), ApiError> {
