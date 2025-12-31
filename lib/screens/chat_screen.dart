@@ -6,7 +6,7 @@ import 'package:sloth/hooks/use_chat_avatar.dart';
 import 'package:sloth/hooks/use_chat_messages.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -30,10 +30,13 @@ class ChatScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            _ChatHeader(
-              displayName: groupAvatarSnapshot.data?.displayName ?? '',
-              pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
-              onBack: () => Routes.goToChatList(context),
+            WnSlateContainer(
+              child: WnChatHeader(
+                displayName: groupAvatarSnapshot.data?.displayName ?? '',
+                pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
+                onBack: () => Routes.goToChatList(context),
+                onMenuTap: () => Routes.pushToWip(context),
+              ),
             ),
             Expanded(
               child: isLoading
@@ -68,70 +71,6 @@ class ChatScreen extends HookConsumerWidget {
             const _ChatInput(),
           ],
         ),
-      ),
-    );
-  }
-}
-
-class _ChatHeader extends StatelessWidget {
-  final String displayName;
-  final String? pictureUrl;
-  final VoidCallback onBack;
-
-  const _ChatHeader({
-    required this.displayName,
-    this.pictureUrl,
-    required this.onBack,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return WnSlateContainer(
-      child: Row(
-        children: [
-          IconButton(
-            key: const Key('back_button'),
-            onPressed: onBack,
-            icon: Icon(
-              Icons.chevron_left,
-              color: colors.foregroundTertiary,
-              size: 28.w,
-            ),
-            tooltip: 'Back',
-          ),
-          SizedBox(width: 8.w),
-          WnAvatar(
-            pictureUrl: pictureUrl,
-            displayName: displayName,
-            size: 40.w,
-          ),
-          SizedBox(width: 12.w),
-          Expanded(
-            child: Text(
-              displayName,
-              style: TextStyle(
-                color: colors.foregroundPrimary,
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
-              ),
-              overflow: TextOverflow.ellipsis,
-            ),
-          ),
-          IconButton(
-            key: const Key('menu_button'),
-            onPressed: () {
-              Routes.pushToWip(context);
-            },
-            icon: Icon(
-              Icons.more_horiz,
-              color: colors.foregroundTertiary,
-              size: 24.w,
-            ),
-            tooltip: 'Menu',
-          ),
-        ],
       ),
     );
   }
