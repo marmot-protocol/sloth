@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
 import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/screens/chat_invite_screen.dart' show ChatInviteScreen;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
 import 'package:sloth/screens/chat_screen.dart' show ChatScreen;
 import 'package:sloth/screens/developer_settings_screen.dart' show DeveloperSettingsScreen;
@@ -14,7 +15,6 @@ import 'package:sloth/screens/login_screen.dart' show LoginScreen;
 import 'package:sloth/screens/onboarding_screen.dart' show OnboardingScreen;
 import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/signup_screen.dart' show SignupScreen;
-import 'package:sloth/screens/welcome_screen.dart' show WelcomeScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
 
 abstract final class Routes {
@@ -27,7 +27,7 @@ abstract final class Routes {
   static const _wip = '/wip';
   static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
-  static const _welcome = '/welcomes/:welcomeId';
+  static const _invite = '/invites/:mlsGroupId';
   static const _chat = '/chats/:groupId';
   static const _publicRoutes = {_home, _login, _signup};
 
@@ -109,11 +109,11 @@ abstract final class Routes {
           ),
         ),
         GoRoute(
-          name: 'welcome',
-          path: _welcome,
+          name: 'invite',
+          path: _invite,
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
-            child: WelcomeScreen(welcomeId: state.pathParameters['welcomeId']!),
+            child: ChatInviteScreen(mlsGroupId: state.pathParameters['mlsGroupId']!),
           ),
         ),
         GoRoute(
@@ -204,8 +204,8 @@ abstract final class Routes {
     GoRouter.of(context).push(_developerSettings);
   }
 
-  static void pushToWelcome(BuildContext context, String welcomeId) {
-    GoRouter.of(context).pushNamed('welcome', pathParameters: {'welcomeId': welcomeId});
+  static void pushToInvite(BuildContext context, String mlsGroupId) {
+    GoRouter.of(context).pushNamed('invite', pathParameters: {'mlsGroupId': mlsGroupId});
   }
 
   static void goToChat(BuildContext context, String groupId) {
