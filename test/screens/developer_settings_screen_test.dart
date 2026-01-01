@@ -13,6 +13,7 @@ import '../test_helpers.dart';
 
 class _MockApi implements RustLibApi {
   List<FlutterEvent> keyPackages = [];
+  String? deletedKeyPackageId;
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -34,7 +35,10 @@ class _MockApi implements RustLibApi {
   Future<bool> crateApiAccountsDeleteAccountKeyPackage({
     required String accountPubkey,
     required String keyPackageId,
-  }) async => true;
+  }) async {
+    deletedKeyPackageId = keyPackageId;
+    return true;
+  }
 
   @override
   Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({
@@ -63,6 +67,7 @@ void main() {
 
   setUp(() {
     mockApi.keyPackages = [];
+    mockApi.deletedKeyPackageId = null;
   });
 
   Future<void> pumpScreen(WidgetTester tester) async {
@@ -121,6 +126,24 @@ void main() {
       await tester.tap(find.byIcon(Icons.close));
       await tester.pumpAndSettle();
       expect(find.byType(DeveloperSettingsScreen), findsNothing);
+    });
+
+    testWidgets('tapping delete icon calls delete with package id', (tester) async {
+      mockApi.keyPackages = [
+        FlutterEvent(
+          id: 'pkg_to_delete',
+          pubkey: 'test',
+          createdAt: DateTime.now(),
+          kind: 443,
+          tags: [],
+          content: '',
+        ),
+      ];
+
+      await pumpScreen(tester);
+      await tester.tap(find.byKey(const Key('delete_key_package_pkg_to_delete')));
+      await tester.pump();
+      expect(mockApi.deletedKeyPackageId, 'pkg_to_delete');
     });
   });
 }
