@@ -2,35 +2,31 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/screens/chat_invite_screen.dart';
+import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
-import 'package:sloth/screens/welcome_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
+import 'package:sloth/src/rust/api/groups.dart' show ChatSummary, GroupType;
+import 'package:sloth/src/rust/api/messages.dart' show MessageStreamItem, ChatMessage;
 import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/welcomes.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/chat_list_welcome_tile.dart';
+import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
-
 import '../test_helpers.dart';
 
-Welcome _welcome(String id) => Welcome(
-  id: id,
-  mlsGroupId: 'mls_$id',
-  nostrGroupId: 'nostr_$id',
-  groupName: 'Group $id',
-  groupDescription: '',
-  groupAdminPubkeys: const [],
-  groupRelays: const [],
-  welcomer: 'welcomer',
-  memberCount: 1,
-  state: WelcomeState.pending,
-  createdAt: BigInt.one,
-);
+ChatSummary _chatSummaryFactory({required String id, required bool pendingConfirmation}) =>
+    ChatSummary(
+      mlsGroupId: 'mls_$id',
+      name: 'Chat $id',
+      groupType: GroupType.group,
+      createdAt: DateTime(2024),
+      pendingConfirmation: pendingConfirmation,
+    );
 
 class _MockApi implements RustLibApi {
-  List<Welcome> welcomes = [];
-  int welcomesCallCount = 0;
+  List<ChatSummary> chatList = [];
+  int chatListCallCount = 0;
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -39,18 +35,27 @@ class _MockApi implements RustLibApi {
   }) async => const FlutterMetadata(custom: {});
 
   @override
-  Future<List<Welcome>> crateApiWelcomesPendingWelcomes({
-    required String pubkey,
+  Future<List<ChatSummary>> crateApiGroupsGetChatList({
+    required String accountPubkey,
   }) async {
-    welcomesCallCount++;
-    return welcomes;
+    chatListCallCount++;
+    return chatList;
   }
 
   @override
-  Future<Welcome> crateApiWelcomesFindWelcomeByEventId({
+  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
+    required String groupId,
+  }) async* {
+    yield const MessageStreamItem.initialSnapshot(messages: []);
+  }
+
+  @override
+  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
     required String pubkey,
-    required String welcomeEventId,
-  }) async => welcomes.firstWhere((w) => w.id == welcomeEventId);
+    required String groupId,
+  }) async {
+    return [];
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
@@ -70,8 +75,8 @@ void main() {
   setUpAll(() => RustLib.initMock(api: _api));
 
   setUp(() {
-    _api.welcomes = [];
-    _api.welcomesCallCount = 0;
+    _api.chatList = [];
+    _api.chatListCallCount = 0;
   });
 
   Future<void> pumpChatListScreen(WidgetTester tester) async {
@@ -107,8 +112,8 @@ void main() {
       expect(find.byType(WipScreen), findsOneWidget);
     });
 
-    group('without welcomes', () {
-      setUp(() => _api.welcomes = []);
+    group('without chats', () {
+      setUp(() => _api.chatList = []);
       testWidgets('shows no chats message', (tester) async {
         await pumpChatListScreen(tester);
         expect(find.text('No chats yet'), findsOneWidget);
@@ -121,23 +126,28 @@ void main() {
 
       testWidgets('pull to refresh triggers refetch', (tester) async {
         await pumpChatListScreen(tester);
-        final callsBefore = _api.welcomesCallCount;
+        final callsBefore = _api.chatListCallCount;
         await tester.fling(
           find.byType(SingleChildScrollView),
           const Offset(0, 300),
           1000,
         );
         await tester.pumpAndSettle();
-        expect(_api.welcomesCallCount, greaterThan(callsBefore));
+        expect(_api.chatListCallCount, greaterThan(callsBefore));
       });
     });
 
-    group('with welcomes', () {
-      setUp(() => _api.welcomes = [_welcome('w1'), _welcome('w2')]);
+    group('with chats', () {
+      setUp(
+        () => _api.chatList = [
+          _chatSummaryFactory(id: 'c1', pendingConfirmation: true),
+          _chatSummaryFactory(id: 'c2', pendingConfirmation: false),
+        ],
+      );
 
-      testWidgets('shows welcome tiles', (tester) async {
+      testWidgets('shows chat tiles', (tester) async {
         await pumpChatListScreen(tester);
-        expect(find.byType(ChatListWelcomeTile), findsNWidgets(2));
+        expect(find.byType(ChatListTile), findsNWidgets(2));
       });
 
       testWidgets('hides empty state', (tester) async {
@@ -145,19 +155,26 @@ void main() {
         expect(find.text('No chats yet'), findsNothing);
       });
 
-      testWidgets('tapping tile navigates to welcome screen', (tester) async {
+      testWidgets('tapping pending chat tile navigates to invite screen', (tester) async {
         await pumpChatListScreen(tester);
-        await tester.tap(find.byType(ChatListWelcomeTile).first);
+        await tester.tap(find.byType(ChatListTile).first);
         await tester.pumpAndSettle();
-        expect(find.byType(WelcomeScreen), findsOneWidget);
+        expect(find.byType(ChatInviteScreen), findsOneWidget);
+      });
+
+      testWidgets('tapping accepted chat tile navigates to chat screen', (tester) async {
+        await pumpChatListScreen(tester);
+        await tester.tap(find.byType(ChatListTile).last);
+        await tester.pumpAndSettle();
+        expect(find.byType(ChatScreen), findsOneWidget);
       });
 
       testWidgets('pull to refresh triggers refetch', (tester) async {
         await pumpChatListScreen(tester);
-        final callsBefore = _api.welcomesCallCount;
+        final callsBefore = _api.chatListCallCount;
         await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
         await tester.pumpAndSettle();
-        expect(_api.welcomesCallCount, greaterThan(callsBefore));
+        expect(_api.chatListCallCount, greaterThan(callsBefore));
       });
     });
   });

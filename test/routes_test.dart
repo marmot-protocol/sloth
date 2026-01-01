@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/screens/chat_invite_screen.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
@@ -13,11 +14,9 @@ import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
-import 'package:sloth/screens/welcome_screen.dart' show WelcomeScreen;
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/welcomes.dart' show Welcome, WelcomeState;
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'test_helpers.dart';
 
@@ -32,26 +31,6 @@ class _MockRustLibApi implements RustLibApi {
       displayName: 'Test Display Name',
       about: 'Test bio',
       custom: {},
-    );
-  }
-
-  @override
-  Future<Welcome> crateApiWelcomesFindWelcomeByEventId({
-    required String pubkey,
-    required String welcomeEventId,
-  }) async {
-    return Welcome(
-      id: welcomeEventId,
-      mlsGroupId: '',
-      nostrGroupId: '',
-      groupName: '',
-      groupDescription: '',
-      groupAdminPubkeys: const [],
-      groupRelays: const [],
-      welcomer: '',
-      memberCount: 0,
-      state: WelcomeState.pending,
-      createdAt: BigInt.zero,
     );
   }
 
@@ -92,6 +71,14 @@ class _MockRustLibApi implements RustLibApi {
     required String groupId,
   }) async {
     return null;
+  }
+
+  @override
+  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
+    required String pubkey,
+    required String groupId,
+  }) async {
+    return [];
   }
 
   @override
@@ -448,17 +435,17 @@ void main() {
     });
   });
 
-  group('pushToWelcome', () {
-    testWidgets('pushes WelcomeScreen onto stack', (tester) async {
+  group('pushToInvite', () {
+    testWidgets('pushes ChatInviteScreen onto stack', (tester) async {
       await pumpRouter(
         tester,
         overrides: [
           authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
         ],
       );
-      Routes.pushToWelcome(getContext(tester), 'test-id');
+      Routes.pushToInvite(getContext(tester), 'test-id');
       await tester.pumpAndSettle();
-      expect(find.byType(WelcomeScreen), findsOneWidget);
+      expect(find.byType(ChatInviteScreen), findsOneWidget);
     });
 
     testWidgets('does not reset navigation stack', (tester) async {
@@ -468,7 +455,7 @@ void main() {
           authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
         ],
       );
-      Routes.pushToWelcome(getContext(tester), 'test-id');
+      Routes.pushToInvite(getContext(tester), 'test-id');
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();

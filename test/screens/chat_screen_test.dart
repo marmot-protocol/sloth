@@ -8,7 +8,6 @@ import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/welcomes.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 
@@ -55,11 +54,6 @@ class _MockApi implements RustLibApi {
       );
     });
     return controller!.stream;
-  }
-
-  @override
-  Future<List<Welcome>> crateApiWelcomesPendingWelcomes({required String pubkey}) {
-    return Future.value([]);
   }
 
   @override

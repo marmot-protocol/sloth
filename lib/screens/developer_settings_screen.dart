@@ -213,6 +213,7 @@ class _KeyPackageTile extends StatelessWidget {
             ),
           ),
           IconButton(
+            key: Key('delete_key_package_${package.id}'),
             onPressed: disabled ? null : onDelete,
             icon: Icon(
               Icons.delete_outline,
