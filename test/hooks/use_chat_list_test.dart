@@ -2,7 +2,8 @@ import 'dart:async' show Completer;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/hooks/use_chat_list.dart';
-import 'package:sloth/src/rust/api/groups.dart';
+import 'package:sloth/src/rust/api/chat_list.dart';
+import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/src/rust/frb_generated.dart';
 import '../test_helpers.dart';
 
@@ -20,7 +21,7 @@ class _MockApi implements RustLibApi {
   final calls = <String>[];
 
   @override
-  Future<List<ChatSummary>> crateApiGroupsGetChatList({
+  Future<List<ChatSummary>> crateApiChatListGetChatList({
     required String accountPubkey,
   }) {
     calls.add(accountPubkey);

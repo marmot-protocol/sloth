@@ -4,7 +4,7 @@ import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_chat_list.dart';
 import 'package:sloth/hooks/use_route_refresh.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/src/rust/api/groups.dart' show ChatSummary;
+import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';

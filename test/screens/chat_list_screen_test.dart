@@ -6,7 +6,8 @@ import 'package:sloth/screens/chat_invite_screen.dart';
 import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
-import 'package:sloth/src/rust/api/groups.dart' show ChatSummary, GroupType;
+import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
+import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/src/rust/api/messages.dart' show MessageStreamItem, ChatMessage;
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -35,7 +36,7 @@ class _MockApi implements RustLibApi {
   }) async => const FlutterMetadata(custom: {});
 
   @override
-  Future<List<ChatSummary>> crateApiGroupsGetChatList({
+  Future<List<ChatSummary>> crateApiChatListGetChatList({
     required String accountPubkey,
   }) async {
     chatListCallCount++;

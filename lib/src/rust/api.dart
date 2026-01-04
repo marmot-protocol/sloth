@@ -65,10 +65,7 @@ class WhitenoiseConfig {
   /// Path to the directory where log files will be written
   final String logsDir;
 
-  const WhitenoiseConfig({
-    required this.dataDir,
-    required this.logsDir,
-  });
+  const WhitenoiseConfig({required this.dataDir, required this.logsDir});
 
   @override
   int get hashCode => dataDir.hashCode ^ logsDir.hashCode;

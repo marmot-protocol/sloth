@@ -12,6 +12,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated_io.dart';
 import 'api.dart';
 import 'api/account_groups.dart';
 import 'api/accounts.dart';
+import 'api/chat_list.dart';
 import 'api/error.dart';
 import 'api/groups.dart';
 import 'api/media_files.dart';
@@ -135,6 +136,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  RustStreamSink<ChatListStreamItem> dco_decode_StreamSink_chat_list_stream_item_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<MessageStreamItem> dco_decode_StreamSink_message_stream_item_Sse(dynamic raw);
 
   @protected
@@ -160,6 +164,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool dco_decode_box_autoadd_bool(dynamic raw);
+
+  @protected
+  ChatListUpdate dco_decode_box_autoadd_chat_list_update(dynamic raw);
 
   @protected
   ChatMessageSummary dco_decode_box_autoadd_chat_message_summary(dynamic raw);
@@ -189,6 +196,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   WhitenoiseConfig dco_decode_box_autoadd_whitenoise_config(dynamic raw);
+
+  @protected
+  ChatListStreamItem dco_decode_chat_list_stream_item(dynamic raw);
+
+  @protected
+  ChatListUpdate dco_decode_chat_list_update(dynamic raw);
+
+  @protected
+  ChatListUpdateTrigger dco_decode_chat_list_update_trigger(dynamic raw);
 
   @protected
   ChatMessage dco_decode_chat_message(dynamic raw);
@@ -469,6 +485,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  RustStreamSink<ChatListStreamItem> sse_decode_StreamSink_chat_list_stream_item_Sse(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   RustStreamSink<MessageStreamItem> sse_decode_StreamSink_message_stream_item_Sse(
     SseDeserializer deserializer,
   );
@@ -496,6 +517,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   bool sse_decode_box_autoadd_bool(SseDeserializer deserializer);
+
+  @protected
+  ChatListUpdate sse_decode_box_autoadd_chat_list_update(
+    SseDeserializer deserializer,
+  );
 
   @protected
   ChatMessageSummary sse_decode_box_autoadd_chat_message_summary(
@@ -535,6 +561,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   WhitenoiseConfig sse_decode_box_autoadd_whitenoise_config(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ChatListStreamItem sse_decode_chat_list_stream_item(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  ChatListUpdate sse_decode_chat_list_update(SseDeserializer deserializer);
+
+  @protected
+  ChatListUpdateTrigger sse_decode_chat_list_update_trigger(
     SseDeserializer deserializer,
   );
 
@@ -860,6 +899,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_StreamSink_chat_list_stream_item_Sse(
+    RustStreamSink<ChatListStreamItem> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_StreamSink_message_stream_item_Sse(
     RustStreamSink<MessageStreamItem> self,
     SseSerializer serializer,
@@ -894,6 +939,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_box_autoadd_bool(bool self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_box_autoadd_chat_list_update(
+    ChatListUpdate self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_box_autoadd_chat_message_summary(
@@ -943,6 +994,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_box_autoadd_whitenoise_config(
     WhitenoiseConfig self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_chat_list_stream_item(
+    ChatListStreamItem self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_chat_list_update(
+    ChatListUpdate self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_chat_list_update_trigger(
+    ChatListUpdateTrigger self,
     SseSerializer serializer,
   );
 

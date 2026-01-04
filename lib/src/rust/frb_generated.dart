@@ -11,6 +11,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'api.dart';
 import 'api/account_groups.dart';
 import 'api/accounts.dart';
+import 'api/chat_list.dart';
 import 'api/error.dart';
 import 'api/groups.dart';
 import 'api/media_files.dart';
@@ -47,12 +48,8 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   /// Initialize flutter_rust_bridge in mock mode.
   /// No libraries for FFI are loaded.
-  static void initMock({
-    required RustLibApi api,
-  }) {
-    instance.initMockImpl(
-      api: api,
-    );
+  static void initMock({required RustLibApi api}) {
+    instance.initMockImpl(api: api);
   }
 
   /// Dispose flutter_rust_bridge
@@ -78,7 +75,7 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
   String get codegenVersion => '2.11.1';
 
   @override
-  int get rustContentHash => 1870409244;
+  int get rustContentHash => -1704412371;
 
   static const kDefaultExternalLibraryLoaderConfig = ExternalLibraryLoaderConfig(
     stem: 'rust_lib_whitenoise',
@@ -188,7 +185,7 @@ abstract class RustLibApi extends BaseApi {
 
   Future<AppSettings> crateApiGetAppSettings();
 
-  Future<List<ChatSummary>> crateApiGroupsGetChatList({
+  Future<List<ChatSummary>> crateApiChatListGetChatList({
     required String accountPubkey,
   });
 
@@ -297,6 +294,10 @@ abstract class RustLibApi extends BaseApi {
   });
 
   Future<String> crateApiUtilsStringFromRelayUrl({required RelayUrl relayUrl});
+
+  Stream<ChatListStreamItem> crateApiChatListSubscribeToChatList({
+    required String accountPubkey,
+  });
 
   Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
     required String groupId,
@@ -456,10 +457,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsAccountFollowsConstMeta => const TaskConstMeta(
-    debugName: 'account_follows',
-    argNames: ['pubkey'],
-  );
+  TaskConstMeta get kCrateApiAccountsAccountFollowsConstMeta =>
+      const TaskConstMeta(debugName: 'account_follows', argNames: ['pubkey']);
 
   @override
   Future<FlutterEvent?> crateApiAccountsAccountKeyPackage({
@@ -587,10 +586,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiGroupsActiveGroupsConstMeta => const TaskConstMeta(
-    debugName: 'active_groups',
-    argNames: ['pubkey'],
-  );
+  TaskConstMeta get kCrateApiGroupsActiveGroupsConstMeta =>
+      const TaskConstMeta(debugName: 'active_groups', argNames: ['pubkey']);
 
   @override
   Future<void> crateApiAccountsAddAccountRelay({
@@ -807,10 +804,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsCreateIdentityConstMeta => const TaskConstMeta(
-    debugName: 'create_identity',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiAccountsCreateIdentityConstMeta =>
+      const TaskConstMeta(debugName: 'create_identity', argNames: []);
 
   @override
   Future<WhitenoiseConfig> crateApiCreateWhitenoiseConfig({
@@ -970,10 +965,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiDeleteAllDataConstMeta => const TaskConstMeta(
-    debugName: 'delete_all_data',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiDeleteAllDataConstMeta =>
+      const TaskConstMeta(debugName: 'delete_all_data', argNames: []);
 
   @override
   Future<MediaFile> crateApiMediaFilesDownloadChatMedia({
@@ -1035,10 +1028,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysEnsureAllSubscriptionsConstMeta => const TaskConstMeta(
-    debugName: 'ensure_all_subscriptions',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiRelaysEnsureAllSubscriptionsConstMeta =>
+      const TaskConstMeta(debugName: 'ensure_all_subscriptions', argNames: []);
 
   @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) {
@@ -1164,10 +1155,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsGetAccountConstMeta => const TaskConstMeta(
-    debugName: 'get_account',
-    argNames: ['pubkey'],
-  );
+  TaskConstMeta get kCrateApiAccountsGetAccountConstMeta =>
+      const TaskConstMeta(debugName: 'get_account', argNames: ['pubkey']);
 
   @override
   Future<List<(String, String)>> crateApiRelaysGetAccountRelayStatuses({
@@ -1225,10 +1214,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsGetAccountsConstMeta => const TaskConstMeta(
-    debugName: 'get_accounts',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiAccountsGetAccountsConstMeta =>
+      const TaskConstMeta(debugName: 'get_accounts', argNames: []);
 
   @override
   Future<AppSettings> crateApiGetAppSettings() {
@@ -1255,13 +1242,11 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiGetAppSettingsConstMeta => const TaskConstMeta(
-    debugName: 'get_app_settings',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiGetAppSettingsConstMeta =>
+      const TaskConstMeta(debugName: 'get_app_settings', argNames: []);
 
   @override
-  Future<List<ChatSummary>> crateApiGroupsGetChatList({
+  Future<List<ChatSummary>> crateApiChatListGetChatList({
     required String accountPubkey,
   }) {
     return handler.executeNormal(
@@ -1280,14 +1265,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           decodeSuccessData: sse_decode_list_chat_summary,
           decodeErrorData: sse_decode_api_error,
         ),
-        constMeta: kCrateApiGroupsGetChatListConstMeta,
+        constMeta: kCrateApiChatListGetChatListConstMeta,
         argValues: [accountPubkey],
         apiImpl: this,
       ),
     );
   }
 
-  TaskConstMeta get kCrateApiGroupsGetChatListConstMeta => const TaskConstMeta(
+  TaskConstMeta get kCrateApiChatListGetChatListConstMeta => const TaskConstMeta(
     debugName: 'get_chat_list',
     argNames: ['accountPubkey'],
   );
@@ -1846,10 +1831,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsLoginConstMeta => const TaskConstMeta(
-    debugName: 'login',
-    argNames: ['nsecOrHexPrivkey'],
-  );
+  TaskConstMeta get kCrateApiAccountsLoginConstMeta =>
+      const TaskConstMeta(debugName: 'login', argNames: ['nsecOrHexPrivkey']);
 
   @override
   Future<void> crateApiAccountsLogout({required String pubkey}) {
@@ -1876,10 +1859,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsLogoutConstMeta => const TaskConstMeta(
-    debugName: 'logout',
-    argNames: ['pubkey'],
-  );
+  TaskConstMeta get kCrateApiAccountsLogoutConstMeta =>
+      const TaskConstMeta(debugName: 'logout', argNames: ['pubkey']);
 
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
@@ -1963,10 +1944,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysRelayTypeInboxConstMeta => const TaskConstMeta(
-    debugName: 'relay_type_inbox',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiRelaysRelayTypeInboxConstMeta =>
+      const TaskConstMeta(debugName: 'relay_type_inbox', argNames: []);
 
   @override
   Future<RelayType> crateApiRelaysRelayTypeKeyPackage() {
@@ -1993,10 +1972,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysRelayTypeKeyPackageConstMeta => const TaskConstMeta(
-    debugName: 'relay_type_key_package',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiRelaysRelayTypeKeyPackageConstMeta =>
+      const TaskConstMeta(debugName: 'relay_type_key_package', argNames: []);
 
   @override
   Future<RelayType> crateApiRelaysRelayTypeNip65() {
@@ -2023,10 +2000,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysRelayTypeNip65ConstMeta => const TaskConstMeta(
-    debugName: 'relay_type_nip65',
-    argNames: [],
-  );
+  TaskConstMeta get kCrateApiRelaysRelayTypeNip65ConstMeta =>
+      const TaskConstMeta(debugName: 'relay_type_nip65', argNames: []);
 
   @override
   Future<RelayUrl> crateApiUtilsRelayUrlFromString({required String url}) {
@@ -2211,6 +2186,43 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   );
 
   @override
+  Stream<ChatListStreamItem> crateApiChatListSubscribeToChatList({
+    required String accountPubkey,
+  }) {
+    final sink = RustStreamSink<ChatListStreamItem>();
+    unawaited(
+      handler.executeNormal(
+        NormalTask(
+          callFfi: (port_) {
+            final serializer = SseSerializer(generalizedFrbRustBinding);
+            sse_encode_String(accountPubkey, serializer);
+            sse_encode_StreamSink_chat_list_stream_item_Sse(sink, serializer);
+            pdeCallFfi(
+              generalizedFrbRustBinding,
+              serializer,
+              funcId: 56,
+              port: port_,
+            );
+          },
+          codec: SseCodec(
+            decodeSuccessData: sse_decode_unit,
+            decodeErrorData: sse_decode_api_error,
+          ),
+          constMeta: kCrateApiChatListSubscribeToChatListConstMeta,
+          argValues: [accountPubkey, sink],
+          apiImpl: this,
+        ),
+      ),
+    );
+    return sink.stream;
+  }
+
+  TaskConstMeta get kCrateApiChatListSubscribeToChatListConstMeta => const TaskConstMeta(
+    debugName: 'subscribe_to_chat_list',
+    argNames: ['accountPubkey', 'sink'],
+  );
+
+  @override
   Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
     required String groupId,
   }) {
@@ -2225,7 +2237,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
             pdeCallFfi(
               generalizedFrbRustBinding,
               serializer,
-              funcId: 56,
+              funcId: 57,
               port: port_,
             );
           },
@@ -2257,7 +2269,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 57,
+            funcId: 58,
             port: port_,
           );
         },
@@ -2273,10 +2285,8 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiUtilsTagFromVecConstMeta => const TaskConstMeta(
-    debugName: 'tag_from_vec',
-    argNames: ['vec'],
-  );
+  TaskConstMeta get kCrateApiUtilsTagFromVecConstMeta =>
+      const TaskConstMeta(debugName: 'tag_from_vec', argNames: ['vec']);
 
   @override
   Future<void> crateApiAccountsUnfollowUser({
@@ -2292,7 +2302,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 58,
+            funcId: 59,
             port: port_,
           );
         },
@@ -2326,7 +2336,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 59,
+            funcId: 60,
             port: port_,
           );
         },
@@ -2359,7 +2369,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 60,
+            funcId: 61,
             port: port_,
           );
         },
@@ -2397,7 +2407,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 61,
+            funcId: 62,
             port: port_,
           );
         },
@@ -2433,7 +2443,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 62,
+            funcId: 63,
             port: port_,
           );
         },
@@ -2471,7 +2481,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 63,
+            funcId: 64,
             port: port_,
           );
         },
@@ -2505,7 +2515,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 64,
+            funcId: 65,
             port: port_,
           );
         },
@@ -2539,7 +2549,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 65,
+            funcId: 66,
             port: port_,
           );
         },
@@ -2578,7 +2588,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
           pdeCallFfi(
             generalizedFrbRustBinding,
             serializer,
-            funcId: 66,
+            funcId: 67,
             port: port_,
           );
         },
@@ -2775,6 +2785,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RustStreamSink<ChatListStreamItem> dco_decode_StreamSink_chat_list_stream_item_Sse(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    throw UnimplementedError();
+  }
+
+  @protected
   RustStreamSink<MessageStreamItem> dco_decode_StreamSink_message_stream_item_Sse(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     throw UnimplementedError();
@@ -2819,37 +2835,21 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
       case 0:
-        return ApiError_Whitenoise(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_Whitenoise(message: dco_decode_String(raw[1]));
       case 1:
-        return ApiError_InvalidKey(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_InvalidKey(message: dco_decode_String(raw[1]));
       case 2:
-        return ApiError_NostrUrl(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_NostrUrl(message: dco_decode_String(raw[1]));
       case 3:
-        return ApiError_NostrTag(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_NostrTag(message: dco_decode_String(raw[1]));
       case 4:
-        return ApiError_NostrEvent(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_NostrEvent(message: dco_decode_String(raw[1]));
       case 5:
-        return ApiError_NostrParse(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_NostrParse(message: dco_decode_String(raw[1]));
       case 6:
-        return ApiError_NostrHex(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_NostrHex(message: dco_decode_String(raw[1]));
       case 7:
-        return ApiError_Other(
-          message: dco_decode_String(raw[1]),
-        );
+        return ApiError_Other(message: dco_decode_String(raw[1]));
       default:
         throw Exception('unreachable');
     }
@@ -2877,6 +2877,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   bool dco_decode_box_autoadd_bool(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return raw as bool;
+  }
+
+  @protected
+  ChatListUpdate dco_decode_box_autoadd_chat_list_update(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return dco_decode_chat_list_update(raw);
   }
 
   @protected
@@ -2933,6 +2939,40 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   WhitenoiseConfig dco_decode_box_autoadd_whitenoise_config(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return dco_decode_whitenoise_config(raw);
+  }
+
+  @protected
+  ChatListStreamItem dco_decode_chat_list_stream_item(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    switch (raw[0]) {
+      case 0:
+        return ChatListStreamItem_InitialSnapshot(
+          items: dco_decode_list_chat_summary(raw[1]),
+        );
+      case 1:
+        return ChatListStreamItem_Update(
+          update: dco_decode_box_autoadd_chat_list_update(raw[1]),
+        );
+      default:
+        throw Exception('unreachable');
+    }
+  }
+
+  @protected
+  ChatListUpdate dco_decode_chat_list_update(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    final arr = raw as List<dynamic>;
+    if (arr.length != 2) throw Exception('unexpected arr length: expect 2 but see ${arr.length}');
+    return ChatListUpdate(
+      trigger: dco_decode_chat_list_update_trigger(arr[0]),
+      item: dco_decode_chat_summary(arr[1]),
+    );
+  }
+
+  @protected
+  ChatListUpdateTrigger dco_decode_chat_list_update_trigger(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return ChatListUpdateTrigger.values[raw as int];
   }
 
   @protected
@@ -3379,10 +3419,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     if (arr.length != 2) {
       throw Exception('Expected 2 elements, got ${arr.length}');
     }
-    return (
-      dco_decode_String(arr[0]),
-      dco_decode_String(arr[1]),
-    );
+    return (dco_decode_String(arr[0]), dco_decode_String(arr[1]));
   }
 
   @protected
@@ -3688,6 +3725,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  RustStreamSink<ChatListStreamItem> sse_decode_StreamSink_chat_list_stream_item_Sse(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    throw UnimplementedError('Unreachable ()');
+  }
+
+  @protected
   RustStreamSink<MessageStreamItem> sse_decode_StreamSink_message_stream_item_Sse(
     SseDeserializer deserializer,
   ) {
@@ -3798,6 +3843,14 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  ChatListUpdate sse_decode_box_autoadd_chat_list_update(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    return (sse_decode_chat_list_update(deserializer));
+  }
+
+  @protected
   ChatMessageSummary sse_decode_box_autoadd_chat_message_summary(
     SseDeserializer deserializer,
   ) {
@@ -3863,6 +3916,44 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     return (sse_decode_whitenoise_config(deserializer));
+  }
+
+  @protected
+  ChatListStreamItem sse_decode_chat_list_stream_item(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final tag_ = sse_decode_i_32(deserializer);
+    switch (tag_) {
+      case 0:
+        final var_items = sse_decode_list_chat_summary(deserializer);
+        return ChatListStreamItem_InitialSnapshot(items: var_items);
+      case 1:
+        final var_update = sse_decode_box_autoadd_chat_list_update(
+          deserializer,
+        );
+        return ChatListStreamItem_Update(update: var_update);
+      default:
+        throw UnimplementedError('');
+    }
+  }
+
+  @protected
+  ChatListUpdate sse_decode_chat_list_update(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_trigger = sse_decode_chat_list_update_trigger(deserializer);
+    final var_item = sse_decode_chat_summary(deserializer);
+    return ChatListUpdate(trigger: var_trigger, item: var_item);
+  }
+
+  @protected
+  ChatListUpdateTrigger sse_decode_chat_list_update_trigger(
+    SseDeserializer deserializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    final inner = sse_decode_i_32(deserializer);
+    return ChatListUpdateTrigger.values[inner];
   }
 
   @protected
@@ -4818,7 +4909,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(), serializer);
+    sse_encode_usize(
+      (self as GroupIdImpl).frbInternalSseEncode(),
+      serializer,
+    );
   }
 
   @protected
@@ -4839,7 +4933,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(), serializer);
+    sse_encode_usize(
+      (self as RelayUrlImpl).frbInternalSseEncode(),
+      serializer,
+    );
   }
 
   @protected
@@ -4848,7 +4945,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize((self as TagImpl).frbInternalSseEncode(), serializer);
+    sse_encode_usize(
+      (self as TagImpl).frbInternalSseEncode(),
+      serializer,
+    );
   }
 
   @protected
@@ -4859,6 +4959,23 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_usize(
       (self as ThemeModeImpl).frbInternalSseEncode(),
+      serializer,
+    );
+  }
+
+  @protected
+  void sse_encode_StreamSink_chat_list_stream_item_Sse(
+    RustStreamSink<ChatListStreamItem> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(
+      self.setupAndSerialize(
+        codec: SseCodec(
+          decodeSuccessData: sse_decode_chat_list_stream_item,
+          decodeErrorData: sse_decode_AnyhowException,
+        ),
+      ),
       serializer,
     );
   }
@@ -4968,6 +5085,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   }
 
   @protected
+  void sse_encode_box_autoadd_chat_list_update(
+    ChatListUpdate self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_chat_list_update(self, serializer);
+  }
+
+  @protected
   void sse_encode_box_autoadd_chat_message_summary(
     ChatMessageSummary self,
     SseSerializer serializer,
@@ -5043,6 +5169,41 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
     sse_encode_whitenoise_config(self, serializer);
+  }
+
+  @protected
+  void sse_encode_chat_list_stream_item(
+    ChatListStreamItem self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    switch (self) {
+      case ChatListStreamItem_InitialSnapshot(items: final items):
+        sse_encode_i_32(0, serializer);
+        sse_encode_list_chat_summary(items, serializer);
+      case ChatListStreamItem_Update(update: final update):
+        sse_encode_i_32(1, serializer);
+        sse_encode_box_autoadd_chat_list_update(update, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_chat_list_update(
+    ChatListUpdate self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_chat_list_update_trigger(self.trigger, serializer);
+    sse_encode_chat_summary(self.item, serializer);
+  }
+
+  @protected
+  void sse_encode_chat_list_update_trigger(
+    ChatListUpdateTrigger self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.index, serializer);
   }
 
   @protected

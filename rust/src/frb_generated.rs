@@ -41,7 +41,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1870409244;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1704412371;
 
 // Section: executor
 
@@ -1045,7 +1045,7 @@ fn wire__crate__api__get_app_settings_impl(
         },
     )
 }
-fn wire__crate__api__groups__get_chat_list_impl(
+fn wire__crate__api__chat_list__get_chat_list_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
     rust_vec_len_: i32,
@@ -1073,7 +1073,7 @@ fn wire__crate__api__groups__get_chat_list_impl(
                 transform_result_sse::<_, crate::api::error::ApiError>(
                     (move || async move {
                         let output_ok =
-                            crate::api::groups::get_chat_list(api_account_pubkey).await?;
+                            crate::api::chat_list::get_chat_list(api_account_pubkey).await?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -2164,6 +2164,50 @@ fn wire__crate__api__utils__string_from_relay_url_impl(
         },
     )
 }
+fn wire__crate__api__chat_list__subscribe_to_chat_list_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "subscribe_to_chat_list",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_account_pubkey = <String>::sse_decode(&mut deserializer);
+            let api_sink = <StreamSink<
+                crate::api::chat_list::ChatListStreamItem,
+                flutter_rust_bridge::for_generated::SseCodec,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, crate::api::error::ApiError>(
+                    (move || async move {
+                        let output_ok = crate::api::chat_list::subscribe_to_chat_list(
+                            api_account_pubkey,
+                            api_sink,
+                        )
+                        .await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__messages__subscribe_to_group_messages_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -2785,6 +2829,19 @@ impl SseDecode
 
 impl SseDecode
     for StreamSink<
+        crate::api::chat_list::ChatListStreamItem,
+        flutter_rust_bridge::for_generated::SseCodec,
+    >
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <String>::sse_decode(deserializer);
+        return StreamSink::deserialize(inner);
+    }
+}
+
+impl SseDecode
+    for StreamSink<
         crate::api::messages::MessageStreamItem,
         flutter_rust_bridge::for_generated::SseCodec,
     >
@@ -2908,6 +2965,56 @@ impl SseDecode for bool {
     }
 }
 
+impl SseDecode for crate::api::chat_list::ChatListStreamItem {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_items =
+                    <Vec<crate::api::chat_list::ChatSummary>>::sse_decode(deserializer);
+                return crate::api::chat_list::ChatListStreamItem::InitialSnapshot {
+                    items: var_items,
+                };
+            }
+            1 => {
+                let mut var_update =
+                    <crate::api::chat_list::ChatListUpdate>::sse_decode(deserializer);
+                return crate::api::chat_list::ChatListStreamItem::Update { update: var_update };
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseDecode for crate::api::chat_list::ChatListUpdate {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_trigger =
+            <crate::api::chat_list::ChatListUpdateTrigger>::sse_decode(deserializer);
+        let mut var_item = <crate::api::chat_list::ChatSummary>::sse_decode(deserializer);
+        return crate::api::chat_list::ChatListUpdate {
+            trigger: var_trigger,
+            item: var_item,
+        };
+    }
+}
+
+impl SseDecode for crate::api::chat_list::ChatListUpdateTrigger {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::chat_list::ChatListUpdateTrigger::NewGroup,
+            1 => crate::api::chat_list::ChatListUpdateTrigger::NewLastMessage,
+            2 => crate::api::chat_list::ChatListUpdateTrigger::LastMessageDeleted,
+            _ => unreachable!("Invalid variant for ChatListUpdateTrigger: {}", inner),
+        };
+    }
+}
+
 impl SseDecode for crate::api::messages::ChatMessage {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -2962,7 +3069,7 @@ impl SseDecode for crate::api::messages::ChatMessageSummary {
     }
 }
 
-impl SseDecode for crate::api::groups::ChatSummary {
+impl SseDecode for crate::api::chat_list::ChatSummary {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut var_mlsGroupId = <String>::sse_decode(deserializer);
@@ -2974,7 +3081,7 @@ impl SseDecode for crate::api::groups::ChatSummary {
         let mut var_lastMessage =
             <Option<crate::api::messages::ChatMessageSummary>>::sse_decode(deserializer);
         let mut var_pendingConfirmation = <bool>::sse_decode(deserializer);
-        return crate::api::groups::ChatSummary {
+        return crate::api::chat_list::ChatSummary {
             mls_group_id: var_mlsGroupId,
             name: var_name,
             group_type: var_groupType,
@@ -3221,13 +3328,15 @@ impl SseDecode for Vec<crate::api::messages::ChatMessage> {
     }
 }
 
-impl SseDecode for Vec<crate::api::groups::ChatSummary> {
+impl SseDecode for Vec<crate::api::chat_list::ChatSummary> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
         let mut len_ = <i32>::sse_decode(deserializer);
         let mut ans_ = vec![];
         for idx_ in 0..len_ {
-            ans_.push(<crate::api::groups::ChatSummary>::sse_decode(deserializer));
+            ans_.push(<crate::api::chat_list::ChatSummary>::sse_decode(
+                deserializer,
+            ));
         }
         return ans_;
     }
@@ -3844,7 +3953,7 @@ fn pde_ffi_dispatcher_primary_impl(
         ),
         25 => wire__crate__api__accounts__get_accounts_impl(port, ptr, rust_vec_len, data_len),
         26 => wire__crate__api__get_app_settings_impl(port, ptr, rust_vec_len, data_len),
-        27 => wire__crate__api__groups__get_chat_list_impl(port, ptr, rust_vec_len, data_len),
+        27 => wire__crate__api__chat_list__get_chat_list_impl(port, ptr, rust_vec_len, data_len),
         28 => wire__crate__api__utils__get_default_blossom_server_url_impl(
             port,
             ptr,
@@ -3918,34 +4027,40 @@ fn pde_ffi_dispatcher_primary_impl(
         55 => {
             wire__crate__api__utils__string_from_relay_url_impl(port, ptr, rust_vec_len, data_len)
         }
-        56 => wire__crate__api__messages__subscribe_to_group_messages_impl(
+        56 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        57 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
-        58 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
-        59 => wire__crate__api__accounts__update_account_metadata_impl(
+        57 => wire__crate__api__messages__subscribe_to_group_messages_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        60 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
-        61 => wire__crate__api__accounts__upload_account_profile_picture_impl(
+        58 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
+        59 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
+        60 => wire__crate__api__accounts__update_account_metadata_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        62 => {
+        61 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
+        62 => wire__crate__api__accounts__upload_account_profile_picture_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        63 => {
             wire__crate__api__media_files__upload_chat_media_impl(port, ptr, rust_vec_len, data_len)
         }
-        63 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
-        64 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
-        65 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
-        66 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
+        64 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
+        65 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
+        66 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
+        67 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4144,6 +4259,76 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::error::ApiError>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::chat_list::ChatListStreamItem {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::api::chat_list::ChatListStreamItem::InitialSnapshot { items } => {
+                [0.into_dart(), items.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::chat_list::ChatListStreamItem::Update { update } => {
+                [1.into_dart(), update.into_into_dart().into_dart()].into_dart()
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::chat_list::ChatListStreamItem
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::chat_list::ChatListStreamItem>
+    for crate::api::chat_list::ChatListStreamItem
+{
+    fn into_into_dart(self) -> crate::api::chat_list::ChatListStreamItem {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::chat_list::ChatListUpdate {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.trigger.into_into_dart().into_dart(),
+            self.item.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::chat_list::ChatListUpdate
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::chat_list::ChatListUpdate>
+    for crate::api::chat_list::ChatListUpdate
+{
+    fn into_into_dart(self) -> crate::api::chat_list::ChatListUpdate {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::chat_list::ChatListUpdateTrigger {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::NewGroup => 0.into_dart(),
+            Self::NewLastMessage => 1.into_dart(),
+            Self::LastMessageDeleted => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::chat_list::ChatListUpdateTrigger
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::chat_list::ChatListUpdateTrigger>
+    for crate::api::chat_list::ChatListUpdateTrigger
+{
+    fn into_into_dart(self) -> crate::api::chat_list::ChatListUpdateTrigger {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::messages::ChatMessage {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -4200,7 +4385,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::messages::ChatMessageSummary>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
-impl flutter_rust_bridge::IntoDart for crate::api::groups::ChatSummary {
+impl flutter_rust_bridge::IntoDart for crate::api::chat_list::ChatSummary {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
             self.mls_group_id.into_into_dart().into_dart(),
@@ -4216,13 +4401,13 @@ impl flutter_rust_bridge::IntoDart for crate::api::groups::ChatSummary {
     }
 }
 impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
-    for crate::api::groups::ChatSummary
+    for crate::api::chat_list::ChatSummary
 {
 }
-impl flutter_rust_bridge::IntoIntoDart<crate::api::groups::ChatSummary>
-    for crate::api::groups::ChatSummary
+impl flutter_rust_bridge::IntoIntoDart<crate::api::chat_list::ChatSummary>
+    for crate::api::chat_list::ChatSummary
 {
-    fn into_into_dart(self) -> crate::api::groups::ChatSummary {
+    fn into_into_dart(self) -> crate::api::chat_list::ChatSummary {
         self
     }
 }
@@ -4835,6 +5020,18 @@ impl SseEncode
 
 impl SseEncode
     for StreamSink<
+        crate::api::chat_list::ChatListStreamItem,
+        flutter_rust_bridge::for_generated::SseCodec,
+    >
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        unimplemented!("")
+    }
+}
+
+impl SseEncode
+    for StreamSink<
         crate::api::messages::MessageStreamItem,
         flutter_rust_bridge::for_generated::SseCodec,
     >
@@ -4924,6 +5121,50 @@ impl SseEncode for bool {
     }
 }
 
+impl SseEncode for crate::api::chat_list::ChatListStreamItem {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::api::chat_list::ChatListStreamItem::InitialSnapshot { items } => {
+                <i32>::sse_encode(0, serializer);
+                <Vec<crate::api::chat_list::ChatSummary>>::sse_encode(items, serializer);
+            }
+            crate::api::chat_list::ChatListStreamItem::Update { update } => {
+                <i32>::sse_encode(1, serializer);
+                <crate::api::chat_list::ChatListUpdate>::sse_encode(update, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
+impl SseEncode for crate::api::chat_list::ChatListUpdate {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::chat_list::ChatListUpdateTrigger>::sse_encode(self.trigger, serializer);
+        <crate::api::chat_list::ChatSummary>::sse_encode(self.item, serializer);
+    }
+}
+
+impl SseEncode for crate::api::chat_list::ChatListUpdateTrigger {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::chat_list::ChatListUpdateTrigger::NewGroup => 0,
+                crate::api::chat_list::ChatListUpdateTrigger::NewLastMessage => 1,
+                crate::api::chat_list::ChatListUpdateTrigger::LastMessageDeleted => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
 impl SseEncode for crate::api::messages::ChatMessage {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -4954,7 +5195,7 @@ impl SseEncode for crate::api::messages::ChatMessageSummary {
     }
 }
 
-impl SseEncode for crate::api::groups::ChatSummary {
+impl SseEncode for crate::api::chat_list::ChatSummary {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <String>::sse_encode(self.mls_group_id, serializer);
@@ -5144,12 +5385,12 @@ impl SseEncode for Vec<crate::api::messages::ChatMessage> {
     }
 }
 
-impl SseEncode for Vec<crate::api::groups::ChatSummary> {
+impl SseEncode for Vec<crate::api::chat_list::ChatSummary> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
-            <crate::api::groups::ChatSummary>::sse_encode(item, serializer);
+            <crate::api::chat_list::ChatSummary>::sse_encode(item, serializer);
         }
     }
 }

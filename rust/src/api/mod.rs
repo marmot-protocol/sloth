@@ -55,7 +55,9 @@ pub fn create_whitenoise_config(data_dir: String, logs_dir: String) -> Whitenois
 }
 
 // Declare the modules
+pub mod account_groups;
 pub mod accounts;
+pub mod chat_list;
 pub mod error;
 pub mod groups;
 pub mod media_files;
@@ -64,12 +66,11 @@ pub mod metadata;
 pub mod relays;
 pub mod users;
 pub mod utils;
-pub use utils::{group_id_from_string, group_id_to_string};
-pub mod account_groups;
 
 // Re-export everything
 pub use account_groups::*;
 pub use accounts::*;
+pub use chat_list::*;
 pub use error::*;
 pub use groups::*;
 pub use media_files::*;
