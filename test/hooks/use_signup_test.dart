@@ -1,34 +1,15 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_signup.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
-import '../mocks/mock_secure_storage.dart';
-
 class MockApi implements RustLibApi {
-  bool identityCreated = false;
   bool imageUploaded = false;
   FlutterMetadata? updatedMetadata;
-  bool shouldThrowOnCreateIdentity = false;
-
-  @override
-  Future<Account> crateApiAccountsCreateIdentity() async {
-    if (shouldThrowOnCreateIdentity) {
-      throw Exception('Network error');
-    }
-    identityCreated = true;
-    return Account(
-      pubkey: 'test_pubkey',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-  }
 
   @override
   Future<String> crateApiUtilsGetDefaultBlossomServerUrl() async {
@@ -76,23 +57,31 @@ class _MockFile extends Fake implements File {
 
 late ({
   SignupState state,
-  SignupCallback submit,
+  SubmitCallback submit,
   OnImageSelectedCallback onImageSelected,
   ClearErrorsCallback clearErrors,
 })
 result;
 
-Future<void> _pump(WidgetTester tester, List overrides) async {
+bool signupCalled = false;
+bool shouldThrowOnSignup = false;
+
+Future<String> mockSignup() async {
+  if (shouldThrowOnSignup) {
+    throw Exception('Network error');
+  }
+  signupCalled = true;
+  return 'test_pubkey';
+}
+
+Future<void> _pump(WidgetTester tester) async {
   await tester.pumpWidget(
-    ProviderScope(
-      overrides: [...overrides],
-      child: MaterialApp(
-        home: HookConsumer(
-          builder: (context, ref, _) {
-            result = useSignup(ref);
-            return const SizedBox();
-          },
-        ),
+    MaterialApp(
+      home: HookBuilder(
+        builder: (context) {
+          result = useSignup(mockSignup);
+          return const SizedBox();
+        },
       ),
     ),
   );
@@ -101,39 +90,36 @@ Future<void> _pump(WidgetTester tester, List overrides) async {
 late MockApi mockApi;
 
 void main() {
-  late List overrides;
-
   setUpAll(() {
     mockApi = MockApi();
     RustLib.initMock(api: mockApi);
   });
 
   setUp(() {
-    mockApi.identityCreated = false;
+    signupCalled = false;
+    shouldThrowOnSignup = false;
     mockApi.imageUploaded = false;
     mockApi.updatedMetadata = null;
-    mockApi.shouldThrowOnCreateIdentity = false;
-    overrides = [secureStorageProvider.overrideWithValue(MockSecureStorage())];
   });
 
   group('submit', () {
     testWidgets('sets error when displayName is empty', (tester) async {
-      await _pump(tester, overrides);
+      await _pump(tester);
       await result.submit(displayName: '');
       await tester.pump();
 
       expect(result.state.displayNameError, isNotNull);
     });
 
-    testWidgets('creates identity', (tester) async {
-      await _pump(tester, overrides);
+    testWidgets('calls signup callback', (tester) async {
+      await _pump(tester);
       await result.submit(displayName: 'Test');
 
-      expect(mockApi.identityCreated, isTrue);
+      expect(signupCalled, isTrue);
     });
 
     testWidgets('updates metadata', (tester) async {
-      await _pump(tester, overrides);
+      await _pump(tester);
       await result.submit(displayName: 'Test');
 
       expect(mockApi.updatedMetadata, isNotNull);
@@ -142,7 +128,7 @@ void main() {
     testWidgets('with image uploads to blossom', (tester) async {
       await IOOverrides.runZoned(
         () async {
-          await _pump(tester, overrides);
+          await _pump(tester);
           result.onImageSelected('/fake/image.jpg');
           await result.submit(displayName: 'Test');
 
@@ -155,7 +141,7 @@ void main() {
     testWidgets('with image includes url in metadata', (tester) async {
       await IOOverrides.runZoned(
         () async {
-          await _pump(tester, overrides);
+          await _pump(tester);
           result.onImageSelected('/fake/image.jpg');
           await result.submit(displayName: 'Test');
 
@@ -166,8 +152,8 @@ void main() {
     });
 
     testWidgets('sets friendly error message on failure', (tester) async {
-      mockApi.shouldThrowOnCreateIdentity = true;
-      await _pump(tester, overrides);
+      shouldThrowOnSignup = true;
+      await _pump(tester);
       await result.submit(displayName: 'Test');
       await tester.pump();
 
@@ -177,8 +163,8 @@ void main() {
 
   group('clearErrors', () {
     testWidgets('clears error', (tester) async {
-      mockApi.shouldThrowOnCreateIdentity = true;
-      await _pump(tester, overrides);
+      shouldThrowOnSignup = true;
+      await _pump(tester);
       await result.submit(displayName: 'Test');
       await tester.pump();
 
@@ -191,7 +177,7 @@ void main() {
     });
 
     testWidgets('clears displayNameError', (tester) async {
-      await _pump(tester, overrides);
+      await _pump(tester);
       await result.submit(displayName: '');
       await tester.pump();
 

@@ -20,6 +20,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 
 ### Changed
+- Change hooks that received refs to receive data [PR #27](https://github.com/marmot-protocol/sloth/pull/27)
 
 ### Deprecated
 
