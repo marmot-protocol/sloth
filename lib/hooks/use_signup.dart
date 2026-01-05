@@ -85,7 +85,7 @@ useSignup(WidgetRef ref) {
         );
       }
 
-      await profileService.updateProfile(
+      await profileService.setProfile(
         displayName: displayName.trim(),
         about: bio?.isNotEmpty == true ? bio : null,
         pictureUrl: pictureUrl,
