@@ -10,10 +10,13 @@ import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
 import 'package:sloth/screens/chat_screen.dart' show ChatScreen;
 import 'package:sloth/screens/developer_settings_screen.dart' show DeveloperSettingsScreen;
 import 'package:sloth/screens/donate_screen.dart' show DonateScreen;
+import 'package:sloth/screens/edit_profile_screen.dart' show EditProfileScreen;
 import 'package:sloth/screens/home_screen.dart' show HomeScreen;
 import 'package:sloth/screens/login_screen.dart' show LoginScreen;
 import 'package:sloth/screens/onboarding_screen.dart' show OnboardingScreen;
+import 'package:sloth/screens/profile_keys_screen.dart' show ProfileKeysScreen;
 import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
+import 'package:sloth/screens/share_profile_screen.dart' show ShareProfileScreen;
 import 'package:sloth/screens/signup_screen.dart' show SignupScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
 
@@ -27,6 +30,9 @@ abstract final class Routes {
   static const _wip = '/wip';
   static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
+  static const _profileKeys = '/profile-keys';
+  static const _shareProfile = '/share-profile';
+  static const _editProfile = '/edit-profile';
   static const _invite = '/invites/:mlsGroupId';
   static const _chat = '/chats/:groupId';
   static const _publicRoutes = {_home, _login, _signup};
@@ -106,6 +112,27 @@ abstract final class Routes {
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
             child: const DeveloperSettingsScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _profileKeys,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const ProfileKeysScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _shareProfile,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const ShareProfileScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _editProfile,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const EditProfileScreen(),
           ),
         ),
         GoRoute(
@@ -202,6 +229,18 @@ abstract final class Routes {
 
   static void pushToDeveloperSettings(BuildContext context) {
     GoRouter.of(context).push(_developerSettings);
+  }
+
+  static void pushToProfileKeys(BuildContext context) {
+    GoRouter.of(context).push(_profileKeys);
+  }
+
+  static void pushToShareProfile(BuildContext context) {
+    GoRouter.of(context).push(_shareProfile);
+  }
+
+  static void pushToEditProfile(BuildContext context) {
+    GoRouter.of(context).push(_editProfile);
   }
 
   static void pushToInvite(BuildContext context, String mlsGroupId) {

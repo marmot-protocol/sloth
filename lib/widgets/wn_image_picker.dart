@@ -124,13 +124,20 @@ class _ImageDisplay extends HookWidget {
     }, [isAnimating]);
 
     if (imagePath != null && imagePath!.isNotEmpty) {
+      final isUrl = imagePath!.startsWith('http://') || imagePath!.startsWith('https://');
       return _buildImageContainer(
         colors: colors,
-        child: Image.file(
-          File(imagePath!),
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) => _buildInitialsContent(colors),
-        ),
+        child: isUrl
+            ? Image.network(
+                imagePath!,
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => _buildInitialsContent(colors),
+              )
+            : Image.file(
+                File(imagePath!),
+                fit: BoxFit.cover,
+                errorBuilder: (context, error, stackTrace) => _buildInitialsContent(colors),
+              ),
         loading: isAnimating,
         animationController: animationController,
       );

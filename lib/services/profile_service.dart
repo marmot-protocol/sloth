@@ -15,12 +15,14 @@ class ProfileService {
     required String displayName,
     String? about,
     String? pictureUrl,
+    String? nip05,
   }) async {
     _logger.info('Updating profile');
     final metadata = FlutterMetadata(
       displayName: displayName,
       about: about,
       picture: pictureUrl,
+      nip05: nip05,
       custom: const {},
     );
     await accounts_api.updateAccountMetadata(pubkey: pubkey, metadata: metadata);
