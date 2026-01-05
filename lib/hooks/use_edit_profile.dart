@@ -231,6 +231,7 @@ useEditProfile(String pubkey) {
       about: about,
       nip05: nip05,
       clearError: true,
+      clearSelectedImagePath: true,
     );
   }
 

@@ -1,6 +1,14 @@
-import 'dart:io' show File, FileSystemException, IOOverrides;
+import 'dart:io'
+    show
+        File,
+        FileSystemException,
+        IOOverrides,
+        HttpOverrides,
+        HttpClient,
+        HttpClientRequest,
+        SocketException;
 
-import 'package:flutter/material.dart' show Key;
+import 'package:flutter/material.dart' show Image, Key;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
@@ -29,6 +37,13 @@ class _ErrorFile extends Fake implements File {
   Never readAsBytesSync() => throw const FileSystemException('Failed to read');
 }
 
+class _MockFailingHttpClient extends Fake implements HttpClient {
+  @override
+  Future<HttpClientRequest> getUrl(Uri url) async {
+    throw const SocketException('Simulated network error');
+  }
+}
+
 void main() {
   group('WnImagePicker', () {
     group('without imagePath', () {
@@ -54,7 +69,7 @@ void main() {
     });
 
     group('with invalid imagePath', () {
-      testWidgets('shows initials when image fails to load', (tester) async {
+      testWidgets('shows initials when local file fails to load', (tester) async {
         await IOOverrides.runZoned(
           () async {
             await mountWidget(
@@ -72,7 +87,7 @@ void main() {
         );
       });
 
-      testWidgets('shows user icon when image fails and no displayName', (tester) async {
+      testWidgets('shows user icon when local file fails and no displayName', (tester) async {
         await IOOverrides.runZoned(
           () async {
             await mountWidget(
@@ -85,6 +100,67 @@ void main() {
           },
           createFile: (path) => _ErrorFile(path),
         );
+      });
+
+      testWidgets('shows initials when URL fails to load', (tester) async {
+        await HttpOverrides.runZoned(
+          () async {
+            await mountWidget(
+              const WnImagePicker(
+                imagePath: 'https://example.com/image.jpg',
+                displayName: 'John Doe',
+              ),
+              tester,
+            );
+            await tester.pumpAndSettle();
+
+            expect(find.text('JD'), findsOneWidget);
+          },
+          createHttpClient: (_) => _MockFailingHttpClient(),
+        );
+      });
+
+      testWidgets('shows user icon when URL fails and no displayName', (tester) async {
+        await HttpOverrides.runZoned(
+          () async {
+            await mountWidget(
+              const WnImagePicker(imagePath: 'https://example.com/image.jpg'),
+              tester,
+            );
+            await tester.pumpAndSettle();
+
+            expect(find.byKey(const Key('user_icon')), findsOneWidget);
+          },
+          createHttpClient: (_) => _MockFailingHttpClient(),
+        );
+      });
+    });
+
+    group('with valid URL imagePath', () {
+      testWidgets('renders Image widget for http URLs', (tester) async {
+        await mountWidget(
+          const WnImagePicker(
+            imagePath: 'http://example.com/image.jpg',
+            displayName: 'Test',
+          ),
+          tester,
+        );
+        await tester.pump();
+
+        expect(find.byType(Image), findsOneWidget);
+      });
+
+      testWidgets('renders Image widget for https URLs', (tester) async {
+        await mountWidget(
+          const WnImagePicker(
+            imagePath: 'https://example.com/image.jpg',
+            displayName: 'Test',
+          ),
+          tester,
+        );
+        await tester.pump();
+
+        expect(find.byType(Image), findsOneWidget);
       });
     });
 

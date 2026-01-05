@@ -6,6 +6,9 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
+import 'package:sloth/screens/edit_profile_screen.dart';
+import 'package:sloth/screens/profile_keys_screen.dart';
+import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -26,6 +29,16 @@ class _MockApi implements RustLibApi {
 
   @override
   Future<void> crateApiAccountsLogout({required String pubkey}) async {}
+
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    return 'npub1test${hexPubkey.substring(0, 10)}';
+  }
+
+  @override
+  Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
+    return 'nsec1test${pubkey.substring(0, 10)}';
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
@@ -83,18 +96,25 @@ void main() {
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Edit profile navigates to WIP screen', (tester) async {
+    testWidgets('tapping Edit profile navigates to EditProfileScreen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.text('Edit profile'));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(EditProfileScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Profile keys navigates to WIP screen', (tester) async {
+    testWidgets('tapping Profile keys navigates to ProfileKeysScreen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.text('Profile keys'));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(ProfileKeysScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping QR code icon navigates to ShareProfileScreen', (tester) async {
+      await pumpSettingsScreen(tester);
+      await tester.tap(find.byKey(const Key('qr_code_button')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ShareProfileScreen), findsOneWidget);
     });
 
     testWidgets('tapping Network relays navigates to WIP screen', (tester) async {

@@ -61,27 +61,27 @@ void main() {
     service = const ProfileService('test_pubkey');
   });
 
-  group('updateProfile', () {
+  group('setProfile', () {
     test('calls API with pubkey', () async {
-      await service.updateProfile(displayName: 'Test');
+      await service.setProfile(displayName: 'Test');
 
       expect(mockApi.updatedPubkey, 'test_pubkey');
     });
 
     test('passes displayName to metadata', () async {
-      await service.updateProfile(displayName: 'Test Name');
+      await service.setProfile(displayName: 'Test Name');
 
       expect(mockApi.updatedMetadata?.displayName, 'Test Name');
     });
 
     test('passes about to metadata', () async {
-      await service.updateProfile(displayName: 'Test', about: 'Bio');
+      await service.setProfile(displayName: 'Test', about: 'Bio');
 
       expect(mockApi.updatedMetadata?.about, 'Bio');
     });
 
     test('passes pictureUrl to metadata', () async {
-      await service.updateProfile(displayName: 'Test', pictureUrl: 'https://pic.url');
+      await service.setProfile(displayName: 'Test', pictureUrl: 'https://pic.url');
 
       expect(mockApi.updatedMetadata?.picture, 'https://pic.url');
     });
