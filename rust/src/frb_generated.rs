@@ -3081,6 +3081,7 @@ impl SseDecode for crate::api::chat_list::ChatSummary {
         let mut var_lastMessage =
             <Option<crate::api::messages::ChatMessageSummary>>::sse_decode(deserializer);
         let mut var_pendingConfirmation = <bool>::sse_decode(deserializer);
+        let mut var_welcomerPubkey = <Option<String>>::sse_decode(deserializer);
         return crate::api::chat_list::ChatSummary {
             mls_group_id: var_mlsGroupId,
             name: var_name,
@@ -3090,6 +3091,7 @@ impl SseDecode for crate::api::chat_list::ChatSummary {
             group_image_url: var_groupImageUrl,
             last_message: var_lastMessage,
             pending_confirmation: var_pendingConfirmation,
+            welcomer_pubkey: var_welcomerPubkey,
         };
     }
 }
@@ -4396,6 +4398,7 @@ impl flutter_rust_bridge::IntoDart for crate::api::chat_list::ChatSummary {
             self.group_image_url.into_into_dart().into_dart(),
             self.last_message.into_into_dart().into_dart(),
             self.pending_confirmation.into_into_dart().into_dart(),
+            self.welcomer_pubkey.into_into_dart().into_dart(),
         ]
         .into_dart()
     }
@@ -5209,6 +5212,7 @@ impl SseEncode for crate::api::chat_list::ChatSummary {
             serializer,
         );
         <bool>::sse_encode(self.pending_confirmation, serializer);
+        <Option<String>>::sse_encode(self.welcomer_pubkey, serializer);
     }
 }
 

@@ -47,8 +47,9 @@ sealed class ChatListStreamItem with _$ChatListStreamItem {
   }) = ChatListStreamItem_InitialSnapshot;
 
   /// Real-time update for a single chat
-  const factory ChatListStreamItem.update({required ChatListUpdate update}) =
-      ChatListStreamItem_Update;
+  const factory ChatListStreamItem.update({
+    required ChatListUpdate update,
+  }) = ChatListStreamItem_Update;
 }
 
 /// A real-time update for the chat list.
@@ -59,7 +60,10 @@ class ChatListUpdate {
   final ChatListUpdateTrigger trigger;
   final ChatSummary item;
 
-  const ChatListUpdate({required this.trigger, required this.item});
+  const ChatListUpdate({
+    required this.trigger,
+    required this.item,
+  });
 
   @override
   int get hashCode => trigger.hashCode ^ item.hashCode;
@@ -85,9 +89,6 @@ enum ChatListUpdateTrigger {
   lastMessageDeleted,
 }
 
-/// Summary of a chat/group for the chat list screen.
-///
-/// Contains pre-computed display data (resolved names, images, last message).
 class ChatSummary {
   /// MLS group identifier (hex string)
   final String mlsGroupId;
@@ -115,6 +116,10 @@ class ChatSummary {
   /// Whether the group is pending user confirmation
   final bool pendingConfirmation;
 
+  /// Public key (hex) of the user who invited this account to the group.
+  /// `Some` when invited by another user, `None` when the user created the group.
+  final String? welcomerPubkey;
+
   const ChatSummary({
     required this.mlsGroupId,
     this.name,
@@ -124,6 +129,7 @@ class ChatSummary {
     this.groupImageUrl,
     this.lastMessage,
     required this.pendingConfirmation,
+    this.welcomerPubkey,
   });
 
   @override
@@ -135,7 +141,8 @@ class ChatSummary {
       groupImagePath.hashCode ^
       groupImageUrl.hashCode ^
       lastMessage.hashCode ^
-      pendingConfirmation.hashCode;
+      pendingConfirmation.hashCode ^
+      welcomerPubkey.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -149,5 +156,6 @@ class ChatSummary {
           groupImagePath == other.groupImagePath &&
           groupImageUrl == other.groupImageUrl &&
           lastMessage == other.lastMessage &&
-          pendingConfirmation == other.pendingConfirmation;
+          pendingConfirmation == other.pendingConfirmation &&
+          welcomerPubkey == other.welcomerPubkey;
 }

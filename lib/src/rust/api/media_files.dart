@@ -35,7 +35,11 @@ class FileMetadata {
   final String? dimensions;
   final String? blurhash;
 
-  const FileMetadata({this.originalFilename, this.dimensions, this.blurhash});
+  const FileMetadata({
+    this.originalFilename,
+    this.dimensions,
+    this.blurhash,
+  });
 
   @override
   int get hashCode => originalFilename.hashCode ^ dimensions.hashCode ^ blurhash.hashCode;

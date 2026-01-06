@@ -189,8 +189,9 @@ sealed class MessageStreamItem with _$MessageStreamItem {
   }) = MessageStreamItem_InitialSnapshot;
 
   /// Real-time update for a single message
-  const factory MessageStreamItem.update({required MessageUpdate update}) =
-      MessageStreamItem_Update;
+  const factory MessageStreamItem.update({
+    required MessageUpdate update,
+  }) = MessageStreamItem_Update;
 }
 
 /// A real-time update for a group message.
@@ -201,7 +202,10 @@ class MessageUpdate {
   final UpdateTrigger trigger;
   final ChatMessage message;
 
-  const MessageUpdate({required this.trigger, required this.message});
+  const MessageUpdate({
+    required this.trigger,
+    required this.message,
+  });
 
   @override
   int get hashCode => trigger.hashCode ^ message.hashCode;
@@ -260,7 +264,10 @@ class ReactionSummary {
   final List<EmojiReaction> byEmoji;
   final List<UserReaction> userReactions;
 
-  const ReactionSummary({required this.byEmoji, required this.userReactions});
+  const ReactionSummary({
+    required this.byEmoji,
+    required this.userReactions,
+  });
 
   @override
   int get hashCode => byEmoji.hashCode ^ userReactions.hashCode;
@@ -279,7 +286,10 @@ class SerializableToken {
   final String tokenType;
   final String? content;
 
-  const SerializableToken({required this.tokenType, this.content});
+  const SerializableToken({
+    required this.tokenType,
+    this.content,
+  });
 
   @override
   int get hashCode => tokenType.hashCode ^ content.hashCode;
