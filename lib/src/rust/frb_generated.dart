@@ -2851,14 +2851,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   AccountGroup dco_decode_account_group(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 7) throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return AccountGroup(
       id: dco_decode_opt_box_autoadd_i_64(arr[0]),
       accountPubkey: dco_decode_String(arr[1]),
       mlsGroupId: dco_decode_String(arr[2]),
       userConfirmation: dco_decode_opt_box_autoadd_bool(arr[3]),
-      createdAt: dco_decode_i_64(arr[4]),
-      updatedAt: dco_decode_i_64(arr[5]),
+      welcomerPubkey: dco_decode_opt_String(arr[4]),
+      createdAt: dco_decode_i_64(arr[5]),
+      updatedAt: dco_decode_i_64(arr[6]),
     );
   }
 
@@ -3823,6 +3824,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     final var_accountPubkey = sse_decode_String(deserializer);
     final var_mlsGroupId = sse_decode_String(deserializer);
     final var_userConfirmation = sse_decode_opt_box_autoadd_bool(deserializer);
+    final var_welcomerPubkey = sse_decode_opt_String(deserializer);
     final var_createdAt = sse_decode_i_64(deserializer);
     final var_updatedAt = sse_decode_i_64(deserializer);
     return AccountGroup(
@@ -3830,6 +3832,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       accountPubkey: var_accountPubkey,
       mlsGroupId: var_mlsGroupId,
       userConfirmation: var_userConfirmation,
+      welcomerPubkey: var_welcomerPubkey,
       createdAt: var_createdAt,
       updatedAt: var_updatedAt,
     );
@@ -5064,6 +5067,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.accountPubkey, serializer);
     sse_encode_String(self.mlsGroupId, serializer);
     sse_encode_opt_box_autoadd_bool(self.userConfirmation, serializer);
+    sse_encode_opt_String(self.welcomerPubkey, serializer);
     sse_encode_i_64(self.createdAt, serializer);
     sse_encode_i_64(self.updatedAt, serializer);
   }

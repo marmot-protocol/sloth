@@ -45,6 +45,7 @@ class AccountGroup {
   final String accountPubkey;
   final String mlsGroupId;
   final bool? userConfirmation;
+  final String? welcomerPubkey;
   final PlatformInt64 createdAt;
   final PlatformInt64 updatedAt;
 
@@ -53,6 +54,7 @@ class AccountGroup {
     required this.accountPubkey,
     required this.mlsGroupId,
     this.userConfirmation,
+    this.welcomerPubkey,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -63,6 +65,7 @@ class AccountGroup {
       accountPubkey.hashCode ^
       mlsGroupId.hashCode ^
       userConfirmation.hashCode ^
+      welcomerPubkey.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
 
@@ -75,6 +78,7 @@ class AccountGroup {
           accountPubkey == other.accountPubkey &&
           mlsGroupId == other.mlsGroupId &&
           userConfirmation == other.userConfirmation &&
+          welcomerPubkey == other.welcomerPubkey &&
           createdAt == other.createdAt &&
           updatedAt == other.updatedAt;
 }
