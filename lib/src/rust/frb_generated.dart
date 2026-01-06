@@ -48,8 +48,12 @@ class RustLib extends BaseEntrypoint<RustLibApi, RustLibApiImpl, RustLibWire> {
 
   /// Initialize flutter_rust_bridge in mock mode.
   /// No libraries for FFI are loaded.
-  static void initMock({required RustLibApi api}) {
-    instance.initMockImpl(api: api);
+  static void initMock({
+    required RustLibApi api,
+  }) {
+    instance.initMockImpl(
+      api: api,
+    );
   }
 
   /// Dispose flutter_rust_bridge
@@ -457,8 +461,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsAccountFollowsConstMeta =>
-      const TaskConstMeta(debugName: 'account_follows', argNames: ['pubkey']);
+  TaskConstMeta get kCrateApiAccountsAccountFollowsConstMeta => const TaskConstMeta(
+    debugName: 'account_follows',
+    argNames: ['pubkey'],
+  );
 
   @override
   Future<FlutterEvent?> crateApiAccountsAccountKeyPackage({
@@ -586,8 +592,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiGroupsActiveGroupsConstMeta =>
-      const TaskConstMeta(debugName: 'active_groups', argNames: ['pubkey']);
+  TaskConstMeta get kCrateApiGroupsActiveGroupsConstMeta => const TaskConstMeta(
+    debugName: 'active_groups',
+    argNames: ['pubkey'],
+  );
 
   @override
   Future<void> crateApiAccountsAddAccountRelay({
@@ -804,8 +812,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsCreateIdentityConstMeta =>
-      const TaskConstMeta(debugName: 'create_identity', argNames: []);
+  TaskConstMeta get kCrateApiAccountsCreateIdentityConstMeta => const TaskConstMeta(
+    debugName: 'create_identity',
+    argNames: [],
+  );
 
   @override
   Future<WhitenoiseConfig> crateApiCreateWhitenoiseConfig({
@@ -965,8 +975,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiDeleteAllDataConstMeta =>
-      const TaskConstMeta(debugName: 'delete_all_data', argNames: []);
+  TaskConstMeta get kCrateApiDeleteAllDataConstMeta => const TaskConstMeta(
+    debugName: 'delete_all_data',
+    argNames: [],
+  );
 
   @override
   Future<MediaFile> crateApiMediaFilesDownloadChatMedia({
@@ -1028,8 +1040,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysEnsureAllSubscriptionsConstMeta =>
-      const TaskConstMeta(debugName: 'ensure_all_subscriptions', argNames: []);
+  TaskConstMeta get kCrateApiRelaysEnsureAllSubscriptionsConstMeta => const TaskConstMeta(
+    debugName: 'ensure_all_subscriptions',
+    argNames: [],
+  );
 
   @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) {
@@ -1155,8 +1169,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsGetAccountConstMeta =>
-      const TaskConstMeta(debugName: 'get_account', argNames: ['pubkey']);
+  TaskConstMeta get kCrateApiAccountsGetAccountConstMeta => const TaskConstMeta(
+    debugName: 'get_account',
+    argNames: ['pubkey'],
+  );
 
   @override
   Future<List<(String, String)>> crateApiRelaysGetAccountRelayStatuses({
@@ -1214,8 +1230,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsGetAccountsConstMeta =>
-      const TaskConstMeta(debugName: 'get_accounts', argNames: []);
+  TaskConstMeta get kCrateApiAccountsGetAccountsConstMeta => const TaskConstMeta(
+    debugName: 'get_accounts',
+    argNames: [],
+  );
 
   @override
   Future<AppSettings> crateApiGetAppSettings() {
@@ -1242,8 +1260,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiGetAppSettingsConstMeta =>
-      const TaskConstMeta(debugName: 'get_app_settings', argNames: []);
+  TaskConstMeta get kCrateApiGetAppSettingsConstMeta => const TaskConstMeta(
+    debugName: 'get_app_settings',
+    argNames: [],
+  );
 
   @override
   Future<List<ChatSummary>> crateApiChatListGetChatList({
@@ -1831,8 +1851,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsLoginConstMeta =>
-      const TaskConstMeta(debugName: 'login', argNames: ['nsecOrHexPrivkey']);
+  TaskConstMeta get kCrateApiAccountsLoginConstMeta => const TaskConstMeta(
+    debugName: 'login',
+    argNames: ['nsecOrHexPrivkey'],
+  );
 
   @override
   Future<void> crateApiAccountsLogout({required String pubkey}) {
@@ -1859,8 +1881,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiAccountsLogoutConstMeta =>
-      const TaskConstMeta(debugName: 'logout', argNames: ['pubkey']);
+  TaskConstMeta get kCrateApiAccountsLogoutConstMeta => const TaskConstMeta(
+    debugName: 'logout',
+    argNames: ['pubkey'],
+  );
 
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
@@ -1944,8 +1968,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysRelayTypeInboxConstMeta =>
-      const TaskConstMeta(debugName: 'relay_type_inbox', argNames: []);
+  TaskConstMeta get kCrateApiRelaysRelayTypeInboxConstMeta => const TaskConstMeta(
+    debugName: 'relay_type_inbox',
+    argNames: [],
+  );
 
   @override
   Future<RelayType> crateApiRelaysRelayTypeKeyPackage() {
@@ -1972,8 +1998,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysRelayTypeKeyPackageConstMeta =>
-      const TaskConstMeta(debugName: 'relay_type_key_package', argNames: []);
+  TaskConstMeta get kCrateApiRelaysRelayTypeKeyPackageConstMeta => const TaskConstMeta(
+    debugName: 'relay_type_key_package',
+    argNames: [],
+  );
 
   @override
   Future<RelayType> crateApiRelaysRelayTypeNip65() {
@@ -2000,8 +2028,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiRelaysRelayTypeNip65ConstMeta =>
-      const TaskConstMeta(debugName: 'relay_type_nip65', argNames: []);
+  TaskConstMeta get kCrateApiRelaysRelayTypeNip65ConstMeta => const TaskConstMeta(
+    debugName: 'relay_type_nip65',
+    argNames: [],
+  );
 
   @override
   Future<RelayUrl> crateApiUtilsRelayUrlFromString({required String url}) {
@@ -2285,8 +2315,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     );
   }
 
-  TaskConstMeta get kCrateApiUtilsTagFromVecConstMeta =>
-      const TaskConstMeta(debugName: 'tag_from_vec', argNames: ['vec']);
+  TaskConstMeta get kCrateApiUtilsTagFromVecConstMeta => const TaskConstMeta(
+    debugName: 'tag_from_vec',
+    argNames: ['vec'],
+  );
 
   @override
   Future<void> crateApiAccountsUnfollowUser({
@@ -2819,14 +2851,15 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   AccountGroup dco_decode_account_group(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 6) throw Exception('unexpected arr length: expect 6 but see ${arr.length}');
+    if (arr.length != 7) throw Exception('unexpected arr length: expect 7 but see ${arr.length}');
     return AccountGroup(
       id: dco_decode_opt_box_autoadd_i_64(arr[0]),
       accountPubkey: dco_decode_String(arr[1]),
       mlsGroupId: dco_decode_String(arr[2]),
       userConfirmation: dco_decode_opt_box_autoadd_bool(arr[3]),
-      createdAt: dco_decode_i_64(arr[4]),
-      updatedAt: dco_decode_i_64(arr[5]),
+      welcomerPubkey: dco_decode_opt_String(arr[4]),
+      createdAt: dco_decode_i_64(arr[5]),
+      updatedAt: dco_decode_i_64(arr[6]),
     );
   }
 
@@ -2835,21 +2868,37 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     switch (raw[0]) {
       case 0:
-        return ApiError_Whitenoise(message: dco_decode_String(raw[1]));
+        return ApiError_Whitenoise(
+          message: dco_decode_String(raw[1]),
+        );
       case 1:
-        return ApiError_InvalidKey(message: dco_decode_String(raw[1]));
+        return ApiError_InvalidKey(
+          message: dco_decode_String(raw[1]),
+        );
       case 2:
-        return ApiError_NostrUrl(message: dco_decode_String(raw[1]));
+        return ApiError_NostrUrl(
+          message: dco_decode_String(raw[1]),
+        );
       case 3:
-        return ApiError_NostrTag(message: dco_decode_String(raw[1]));
+        return ApiError_NostrTag(
+          message: dco_decode_String(raw[1]),
+        );
       case 4:
-        return ApiError_NostrEvent(message: dco_decode_String(raw[1]));
+        return ApiError_NostrEvent(
+          message: dco_decode_String(raw[1]),
+        );
       case 5:
-        return ApiError_NostrParse(message: dco_decode_String(raw[1]));
+        return ApiError_NostrParse(
+          message: dco_decode_String(raw[1]),
+        );
       case 6:
-        return ApiError_NostrHex(message: dco_decode_String(raw[1]));
+        return ApiError_NostrHex(
+          message: dco_decode_String(raw[1]),
+        );
       case 7:
-        return ApiError_Other(message: dco_decode_String(raw[1]));
+        return ApiError_Other(
+          message: dco_decode_String(raw[1]),
+        );
       default:
         throw Exception('unreachable');
     }
@@ -3015,7 +3064,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ChatSummary dco_decode_chat_summary(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 8) throw Exception('unexpected arr length: expect 8 but see ${arr.length}');
+    if (arr.length != 9) throw Exception('unexpected arr length: expect 9 but see ${arr.length}');
     return ChatSummary(
       mlsGroupId: dco_decode_String(arr[0]),
       name: dco_decode_opt_String(arr[1]),
@@ -3025,6 +3074,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       groupImageUrl: dco_decode_opt_String(arr[5]),
       lastMessage: dco_decode_opt_box_autoadd_chat_message_summary(arr[6]),
       pendingConfirmation: dco_decode_bool(arr[7]),
+      welcomerPubkey: dco_decode_opt_String(arr[8]),
     );
   }
 
@@ -3419,7 +3469,10 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     if (arr.length != 2) {
       throw Exception('Expected 2 elements, got ${arr.length}');
     }
-    return (dco_decode_String(arr[0]), dco_decode_String(arr[1]));
+    return (
+      dco_decode_String(arr[0]),
+      dco_decode_String(arr[1]),
+    );
   }
 
   @protected
@@ -3771,6 +3824,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     final var_accountPubkey = sse_decode_String(deserializer);
     final var_mlsGroupId = sse_decode_String(deserializer);
     final var_userConfirmation = sse_decode_opt_box_autoadd_bool(deserializer);
+    final var_welcomerPubkey = sse_decode_opt_String(deserializer);
     final var_createdAt = sse_decode_i_64(deserializer);
     final var_updatedAt = sse_decode_i_64(deserializer);
     return AccountGroup(
@@ -3778,6 +3832,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       accountPubkey: var_accountPubkey,
       mlsGroupId: var_mlsGroupId,
       userConfirmation: var_userConfirmation,
+      welcomerPubkey: var_welcomerPubkey,
       createdAt: var_createdAt,
       updatedAt: var_updatedAt,
     );
@@ -4021,6 +4076,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       deserializer,
     );
     final var_pendingConfirmation = sse_decode_bool(deserializer);
+    final var_welcomerPubkey = sse_decode_opt_String(deserializer);
     return ChatSummary(
       mlsGroupId: var_mlsGroupId,
       name: var_name,
@@ -4030,6 +4086,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       groupImageUrl: var_groupImageUrl,
       lastMessage: var_lastMessage,
       pendingConfirmation: var_pendingConfirmation,
+      welcomerPubkey: var_welcomerPubkey,
     );
   }
 
@@ -4909,10 +4966,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as GroupIdImpl).frbInternalSseEncode(),
-      serializer,
-    );
+    sse_encode_usize((self as GroupIdImpl).frbInternalSseEncode(), serializer);
   }
 
   @protected
@@ -4933,10 +4987,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as RelayUrlImpl).frbInternalSseEncode(),
-      serializer,
-    );
+    sse_encode_usize((self as RelayUrlImpl).frbInternalSseEncode(), serializer);
   }
 
   @protected
@@ -4945,10 +4996,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     SseSerializer serializer,
   ) {
     // Codec=Sse (Serialization based), see doc to use other codecs
-    sse_encode_usize(
-      (self as TagImpl).frbInternalSseEncode(),
-      serializer,
-    );
+    sse_encode_usize((self as TagImpl).frbInternalSseEncode(), serializer);
   }
 
   @protected
@@ -5019,6 +5067,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.accountPubkey, serializer);
     sse_encode_String(self.mlsGroupId, serializer);
     sse_encode_opt_box_autoadd_bool(self.userConfirmation, serializer);
+    sse_encode_opt_String(self.welcomerPubkey, serializer);
     sse_encode_i_64(self.createdAt, serializer);
     sse_encode_i_64(self.updatedAt, serializer);
   }
@@ -5251,6 +5300,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       serializer,
     );
     sse_encode_bool(self.pendingConfirmation, serializer);
+    sse_encode_opt_String(self.welcomerPubkey, serializer);
   }
 
   @protected

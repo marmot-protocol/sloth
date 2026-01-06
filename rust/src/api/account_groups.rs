@@ -22,6 +22,7 @@ pub struct AccountGroup {
     pub account_pubkey: String,
     pub mls_group_id: String,
     pub user_confirmation: Option<bool>,
+    pub welcomer_pubkey: Option<String>,
     pub created_at: i64,
     pub updated_at: i64,
 }
@@ -33,6 +34,7 @@ impl From<WhitenoiseAccountGroup> for AccountGroup {
             account_pubkey: ag.account_pubkey.to_hex(),
             mls_group_id: group_id_to_string(&ag.mls_group_id),
             user_confirmation: ag.user_confirmation,
+            welcomer_pubkey: ag.welcomer_pubkey.map(|pk| pk.to_hex()),
             created_at: ag.created_at.timestamp_millis(),
             updated_at: ag.updated_at.timestamp_millis(),
         }
@@ -46,6 +48,7 @@ impl From<&WhitenoiseAccountGroup> for AccountGroup {
             account_pubkey: ag.account_pubkey.to_hex(),
             mls_group_id: group_id_to_string(&ag.mls_group_id),
             user_confirmation: ag.user_confirmation,
+            welcomer_pubkey: ag.welcomer_pubkey.map(|pk| pk.to_hex()),
             created_at: ag.created_at.timestamp_millis(),
             updated_at: ag.updated_at.timestamp_millis(),
         }

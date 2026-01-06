@@ -33,6 +33,9 @@ pub struct ChatSummary {
     pub last_message: Option<ChatMessageSummary>,
     /// Whether the group is pending user confirmation
     pub pending_confirmation: bool,
+    /// Public key (hex) of the user who invited this account to the group.
+    /// `Some` when invited by another user, `None` when the user created the group.
+    pub welcomer_pubkey: Option<String>,
 }
 
 impl From<WhitenoiseChatListItem> for ChatSummary {
@@ -48,6 +51,7 @@ impl From<WhitenoiseChatListItem> for ChatSummary {
             group_image_url: item.group_image_url,
             last_message: item.last_message.map(|m| m.into()),
             pending_confirmation: item.pending_confirmation,
+            welcomer_pubkey: item.welcomer_pubkey.map(|pk| pk.to_hex()),
         }
     }
 }

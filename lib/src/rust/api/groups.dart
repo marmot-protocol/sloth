@@ -261,9 +261,16 @@ class GroupInformation {
           updatedAt == other.updatedAt;
 }
 
-enum GroupState { active, inactive, pending }
+enum GroupState {
+  active,
+  inactive,
+  pending,
+}
 
-enum GroupType { directMessage, group }
+enum GroupType {
+  directMessage,
+  group,
+}
 
 class UploadGroupImageResult {
   final U8Array32 encryptedHash;

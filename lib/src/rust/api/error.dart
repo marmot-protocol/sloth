@@ -17,18 +17,38 @@ sealed class ApiError with _$ApiError implements FrbException {
   const ApiError._();
 
   /// Core whitenoise library errors
-  const factory ApiError.whitenoise({required String message}) = ApiError_Whitenoise;
-  const factory ApiError.invalidKey({required String message}) = ApiError_InvalidKey;
-  const factory ApiError.nostrUrl({required String message}) = ApiError_NostrUrl;
-  const factory ApiError.nostrTag({required String message}) = ApiError_NostrTag;
-  const factory ApiError.nostrEvent({required String message}) = ApiError_NostrEvent;
-  const factory ApiError.nostrParse({required String message}) = ApiError_NostrParse;
-  const factory ApiError.nostrHex({required String message}) = ApiError_NostrHex;
-  const factory ApiError.other({required String message}) = ApiError_Other;
+  const factory ApiError.whitenoise({
+    required String message,
+  }) = ApiError_Whitenoise;
+  const factory ApiError.invalidKey({
+    required String message,
+  }) = ApiError_InvalidKey;
+  const factory ApiError.nostrUrl({
+    required String message,
+  }) = ApiError_NostrUrl;
+  const factory ApiError.nostrTag({
+    required String message,
+  }) = ApiError_NostrTag;
+  const factory ApiError.nostrEvent({
+    required String message,
+  }) = ApiError_NostrEvent;
+  const factory ApiError.nostrParse({
+    required String message,
+  }) = ApiError_NostrParse;
+  const factory ApiError.nostrHex({
+    required String message,
+  }) = ApiError_NostrHex;
+  const factory ApiError.other({
+    required String message,
+  }) = ApiError_Other;
 
   /// Get a user-friendly error type name
-  Future<String> errorType() => RustLib.instance.api.crateApiErrorApiErrorErrorType(that: this);
+  Future<String> errorType() => RustLib.instance.api.crateApiErrorApiErrorErrorType(
+    that: this,
+  );
 
   /// Get the error message as a string
-  Future<String> messageText() => RustLib.instance.api.crateApiErrorApiErrorMessageText(that: this);
+  Future<String> messageText() => RustLib.instance.api.crateApiErrorApiErrorMessageText(
+    that: this,
+  );
 }
