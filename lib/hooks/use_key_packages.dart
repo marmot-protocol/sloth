@@ -1,7 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 
 final _logger = Logger('useKeyPackages');
@@ -38,8 +36,7 @@ class KeyPackagesState {
   Future<void> Function(String id) delete,
   Future<void> Function() deleteAll,
 })
-useKeyPackages(WidgetRef ref) {
-  final pubkey = ref.watch(accountPubkeyProvider);
+useKeyPackages(String pubkey) {
   final state = useState(const KeyPackagesState());
 
   Future<void> fetch() async {

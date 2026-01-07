@@ -1,14 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
-import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-
-import '../mocks/mock_secure_storage.dart';
 
 class MockApi implements RustLibApi {
   List<FlutterEvent> keyPackages = [];
@@ -67,14 +64,6 @@ class MockApi implements RustLibApi {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
-class _MockAuthNotifier extends AuthNotifier {
-  @override
-  Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
-  }
-}
-
 late ({
   KeyPackagesState state,
   Future<void> Function() fetch,
@@ -84,17 +73,14 @@ late ({
 })
 hook;
 
-Future<void> _pump(WidgetTester tester, List overrides) async {
+Future<void> _pump(WidgetTester tester) async {
   await tester.pumpWidget(
-    ProviderScope(
-      overrides: [...overrides],
-      child: MaterialApp(
-        home: HookConsumer(
-          builder: (context, ref, _) {
-            hook = useKeyPackages(ref);
-            return const SizedBox();
-          },
-        ),
+    MaterialApp(
+      home: HookBuilder(
+        builder: (context) {
+          hook = useKeyPackages('test_pubkey');
+          return const SizedBox();
+        },
       ),
     ),
   );
@@ -103,8 +89,6 @@ Future<void> _pump(WidgetTester tester, List overrides) async {
 late MockApi mockApi;
 
 void main() {
-  late List overrides;
-
   setUpAll(() {
     mockApi = MockApi();
     RustLib.initMock(api: mockApi);
@@ -114,10 +98,6 @@ void main() {
     mockApi.keyPackages = [];
     mockApi.shouldThrow = false;
     mockApi.publishCompleter = null;
-    overrides = [
-      authProvider.overrideWith(() => _MockAuthNotifier()),
-      secureStorageProvider.overrideWithValue(MockSecureStorage()),
-    ];
   });
 
   group('fetch', () {
@@ -133,7 +113,7 @@ void main() {
         ),
       ];
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.fetch();
       await tester.pump();
 
@@ -143,7 +123,7 @@ void main() {
     testWidgets('sets error on failure', (tester) async {
       mockApi.shouldThrow = true;
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.fetch();
       await tester.pump();
 
@@ -153,7 +133,7 @@ void main() {
 
   group('publish', () {
     testWidgets('refreshes packages after publish', (tester) async {
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.publish();
       await tester.pump();
       expect(hook.state.isLoading, isFalse);
@@ -163,7 +143,7 @@ void main() {
     testWidgets('sets error on failure', (tester) async {
       mockApi.shouldThrow = true;
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.publish();
       await tester.pump();
 
@@ -184,7 +164,7 @@ void main() {
         ),
       ];
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.fetch();
       await tester.pump();
 
@@ -208,7 +188,7 @@ void main() {
         ),
       ];
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.fetch();
       await tester.pump();
       expect(hook.state.packages.length, 1);
@@ -240,7 +220,7 @@ void main() {
         ),
       ];
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.fetch();
       await tester.pump();
 
@@ -282,7 +262,7 @@ void main() {
         ),
       ];
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.fetch();
       await tester.pump();
       expect(hook.state.packages.length, 2);
@@ -295,7 +275,7 @@ void main() {
     testWidgets('sets error on failure', (tester) async {
       mockApi.shouldThrow = true;
 
-      await _pump(tester, overrides);
+      await _pump(tester);
       await hook.deleteAll();
       await tester.pump();
 

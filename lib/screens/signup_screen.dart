@@ -6,6 +6,7 @@ import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
 import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_signup.dart' show useSignup;
+import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_image_picker.dart' show WnImagePicker;
@@ -23,7 +24,9 @@ class SignupScreen extends HookConsumerWidget {
     final displayNameController = useTextEditingController();
     final bioController = useTextEditingController();
     final scrollController = useScrollController();
-    final (:state, :submit, :onImageSelected, :clearErrors) = useSignup(ref);
+    final (:state, :submit, :onImageSelected, :clearErrors) = useSignup(
+      () => ref.read(authProvider.notifier).signup(),
+    );
 
     final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
     useEffect(() {

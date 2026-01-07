@@ -78,6 +78,8 @@ genhtml coverage/lcov.info -o coverage/html
 - Sloths avoid caching in flutter side. Sloths remember that White Noise crate already persists data in a local DB.
 - Sloths put shared app state in providers.
 - Sloths put ephemeral widget state in hooks.
+- Sloths pass data to hooks, not widget refs.
+- Sloths let screens watch providers and pass data to hooks.
 - Sloths don't add code comments unless strictly necessary. Instead, they make big effort on writing code that is self-explanatory.
 
 ## 📚 Resources

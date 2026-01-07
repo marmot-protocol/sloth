@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
+import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -15,7 +16,8 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final (:state, :fetch, :publish, :delete, :deleteAll) = useKeyPackages(ref);
+    final pubkey = ref.watch(accountPubkeyProvider);
+    final (:state, :fetch, :publish, :delete, :deleteAll) = useKeyPackages(pubkey);
 
     useEffect(() {
       fetch();

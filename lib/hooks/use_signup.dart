@@ -1,7 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/services/profile_service.dart' show ProfileService;
 
 final _logger = Logger('useSignup');
@@ -35,7 +33,7 @@ class SignupState {
   }
 }
 
-typedef SignupCallback =
+typedef SubmitCallback =
     Future<bool> Function({
       required String displayName,
       String? bio,
@@ -47,11 +45,11 @@ typedef ClearErrorsCallback = void Function();
 
 ({
   SignupState state,
-  SignupCallback submit,
+  SubmitCallback submit,
   OnImageSelectedCallback onImageSelected,
   ClearErrorsCallback clearErrors,
 })
-useSignup(WidgetRef ref) {
+useSignup(Future<String> Function() signup) {
   final state = useState(const SignupState());
 
   void onImageSelected(String imagePath) {
@@ -75,7 +73,7 @@ useSignup(WidgetRef ref) {
     state.value = state.value.copyWith(isLoading: true, clearError: true);
 
     try {
-      final pubkey = await ref.read(authProvider.notifier).signup();
+      final pubkey = await signup();
       final profileService = ProfileService(pubkey);
 
       String? pictureUrl;
