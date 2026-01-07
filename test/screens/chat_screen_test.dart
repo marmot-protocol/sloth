@@ -34,12 +34,44 @@ class _MockApi implements RustLibApi {
   StreamController<MessageStreamItem>? controller;
   List<ChatMessage> initialMessages = [];
   String groupName = 'Test Group';
+  final List<String> sentMessages = [];
+  Exception? sendError;
 
   void reset() {
     controller?.close();
     controller = null;
     initialMessages = [];
     groupName = 'Test Group';
+    sentMessages.clear();
+    sendError = null;
+  }
+
+  void emitMessage(ChatMessage message) {
+    controller?.add(
+      MessageStreamItem.update(
+        update: MessageUpdate(trigger: UpdateTrigger.newMessage, message: message),
+      ),
+    );
+  }
+
+  @override
+  Future<MessageWithTokens> crateApiMessagesSendMessageToGroup({
+    required String pubkey,
+    required String groupId,
+    required String message,
+    required int kind,
+    List<Tag>? tags,
+  }) async {
+    if (sendError != null) throw sendError!;
+    sentMessages.add(message);
+    return MessageWithTokens(
+      id: 'sent_${sentMessages.length}',
+      pubkey: pubkey,
+      kind: kind,
+      createdAt: DateTime.now(),
+      content: message,
+      tokens: const [],
+    );
   }
 
   @override
@@ -210,6 +242,160 @@ void main() {
         await tester.tap(find.byKey(const Key('menu_button')));
         await tester.pumpAndSettle();
         expect(find.byType(WipScreen), findsOneWidget);
+      });
+    });
+
+    group('message sending', () {
+      testWidgets('send button appears when text is entered', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.enterText(find.byType(TextField), 'Hello');
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('send_button')), findsOneWidget);
+      });
+
+      testWidgets('input is cleared after sending', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.enterText(find.byType(TextField), 'Hello');
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('send_button')));
+        await tester.pumpAndSettle();
+
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.controller!.text, isEmpty);
+      });
+
+      testWidgets('send button disappears after sending', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.enterText(find.byType(TextField), 'Hello');
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('send_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('send_button')), findsNothing);
+      });
+
+      group('when sending fails', () {
+        Future<void> attemptSend(WidgetTester tester) async {
+          _api.sendError = Exception('Network error');
+          await pumpChatScreen(tester);
+          await tester.enterText(find.byType(TextField), 'Hello');
+          await tester.pumpAndSettle();
+          await tester.tap(find.byKey(const Key('send_button')));
+          await tester.pumpAndSettle();
+        }
+
+        testWidgets('input is not cleared', (tester) async {
+          await attemptSend(tester);
+
+          final textField = tester.widget<TextField>(find.byType(TextField));
+          expect(textField.controller!.text, 'Hello');
+        });
+
+        testWidgets('shows error snackbar', (tester) async {
+          await attemptSend(tester);
+
+          expect(find.text('Failed to send message. Please try again.'), findsOneWidget);
+        });
+      });
+    });
+
+    group('message reception', () {
+      testWidgets('message bubble appears when stream emits update', (tester) async {
+        await pumpChatScreen(tester);
+        _api.emitMessage(_message('new_msg', DateTime.now()));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Message new_msg'), findsOneWidget);
+      });
+    });
+
+    group('focus management', () {
+      testWidgets('tapping outside unfocuses input', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.text('No messages yet'));
+        await tester.pumpAndSettle();
+
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+    });
+
+    group('auto-scroll', () {
+      setUp(() {
+        _api.initialMessages = List.generate(
+          20,
+          (i) => _message('m$i', DateTime(2024, 1, i + 1)),
+        );
+      });
+
+      ScrollPosition getScrollPosition(WidgetTester tester) {
+        return Scrollable.of(tester.element(find.byType(WnMessageBubble).first)).position;
+      }
+
+      testWidgets('scrolls to bottom on initial load', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.pumpAndSettle();
+
+        final position = getScrollPosition(tester);
+        expect(position.pixels, 0);
+      });
+
+      testWidgets('scrolls to bottom when own message arrives', (tester) async {
+        await pumpChatScreen(tester);
+        _api.emitMessage(_message('own', DateTime.now(), pubkey: _testPubkey));
+        await tester.pumpAndSettle();
+
+        final position = getScrollPosition(tester);
+        expect(position.pixels, 0);
+      });
+
+      testWidgets('scrolls when at bottom and other message arrives', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.pumpAndSettle();
+
+        final position = getScrollPosition(tester);
+        expect(position.pixels, 0);
+
+        _api.emitMessage(_message('other', DateTime.now()));
+        await tester.pumpAndSettle();
+
+        expect(position.pixels, 0);
+      });
+
+      testWidgets('does not scroll when not at bottom and other message arrives', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.pumpAndSettle();
+
+        final position = getScrollPosition(tester);
+        position.jumpTo(position.maxScrollExtent);
+        await tester.pumpAndSettle();
+
+        final positionBeforeMessage = position.pixels;
+
+        _api.emitMessage(_message('other', DateTime.now()));
+        await tester.pumpAndSettle();
+
+        expect(position.pixels, positionBeforeMessage);
+      });
+
+      testWidgets('scrolls to bottom when input is focused', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.pumpAndSettle();
+
+        final position = getScrollPosition(tester);
+        position.jumpTo(position.maxScrollExtent);
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byType(TextField));
+        final animationDelay = const Duration(milliseconds: 400);
+        await tester.pump(animationDelay);
+        await tester.pumpAndSettle();
+
+        expect(position.pixels, 0);
       });
     });
   });
