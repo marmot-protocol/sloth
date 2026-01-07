@@ -105,6 +105,7 @@ class WnTextFormField extends StatelessWidget {
             children: [
               Icon(
                 Icons.error_outline_rounded,
+                key: const Key('error_icon'),
                 size: 14.sp,
                 color: colors.error,
               ),

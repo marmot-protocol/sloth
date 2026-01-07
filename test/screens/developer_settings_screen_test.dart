@@ -123,7 +123,7 @@ void main() {
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpScreen(tester);
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(find.byKey(const Key('close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(DeveloperSettingsScreen), findsNothing);
     });
