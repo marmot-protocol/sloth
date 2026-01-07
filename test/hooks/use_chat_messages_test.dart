@@ -1,14 +1,18 @@
 import 'dart:async';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/hooks/use_chat_messages.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import '../test_helpers.dart';
 
-ChatMessage _message(String id, DateTime createdAt, {String content = 'test'}) => ChatMessage(
+ChatMessage _message(
+  String id,
+  DateTime createdAt, {
+  String content = 'test',
+  String pubkey = 'pubkey',
+}) => ChatMessage(
   id: id,
-  pubkey: 'pubkey',
+  pubkey: pubkey,
   content: content,
   createdAt: createdAt,
   tags: const [],
@@ -66,16 +70,22 @@ void main() {
     testWidgets('starts with empty list', (tester) async {
       final getResult = await _pump(tester, 'group1');
 
-      expect(getResult().snapshot.data, isEmpty);
+      expect(getResult().messageCount, 0);
     });
 
-    testWidgets('is waiting for initial data', (tester) async {
+    testWidgets('is loading before initial data', (tester) async {
       final getResult = await _pump(tester, 'group1');
 
-      expect(
-        getResult().snapshot.connectionState,
-        ConnectionState.waiting,
-      );
+      expect(getResult().isLoading, isTrue);
+    });
+
+    testWidgets('is not loading after initial data arrives', (tester) async {
+      final getResult = await _pump(tester, 'group1');
+
+      _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+      await tester.pumpAndSettle();
+
+      expect(getResult().isLoading, isFalse);
     });
 
     testWidgets('returns messages from initial snapshot', (tester) async {
@@ -87,10 +97,10 @@ void main() {
       ]);
       await tester.pump();
 
-      expect(getResult().snapshot.data?.length, 2);
+      expect(getResult().messageCount, 2);
     });
 
-    testWidgets('preserves order of events', (tester) async {
+    testWidgets('returns messages in reversed order (newest first)', (tester) async {
       final getResult = await _pump(tester, 'group1');
 
       _api.emitInitialSnapshot([
@@ -99,12 +109,12 @@ void main() {
       ]);
       await tester.pump();
 
-      final messages = getResult().snapshot.data!;
-      expect(messages.first.id, 'm1');
-      expect(messages.last.id, 'm2');
+      final result = getResult();
+      expect(result.getMessage(0).id, 'm2');
+      expect(result.getMessage(1).id, 'm1');
     });
 
-    testWidgets('appends new message at end', (tester) async {
+    testWidgets('prepends new message at start (newest first)', (tester) async {
       final getResult = await _pump(tester, 'group1');
 
       _api.emitInitialSnapshot([
@@ -115,9 +125,148 @@ void main() {
       _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2)));
       await tester.pumpAndSettle();
 
-      final messages = getResult().snapshot.data!;
-      expect(messages.length, 2);
-      expect(messages.last.id, 'm2');
+      final result = getResult();
+      expect(result.messageCount, 2);
+      expect(result.getMessage(0).id, 'm2');
+    });
+
+    group('getReversedMessageIndex', () {
+      testWidgets('returns correct index for messages', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024)),
+          _message('m2', DateTime(2024, 1, 2)),
+        ]);
+        await tester.pump();
+
+        final result = getResult();
+        expect(result.getReversedMessageIndex('m2'), 0);
+        expect(result.getReversedMessageIndex('m1'), 1);
+      });
+
+      testWidgets('returns null for unknown message id', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024)),
+        ]);
+        await tester.pump();
+
+        expect(getResult().getReversedMessageIndex('unknown'), isNull);
+      });
+    });
+
+    group('latestMessageId', () {
+      group('before initial load', () {
+        testWidgets('is null', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          expect(getResult().latestMessageId, isNull);
+        });
+      });
+
+      group('when initial load has messages', () {
+        testWidgets('is last message id', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          _api.emitInitialSnapshot([
+            _message('m1', DateTime(2024)),
+            _message('m2', DateTime(2024, 1, 2)),
+          ]);
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessageId, 'm2');
+        });
+      });
+
+      group('when initial load is empty', () {
+        testWidgets('is null', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          _api.emitInitialSnapshot([]);
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessageId, isNull);
+        });
+      });
+
+      group('when new message arrives', () {
+        testWidgets('updates to new message id', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          _api.emitInitialSnapshot([]);
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessageId, isNull);
+
+          _api.emitNewMessage(_message('m1', DateTime(2024)));
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessageId, 'm1');
+
+          _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2)));
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessageId, 'm2');
+        });
+      });
+    });
+
+    group('latestMessagePubkey', () {
+      group('before initial load', () {
+        testWidgets('is null', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          expect(getResult().latestMessagePubkey, isNull);
+        });
+      });
+
+      group('when initial load has messages', () {
+        testWidgets('is last message pubkey', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          _api.emitInitialSnapshot([
+            _message('m1', DateTime(2024), pubkey: 'alice'),
+            _message('m2', DateTime(2024, 1, 2), pubkey: 'bob'),
+          ]);
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessagePubkey, 'bob');
+        });
+      });
+
+      group('when initial load is empty', () {
+        testWidgets('is null', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          _api.emitInitialSnapshot([]);
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessagePubkey, isNull);
+        });
+      });
+
+      group('when new message arrives', () {
+        testWidgets('updates to new message pubkey', (tester) async {
+          final getResult = await _pump(tester, 'group1');
+
+          _api.emitInitialSnapshot([]);
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessagePubkey, isNull);
+
+          _api.emitNewMessage(_message('m1', DateTime(2024), pubkey: 'alice'));
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessagePubkey, 'alice');
+
+          _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2), pubkey: 'bob'));
+          await tester.pumpAndSettle();
+
+          expect(getResult().latestMessagePubkey, 'bob');
+        });
+      });
     });
   });
 }
