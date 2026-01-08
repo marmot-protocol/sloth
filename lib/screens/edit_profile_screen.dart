@@ -70,11 +70,11 @@ class EditProfileScreen extends HookConsumerWidget {
                             Gap(16.h),
                             Center(
                               child: WnImagePicker(
-                                    imagePath: state.pictureUrl,
+                                imagePath: state.pictureUrl,
                                 displayName: state.displayName ?? '',
-                                    onImageSelected: onImageSelected,
-                                    loading: state.loadingState == EditProfileLoadingState.saving,
-                                    disabled: state.loadingState == EditProfileLoadingState.saving,
+                                onImageSelected: onImageSelected,
+                                loading: state.loadingState == EditProfileLoadingState.saving,
+                                disabled: state.loadingState == EditProfileLoadingState.saving,
                               ),
                             ),
                             Gap(36.h),

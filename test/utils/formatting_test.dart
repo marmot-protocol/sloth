@@ -87,7 +87,9 @@ void main() {
     });
 
     test('returns npub string for valid hex pubkey', () {
-      final result = npubFromPubkey('abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890');
+      final result = npubFromPubkey(
+        'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+      );
       expect(result, isNotNull);
       expect(result, startsWith('npub1'));
       expect(result, contains('abcdef1234'));

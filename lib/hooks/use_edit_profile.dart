@@ -220,7 +220,8 @@ useEditProfile(String pubkey) {
 
   void discardChanges() {
     if (state.value.currentMetadata == null) return;
-    final displayName = state.value.currentMetadata?.displayName ?? state.value.currentMetadata?.name ?? '';
+    final displayName =
+        state.value.currentMetadata?.displayName ?? state.value.currentMetadata?.name ?? '';
     final about = state.value.currentMetadata?.about ?? '';
     final nip05 = state.value.currentMetadata?.nip05 ?? '';
     displayNameController.text = displayName;

@@ -27,7 +27,7 @@ class _MockApi implements RustLibApi {
     if (updatedMetadata != null) {
       return updatedMetadata!;
     }
-    return FlutterMetadata(
+    return const FlutterMetadata(
       name: 'Test User',
       displayName: 'Test Display Name',
       about: 'Test About',
