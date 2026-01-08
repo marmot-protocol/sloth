@@ -85,6 +85,12 @@ void main() {
 
       expect(mockApi.updatedMetadata?.picture, 'https://pic.url');
     });
+
+    test('passes nip05 to metadata', () async {
+      await service.setProfile(displayName: 'Test', nip05: 'user@example.com');
+
+      expect(mockApi.updatedMetadata?.nip05, 'user@example.com');
+    });
   });
 
   group('uploadProfilePicture', () {
