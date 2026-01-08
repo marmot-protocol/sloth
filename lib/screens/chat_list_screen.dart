@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_chat_list.dart';
-import 'package:sloth/hooks/use_route_refresh.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/widgets/chat_list_tile.dart';
@@ -18,7 +17,8 @@ class ChatListScreen extends HookConsumerWidget {
     final pubkey = ref.watch(accountPubkeyProvider);
     final chatListResult = useChatList(pubkey);
 
-    useRouteRefresh(context, chatListResult.refresh);
+    final chatList = chatListResult.snapshot.data?.values.toList() ?? [];
+    final isLoading = chatListResult.snapshot.connectionState == ConnectionState.waiting;
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
@@ -26,13 +26,7 @@ class ChatListScreen extends HookConsumerWidget {
         child: Column(
           children: [
             const WnSlateContainer(child: WnAccountBar()),
-            Expanded(
-              child: _buildContent(
-                context,
-                chatListResult.snapshot,
-                chatListResult.refresh,
-              ),
-            ),
+            Expanded(child: _buildContent(context, chatList, isLoading)),
           ],
         ),
       ),
@@ -41,69 +35,48 @@ class ChatListScreen extends HookConsumerWidget {
 
   Widget _buildContent(
     BuildContext context,
-    AsyncSnapshot<List<ChatSummary>> chatListSnapshot,
-    VoidCallback onRefresh,
+    List<ChatSummary> chatList,
+    bool isLoading,
   ) {
     final colors = context.colors;
 
-    final chatList = chatListSnapshot.data ?? [];
+    if (isLoading && chatList.isEmpty) {
+      return Center(
+        child: CircularProgressIndicator(color: colors.foregroundPrimary),
+      );
+    }
 
     if (chatList.isEmpty) {
-      return RefreshIndicator(
-        onRefresh: () async => onRefresh(),
-        color: colors.foregroundPrimary,
-        backgroundColor: colors.backgroundTertiary,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              physics: const AlwaysScrollableScrollPhysics(),
-              child: ConstrainedBox(
-                constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'No chats yet',
-                        style: TextStyle(
-                          color: colors.foregroundPrimary,
-                          fontSize: 18,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      const SizedBox(height: 8),
-                      Text(
-                        'Pull down to refresh',
-                        style: TextStyle(
-                          color: colors.foregroundTertiary,
-                          fontSize: 14,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'No chats yet',
+              style: TextStyle(
+                color: colors.foregroundPrimary,
+                fontSize: 18,
+                fontWeight: FontWeight.w500,
               ),
-            );
-          },
+            ),
+            const SizedBox(height: 8),
+            Text(
+              'Start a conversation',
+              style: TextStyle(color: colors.foregroundTertiary, fontSize: 14),
+              textAlign: TextAlign.center,
+            ),
+          ],
         ),
       );
     }
 
-    return RefreshIndicator(
-      onRefresh: () async => onRefresh(),
-      color: colors.foregroundPrimary,
-      backgroundColor: colors.backgroundTertiary,
-      child: ListView.builder(
-        physics: const AlwaysScrollableScrollPhysics(),
-        itemCount: chatList.length,
-        itemBuilder: (context, index) {
-          final chatSummary = chatList[index];
-          return ChatListTile(
-            chatSummary: chatSummary,
-          );
-        },
-      ),
+    return ListView.builder(
+      physics: const AlwaysScrollableScrollPhysics(),
+      itemCount: chatList.length,
+      itemBuilder: (context, index) {
+        final chatSummary = chatList[chatList.length - 1 - index];
+        return ChatListTile(chatSummary: chatSummary);
+      },
     );
   }
 }

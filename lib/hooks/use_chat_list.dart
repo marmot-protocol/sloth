@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:sloth/src/rust/api/chat_list.dart' as chat_list_api;
+import 'package:sloth/src/rust/api/chat_list.dart';
 
-typedef ChatListResult = ({
-  AsyncSnapshot<List<chat_list_api.ChatSummary>> snapshot,
-  VoidCallback refresh,
-});
+typedef ChatListMap = Map<String, ChatSummary>;
+typedef ChatListResult = ({AsyncSnapshot<ChatListMap> snapshot});
 
 ChatListResult useChatList(String pubkey) {
-  final refreshKey = useState(0);
-  final future = useMemoized(
-    () async {
-      final chatSummaries = await chat_list_api.getChatList(accountPubkey: pubkey);
-      return chatSummaries.toList();
-    },
-    [pubkey, refreshKey.value],
-  );
-  final snapshot = useFuture(future);
+  final chatMap = useRef(<String, ChatSummary>{});
 
-  return (
-    snapshot: snapshot,
-    refresh: () => refreshKey.value++,
+  final stream = useMemoized(
+    () => subscribeToChatList(accountPubkey: pubkey).map((item) {
+      return item.when(
+        initialSnapshot: (items) {
+          chatMap.value = {for (final c in items.reversed) c.mlsGroupId: c};
+          return chatMap.value;
+        },
+        update: (update) {
+          final id = update.item.mlsGroupId;
+          switch (update.trigger) {
+            case ChatListUpdateTrigger.lastMessageDeleted:
+              chatMap.value[id] = update.item;
+            case ChatListUpdateTrigger.newGroup:
+              chatMap.value[id] = update.item;
+            case ChatListUpdateTrigger.newLastMessage:
+              chatMap.value.remove(id);
+              chatMap.value[id] = update.item;
+          }
+          return chatMap.value;
+        },
+      );
+    }),
+    [pubkey],
   );
+
+  final snapshot = useStream(stream, initialData: <String, ChatSummary>{});
+  return (snapshot: snapshot);
 }
