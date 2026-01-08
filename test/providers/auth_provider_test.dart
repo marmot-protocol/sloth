@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
+import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
@@ -13,20 +14,35 @@ class _MockRustLibApi implements RustLibApi {
   var metadataCompleter = Completer<FlutterMetadata>();
   String? metadataCalledWithPubkey;
   String? logoutCalledWithPubkey;
+  final Set<String> existingAccounts = {};
+  Object? getAccountError;
 
   @override
-  Future<Account> crateApiAccountsCreateIdentity() async => Account(
-    pubkey: 'created_pubkey',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  );
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
+    if (getAccountError != null) {
+      throw getAccountError!;
+    }
+    if (!existingAccounts.contains(pubkey)) {
+      throw const ApiError.whitenoise(message: 'Account not found');
+    }
+    return Account(pubkey: pubkey, createdAt: DateTime.now(), updatedAt: DateTime.now());
+  }
 
   @override
-  Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey}) async => Account(
-    pubkey: 'logged_in_pubkey',
-    createdAt: DateTime.now(),
-    updatedAt: DateTime.now(),
-  );
+  Future<Account> crateApiAccountsCreateIdentity() async {
+    existingAccounts.add('created_pubkey');
+    return Account(pubkey: 'created_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now());
+  }
+
+  @override
+  Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey}) async {
+    existingAccounts.add('logged_in_pubkey');
+    return Account(
+      pubkey: 'logged_in_pubkey',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
 
   @override
   Future<void> crateApiAccountsLogout({required String pubkey}) async {
@@ -60,6 +76,8 @@ void main() {
     mockApi.metadataCompleter = Completer<FlutterMetadata>();
     mockApi.metadataCalledWithPubkey = null;
     mockApi.logoutCalledWithPubkey = null;
+    mockApi.existingAccounts.clear();
+    mockApi.getAccountError = null;
     mockStorage = MockSecureStorage();
     container = ProviderContainer(
       overrides: [secureStorageProvider.overrideWithValue(mockStorage)],
@@ -70,15 +88,61 @@ void main() {
 
   group('AuthNotifier', () {
     group('build', () {
-      test('returns null when storage is empty', () async {
-        await container.read(authProvider.future);
-        expect(container.read(authProvider).value, isNull);
+      group('when secure storage has no pubkey', () {
+        test('returns null', () async {
+          await container.read(authProvider.future);
+          expect(container.read(authProvider).value, isNull);
+        });
       });
 
-      test('returns stored pubkey when present', () async {
-        await mockStorage.write(key: 'active_account_pubkey', value: 'stored_pubkey');
-        final pubkey = await container.read(authProvider.future);
-        expect(pubkey, 'stored_pubkey');
+      group('when pubkey is only in secure storage', () {
+        setUp(() async {
+          mockApi.existingAccounts.clear();
+          await mockStorage.write(key: 'active_account_pubkey', value: 'stale_pubkey');
+        });
+        test('returns null', () async {
+          final pubkey = await container.read(authProvider.future);
+          expect(pubkey, isNull);
+          expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
+        });
+
+        test('clears secure storage', () async {
+          await container.read(authProvider.future);
+          expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
+        });
+      });
+
+      group('when getAccount fails with unexpected error', () {
+        setUp(() async {
+          mockApi.getAccountError = const ApiError.whitenoise(message: 'Network error');
+          await mockStorage.write(key: 'active_account_pubkey', value: 'stored_pubkey');
+        });
+
+        test('returns stored pubkey', () async {
+          final pubkey = await container.read(authProvider.future);
+          expect(pubkey, 'stored_pubkey');
+        });
+
+        test('does not clear secure storage', () async {
+          await container.read(authProvider.future);
+          expect(await mockStorage.read(key: 'active_account_pubkey'), 'stored_pubkey');
+        });
+      });
+
+      group('when pubkey is in secure storage and rust crate db', () {
+        setUp(() async {
+          mockApi.existingAccounts.add('stored_pubkey');
+          await mockStorage.write(key: 'active_account_pubkey', value: 'stored_pubkey');
+        });
+        test('returns expected pubkey', () async {
+          final pubkey = await container.read(authProvider.future);
+          expect(pubkey, 'stored_pubkey');
+        });
+
+        test('does not clear secure storage', () async {
+          await container.read(authProvider.future);
+          expect(await mockStorage.read(key: 'active_account_pubkey'), 'stored_pubkey');
+        });
       });
     });
 

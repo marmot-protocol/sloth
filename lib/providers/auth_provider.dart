@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
+import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/users.dart' as users_api;
 
 const _storageKey = 'active_account_pubkey';
@@ -16,7 +17,17 @@ class AuthNotifier extends AsyncNotifier<String?> {
   Future<String?> build() async {
     final storage = ref.read(secureStorageProvider);
     final pubkey = await storage.read(key: _storageKey);
-    return (pubkey != null && pubkey.isNotEmpty) ? pubkey : null;
+    if (pubkey == null || pubkey.isEmpty) return null;
+
+    try {
+      await accounts_api.getAccount(pubkey: pubkey);
+    } catch (e) {
+      if (e is ApiError && e.message.contains('Account not found')) {
+        await storage.delete(key: _storageKey);
+        return null;
+      }
+    }
+    return pubkey;
   }
 
   Future<void> login(String nsec) async {
