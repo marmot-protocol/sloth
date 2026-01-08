@@ -1,5 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/utils/formatting.dart';
+
+class _MockApi implements RustLibApi {
+  bool shouldThrow = false;
+
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    if (shouldThrow) {
+      throw Exception('Invalid hex pubkey');
+    }
+    return 'npub1test${hexPubkey.substring(0, 10)}';
+  }
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
 
 void main() {
   group('formatPublicKey', () {
@@ -55,6 +71,40 @@ void main() {
 
     test('returns null for whitespace-only string', () {
       expect(formatInitials('   '), isNull);
+    });
+  });
+
+  group('npubFromPubkey', () {
+    late _MockApi mockApi;
+
+    setUpAll(() {
+      mockApi = _MockApi();
+      RustLib.initMock(api: mockApi);
+    });
+
+    setUp(() {
+      mockApi.shouldThrow = false;
+    });
+
+    test('returns npub string for valid hex pubkey', () {
+      final result = npubFromPubkey(
+        'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
+      );
+      expect(result, isNotNull);
+      expect(result, startsWith('npub1'));
+      expect(result, contains('abcdef1234'));
+    });
+
+    test('returns null when API throws error', () {
+      mockApi.shouldThrow = true;
+      final result = npubFromPubkey('invalid_pubkey');
+      expect(result, isNull);
+    });
+
+    test('handles empty string', () {
+      mockApi.shouldThrow = true;
+      final result = npubFromPubkey('');
+      expect(result, isNull);
     });
   });
 }

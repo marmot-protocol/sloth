@@ -20,6 +20,7 @@ class SettingsScreen extends HookConsumerWidget {
     final colors = context.colors;
     final pubkey = ref.watch(accountPubkeyProvider);
     final metadataSnapshot = useUserMetadata(context, pubkey);
+    final npub = npubFromPubkey(pubkey);
 
     final metadata = metadataSnapshot.data;
     final displayName = metadata?.displayName ?? metadata?.name;
@@ -58,14 +59,35 @@ class SettingsScreen extends HookConsumerWidget {
                                   color: colors.foregroundPrimary,
                                 ),
                               ),
-                            Text(
-                              formatPublicKey(pubkey),
-                              maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
-                                color: colors.foregroundTertiary,
-                              ),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: Text(
+                                    npub != null ? formatPublicKey(npub) : formatPublicKey(pubkey),
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.w500,
+                                      color: colors.foregroundTertiary,
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(width: 8.w),
+                                IconButton(
+                                  key: const Key('qr_code_button'),
+                                  onPressed: () => Routes.pushToShareProfile(context),
+                                  icon: Icon(
+                                    Icons.qr_code,
+                                    size: 24.w,
+                                    color: colors.foregroundTertiary,
+                                  ),
+                                  padding: EdgeInsets.zero,
+                                  constraints: BoxConstraints(
+                                    minWidth: 24.w,
+                                    minHeight: 24.w,
+                                  ),
+                                ),
+                              ],
                             ),
                           ],
                         ),
@@ -76,12 +98,12 @@ class SettingsScreen extends HookConsumerWidget {
                 _SettingsTile(
                   svgPath: 'assets/svgs/user.svg',
                   label: 'Edit profile',
-                  onTap: () => Routes.pushToWip(context),
+                  onTap: () => Routes.pushToEditProfile(context),
                 ),
                 _SettingsTile(
                   svgPath: 'assets/svgs/password.svg',
                   label: 'Profile keys',
-                  onTap: () => Routes.pushToWip(context),
+                  onTap: () => Routes.pushToProfileKeys(context),
                 ),
                 _SettingsTile(
                   svgPath: 'assets/svgs/relays.svg',

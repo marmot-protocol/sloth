@@ -1,0 +1,80 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
+import 'package:sloth/extensions/build_context.dart';
+
+class WnWarningBox extends StatelessWidget {
+  const WnWarningBox({
+    super.key,
+    required this.title,
+    required this.description,
+    this.backgroundColor,
+    this.borderColor,
+    this.iconColor,
+    this.titleColor,
+    this.descriptionColor,
+    this.icon = Icons.warning_amber_rounded,
+  });
+
+  final String title;
+  final String description;
+  final Color? backgroundColor;
+  final Color? borderColor;
+  final Color? iconColor;
+  final Color? titleColor;
+  final Color? descriptionColor;
+  final IconData icon;
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final bgColor = backgroundColor ?? colors.error.withValues(alpha: 0.1);
+    final border = borderColor ?? colors.error.withValues(alpha: 0.3);
+    final iconC = iconColor ?? colors.error;
+    final titleC = titleColor ?? colors.error;
+    final descC = descriptionColor ?? colors.foregroundPrimary;
+
+    return Container(
+      padding: EdgeInsets.all(12.w),
+      decoration: BoxDecoration(
+        color: bgColor,
+        border: Border.all(color: border),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(
+                icon,
+                size: 20.w,
+                color: iconC,
+              ),
+              Gap(8.w),
+              Expanded(
+                child: Text(
+                  title,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w600,
+                    color: titleC,
+                  ),
+                ),
+              ),
+            ],
+          ),
+          Gap(8.h),
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 14.sp,
+              fontWeight: FontWeight.w500,
+              color: descC,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

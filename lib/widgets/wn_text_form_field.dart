@@ -16,6 +16,8 @@ class WnTextFormField extends StatelessWidget {
     this.errorText,
     this.onChanged,
     this.textInputAction,
+    this.readOnly = false,
+    this.suffixIcon,
   });
 
   final String label;
@@ -28,6 +30,8 @@ class WnTextFormField extends StatelessWidget {
   final String? errorText;
   final ValueChanged<String>? onChanged;
   final TextInputAction? textInputAction;
+  final bool readOnly;
+  final Widget? suffixIcon;
 
   @override
   Widget build(BuildContext context) {
@@ -49,6 +53,7 @@ class WnTextFormField extends StatelessWidget {
         TextFormField(
           controller: controller,
           autofocus: autofocus,
+          readOnly: readOnly,
           maxLines: obscureText ? 1 : maxLines,
           minLines: minLines,
           onChanged: onChanged,
@@ -89,6 +94,7 @@ class WnTextFormField extends StatelessWidget {
                 color: hasError ? colors.error : colors.foregroundTertiary,
               ),
             ),
+            suffixIcon: suffixIcon,
           ),
           obscureText: obscureText,
           obscuringCharacter: '●',

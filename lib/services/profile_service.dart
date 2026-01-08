@@ -11,20 +11,22 @@ class ProfileService {
 
   const ProfileService(this.pubkey);
 
-  Future<void> updateProfile({
+  Future<void> setProfile({
     required String displayName,
     String? about,
     String? pictureUrl,
+    String? nip05,
   }) async {
-    _logger.info('Updating profile');
+    _logger.info('Setting profile (for signup)');
     final metadata = FlutterMetadata(
       displayName: displayName,
       about: about,
       picture: pictureUrl,
+      nip05: nip05,
       custom: const {},
     );
     await accounts_api.updateAccountMetadata(pubkey: pubkey, metadata: metadata);
-    _logger.info('Profile updated successfully');
+    _logger.info('Profile set successfully');
   }
 
   Future<String> uploadProfilePicture({
