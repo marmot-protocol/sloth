@@ -14,9 +14,10 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
     required bool blockingDataSync,
@@ -28,9 +29,6 @@ class _MockApi implements RustLibApi {
   );
 
   @override
-  Future<void> crateApiAccountsLogout({required String pubkey}) async {}
-
-  @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
     return 'npub1test${hexPubkey.substring(0, 10)}';
   }
@@ -39,9 +37,6 @@ class _MockApi implements RustLibApi {
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {

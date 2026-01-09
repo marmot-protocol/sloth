@@ -7,10 +7,10 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockRustLibApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
     required bool blockingDataSync,
@@ -22,12 +22,6 @@ class _MockRustLibApi implements RustLibApi {
       about: 'Test bio',
       custom: {},
     );
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    final methodName = invocation.memberName.toString();
-    throw UnimplementedError('_MockRustLibApi.$methodName is not implemented');
   }
 }
 
@@ -50,7 +44,7 @@ class _MockAuthNotifier extends AuthNotifier {
 
 void main() {
   setUpAll(() {
-    RustLib.initMock(api: _MockRustLibApi());
+    RustLib.initMock(api: _MockApi());
   });
 
   late _MockAuthNotifier mockAuth;

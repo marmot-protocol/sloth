@@ -10,22 +10,14 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockRustLibApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
     return Account(pubkey: 'test_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now());
   }
-
-  @override
-  Future<String> crateApiUtilsGetDefaultBlossomServerUrl() async => 'https://blossom.example.com';
-
-  @override
-  Future<void> crateApiAccountsUpdateAccountMetadata({
-    required String pubkey,
-    required FlutterMetadata metadata,
-  }) async {}
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -34,9 +26,6 @@ class _MockRustLibApi implements RustLibApi {
   }) async {
     return const FlutterMetadata(displayName: 'Test User', custom: {});
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -54,7 +43,7 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  setUpAll(() => RustLib.initMock(api: _MockRustLibApi()));
+  setUpAll(() => RustLib.initMock(api: _MockApi()));
 
   Future<void> pumpSignupScreen(WidgetTester tester, {List overrides = const []}) async {
     await mountTestApp(tester, overrides: overrides);

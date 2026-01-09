@@ -14,6 +14,7 @@ import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
+import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
@@ -79,6 +80,13 @@ class _MockRustLibApi implements RustLibApi {
     required String groupId,
   }) async {
     return [];
+  }
+
+  @override
+  Stream<ChatListStreamItem> crateApiChatListSubscribeToChatList({
+    required String accountPubkey,
+  }) {
+    return Stream.value(const ChatListStreamItem.initialSnapshot(items: []));
   }
 
   @override

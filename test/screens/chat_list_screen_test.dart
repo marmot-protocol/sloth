@@ -9,12 +9,11 @@ import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
-import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 ChatSummary _chatSummary({required String id, required bool pendingConfirmation}) => ChatSummary(
@@ -26,7 +25,7 @@ ChatSummary _chatSummary({required String id, required bool pendingConfirmation}
   unreadCount: BigInt.zero,
 );
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   StreamController<ChatListStreamItem>? controller;
   List<ChatSummary> initialChats = [];
 
@@ -49,25 +48,6 @@ class _MockApi implements RustLibApi {
   }
 
   @override
-  Future<FlutterMetadata> crateApiUsersUserMetadata({
-    required bool blockingDataSync,
-    required String pubkey,
-  }) async => const FlutterMetadata(custom: {});
-
-  @override
-  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
-    required String groupId,
-  }) async* {
-    yield const MessageStreamItem.initialSnapshot(messages: []);
-  }
-
-  @override
-  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
-    required String pubkey,
-    required String groupId,
-  }) async => [];
-
-  @override
   Future<Group> crateApiGroupsGetGroup({
     required String accountPubkey,
     required String groupId,
@@ -80,27 +60,6 @@ class _MockApi implements RustLibApi {
     epoch: BigInt.zero,
     state: GroupState.active,
   );
-
-  @override
-  Future<bool> crateApiGroupsGroupIsDirectMessageType({
-    required Group that,
-    required String accountPubkey,
-  }) async => false;
-
-  @override
-  Future<String?> crateApiGroupsGetGroupImagePath({
-    required String accountPubkey,
-    required String groupId,
-  }) async => null;
-
-  @override
-  Future<List<String>> crateApiGroupsGroupMembers({
-    required String pubkey,
-    required String groupId,
-  }) async => [];
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {

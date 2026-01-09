@@ -9,10 +9,10 @@ import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/account_groups.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 const _testPubkey = 'test_pubkey';
@@ -39,7 +39,7 @@ AccountGroup _accountGroup() => AccountGroup(
   updatedAt: PlatformInt64Util.from(0),
 );
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   List<ChatMessage> messages = [];
   String groupName = 'Test Group';
   bool acceptCalled = false;
@@ -79,22 +79,6 @@ class _MockApi implements RustLibApi {
   }
 
   @override
-  Future<bool> crateApiGroupsGroupIsDirectMessageType({
-    required Group that,
-    required String accountPubkey,
-  }) async {
-    return false;
-  }
-
-  @override
-  Future<String?> crateApiGroupsGetGroupImagePath({
-    required String accountPubkey,
-    required String groupId,
-  }) async {
-    return null;
-  }
-
-  @override
   Future<AccountGroup> crateApiAccountGroupsAcceptAccountGroup({
     required String accountPubkey,
     required String mlsGroupId,
@@ -113,24 +97,6 @@ class _MockApi implements RustLibApi {
     if (errorToThrow != null) throw errorToThrow!;
     return _accountGroup();
   }
-
-  @override
-  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
-    required String groupId,
-  }) async* {
-    yield const MessageStreamItem.initialSnapshot(messages: []);
-  }
-
-  @override
-  Future<FlutterMetadata> crateApiUsersUserMetadata({
-    required bool blockingDataSync,
-    required String pubkey,
-  }) async {
-    return const FlutterMetadata(custom: {});
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
