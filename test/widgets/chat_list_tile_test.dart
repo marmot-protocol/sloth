@@ -10,6 +10,7 @@ import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_animated_avatar.dart';
 
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 ChatSummary _chatSummary({
@@ -41,7 +42,7 @@ ChatSummary _chatSummary({
       : null,
 );
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   FlutterMetadata welcomerMetadata = const FlutterMetadata(custom: {});
   bool shouldThrow = false;
 
@@ -53,9 +54,6 @@ class _MockApi implements RustLibApi {
     if (shouldThrow) throw Exception('Network error');
     return welcomerMetadata;
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 final _api = _MockApi();
