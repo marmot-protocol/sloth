@@ -67,7 +67,7 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   freezed: ^3.2.3
-  build_runner: ^2.7.1
+  build_runner: ^2.10.4
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
