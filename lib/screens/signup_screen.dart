@@ -82,6 +82,7 @@ class SignupScreen extends HookConsumerWidget {
                             spacing: 4.w,
                             children: [
                               IconButton(
+                                key: const Key('back_button'),
                                 onPressed: () => Routes.goBack(context),
                                 icon: const Icon(Icons.chevron_left),
                                 color: colors.foregroundTertiary,

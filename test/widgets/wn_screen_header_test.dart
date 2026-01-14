@@ -14,7 +14,7 @@ void main() {
 
     testWidgets('displays close icon', (tester) async {
       await mountWidget(const WnScreenHeader(title: 'Settings'), tester);
-      expect(find.byIcon(Icons.close), findsOneWidget);
+      expect(find.byKey(const Key('close_button')), findsOneWidget);
     });
 
     group('navigation', () {

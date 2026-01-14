@@ -50,6 +50,7 @@ class OnboardingScreen extends ConsumerWidget {
                           ),
                         ),
                         IconButton(
+                          key: const Key('close_button'),
                           onPressed: () => Routes.goToChatList(context),
                           icon: Icon(
                             Icons.close,

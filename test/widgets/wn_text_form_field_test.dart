@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show EditableText, Icons, TextFormField;
+import 'package:flutter/material.dart' show EditableText, Key, TextFormField;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
 import '../test_helpers.dart' show mountWidget;
@@ -63,7 +63,7 @@ void main() {
         ),
         tester,
       );
-      expect(find.byIcon(Icons.error_outline_rounded), findsNothing);
+      expect(find.byKey(const Key('error_icon')), findsNothing);
     });
 
     group('with autofocus', () {
@@ -142,6 +142,18 @@ void main() {
           tester,
         );
         expect(find.text('This field is required'), findsOneWidget);
+      });
+
+      testWidgets('displays error icon', (tester) async {
+        await mountWidget(
+          const WnTextFormField(
+            label: 'Label',
+            placeholder: 'hint',
+            errorText: 'Error',
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('error_icon')), findsOneWidget);
       });
     });
   });

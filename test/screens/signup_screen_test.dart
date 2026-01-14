@@ -91,7 +91,7 @@ void main() {
     group('navigation', () {
       testWidgets('tapping back button returns to home screen', (tester) async {
         await pumpSignupScreen(tester);
-        await tester.tap(find.byIcon(Icons.chevron_left));
+        await tester.tap(find.byKey(const Key('back_button')));
         await tester.pumpAndSettle();
         expect(find.byType(HomeScreen), findsOneWidget);
       });

@@ -40,13 +40,13 @@ void main() {
     testWidgets('displays back button', (tester) async {
       await pumpHeader(tester);
 
-      expect(find.byIcon(Icons.chevron_left), findsOneWidget);
+      expect(find.byKey(const Key('back_button')), findsOneWidget);
     });
 
     testWidgets('displays menu button', (tester) async {
       await pumpHeader(tester);
 
-      expect(find.byIcon(Icons.more_horiz), findsOneWidget);
+      expect(find.byKey(const Key('menu_button')), findsOneWidget);
     });
 
     testWidgets('displays avatar', (tester) async {
