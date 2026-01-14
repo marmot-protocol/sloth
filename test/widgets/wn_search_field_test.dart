@@ -1,0 +1,62 @@
+import 'package:flutter/material.dart' show EditableText, Key, TextField, TextEditingController;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/widgets/wn_search_field.dart' show WnSearchField;
+import '../test_helpers.dart' show mountWidget;
+
+void main() {
+  group('WnSearchField', () {
+    testWidgets('displays placeholder', (tester) async {
+      await mountWidget(const WnSearchField(placeholder: 'Search users'), tester);
+      expect(find.text('Search users'), findsOneWidget);
+    });
+
+    testWidgets('displays search icon', (tester) async {
+      await mountWidget(const WnSearchField(placeholder: 'Search'), tester);
+      expect(find.byKey(const Key('search_icon')), findsOneWidget);
+    });
+
+    testWidgets('displays entered text', (tester) async {
+      await mountWidget(const WnSearchField(placeholder: 'Search'), tester);
+      await tester.enterText(find.byType(TextField), 'hello');
+      await tester.pump();
+      expect(find.text('hello'), findsOneWidget);
+    });
+
+    testWidgets('is not focused by default', (tester) async {
+      await mountWidget(const WnSearchField(placeholder: 'Search'), tester);
+      final field = tester.widget<EditableText>(find.byType(EditableText));
+      expect(field.focusNode.hasFocus, isFalse);
+    });
+
+    testWidgets('calls onChanged when text changes', (tester) async {
+      String? changedValue;
+      await mountWidget(
+        WnSearchField(placeholder: 'Search', onChanged: (v) => changedValue = v),
+        tester,
+      );
+      await tester.enterText(find.byType(TextField), 'test');
+      expect(changedValue, 'test');
+    });
+
+    testWidgets('uses provided controller', (tester) async {
+      final controller = TextEditingController(text: 'initial');
+      addTearDown(controller.dispose);
+      await mountWidget(
+        WnSearchField(placeholder: 'Search', controller: controller),
+        tester,
+      );
+      expect(find.text('initial'), findsOneWidget);
+    });
+
+    group('with autofocus', () {
+      testWidgets('is focused', (tester) async {
+        await mountWidget(
+          const WnSearchField(placeholder: 'Search', autofocus: true),
+          tester,
+        );
+        final field = tester.widget<EditableText>(find.byType(EditableText));
+        expect(field.focusNode.hasFocus, isTrue);
+      });
+    });
+  });
+}
