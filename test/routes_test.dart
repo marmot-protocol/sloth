@@ -14,10 +14,12 @@ import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
+import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'test_helpers.dart';
 
@@ -87,6 +89,16 @@ class _MockRustLibApi implements RustLibApi {
     required String accountPubkey,
   }) {
     return Stream.value(const ChatListStreamItem.initialSnapshot(items: []));
+  }
+
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    return 'npub1test${hexPubkey.substring(0, 10)}';
+  }
+
+  @override
+  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
+    return [];
   }
 
   @override
@@ -171,6 +183,13 @@ void main() {
       testWidgets('redirects to LoginScreen when accessing /donate', (tester) async {
         await pumpRouter(tester);
         Routes.pushToDonate(getContext(tester));
+        await tester.pumpAndSettle();
+        expect(find.byType(LoginScreen), findsOneWidget);
+      });
+
+      testWidgets('redirects to LoginScreen when accessing /user-search', (tester) async {
+        await pumpRouter(tester);
+        Routes.pushToUserSearch(getContext(tester));
         await tester.pumpAndSettle();
         expect(find.byType(LoginScreen), findsOneWidget);
       });
@@ -436,6 +455,34 @@ void main() {
         ],
       );
       Routes.pushToDeveloperSettings(getContext(tester));
+      await tester.pumpAndSettle();
+      Routes.goBack(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
+    });
+  });
+
+  group('pushToUserSearch', () {
+    testWidgets('pushes UserSearchScreen onto stack', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToUserSearch(getContext(tester));
+      await tester.pumpAndSettle();
+      expect(find.byType(UserSearchScreen), findsOneWidget);
+    });
+
+    testWidgets('does not reset navigation stack', (tester) async {
+      await pumpRouter(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
+        ],
+      );
+      Routes.pushToUserSearch(getContext(tester));
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();
