@@ -6,7 +6,7 @@ import 'package:sloth/services/user_metadata_service.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_animated_avatar.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 class ChatListTile extends HookWidget {
   final ChatSummary chatSummary;
@@ -77,9 +77,10 @@ class ChatListTile extends HookWidget {
       onTap: isPending
           ? () => Routes.pushToInvite(context, chatSummary.mlsGroupId)
           : () => Routes.goToChat(context, chatSummary.mlsGroupId),
-      leading: WnAnimatedAvatar(
+      leading: WnAvatar(
         pictureUrl: pictureUrl,
         displayName: avatarName,
+        animated: true,
       ),
       title: Text(
         title,

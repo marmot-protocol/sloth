@@ -53,6 +53,7 @@ dependencies:
   image_picker: ^1.1.2
   mime: ^2.0.0
   qr_flutter: ^4.1.0
+  cached_network_image: ^3.4.1
 
 dev_dependencies:
   flutter_test:
