@@ -3,9 +3,15 @@ import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 class MockWnApi implements RustLibApi {
+  @override
+  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
+    return [];
+  }
+
   @override
   Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
     required String pubkey,
