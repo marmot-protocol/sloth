@@ -21,7 +21,7 @@ class ShareProfileScreen extends HookConsumerWidget {
     final colors = context.colors;
     final pubkey = ref.watch(accountPubkeyProvider);
     final metadataSnapshot = useUserMetadata(context, pubkey);
-    final npub = npubFromPubkey(pubkey);
+    final npub = npubFromHex(pubkey);
 
     void copyToClipboard(String text) {
       Clipboard.setData(ClipboardData(text: text));
@@ -87,7 +87,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                   children: [
                                     Expanded(
                                       child: Text(
-                                        npub != null ? formatPublicKey(npub) : '',
+                                        formatPublicKey(npub ?? pubkey),
                                         textAlign: TextAlign.center,
                                         style: TextStyle(
                                           fontSize: 14.sp,

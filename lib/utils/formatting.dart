@@ -1,16 +1,4 @@
-import 'package:logging/logging.dart';
-import 'package:sloth/src/rust/api/utils.dart' as utils_api;
-
-final _logger = Logger('formatting');
-
-String? npubFromPubkey(String pubkey) {
-  try {
-    return utils_api.npubFromHexPubkey(hexPubkey: pubkey);
-  } catch (e) {
-    _logger.severe('Failed to convert pubkey to npub', e);
-    return null;
-  }
-}
+export 'package:sloth/utils/encoding.dart' show npubFromHex;
 
 String formatPublicKey(String publicKey) {
   return publicKey.replaceAllMapped(

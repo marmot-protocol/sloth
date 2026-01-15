@@ -18,6 +18,17 @@ class _MockApi implements RustLibApi {
 }
 
 void main() {
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.shouldThrow = false;
+  });
+
   group('formatPublicKey', () {
     test('adds space every 5 chars', () {
       expect(formatPublicKey('abcdefghij'), 'abcde fghij ');
@@ -71,40 +82,6 @@ void main() {
 
     test('returns null for whitespace-only string', () {
       expect(formatInitials('   '), isNull);
-    });
-  });
-
-  group('npubFromPubkey', () {
-    late _MockApi mockApi;
-
-    setUpAll(() {
-      mockApi = _MockApi();
-      RustLib.initMock(api: mockApi);
-    });
-
-    setUp(() {
-      mockApi.shouldThrow = false;
-    });
-
-    test('returns npub string for valid hex pubkey', () {
-      final result = npubFromPubkey(
-        'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-      );
-      expect(result, isNotNull);
-      expect(result, startsWith('npub1'));
-      expect(result, contains('abcdef1234'));
-    });
-
-    test('returns null when API throws error', () {
-      mockApi.shouldThrow = true;
-      final result = npubFromPubkey('invalid_pubkey');
-      expect(result, isNull);
-    });
-
-    test('handles empty string', () {
-      mockApi.shouldThrow = true;
-      final result = npubFromPubkey('');
-      expect(result, isNull);
     });
   });
 }
