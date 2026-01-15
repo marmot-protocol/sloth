@@ -30,6 +30,18 @@ Future<AccountGroup> declineAccountGroup({
   mlsGroupId: mlsGroupId,
 );
 
+/// Marks a message as read for the given account.
+///
+/// Updates the `last_read_message_id` for the account-group pair containing
+/// the specified message. This is used to compute unread counts in the chat list.
+Future<AccountGroup> markMessageRead({
+  required String accountPubkey,
+  required String messageId,
+}) => RustLib.instance.api.crateApiAccountGroupsMarkMessageRead(
+  accountPubkey: accountPubkey,
+  messageId: messageId,
+);
+
 /// Represents the relationship between an account and an MLS group.
 ///
 /// This struct tracks whether a user has accepted or declined a group invite.
@@ -46,6 +58,10 @@ class AccountGroup {
   final String mlsGroupId;
   final bool? userConfirmation;
   final String? welcomerPubkey;
+
+  /// The last message the user has read in this group (hex EventId).
+  /// Used to compute unread counts.
+  final String? lastReadMessageId;
   final PlatformInt64 createdAt;
   final PlatformInt64 updatedAt;
 
@@ -55,6 +71,7 @@ class AccountGroup {
     required this.mlsGroupId,
     this.userConfirmation,
     this.welcomerPubkey,
+    this.lastReadMessageId,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -66,6 +83,7 @@ class AccountGroup {
       mlsGroupId.hashCode ^
       userConfirmation.hashCode ^
       welcomerPubkey.hashCode ^
+      lastReadMessageId.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
 
@@ -79,6 +97,7 @@ class AccountGroup {
           mlsGroupId == other.mlsGroupId &&
           userConfirmation == other.userConfirmation &&
           welcomerPubkey == other.welcomerPubkey &&
+          lastReadMessageId == other.lastReadMessageId &&
           createdAt == other.createdAt &&
           updatedAt == other.updatedAt;
 }

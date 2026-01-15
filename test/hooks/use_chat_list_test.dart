@@ -13,6 +13,7 @@ ChatSummary _chatSummaryFactory(String id, DateTime createdAt) => ChatSummary(
   groupType: GroupType.group,
   createdAt: createdAt,
   pendingConfirmation: false,
+  unreadCount: BigInt.zero,
 );
 
 class _MockApi implements RustLibApi {

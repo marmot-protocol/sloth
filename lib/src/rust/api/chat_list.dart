@@ -120,6 +120,9 @@ class ChatSummary {
   /// `Some` when invited by another user, `None` when the user created the group.
   final String? welcomerPubkey;
 
+  /// Number of unread messages in this chat
+  final BigInt unreadCount;
+
   const ChatSummary({
     required this.mlsGroupId,
     this.name,
@@ -130,6 +133,7 @@ class ChatSummary {
     this.lastMessage,
     required this.pendingConfirmation,
     this.welcomerPubkey,
+    required this.unreadCount,
   });
 
   @override
@@ -142,7 +146,8 @@ class ChatSummary {
       groupImageUrl.hashCode ^
       lastMessage.hashCode ^
       pendingConfirmation.hashCode ^
-      welcomerPubkey.hashCode;
+      welcomerPubkey.hashCode ^
+      unreadCount.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -157,5 +162,6 @@ class ChatSummary {
           groupImageUrl == other.groupImageUrl &&
           lastMessage == other.lastMessage &&
           pendingConfirmation == other.pendingConfirmation &&
-          welcomerPubkey == other.welcomerPubkey;
+          welcomerPubkey == other.welcomerPubkey &&
+          unreadCount == other.unreadCount;
 }

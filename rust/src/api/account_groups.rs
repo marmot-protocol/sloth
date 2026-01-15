@@ -23,6 +23,9 @@ pub struct AccountGroup {
     pub mls_group_id: String,
     pub user_confirmation: Option<bool>,
     pub welcomer_pubkey: Option<String>,
+    /// The last message the user has read in this group (hex EventId).
+    /// Used to compute unread counts.
+    pub last_read_message_id: Option<String>,
     pub created_at: i64,
     pub updated_at: i64,
 }
@@ -35,6 +38,7 @@ impl From<WhitenoiseAccountGroup> for AccountGroup {
             mls_group_id: group_id_to_string(&ag.mls_group_id),
             user_confirmation: ag.user_confirmation,
             welcomer_pubkey: ag.welcomer_pubkey.map(|pk| pk.to_hex()),
+            last_read_message_id: ag.last_read_message_id.map(|id| id.to_hex()),
             created_at: ag.created_at.timestamp_millis(),
             updated_at: ag.updated_at.timestamp_millis(),
         }
@@ -49,6 +53,7 @@ impl From<&WhitenoiseAccountGroup> for AccountGroup {
             mls_group_id: group_id_to_string(&ag.mls_group_id),
             user_confirmation: ag.user_confirmation,
             welcomer_pubkey: ag.welcomer_pubkey.map(|pk| pk.to_hex()),
+            last_read_message_id: ag.last_read_message_id.map(|id| id.to_hex()),
             created_at: ag.created_at.timestamp_millis(),
             updated_at: ag.updated_at.timestamp_millis(),
         }
@@ -96,5 +101,23 @@ pub async fn decline_account_group(
         })?;
 
     let updated = ag.decline(whitenoise).await?;
+    Ok(updated.into())
+}
+
+/// Marks a message as read for the given account.
+///
+/// Updates the `last_read_message_id` for the account-group pair containing
+/// the specified message. This is used to compute unread counts in the chat list.
+#[frb]
+pub async fn mark_message_read(
+    account_pubkey: String,
+    message_id: String,
+) -> Result<AccountGroup, ApiError> {
+    let whitenoise = Whitenoise::get_instance()?;
+    let pubkey = PublicKey::parse(&account_pubkey)?;
+    let account = whitenoise.find_account_by_pubkey(&pubkey).await?;
+    let event_id = EventId::from_hex(&message_id)?;
+
+    let updated = whitenoise.mark_message_read(&account, &event_id).await?;
     Ok(updated.into())
 }
