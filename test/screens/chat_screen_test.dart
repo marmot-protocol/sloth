@@ -15,14 +15,19 @@ import '../test_helpers.dart';
 const _testPubkey = 'test_pubkey';
 const _testGroupId = 'test_group_id';
 
-ChatMessage _message(String id, DateTime createdAt, {String pubkey = 'other'}) => ChatMessage(
+ChatMessage _message(
+  String id,
+  DateTime createdAt, {
+  String pubkey = 'other',
+  bool isDeleted = false,
+}) => ChatMessage(
   id: id,
   pubkey: pubkey,
   content: 'Message $id',
   createdAt: createdAt,
   tags: const [],
   isReply: false,
-  isDeleted: false,
+  isDeleted: isDeleted,
   contentTokens: const [],
   reactions: const ReactionSummary(byEmoji: [], userReactions: []),
   mediaAttachments: const [],
@@ -198,6 +203,16 @@ void main() {
         await pumpChatScreen(tester);
 
         expect(find.text('Message m1'), findsOneWidget);
+      });
+
+      testWidgets('does not display deleted message text', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024, 1, 2)),
+          _message('m2', DateTime(2024, 1, 3), isDeleted: true),
+        ];
+        await pumpChatScreen(tester);
+
+        expect(find.text('Message m2'), findsNothing);
       });
     });
 
