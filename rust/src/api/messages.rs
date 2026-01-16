@@ -422,21 +422,6 @@ pub async fn subscribe_to_group_messages(
     Ok(())
 }
 
-/// Marks a message as read for the given account.
-///
-/// Updates the `last_read_message_id` for the account-group pair containing
-/// the specified message. This is used to compute unread counts in the chat list.
-#[frb]
-pub async fn mark_read(account_pubkey: String, message_id: String) -> Result<(), ApiError> {
-    let whitenoise = Whitenoise::get_instance()?;
-    let pubkey = PublicKey::parse(&account_pubkey)?;
-    let account = whitenoise.find_account_by_pubkey(&pubkey).await?;
-    let event_id = EventId::from_hex(&message_id)?;
-
-    whitenoise.mark_message_read(&account, &event_id).await?;
-    Ok(())
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
