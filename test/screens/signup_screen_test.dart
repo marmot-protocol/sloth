@@ -18,7 +18,12 @@ import '../test_helpers.dart';
 class _MockApi extends MockWnApi {
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
-    return Account(pubkey: 'test_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now());
+    return Account(
+      pubkey: 'test_pubkey',
+      accountType: AccountType.local,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
   }
 
   @override
