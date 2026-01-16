@@ -13,6 +13,7 @@ import 'package:sloth/screens/donate_screen.dart' show DonateScreen;
 import 'package:sloth/screens/edit_profile_screen.dart' show EditProfileScreen;
 import 'package:sloth/screens/home_screen.dart' show HomeScreen;
 import 'package:sloth/screens/login_screen.dart' show LoginScreen;
+import 'package:sloth/screens/network_screen.dart' show NetworkScreen;
 import 'package:sloth/screens/onboarding_screen.dart' show OnboardingScreen;
 import 'package:sloth/screens/profile_keys_screen.dart' show ProfileKeysScreen;
 import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
@@ -35,6 +36,7 @@ abstract final class Routes {
   static const _shareProfile = '/share-profile';
   static const _editProfile = '/edit-profile';
   static const _signOut = '/sign-out';
+  static const _network = '/network';
   static const _invite = '/invites/:mlsGroupId';
   static const _chat = '/chats/:groupId';
   static const _publicRoutes = {_home, _login, _signup};
@@ -142,6 +144,13 @@ abstract final class Routes {
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
             child: const SignOutScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _network,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const NetworkScreen(),
           ),
         ),
         GoRoute(
@@ -262,5 +271,9 @@ abstract final class Routes {
 
   static void goToChat(BuildContext context, String groupId) {
     GoRouter.of(context).goNamed('chat', pathParameters: {'groupId': groupId});
+  }
+
+  static void pushToNetwork(BuildContext context) {
+    GoRouter.of(context).push(_network);
   }
 }
