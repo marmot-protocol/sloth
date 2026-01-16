@@ -8,7 +8,7 @@ Sloth is a playground messaging app for experimenting with the [whitenoise Rust 
 
 ## Architecture
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Flutter UI Layer                         │
 │  (screens/, widgets/, hooks/, providers/)                   │
@@ -37,7 +37,7 @@ Sloth is a playground messaging app for experimenting with the [whitenoise Rust 
 
 **IMPORTANT:** When starting work on a new feature, bug fix, or issue, use the `/create-git-worktree` command to create an isolated development environment.
 
-```
+```bash
 /create-git-worktree <branch-name>
 ```
 
@@ -49,7 +49,7 @@ After running, you'll be working in `trees/issue-42-fix-login/` on that branch.
 
 ## Directory Structure
 
-```
+```text
 sloth/
 ├── lib/                    # Flutter/Dart source code
 │   ├── main.dart           # App entry point
@@ -137,6 +137,8 @@ just generate
 
 ## Testing
 
+**IMPORTANT: Test coverage is of utmost importance. Never submit a PR that reduces test coverage.**
+
 - Test files mirror source structure with `_test.dart` suffix
 - Minimum coverage requirement: 80%
 - Use helpers from `test/test_helpers.dart`:
@@ -164,7 +166,7 @@ Follow these principles when writing code:
 
 ## State Management Pattern
 
-```
+```text
 Screen (watches providers)
     │
     ├── Providers (shared/persistent state)
