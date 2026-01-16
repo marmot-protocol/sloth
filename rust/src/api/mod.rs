@@ -64,6 +64,7 @@ pub mod media_files;
 pub mod messages;
 pub mod metadata;
 pub mod relays;
+pub mod signer;
 pub mod users;
 pub mod utils;
 
@@ -77,6 +78,7 @@ pub use media_files::*;
 pub use messages::*;
 pub use metadata::*;
 pub use relays::*;
+pub use signer::*;
 pub use users::*;
 pub use utils::*;
 

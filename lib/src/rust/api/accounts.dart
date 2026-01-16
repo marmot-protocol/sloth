@@ -11,17 +11,35 @@ import 'metadata.dart';
 import 'relays.dart';
 import 'users.dart';
 
-// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `clone`, `clone`, `fmt`, `fmt`, `from`, `from`
+// These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`
 
-Future<List<Account>> getAccounts() => RustLib.instance.api.crateApiAccountsGetAccounts();
+Future<List<Account>> getAccounts() =>
+    RustLib.instance.api.crateApiAccountsGetAccounts();
 
 Future<Account> getAccount({required String pubkey}) =>
     RustLib.instance.api.crateApiAccountsGetAccount(pubkey: pubkey);
 
-Future<Account> createIdentity() => RustLib.instance.api.crateApiAccountsCreateIdentity();
+Future<Account> createIdentity() =>
+    RustLib.instance.api.crateApiAccountsCreateIdentity();
 
-Future<Account> login({required String nsecOrHexPrivkey}) =>
-    RustLib.instance.api.crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
+Future<Account> login({required String nsecOrHexPrivkey}) => RustLib
+    .instance
+    .api
+    .crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
+
+/// Login with an external signer (like Amber via NIP-55).
+///
+/// This creates an account entry for the given public key without requiring
+/// the private key. The private key never touches this app - all signing
+/// operations must be performed by the external signer.
+///
+/// # Arguments
+///
+/// * `pubkey` - The user's public key (hex format) obtained from the external signer.
+Future<Account> loginWithExternalSigner({required String pubkey}) => RustLib
+    .instance
+    .api
+    .crateApiAccountsLoginWithExternalSigner(pubkey: pubkey);
 
 Future<void> logout({required String pubkey}) =>
     RustLib.instance.api.crateApiAccountsLogout(pubkey: pubkey);
@@ -128,12 +146,16 @@ abstract class RelayType implements RustOpaqueInterface {}
 
 class Account {
   final String pubkey;
+
+  /// The type of account (local key or external signer).
+  final AccountType accountType;
   final DateTime? lastSyncedAt;
   final DateTime createdAt;
   final DateTime updatedAt;
 
   const Account({
     required this.pubkey,
+    required this.accountType,
     this.lastSyncedAt,
     required this.createdAt,
     required this.updatedAt,
@@ -141,7 +163,11 @@ class Account {
 
   @override
   int get hashCode =>
-      pubkey.hashCode ^ lastSyncedAt.hashCode ^ createdAt.hashCode ^ updatedAt.hashCode;
+      pubkey.hashCode ^
+      accountType.hashCode ^
+      lastSyncedAt.hashCode ^
+      createdAt.hashCode ^
+      updatedAt.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -149,9 +175,19 @@ class Account {
       other is Account &&
           runtimeType == other.runtimeType &&
           pubkey == other.pubkey &&
+          accountType == other.accountType &&
           lastSyncedAt == other.lastSyncedAt &&
           createdAt == other.createdAt &&
           updatedAt == other.updatedAt;
+}
+
+/// The type of account authentication.
+enum AccountType {
+  /// Account with locally stored private key.
+  local,
+
+  /// Account using external signer (e.g., Amber via NIP-55).
+  external_,
 }
 
 class FlutterEvent {
