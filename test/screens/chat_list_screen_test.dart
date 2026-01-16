@@ -23,6 +23,7 @@ ChatSummary _chatSummaryFactory({required String id, required bool pendingConfir
       groupType: GroupType.group,
       createdAt: DateTime(2024),
       pendingConfirmation: pendingConfirmation,
+      unreadCount: BigInt.zero,
     );
 
 class _MockApi implements RustLibApi {

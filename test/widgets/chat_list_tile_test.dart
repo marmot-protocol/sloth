@@ -23,6 +23,7 @@ ChatSummary _chatSummary({
   groupType: groupType,
   createdAt: DateTime(2024),
   pendingConfirmation: pendingConfirmation,
+  unreadCount: BigInt.zero,
   groupImagePath: groupImagePath,
   groupImageUrl: groupImageUrl,
   lastMessage: lastMessageContent != null

@@ -36,6 +36,8 @@ pub struct ChatSummary {
     /// Public key (hex) of the user who invited this account to the group.
     /// `Some` when invited by another user, `None` when the user created the group.
     pub welcomer_pubkey: Option<String>,
+    /// Number of unread messages in this chat
+    pub unread_count: u64,
 }
 
 impl From<WhitenoiseChatListItem> for ChatSummary {
@@ -52,6 +54,7 @@ impl From<WhitenoiseChatListItem> for ChatSummary {
             last_message: item.last_message.map(|m| m.into()),
             pending_confirmation: item.pending_confirmation,
             welcomer_pubkey: item.welcomer_pubkey.map(|pk| pk.to_hex()),
+            unread_count: item.unread_count as u64,
         }
     }
 }
