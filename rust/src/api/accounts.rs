@@ -2,12 +2,36 @@ use crate::api::{error::ApiError, metadata::FlutterMetadata, relays::Relay, user
 use chrono::{DateTime, TimeZone, Utc};
 use flutter_rust_bridge::frb;
 use nostr_sdk::prelude::*;
-use whitenoise::{Account as WhitenoiseAccount, ImageType, RelayType, Whitenoise};
+use whitenoise::{
+    Account as WhitenoiseAccount, AccountType as WhitenoiseAccountType, ImageType, RelayType,
+    Whitenoise,
+};
+
+/// The type of account authentication.
+#[frb(non_opaque)]
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum AccountType {
+    /// Account with locally stored private key.
+    Local,
+    /// Account using external signer (e.g., Amber via NIP-55).
+    External,
+}
+
+impl From<WhitenoiseAccountType> for AccountType {
+    fn from(account_type: WhitenoiseAccountType) -> Self {
+        match account_type {
+            WhitenoiseAccountType::Local => AccountType::Local,
+            WhitenoiseAccountType::External => AccountType::External,
+        }
+    }
+}
 
 #[frb(non_opaque)]
 #[derive(Debug, Clone)]
 pub struct Account {
     pub pubkey: String,
+    /// The type of account (local key or external signer).
+    pub account_type: AccountType,
     pub last_synced_at: Option<DateTime<Utc>>,
     pub created_at: DateTime<Utc>,
     pub updated_at: DateTime<Utc>,
@@ -17,6 +41,7 @@ impl From<WhitenoiseAccount> for Account {
     fn from(account: WhitenoiseAccount) -> Self {
         Self {
             pubkey: account.pubkey.to_hex(),
+            account_type: account.account_type.into(),
             last_synced_at: account.last_synced_at,
             created_at: account.created_at,
             updated_at: account.updated_at,
@@ -83,6 +108,23 @@ pub async fn create_identity() -> Result<Account, ApiError> {
 pub async fn login(nsec_or_hex_privkey: String) -> Result<Account, ApiError> {
     let whitenoise = Whitenoise::get_instance()?;
     let account = whitenoise.login(nsec_or_hex_privkey).await?;
+    Ok(account.into())
+}
+
+/// Login with an external signer (like Amber via NIP-55).
+///
+/// This creates an account entry for the given public key without requiring
+/// the private key. The private key never touches this app - all signing
+/// operations must be performed by the external signer.
+///
+/// # Arguments
+///
+/// * `pubkey` - The user's public key (hex format) obtained from the external signer.
+#[frb]
+pub async fn login_with_external_signer(pubkey: String) -> Result<Account, ApiError> {
+    let whitenoise = Whitenoise::get_instance()?;
+    let pubkey = PublicKey::parse(&pubkey)?;
+    let account = whitenoise.login_with_external_signer(pubkey).await?;
     Ok(account.into())
 }
 

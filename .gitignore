@@ -75,3 +75,6 @@ devtools_options.yaml
 /widgetbook/android/local.properties
 /widgetbook/ios/Pods/
 /widgetbook/macos/Pods/
+
+
+*.so
