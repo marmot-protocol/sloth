@@ -8,6 +8,7 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/utils/formatting.dart';
+import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -23,7 +24,7 @@ class SettingsScreen extends HookConsumerWidget {
     final npub = npubFromPubkey(pubkey);
 
     final metadata = metadataSnapshot.data;
-    final displayName = metadata?.displayName ?? metadata?.name;
+    final displayName = presentName(metadata);
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
