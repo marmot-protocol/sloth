@@ -7,6 +7,7 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
 import 'package:sloth/screens/edit_profile_screen.dart';
+import 'package:sloth/screens/network_screen.dart';
 import 'package:sloth/screens/profile_keys_screen.dart';
 import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
@@ -113,11 +114,11 @@ void main() {
       expect(find.byType(ShareProfileScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Network relays navigates to WIP screen', (tester) async {
+    testWidgets('tapping Network relays navigates to NetworkScreen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.text('Network relays'));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(NetworkScreen), findsOneWidget);
     });
 
     testWidgets('tapping App settings navigates to WIP screen', (tester) async {
