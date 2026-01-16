@@ -9,6 +9,7 @@ import 'package:sloth/screens/donate_screen.dart';
 import 'package:sloth/screens/edit_profile_screen.dart';
 import 'package:sloth/screens/profile_keys_screen.dart';
 import 'package:sloth/screens/share_profile_screen.dart';
+import 'package:sloth/screens/sign_out_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -133,11 +134,11 @@ void main() {
       expect(find.byType(DonateScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Sign out calls logout', (tester) async {
+    testWidgets('tapping Sign out navigates to SignOutScreen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.text('Sign out'));
-      await tester.pump();
-      expect(mockAuth.logoutCalled, isTrue);
+      await tester.pumpAndSettle();
+      expect(find.byType(SignOutScreen), findsOneWidget);
     });
 
     testWidgets('tapping Developer settings navigates to Developer settings screen', (

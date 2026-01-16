@@ -32,5 +32,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Fixed
 - Adds internet permission in android manifest [PR #7](https://github.com/marmot-protocol/sloth/pull/7)
 - Fixes logout not working after app reinstall [PR #31](https://github.com/marmot-protocol/sloth/pull/31)
+- Fixes sign out exception and adds dedicated sign out screen with private key backup [PR #45](https://github.com/marmot-protocol/sloth/pull/45)
 
 ### Security

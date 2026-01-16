@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/utils/formatting.dart';
@@ -19,7 +18,11 @@ class SettingsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final pubkey = ref.watch(accountPubkeyProvider);
+    final pubkey = ref.watch(authProvider).value;
+
+    if (pubkey == null) {
+      return const SizedBox.shrink();
+    }
     final metadataSnapshot = useUserMetadata(context, pubkey);
     final npub = npubFromPubkey(pubkey);
 
@@ -129,7 +132,7 @@ class SettingsScreen extends HookConsumerWidget {
                 _SettingsTile(
                   svgPath: 'assets/svgs/logout.svg',
                   label: 'Sign out',
-                  onTap: () => _logout(context, ref),
+                  onTap: () => Routes.pushToSignOut(context),
                 ),
               ],
             ),
@@ -137,13 +140,6 @@ class SettingsScreen extends HookConsumerWidget {
         ),
       ),
     );
-  }
-
-  Future<void> _logout(BuildContext context, WidgetRef ref) async {
-    await ref.read(authProvider.notifier).logout();
-    if (context.mounted) {
-      Routes.goToHome(context);
-    }
   }
 }
 
