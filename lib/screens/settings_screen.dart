@@ -112,7 +112,7 @@ class SettingsScreen extends HookConsumerWidget {
                 _SettingsTile(
                   svgPath: 'assets/svgs/relays.svg',
                   label: 'Network relays',
-                  onTap: () => Routes.pushToWip(context),
+                  onTap: () => Routes.pushToNetwork(context),
                 ),
                 _SettingsTile(
                   svgPath: 'assets/svgs/settings.svg',
