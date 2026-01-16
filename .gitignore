@@ -55,3 +55,7 @@ RUST_FFI_GUIDE.md
 rust/.cargo/config.toml
 # Rust build artifacts (Cargo/rust-analyzer)
 target/
+
+# Git worktrees
+/trees/*
+!/trees/.gitkeep
