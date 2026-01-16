@@ -6,6 +6,7 @@ import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
 class WnAccountBar extends HookConsumerWidget {
@@ -28,7 +29,7 @@ class WnAccountBar extends HookConsumerWidget {
           onTap: () => Routes.pushToSettings(context),
           child: WnAvatar(
             pictureUrl: metadata?.picture,
-            displayName: metadata?.displayName ?? metadata?.name,
+            displayName: presentName(metadata),
           ),
         ),
         const Spacer(),

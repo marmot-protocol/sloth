@@ -5,9 +5,12 @@ import 'package:go_router/go_router.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/src/rust/api/messages.dart';
+import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_animated_avatar.dart';
 
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 ChatSummary _chatSummary({
@@ -17,6 +20,7 @@ ChatSummary _chatSummary({
   String? lastMessageContent,
   String? groupImagePath,
   String? groupImageUrl,
+  String? welcomerPubkey,
 }) => ChatSummary(
   mlsGroupId: 'test-group-id',
   name: name,
@@ -26,6 +30,7 @@ ChatSummary _chatSummary({
   unreadCount: BigInt.zero,
   groupImagePath: groupImagePath,
   groupImageUrl: groupImageUrl,
+  welcomerPubkey: welcomerPubkey,
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
           mlsGroupId: 'test-group-id',
@@ -37,52 +42,165 @@ ChatSummary _chatSummary({
       : null,
 );
 
+class _MockApi extends MockWnApi {
+  FlutterMetadata welcomerMetadata = const FlutterMetadata(custom: {});
+  bool shouldThrow = false;
+
+  @override
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required bool blockingDataSync,
+    required String pubkey,
+  }) async {
+    if (shouldThrow) throw Exception('Network error');
+    return welcomerMetadata;
+  }
+}
+
+final _api = _MockApi();
+
 void main() {
+  setUpAll(() => RustLib.initMock(api: _api));
+  setUp(() {
+    _api.welcomerMetadata = const FlutterMetadata(custom: {});
+    _api.shouldThrow = false;
+  });
+
   Future<void> pumpTile(WidgetTester tester, ChatSummary chatSummary) async {
     await mountWidget(ChatListTile(chatSummary: chatSummary), tester);
+    await tester.pumpAndSettle();
   }
 
   group('ChatListTile', () {
     group('title', () {
-      testWidgets('displays name when present', (tester) async {
+      testWidgets('shows name when present', (tester) async {
         await pumpTile(tester, _chatSummary(name: 'My Group'));
 
         expect(find.text('My Group'), findsOneWidget);
       });
 
-      testWidgets('displays "Unknown user" for DM without name', (tester) async {
-        await pumpTile(tester, _chatSummary(groupType: GroupType.directMessage));
+      testWidgets('shows "Unknown user" for DM without name', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(groupType: GroupType.directMessage),
+        );
 
         expect(find.text('Unknown user'), findsOneWidget);
       });
 
-      testWidgets('displays "Unknown group" for group without name', (tester) async {
+      testWidgets('shows "Unknown group" for group without name', (tester) async {
         await pumpTile(tester, _chatSummary());
 
         expect(find.text('Unknown group'), findsOneWidget);
       });
 
-      testWidgets('displays "Unknown user" for DM with empty name', (tester) async {
-        await pumpTile(tester, _chatSummary(name: '', groupType: GroupType.directMessage));
+      testWidgets('shows "Unknown user" for DM with empty name', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(name: '', groupType: GroupType.directMessage),
+        );
 
         expect(find.text('Unknown user'), findsOneWidget);
       });
     });
 
     group('subtitle', () {
-      testWidgets('displays invite message when pending confirmation', (tester) async {
-        await pumpTile(tester, _chatSummary(pendingConfirmation: true));
+      group('when pending', () {
+        group('DM', () {
+          testWidgets('shows invite message', (tester) async {
+            await pumpTile(
+              tester,
+              _chatSummary(
+                groupType: GroupType.directMessage,
+                pendingConfirmation: true,
+              ),
+            );
 
-        expect(find.text('You have been invited to a secure chat'), findsOneWidget);
+            expect(
+              find.text('Has invited you to a secure chat'),
+              findsOneWidget,
+            );
+          });
+        });
+
+        group('group', () {
+          testWidgets('shows welcomer name in invite when available', (tester) async {
+            _api.welcomerMetadata = const FlutterMetadata(
+              displayName: 'Charlie',
+              custom: {},
+            );
+            await pumpTile(
+              tester,
+              _chatSummary(
+                pendingConfirmation: true,
+                welcomerPubkey: 'welcomer-pubkey',
+              ),
+            );
+
+            expect(
+              find.text('Charlie has invited you to a secure chat'),
+              findsOneWidget,
+            );
+          });
+
+          testWidgets('shows generic invite without welcomer metadata', (tester) async {
+            await pumpTile(
+              tester,
+              _chatSummary(pendingConfirmation: true),
+            );
+
+            expect(
+              find.text('You have been invited to a secure chat'),
+              findsOneWidget,
+            );
+          });
+
+          testWidgets('shows generic invite when metadata fetch fails', (tester) async {
+            _api.shouldThrow = true;
+            await pumpTile(
+              tester,
+              _chatSummary(
+                pendingConfirmation: true,
+                welcomerPubkey: 'welcomer-pubkey',
+              ),
+            );
+
+            expect(
+              find.text('You have been invited to a secure chat'),
+              findsOneWidget,
+            );
+          });
+
+          testWidgets('shows generic invite when metadata has only picture', (tester) async {
+            _api.welcomerMetadata = const FlutterMetadata(
+              picture: 'https://example.com/avatar.png',
+              custom: {},
+            );
+            await pumpTile(
+              tester,
+              _chatSummary(
+                pendingConfirmation: true,
+                welcomerPubkey: 'welcomer-pubkey',
+              ),
+            );
+
+            expect(
+              find.text('You have been invited to a secure chat'),
+              findsOneWidget,
+            );
+          });
+        });
       });
 
-      testWidgets('displays last message content when available', (tester) async {
-        await pumpTile(tester, _chatSummary(lastMessageContent: 'Hello world'));
+      testWidgets('shows last message content when available', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(lastMessageContent: 'Hello world'),
+        );
 
         expect(find.text('Hello world'), findsOneWidget);
       });
 
-      testWidgets('displays empty string when no last message', (tester) async {
+      testWidgets('shows empty string when no last message', (tester) async {
         await pumpTile(tester, _chatSummary());
 
         expect(find.text(''), findsOneWidget);

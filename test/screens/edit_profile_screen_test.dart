@@ -12,9 +12,10 @@ import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
 
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   FlutterMetadata? updatedMetadata;
   String? updatedPubkey;
   bool shouldThrowError = false;
@@ -54,11 +55,6 @@ class _MockApi implements RustLibApi {
   }
 
   @override
-  Future<String> crateApiUtilsGetDefaultBlossomServerUrl() async {
-    return 'https://blossom.example.com';
-  }
-
-  @override
   Future<String> crateApiAccountsUploadAccountProfilePicture({
     required String pubkey,
     required String serverUrl,
@@ -67,9 +63,6 @@ class _MockApi implements RustLibApi {
   }) async {
     return 'https://example.com/picture.jpg';
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {

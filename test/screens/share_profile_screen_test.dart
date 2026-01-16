@@ -10,9 +10,10 @@ import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
     return 'npub1test${hexPubkey.substring(0, 10)}';
@@ -28,9 +29,6 @@ class _MockApi implements RustLibApi {
     picture: 'https://example.com/picture.jpg',
     custom: {},
   );
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {

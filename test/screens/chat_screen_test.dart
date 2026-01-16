@@ -7,10 +7,9 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 const _testPubkey = 'test_pubkey';
@@ -30,7 +29,7 @@ ChatMessage _message(String id, DateTime createdAt, {String pubkey = 'other'}) =
   kind: 9,
 );
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   StreamController<MessageStreamItem>? controller;
   List<ChatMessage> initialMessages = [];
   String groupName = 'Test Group';
@@ -107,39 +106,12 @@ class _MockApi implements RustLibApi {
   }
 
   @override
-  Future<List<String>> crateApiGroupsGroupMembers({
-    required String pubkey,
-    required String groupId,
-  }) {
-    return Future.value([]);
-  }
-
-  @override
-  Future<bool> crateApiGroupsGroupIsDirectMessageType({
-    required Group that,
-    required String accountPubkey,
-  }) {
-    return Future.value(false);
-  }
-
-  @override
-  Future<FlutterMetadata> crateApiUsersUserMetadata({
-    required bool blockingDataSync,
-    required String pubkey,
-  }) {
-    return Future.value(const FlutterMetadata(custom: {}));
-  }
-
-  @override
   Future<String?> crateApiGroupsGetGroupImagePath({
     required String accountPubkey,
     required String groupId,
   }) {
     return Future.value('https://example.com/group.jpg');
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -152,7 +124,6 @@ final _api = _MockApi();
 void main() {
   setUpAll(() => RustLib.initMock(api: _api));
   setUp(() => _api.reset());
-  tearDown(() => _api.reset());
 
   Future<void> pumpChatScreen(WidgetTester tester) async {
     await mountTestApp(

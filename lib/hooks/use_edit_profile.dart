@@ -5,6 +5,7 @@ import 'package:sloth/services/profile_service.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart' as users_api;
+import 'package:sloth/utils/metadata.dart';
 
 final _logger = Logger('useEditProfile');
 
@@ -100,7 +101,7 @@ useEditProfile(String pubkey) {
         pubkey: pubkey,
         blockingDataSync: false,
       );
-      final displayName = metadata.displayName ?? metadata.name ?? '';
+      final displayName = presentName(metadata) ?? '';
       final about = metadata.about ?? '';
       final nip05 = metadata.nip05 ?? '';
       displayNameController.text = displayName;
@@ -193,7 +194,7 @@ useEditProfile(String pubkey) {
         metadata: updatedMetadata,
       );
 
-      final displayName = updatedMetadata.displayName ?? updatedMetadata.name ?? '';
+      final displayName = presentName(updatedMetadata) ?? '';
       final about = updatedMetadata.about ?? '';
       final nip05 = updatedMetadata.nip05 ?? '';
       displayNameController.text = displayName;
@@ -220,8 +221,7 @@ useEditProfile(String pubkey) {
 
   void discardChanges() {
     if (state.value.currentMetadata == null) return;
-    final displayName =
-        state.value.currentMetadata?.displayName ?? state.value.currentMetadata?.name ?? '';
+    final displayName = presentName(state.value.currentMetadata) ?? '';
     final about = state.value.currentMetadata?.about ?? '';
     final nip05 = state.value.currentMetadata?.nip05 ?? '';
     displayNameController.text = displayName;

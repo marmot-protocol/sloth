@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
@@ -6,61 +7,59 @@ import 'package:sloth/screens/chat_invite_screen.dart';
 import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
-import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
-import 'package:sloth/src/rust/api/groups.dart' show GroupType;
-import 'package:sloth/src/rust/api/messages.dart' show MessageStreamItem, ChatMessage;
-import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/api/chat_list.dart';
+import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-ChatSummary _chatSummaryFactory({required String id, required bool pendingConfirmation}) =>
-    ChatSummary(
-      mlsGroupId: 'mls_$id',
-      name: 'Chat $id',
-      groupType: GroupType.group,
-      createdAt: DateTime(2024),
-      pendingConfirmation: pendingConfirmation,
-      unreadCount: BigInt.zero,
-    );
+ChatSummary _chatSummary({required String id, required bool pendingConfirmation}) => ChatSummary(
+  mlsGroupId: 'mls_$id',
+  name: 'Chat $id',
+  groupType: GroupType.group,
+  createdAt: DateTime(2024),
+  pendingConfirmation: pendingConfirmation,
+  unreadCount: BigInt.zero,
+);
 
-class _MockApi implements RustLibApi {
-  List<ChatSummary> chatList = [];
-  int chatListCallCount = 0;
+class _MockApi extends MockWnApi {
+  StreamController<ChatListStreamItem>? controller;
+  List<ChatSummary> initialChats = [];
+
+  void reset() {
+    controller?.close();
+    controller = null;
+    initialChats = [];
+  }
 
   @override
-  Future<FlutterMetadata> crateApiUsersUserMetadata({
-    required bool blockingDataSync,
-    required String pubkey,
-  }) async => const FlutterMetadata(custom: {});
-
-  @override
-  Future<List<ChatSummary>> crateApiChatListGetChatList({
+  Stream<ChatListStreamItem> crateApiChatListSubscribeToChatList({
     required String accountPubkey,
-  }) async {
-    chatListCallCount++;
-    return chatList;
+  }) {
+    controller?.close();
+    controller = StreamController<ChatListStreamItem>.broadcast();
+    Future.microtask(() {
+      controller?.add(ChatListStreamItem.initialSnapshot(items: initialChats));
+    });
+    return controller!.stream;
   }
 
   @override
-  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
+  Future<Group> crateApiGroupsGetGroup({
+    required String accountPubkey,
     required String groupId,
-  }) async* {
-    yield const MessageStreamItem.initialSnapshot(messages: []);
-  }
-
-  @override
-  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
-    required String pubkey,
-    required String groupId,
-  }) async {
-    return [];
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+  }) async => Group(
+    mlsGroupId: groupId,
+    nostrGroupId: '',
+    name: 'Test',
+    description: '',
+    adminPubkeys: const [],
+    epoch: BigInt.zero,
+    state: GroupState.active,
+  );
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -75,11 +74,7 @@ final _api = _MockApi();
 
 void main() {
   setUpAll(() => RustLib.initMock(api: _api));
-
-  setUp(() {
-    _api.chatList = [];
-    _api.chatListCallCount = 0;
-  });
+  setUp(() => _api.reset());
 
   Future<void> pumpChatListScreen(WidgetTester tester) async {
     await mountTestApp(
@@ -92,11 +87,13 @@ void main() {
   group('ChatListScreen', () {
     testWidgets('displays account bar', (tester) async {
       await pumpChatListScreen(tester);
+
       expect(find.byType(WnAccountBar), findsOneWidget);
     });
 
     testWidgets('displays slate container', (tester) async {
       await pumpChatListScreen(tester);
+
       expect(find.byType(WnSlateContainer), findsOneWidget);
     });
 
@@ -104,6 +101,7 @@ void main() {
       await pumpChatListScreen(tester);
       await tester.tap(find.byKey(const Key('avatar_button')));
       await tester.pumpAndSettle();
+
       expect(find.byType(SettingsScreen), findsOneWidget);
     });
 
@@ -111,72 +109,66 @@ void main() {
       await pumpChatListScreen(tester);
       await tester.tap(find.byKey(const Key('chat_add_button')));
       await tester.pumpAndSettle();
+
       expect(find.byType(WipScreen), findsOneWidget);
     });
 
     group('without chats', () {
-      setUp(() => _api.chatList = []);
       testWidgets('shows no chats message', (tester) async {
         await pumpChatListScreen(tester);
+
         expect(find.text('No chats yet'), findsOneWidget);
       });
 
-      testWidgets('shows pull to refresh hint', (tester) async {
+      testWidgets('shows start conversation hint', (tester) async {
         await pumpChatListScreen(tester);
-        expect(find.text('Pull down to refresh'), findsOneWidget);
-      });
 
-      testWidgets('pull to refresh triggers refetch', (tester) async {
-        await pumpChatListScreen(tester);
-        final callsBefore = _api.chatListCallCount;
-        await tester.fling(
-          find.byType(SingleChildScrollView),
-          const Offset(0, 300),
-          1000,
-        );
-        await tester.pumpAndSettle();
-        expect(_api.chatListCallCount, greaterThan(callsBefore));
+        expect(find.text('Start a conversation'), findsOneWidget);
       });
     });
 
     group('with chats', () {
       setUp(
-        () => _api.chatList = [
-          _chatSummaryFactory(id: 'c1', pendingConfirmation: true),
-          _chatSummaryFactory(id: 'c2', pendingConfirmation: false),
+        () => _api.initialChats = [
+          _chatSummary(id: 'c1', pendingConfirmation: true),
+          _chatSummary(id: 'c2', pendingConfirmation: false),
         ],
       );
 
       testWidgets('shows chat tiles', (tester) async {
         await pumpChatListScreen(tester);
+
         expect(find.byType(ChatListTile), findsNWidgets(2));
+      });
+
+      testWidgets('shows chat tiles in the correct order', (tester) async {
+        await pumpChatListScreen(tester);
+        final tiles = tester.widgetList<ChatListTile>(find.byType(ChatListTile)).toList();
+
+        expect(tiles.first.key, const Key('mls_c1'));
+        expect(tiles.last.key, const Key('mls_c2'));
       });
 
       testWidgets('hides empty state', (tester) async {
         await pumpChatListScreen(tester);
+
         expect(find.text('No chats yet'), findsNothing);
       });
 
-      testWidgets('tapping pending chat tile navigates to invite screen', (tester) async {
+      testWidgets('tapping pending chat navigates to invite screen', (tester) async {
         await pumpChatListScreen(tester);
         await tester.tap(find.byType(ChatListTile).first);
         await tester.pumpAndSettle();
+
         expect(find.byType(ChatInviteScreen), findsOneWidget);
       });
 
-      testWidgets('tapping accepted chat tile navigates to chat screen', (tester) async {
+      testWidgets('tapping accepted chat navigates to chat screen', (tester) async {
         await pumpChatListScreen(tester);
         await tester.tap(find.byType(ChatListTile).last);
         await tester.pumpAndSettle();
-        expect(find.byType(ChatScreen), findsOneWidget);
-      });
 
-      testWidgets('pull to refresh triggers refetch', (tester) async {
-        await pumpChatListScreen(tester);
-        final callsBefore = _api.chatListCallCount;
-        await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
-        await tester.pumpAndSettle();
-        expect(_api.chatListCallCount, greaterThan(callsBefore));
+        expect(find.byType(ChatScreen), findsOneWidget);
       });
     });
   });

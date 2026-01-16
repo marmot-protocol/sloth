@@ -9,11 +9,13 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   List<FlutterEvent> keyPackages = [];
   String? deletedKeyPackageId;
+  bool shouldThrowOnFetch = false;
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -24,7 +26,10 @@ class _MockApi implements RustLibApi {
   @override
   Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({
     required String accountPubkey,
-  }) async => keyPackages;
+  }) async {
+    if (shouldThrowOnFetch) throw Exception('Network error');
+    return keyPackages;
+  }
 
   @override
   Future<void> crateApiAccountsPublishAccountKeyPackage({
@@ -44,9 +49,6 @@ class _MockApi implements RustLibApi {
   Future<BigInt> crateApiAccountsDeleteAccountKeyPackages({
     required String accountPubkey,
   }) async => BigInt.from(keyPackages.length);
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -68,6 +70,7 @@ void main() {
   setUp(() {
     mockApi.keyPackages = [];
     mockApi.deletedKeyPackageId = null;
+    mockApi.shouldThrowOnFetch = false;
   });
 
   Future<void> pumpScreen(WidgetTester tester) async {
@@ -144,6 +147,14 @@ void main() {
       await tester.tap(find.byKey(const Key('delete_key_package_pkg_to_delete')));
       await tester.pump();
       expect(mockApi.deletedKeyPackageId, 'pkg_to_delete');
+    });
+
+    testWidgets('displays user-friendly error message on fetch failure', (tester) async {
+      mockApi.shouldThrowOnFetch = true;
+
+      await pumpScreen(tester);
+
+      expect(find.text('Failed to fetch key packages'), findsOneWidget);
     });
   });
 }

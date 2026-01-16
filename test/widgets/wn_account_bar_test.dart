@@ -9,9 +9,10 @@ import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
     required bool blockingDataSync,
