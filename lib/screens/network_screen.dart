@@ -20,83 +20,10 @@ class NetworkScreen extends HookConsumerWidget {
     final pubkey = ref.watch(accountPubkeyProvider);
     final (:state, :fetchAll, :addRelay, :removeRelay) = useNetworkRelays(pubkey);
 
-    final myRelayHelpIconKey = useMemoized(() => GlobalKey());
-    final inboxRelayHelpIconKey = useMemoized(() => GlobalKey());
-    final keyPackageRelayHelpIconKey = useMemoized(() => GlobalKey());
-    final currentOpenTooltipKey = useState<GlobalKey?>(null);
-    final tooltipOverlay = useState<OverlayEntry?>(null);
-
     useEffect(() {
       fetchAll();
       return null;
     }, const []);
-
-    useEffect(() {
-      return () {
-        tooltipOverlay.value?.remove();
-      };
-    }, const []);
-
-    void hideTooltip() {
-      tooltipOverlay.value?.remove();
-      tooltipOverlay.value = null;
-      currentOpenTooltipKey.value = null;
-    }
-
-    void showHelpTooltip(GlobalKey key, String message) {
-      hideTooltip();
-
-      final renderBox = key.currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox == null) return;
-
-      final overlay = Overlay.of(context);
-      final position = renderBox.localToGlobal(Offset.zero);
-
-      final overlayEntry = OverlayEntry(
-        builder: (context) => GestureDetector(
-          behavior: HitTestBehavior.translucent,
-          onTap: hideTooltip,
-          child: Stack(
-            children: [
-              Positioned(
-                left: 16.w,
-                right: 16.w,
-                top: position.dy + 24.h,
-                child: Material(
-                  color: Colors.transparent,
-                  child: Container(
-                    constraints: BoxConstraints(maxWidth: 300.w),
-                    padding: EdgeInsets.all(12.w),
-                    decoration: BoxDecoration(
-                      color: colors.backgroundSecondary,
-                      borderRadius: BorderRadius.circular(8.r),
-                      boxShadow: [
-                        BoxShadow(
-                          color: colors.shadow.withValues(alpha: 0.2),
-                          blurRadius: 8,
-                          offset: const Offset(0, 4),
-                        ),
-                      ],
-                    ),
-                    child: Text(
-                      message,
-                      style: TextStyle(
-                        fontSize: 12.sp,
-                        color: colors.foregroundSecondary,
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      );
-
-      overlay.insert(overlayEntry);
-      tooltipOverlay.value = overlayEntry;
-      currentOpenTooltipKey.value = key;
-    }
 
     void showAddRelaySheet(RelayCategory category) {
       WnAddRelayBottomSheet.show(
@@ -107,7 +34,6 @@ class NetworkScreen extends HookConsumerWidget {
 
     Widget buildSectionHeader({
       required String title,
-      required GlobalKey helpIconKey,
       required String helpMessage,
       required Key infoIconKey,
       required Key addIconKey,
@@ -130,10 +56,29 @@ class NetworkScreen extends HookConsumerWidget {
                   ),
                 ),
                 Gap(8.w),
-                GestureDetector(
-                  key: helpIconKey,
-                  onTap: () => showHelpTooltip(helpIconKey, helpMessage),
-                  behavior: HitTestBehavior.opaque,
+                Tooltip(
+                  message: helpMessage,
+                  triggerMode: TooltipTriggerMode.tap,
+                  showDuration: const Duration(minutes: 1),
+                  preferBelow: true,
+                  verticalOffset: 20.h,
+                  margin: EdgeInsets.symmetric(horizontal: 16.w),
+                  decoration: BoxDecoration(
+                    color: colors.backgroundSecondary,
+                    borderRadius: BorderRadius.circular(8.r),
+                    boxShadow: [
+                      BoxShadow(
+                        color: colors.shadow.withValues(alpha: 0.2),
+                        blurRadius: 8,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  textStyle: TextStyle(
+                    fontSize: 12.sp,
+                    color: colors.foregroundSecondary,
+                  ),
+                  padding: EdgeInsets.all(12.w),
                   child: Padding(
                     padding: EdgeInsets.all(4.w),
                     child: Icon(
@@ -208,82 +153,76 @@ class NetworkScreen extends HookConsumerWidget {
       );
     }
 
-    return GestureDetector(
-      onTap: hideTooltip,
-      child: Scaffold(
-        backgroundColor: colors.backgroundPrimary,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 16.h),
-            child: WnSlateContainer(
-              child: Column(
-                children: [
-                  const WnScreenHeader(title: 'Network Relays'),
-                  Expanded(
-                    child: ListView(
-                      padding: EdgeInsets.only(top: 16.h),
-                      children: [
-                        RepaintBoundary(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              buildSectionHeader(
-                                title: 'My Relays',
-                                helpIconKey: myRelayHelpIconKey,
-                                helpMessage:
-                                    'Relays you have defined for use across all your Nostr applications.',
-                                infoIconKey: const Key('info_icon_my_relays'),
-                                addIconKey: const Key('add_icon_my_relays'),
-                                onAdd: () => showAddRelaySheet(RelayCategory.normal),
-                              ),
-                              Gap(12.h),
-                              buildRelayList(state.normalRelays, RelayCategory.normal),
-                            ],
-                          ),
+    return Scaffold(
+      backgroundColor: colors.backgroundPrimary,
+      body: SafeArea(
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 16.h),
+          child: WnSlateContainer(
+            child: Column(
+              children: [
+                const WnScreenHeader(title: 'Network Relays'),
+                Expanded(
+                  child: ListView(
+                    padding: EdgeInsets.only(top: 16.h),
+                    children: [
+                      RepaintBoundary(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildSectionHeader(
+                              title: 'My Relays',
+                              helpMessage:
+                                  'Relays you have defined for use across all your Nostr applications.',
+                              infoIconKey: const Key('info_icon_my_relays'),
+                              addIconKey: const Key('add_icon_my_relays'),
+                              onAdd: () => showAddRelaySheet(RelayCategory.normal),
+                            ),
+                            Gap(12.h),
+                            buildRelayList(state.normalRelays, RelayCategory.normal),
+                          ],
                         ),
-                        Gap(16.h),
-                        RepaintBoundary(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              buildSectionHeader(
-                                title: 'Inbox Relays',
-                                helpIconKey: inboxRelayHelpIconKey,
-                                helpMessage:
-                                    'Relays used to receive invitations and start secure conversations with new users.',
-                                infoIconKey: const Key('info_icon_inbox_relays'),
-                                addIconKey: const Key('add_icon_inbox_relays'),
-                                onAdd: () => showAddRelaySheet(RelayCategory.inbox),
-                              ),
-                              Gap(12.h),
-                              buildRelayList(state.inboxRelays, RelayCategory.inbox),
-                            ],
-                          ),
+                      ),
+                      Gap(16.h),
+                      RepaintBoundary(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildSectionHeader(
+                              title: 'Inbox Relays',
+                              helpMessage:
+                                  'Relays used to receive invitations and start secure conversations with new users.',
+                              infoIconKey: const Key('info_icon_inbox_relays'),
+                              addIconKey: const Key('add_icon_inbox_relays'),
+                              onAdd: () => showAddRelaySheet(RelayCategory.inbox),
+                            ),
+                            Gap(12.h),
+                            buildRelayList(state.inboxRelays, RelayCategory.inbox),
+                          ],
                         ),
-                        Gap(16.h),
-                        RepaintBoundary(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              buildSectionHeader(
-                                title: 'Key Package Relays',
-                                helpIconKey: keyPackageRelayHelpIconKey,
-                                helpMessage:
-                                    'Relays that store your secure key so others can invite you to encrypted conversations.',
-                                infoIconKey: const Key('info_icon_key_package_relays'),
-                                addIconKey: const Key('add_icon_key_package_relays'),
-                                onAdd: () => showAddRelaySheet(RelayCategory.keyPackage),
-                              ),
-                              Gap(12.h),
-                              buildRelayList(state.keyPackageRelays, RelayCategory.keyPackage),
-                            ],
-                          ),
+                      ),
+                      Gap(16.h),
+                      RepaintBoundary(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildSectionHeader(
+                              title: 'Key Package Relays',
+                              helpMessage:
+                                  'Relays that store your secure key so others can invite you to encrypted conversations.',
+                              infoIconKey: const Key('info_icon_key_package_relays'),
+                              addIconKey: const Key('add_icon_key_package_relays'),
+                              onAdd: () => showAddRelaySheet(RelayCategory.keyPackage),
+                            ),
+                            Gap(12.h),
+                            buildRelayList(state.keyPackageRelays, RelayCategory.keyPackage),
+                          ],
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),

@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Key, Offset, Scaffold, TextFormField;
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
@@ -9,9 +9,10 @@ import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_relay_type.dart';
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   List<Relay> normalRelays = [];
   List<Relay> inboxRelays = [];
   List<Relay> keyPackageRelays = [];
@@ -73,9 +74,6 @@ class _MockApi implements RustLibApi {
   }) async {
     return relayStatuses;
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -156,117 +154,62 @@ void main() {
     });
 
     group('tooltip', () {
-      testWidgets('shows tooltip when My Relays info icon is tapped', (tester) async {
+      testWidgets('My Relays section has tooltip with correct message', (tester) async {
         await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
+        final tooltipFinder = find.ancestor(
+          of: find.byKey(const Key('info_icon_my_relays')),
+          matching: find.byType(Tooltip),
+        );
+        expect(tooltipFinder, findsOneWidget);
+        final tooltip = tester.widget<Tooltip>(tooltipFinder);
         expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsOneWidget,
+          tooltip.message,
+          'Relays you have defined for use across all your Nostr applications.',
         );
       });
 
-      testWidgets('shows tooltip when Inbox Relays info icon is tapped', (tester) async {
+      testWidgets('Inbox Relays section has tooltip with correct message', (tester) async {
         await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_inbox_relays')));
-        await tester.pumpAndSettle();
+        final tooltipFinder = find.ancestor(
+          of: find.byKey(const Key('info_icon_inbox_relays')),
+          matching: find.byType(Tooltip),
+        );
+        expect(tooltipFinder, findsOneWidget);
+        final tooltip = tester.widget<Tooltip>(tooltipFinder);
         expect(
-          find.text(
-            'Relays used to receive invitations and start secure conversations with new users.',
-          ),
-          findsOneWidget,
+          tooltip.message,
+          'Relays used to receive invitations and start secure conversations with new users.',
         );
       });
 
-      testWidgets('shows tooltip when Key Package Relays info icon is tapped', (tester) async {
+      testWidgets('Key Package Relays section has tooltip with correct message', (tester) async {
         await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_key_package_relays')));
-        await tester.pumpAndSettle();
+        final tooltipFinder = find.ancestor(
+          of: find.byKey(const Key('info_icon_key_package_relays')),
+          matching: find.byType(Tooltip),
+        );
+        expect(tooltipFinder, findsOneWidget);
+        final tooltip = tester.widget<Tooltip>(tooltipFinder);
         expect(
-          find.text(
-            'Relays that store your secure key so others can invite you to encrypted conversations.',
-          ),
-          findsOneWidget,
+          tooltip.message,
+          'Relays that store your secure key so others can invite you to encrypted conversations.',
         );
       });
 
-      testWidgets('hides tooltip when tapped outside', (tester) async {
+      testWidgets('all tooltips use tap trigger mode', (tester) async {
         await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsOneWidget,
-        );
-
-        await tester.tapAt(const Offset(10, 10));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsNothing,
-        );
+        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
+        for (final tooltip in tooltips) {
+          expect(tooltip.triggerMode, TooltipTriggerMode.tap);
+        }
       });
 
-      testWidgets('hides tooltip when same info icon is tapped again', (tester) async {
+      testWidgets('all tooltips have one minute show duration', (tester) async {
         await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsOneWidget,
-        );
-
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsNothing,
-        );
-      });
-
-      testWidgets('switches tooltip when different info icon is tapped', (tester) async {
-        await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsOneWidget,
-        );
-
-        await tester.tapAt(const Offset(10, 10));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsNothing,
-        );
-
-        await tester.tap(find.byKey(const Key('info_icon_inbox_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text(
-            'Relays used to receive invitations and start secure conversations with new users.',
-          ),
-          findsOneWidget,
-        );
-      });
-
-      testWidgets('cleans up tooltip when screen is disposed', (tester) async {
-        await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsOneWidget,
-        );
-
-        final closeButton = find.byKey(const Key('close_button'));
-        await tester.tap(closeButton);
-        await tester.pumpAndSettle();
-
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsNothing,
-        );
+        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
+        for (final tooltip in tooltips) {
+          expect(tooltip.showDuration, const Duration(minutes: 1));
+        }
       });
     });
 
@@ -307,8 +250,7 @@ void main() {
         await tester.pump(const Duration(milliseconds: 600));
         await tester.pumpAndSettle();
 
-        final addRelayButton = find.text('Add Relay');
-        await tester.tap(addRelayButton.last);
+        await tester.tap(find.byKey(const Key('add_relay_submit_button')));
         await tester.pumpAndSettle();
         await tester.pump(const Duration(milliseconds: 600));
 
@@ -364,23 +306,15 @@ void main() {
         expect(find.byKey(const Key('close_button')), findsOneWidget);
       });
 
-      testWidgets('hides tooltip when GestureDetector onTap is triggered', (tester) async {
+      testWidgets('close button pops the screen', (tester) async {
         await pumpNetworkScreen(tester);
-        await tester.tap(find.byKey(const Key('info_icon_my_relays')));
-        await tester.pumpAndSettle();
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsOneWidget,
-        );
 
-        final scaffold = find.byType(Scaffold);
-        await tester.tap(scaffold.first, warnIfMissed: false);
+        expect(find.text('Network Relays'), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('close_button')));
         await tester.pumpAndSettle();
 
-        expect(
-          find.text('Relays you have defined for use across all your Nostr applications.'),
-          findsNothing,
-        );
+        expect(find.text('Network Relays'), findsNothing);
       });
     });
   });

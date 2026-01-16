@@ -140,7 +140,7 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
-      await tester.tap(find.text('Add Relay').last);
+      await tester.tap(find.byKey(const Key('add_relay_submit_button')));
       await tester.pumpAndSettle();
 
       expect(addedUrl, 'wss://relay.example.com');
@@ -171,7 +171,7 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
-      await tester.tap(find.text('Add Relay').last);
+      await tester.tap(find.byKey(const Key('add_relay_submit_button')));
       await tester.pumpAndSettle();
 
       expect(find.text('Enter relay address'), findsNothing);
