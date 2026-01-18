@@ -31,11 +31,6 @@ class _MockApi extends MockWnApi {
   );
 
   @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
   }

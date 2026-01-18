@@ -7,8 +7,6 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/src/rust/frb_generated.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';

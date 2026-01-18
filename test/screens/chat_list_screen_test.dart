@@ -10,7 +10,6 @@ import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
-import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
@@ -68,16 +67,6 @@ class _MockApi extends MockWnApi {
     required String pubkey,
     required String groupId,
   }) async {
-    return [];
-  }
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
-  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
     return [];
   }
 }

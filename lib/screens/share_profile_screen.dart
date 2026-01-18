@@ -98,6 +98,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                     ),
                                     Gap(8.w),
                                     IconButton(
+                                      key: const Key('copy_button'),
                                       onPressed: npub != null ? () => copyToClipboard(npub) : null,
                                       icon: Icon(
                                         Icons.copy,

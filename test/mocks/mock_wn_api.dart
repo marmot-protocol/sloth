@@ -13,6 +13,11 @@ class MockWnApi implements RustLibApi {
   }
 
   @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    return 'npub1test${hexPubkey.substring(0, 10)}';
+  }
+
+  @override
   Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
     required String pubkey,
     required String groupId,

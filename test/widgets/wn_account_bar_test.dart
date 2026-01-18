@@ -7,7 +7,6 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_wn_api.dart';
@@ -19,19 +18,6 @@ class _MockApi extends MockWnApi {
     required bool blockingDataSync,
     required String pubkey,
   }) async => const FlutterMetadata(custom: {});
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
-  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
-    return [];
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
