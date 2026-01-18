@@ -9,11 +9,23 @@ import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
+import 'package:sloth/widgets/wn_message_menu.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 const _testPubkey = 'test_pubkey';
 const _testGroupId = 'test_group_id';
+
+class _MockTag implements Tag {
+  final List<String> vec;
+  _MockTag(this.vec);
+
+  @override
+  void dispose() {}
+
+  @override
+  bool get isDisposed => false;
+}
 
 ChatMessage _message(
   String id,
@@ -39,7 +51,10 @@ class _MockApi extends MockWnApi {
   List<ChatMessage> initialMessages = [];
   String groupName = 'Test Group';
   final List<String> sentMessages = [];
+  final List<({String groupId, int kind, List<Tag>? tags})> deletionCalls = [];
   Exception? sendError;
+  Exception? deleteError;
+  int _sendCallCount = 0;
 
   @override
   void reset() {
@@ -48,7 +63,15 @@ class _MockApi extends MockWnApi {
     initialMessages = [];
     groupName = 'Test Group';
     sentMessages.clear();
+    deletionCalls.clear();
     sendError = null;
+    deleteError = null;
+    _sendCallCount = 0;
+  }
+
+  @override
+  Future<Tag> crateApiUtilsTagFromVec({required List<String> vec}) async {
+    return _MockTag(vec);
   }
 
   void emitMessage(ChatMessage message) {
@@ -67,10 +90,18 @@ class _MockApi extends MockWnApi {
     required int kind,
     List<Tag>? tags,
   }) async {
-    if (sendError != null) throw sendError!;
-    sentMessages.add(message);
+    _sendCallCount++;
+    // Deletion messages have kind 5
+    // NIP-09: https://github.com/nostr-protocol/nips/blob/master/09.md
+    if (kind == 5) {
+      if (deleteError != null) throw deleteError!;
+      deletionCalls.add((groupId: groupId, kind: kind, tags: tags));
+    } else {
+      if (sendError != null) throw sendError!;
+      sentMessages.add(message);
+    }
     return MessageWithTokens(
-      id: 'sent_${sentMessages.length}',
+      id: 'mock_$_sendCallCount',
       pubkey: pubkey,
       kind: kind,
       createdAt: DateTime.now(),
@@ -383,6 +414,137 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(position.pixels, 0);
+      });
+    });
+
+    group('message menu', () {
+      Future<void> longPressMessage(WidgetTester tester, String messageId) async {
+        final messageFinder = find.text('Message $messageId');
+        await tester.longPress(messageFinder);
+        await tester.pumpAndSettle();
+      }
+
+      testWidgets('opens on long press', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await longPressMessage(tester, 'm1');
+
+        expect(find.byType(WnMessageMenu), findsOneWidget);
+      });
+
+      testWidgets('shows Delete button for own message', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024), pubkey: _testPubkey),
+        ];
+        await pumpChatScreen(tester);
+
+        await longPressMessage(tester, 'm1');
+
+        expect(find.text('Delete'), findsOneWidget);
+      });
+
+      testWidgets('hides Delete button for other user message', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024), pubkey: 'other_user'),
+        ];
+        await pumpChatScreen(tester);
+
+        await longPressMessage(tester, 'm1');
+
+        expect(find.text('Delete'), findsNothing);
+      });
+
+      testWidgets('closes when close button is tapped', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await longPressMessage(tester, 'm1');
+
+        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnMessageMenu), findsNothing);
+      });
+
+      group('message deletion', () {
+        testWidgets('calls API when Delete is tapped', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), pubkey: _testPubkey),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('Delete'));
+          await tester.pumpAndSettle();
+
+          expect(_api.deletionCalls.length, 1);
+        });
+
+        testWidgets('closes menu after deletion', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), pubkey: _testPubkey),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('Delete'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(WnMessageMenu), findsNothing);
+        });
+
+        testWidgets('sends deletion to correct group', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), pubkey: _testPubkey),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('Delete'));
+          await tester.pumpAndSettle();
+
+          expect(_api.deletionCalls.first.groupId, _testGroupId);
+        });
+
+        testWidgets('deletes expected message id', (tester) async {
+          _api.initialMessages = [
+            _message('msg_to_delete', DateTime(2024), pubkey: _testPubkey),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'msg_to_delete');
+
+          await tester.tap(find.text('Delete'));
+          await tester.pumpAndSettle();
+
+          final tags = _api.deletionCalls.first.tags!.cast<_MockTag>();
+          expect(tags[0].vec, ['e', 'msg_to_delete']);
+        });
+
+        testWidgets('shows error snackbar when deletion fails', (tester) async {
+          _api.deleteError = Exception('Network error');
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), pubkey: _testPubkey),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('Delete'));
+          await tester.pumpAndSettle();
+
+          expect(_api.deletionCalls.length, 0);
+          expect(find.text('Failed to delete message. Please try again.'), findsOneWidget);
+          expect(find.byType(WnMessageMenu), findsNothing);
+        });
       });
     });
   });
