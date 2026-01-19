@@ -19,6 +19,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Show chats in chat list screen and messages in chat invite screen [PR #15](https://github.com/marmot-protocol/sloth/pull/15)
 - Profile (keys, edit, share) screens [PR #22](https://github.com/marmot-protocol/sloth/pull/22)
 - Send messages [PR #33](https://github.com/marmot-protocol/sloth/pull/33)
+- Network relays screen [PR #43](https://github.com/marmot-protocol/sloth/pull/43)
 
 
 ### Changed

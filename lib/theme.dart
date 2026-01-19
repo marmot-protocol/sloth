@@ -9,6 +9,7 @@ typedef ThemeColors = ({
   Color foregroundTertiary,
   Color shadow,
   Color error,
+  Color success,
 });
 
 const ThemeColors lightColors = (
@@ -20,6 +21,7 @@ const ThemeColors lightColors = (
   foregroundTertiary: Color(0xFF737373),
   shadow: Color(0x0A0D120F),
   error: Color(0xffB91C1C),
+  success: Color(0xFF22C55E),
 );
 
 const ThemeColors darkColors = (
@@ -31,6 +33,7 @@ const ThemeColors darkColors = (
   foregroundTertiary: Color(0xFF737373),
   shadow: Color(0xFFFAFAFA),
   error: Color(0xffB91C1C),
+  success: Color(0xFF22C55E),
 );
 
 final lightTheme = ThemeData(

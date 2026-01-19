@@ -1,0 +1,321 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/routes.dart';
+import 'package:sloth/src/rust/api/accounts.dart';
+import 'package:sloth/src/rust/api/relays.dart';
+import 'package:sloth/src/rust/frb_generated.dart';
+
+import '../mocks/mock_relay_type.dart';
+import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
+import '../test_helpers.dart';
+
+class _MockApi extends MockWnApi {
+  List<Relay> normalRelays = [];
+  List<Relay> inboxRelays = [];
+  List<Relay> keyPackageRelays = [];
+  List<(String, String)> relayStatuses = [];
+  List<String> addedRelays = [];
+  List<String> removedRelays = [];
+
+  @override
+  Future<RelayType> crateApiRelaysRelayTypeNip65() async => MockRelayType('nip65');
+
+  @override
+  Future<RelayType> crateApiRelaysRelayTypeInbox() async => MockRelayType('inbox');
+
+  @override
+  Future<RelayType> crateApiRelaysRelayTypeKeyPackage() async => MockRelayType('keyPackage');
+
+  @override
+  Future<List<Relay>> crateApiAccountsAccountRelays({
+    required String pubkey,
+    required RelayType relayType,
+  }) async {
+    final type = (relayType as MockRelayType).type;
+    if (type == 'nip65') return normalRelays;
+    if (type == 'inbox') return inboxRelays;
+    if (type == 'keyPackage') return keyPackageRelays;
+    return [];
+  }
+
+  @override
+  Future<void> crateApiAccountsAddAccountRelay({
+    required String pubkey,
+    required String url,
+    required RelayType relayType,
+  }) async {
+    addedRelays.add(url);
+    final relay = Relay(url: url, createdAt: DateTime.now(), updatedAt: DateTime.now());
+    final type = (relayType as MockRelayType).type;
+    if (type == 'nip65') normalRelays.add(relay);
+    if (type == 'inbox') inboxRelays.add(relay);
+    if (type == 'keyPackage') keyPackageRelays.add(relay);
+  }
+
+  @override
+  Future<void> crateApiAccountsRemoveAccountRelay({
+    required String pubkey,
+    required String url,
+    required RelayType relayType,
+  }) async {
+    removedRelays.add(url);
+    final type = (relayType as MockRelayType).type;
+    if (type == 'nip65') normalRelays.removeWhere((r) => r.url == url);
+    if (type == 'inbox') inboxRelays.removeWhere((r) => r.url == url);
+    if (type == 'keyPackage') keyPackageRelays.removeWhere((r) => r.url == url);
+  }
+
+  @override
+  Future<List<(String, String)>> crateApiRelaysGetAccountRelayStatuses({
+    required String pubkey,
+  }) async {
+    return relayStatuses;
+  }
+}
+
+class _MockAuthNotifier extends AuthNotifier {
+  @override
+  Future<String?> build() async {
+    state = const AsyncData('test_pubkey');
+    return 'test_pubkey';
+  }
+}
+
+void main() {
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.normalRelays = [];
+    mockApi.inboxRelays = [];
+    mockApi.keyPackageRelays = [];
+    mockApi.relayStatuses = [];
+    mockApi.addedRelays = [];
+    mockApi.removedRelays = [];
+  });
+
+  Future<void> pumpNetworkScreen(WidgetTester tester) async {
+    await mountTestApp(
+      tester,
+      overrides: [
+        authProvider.overrideWith(() => _MockAuthNotifier()),
+        secureStorageProvider.overrideWithValue(MockSecureStorage()),
+      ],
+    );
+    Routes.pushToNetwork(tester.element(find.byType(Scaffold)));
+    await tester.pumpAndSettle();
+  }
+
+  group('NetworkScreen', () {
+    testWidgets('displays Network Relays title', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.text('Network Relays'), findsOneWidget);
+    });
+
+    testWidgets('displays My Relays section', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.text('My Relays'), findsOneWidget);
+    });
+
+    testWidgets('displays Inbox Relays section', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.text('Inbox Relays'), findsOneWidget);
+    });
+
+    testWidgets('displays Key Package Relays section', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.text('Key Package Relays'), findsOneWidget);
+    });
+
+    testWidgets('displays info icons for each section', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.byKey(const Key('info_icon_my_relays')), findsOneWidget);
+      expect(find.byKey(const Key('info_icon_inbox_relays')), findsOneWidget);
+      expect(find.byKey(const Key('info_icon_key_package_relays')), findsOneWidget);
+    });
+
+    testWidgets('displays add icons for each section', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.byKey(const Key('add_icon_my_relays')), findsOneWidget);
+      expect(find.byKey(const Key('add_icon_inbox_relays')), findsOneWidget);
+      expect(find.byKey(const Key('add_icon_key_package_relays')), findsOneWidget);
+    });
+
+    testWidgets('displays "No relays configured" for empty sections', (tester) async {
+      await pumpNetworkScreen(tester);
+      expect(find.text('No relays configured'), findsNWidgets(3));
+    });
+
+    group('tooltip', () {
+      testWidgets('My Relays section has tooltip with correct message', (tester) async {
+        await pumpNetworkScreen(tester);
+        final tooltipFinder = find.ancestor(
+          of: find.byKey(const Key('info_icon_my_relays')),
+          matching: find.byType(Tooltip),
+        );
+        expect(tooltipFinder, findsOneWidget);
+        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        expect(
+          tooltip.message,
+          'Relays you have defined for use across all your Nostr applications.',
+        );
+      });
+
+      testWidgets('Inbox Relays section has tooltip with correct message', (tester) async {
+        await pumpNetworkScreen(tester);
+        final tooltipFinder = find.ancestor(
+          of: find.byKey(const Key('info_icon_inbox_relays')),
+          matching: find.byType(Tooltip),
+        );
+        expect(tooltipFinder, findsOneWidget);
+        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        expect(
+          tooltip.message,
+          'Relays used to receive invitations and start secure conversations with new users.',
+        );
+      });
+
+      testWidgets('Key Package Relays section has tooltip with correct message', (tester) async {
+        await pumpNetworkScreen(tester);
+        final tooltipFinder = find.ancestor(
+          of: find.byKey(const Key('info_icon_key_package_relays')),
+          matching: find.byType(Tooltip),
+        );
+        expect(tooltipFinder, findsOneWidget);
+        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        expect(
+          tooltip.message,
+          'Relays that store your secure key so others can invite you to encrypted conversations.',
+        );
+      });
+
+      testWidgets('all tooltips use tap trigger mode', (tester) async {
+        await pumpNetworkScreen(tester);
+        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
+        for (final tooltip in tooltips) {
+          expect(tooltip.triggerMode, TooltipTriggerMode.tap);
+        }
+      });
+
+      testWidgets('all tooltips have one minute show duration', (tester) async {
+        await pumpNetworkScreen(tester);
+        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
+        for (final tooltip in tooltips) {
+          expect(tooltip.showDuration, const Duration(minutes: 1));
+        }
+      });
+    });
+
+    group('add relay', () {
+      testWidgets('opens add relay bottom sheet when add icon is tapped', (tester) async {
+        await pumpNetworkScreen(tester);
+        await tester.tap(find.byKey(const Key('add_icon_my_relays')));
+        await tester.pumpAndSettle();
+        expect(find.text('Add Relay'), findsAtLeastNWidgets(1));
+        expect(find.text('Enter relay address'), findsOneWidget);
+      });
+
+      testWidgets('opens add relay bottom sheet for inbox relays', (tester) async {
+        await pumpNetworkScreen(tester);
+        await tester.tap(find.byKey(const Key('add_icon_inbox_relays')));
+        await tester.pumpAndSettle();
+        expect(find.text('Add Relay'), findsAtLeastNWidgets(1));
+        expect(find.text('Enter relay address'), findsOneWidget);
+      });
+
+      testWidgets('opens add relay bottom sheet for key package relays', (tester) async {
+        await pumpNetworkScreen(tester);
+        await tester.tap(find.byKey(const Key('add_icon_key_package_relays')));
+        await tester.pumpAndSettle();
+        expect(find.text('Add Relay'), findsAtLeastNWidgets(1));
+        expect(find.text('Enter relay address'), findsOneWidget);
+      });
+
+      testWidgets('adds relay when submitted through bottom sheet', (tester) async {
+        mockApi.relayStatuses = [('wss://test.relay.com', 'Connected')];
+
+        await pumpNetworkScreen(tester);
+
+        await tester.tap(find.byKey(const Key('add_icon_my_relays')));
+        await tester.pumpAndSettle();
+
+        await tester.enterText(find.byType(TextFormField), 'wss://test.relay.com');
+        await tester.pump(const Duration(milliseconds: 600));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('add_relay_submit_button')));
+        await tester.pumpAndSettle();
+        await tester.pump(const Duration(milliseconds: 600));
+
+        expect(mockApi.addedRelays.contains('wss://test.relay.com'), isTrue);
+      });
+    });
+
+    group('relay list', () {
+      testWidgets('displays relay tiles when relays exist', (tester) async {
+        mockApi.normalRelays = [
+          Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Relay(url: 'wss://relay2.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        mockApi.relayStatuses = [
+          ('wss://relay1.com', 'connected'),
+          ('wss://relay2.com', 'disconnected'),
+        ];
+
+        await pumpNetworkScreen(tester);
+
+        expect(find.text('wss://relay1.com'), findsOneWidget);
+        expect(find.text('wss://relay2.com'), findsOneWidget);
+        expect(find.text('No relays configured'), findsNWidgets(2));
+      });
+
+      testWidgets('deletes relay when delete button is tapped and confirmed', (tester) async {
+        mockApi.normalRelays = [
+          Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+
+        await pumpNetworkScreen(tester);
+
+        expect(find.text('wss://relay1.com'), findsOneWidget);
+
+        final deleteButton = find.byKey(const Key('delete_relay_wss://relay1.com'));
+        expect(deleteButton, findsOneWidget);
+        await tester.tap(deleteButton);
+        await tester.pumpAndSettle();
+
+        expect(find.text('Remove Relay?'), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('confirm_delete_button')));
+        await tester.pumpAndSettle();
+
+        expect(mockApi.removedRelays.contains('wss://relay1.com'), isTrue);
+      });
+    });
+
+    group('navigation', () {
+      testWidgets('close button is visible', (tester) async {
+        await pumpNetworkScreen(tester);
+
+        expect(find.byKey(const Key('close_button')), findsOneWidget);
+      });
+
+      testWidgets('close button pops the screen', (tester) async {
+        await pumpNetworkScreen(tester);
+
+        expect(find.text('Network Relays'), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Network Relays'), findsNothing);
+      });
+    });
+  });
+}
