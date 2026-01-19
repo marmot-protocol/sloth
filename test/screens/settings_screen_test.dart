@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/screens/app_settings_screen.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
@@ -12,12 +13,26 @@ import 'package:sloth/screens/profile_keys_screen.dart';
 import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
+import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
+
+class _MockThemeMode implements rust_api.ThemeMode {
+  final String mode;
+  const _MockThemeMode(this.mode);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
+class _MockAppSettings implements rust_api.AppSettings {
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
 
 class _MockApi extends MockWnApi {
   @override
@@ -39,6 +54,37 @@ class _MockApi extends MockWnApi {
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
+
+  @override
+  rust_api.ThemeMode crateApiUtilsThemeModeLight() => const _MockThemeMode('light');
+
+  @override
+  rust_api.ThemeMode crateApiUtilsThemeModeDark() => const _MockThemeMode('dark');
+
+  @override
+  rust_api.ThemeMode crateApiUtilsThemeModeSystem() => const _MockThemeMode('system');
+
+  @override
+  String crateApiUtilsThemeModeToString({required rust_api.ThemeMode themeMode}) {
+    return (themeMode as _MockThemeMode).mode;
+  }
+
+  @override
+  Future<rust_api.AppSettings> crateApiGetAppSettings() async {
+    return _MockAppSettings();
+  }
+
+  @override
+  Future<rust_api.ThemeMode> crateApiAppSettingsThemeMode({
+    required rust_api.AppSettings appSettings,
+  }) async {
+    return const _MockThemeMode('system');
+  }
+
+  @override
+  Future<void> crateApiUpdateThemeMode({
+    required rust_api.ThemeMode themeMode,
+  }) async {}
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -121,11 +167,11 @@ void main() {
       expect(find.byType(NetworkScreen), findsOneWidget);
     });
 
-    testWidgets('tapping App settings navigates to WIP screen', (tester) async {
+    testWidgets('tapping App settings navigates to AppSettingsScreen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.text('App settings'));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(AppSettingsScreen), findsOneWidget);
     });
 
     testWidgets('tapping Donate navigates to Donate screen', (tester) async {

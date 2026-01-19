@@ -109,3 +109,8 @@ pub async fn update_theme_mode(theme_mode: ThemeMode) -> Result<(), ApiError> {
         .await
         .map_err(ApiError::from)
 }
+
+#[frb]
+pub fn app_settings_theme_mode(app_settings: &AppSettings) -> ThemeMode {
+    app_settings.theme_mode.clone()
+}

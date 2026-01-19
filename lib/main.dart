@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart'
     show ConsumerStatefulWidget, ConsumerState, ProviderContainer, UncontrolledProviderScope;
 import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/providers/theme_provider.dart' show themeProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/src/rust/api.dart' show createWhitenoiseConfig, initializeWhitenoise;
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -51,6 +52,8 @@ class _MyAppState extends ConsumerState<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    final themeMode = ref.watch(themeProvider).value ?? ThemeMode.system;
+
     return ScreenUtilInit(
       designSize: const Size(390, 844),
       builder: (context, child) {
@@ -58,6 +61,7 @@ class _MyAppState extends ConsumerState<MyApp> {
           title: 'Sloth',
           theme: lightTheme,
           darkTheme: darkTheme,
+          themeMode: themeMode,
           routerConfig: _router,
         );
       },

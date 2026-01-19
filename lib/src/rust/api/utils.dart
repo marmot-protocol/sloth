@@ -5,6 +5,7 @@
 
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
+import '../api.dart';
 import '../frb_generated.dart';
 import 'error.dart';
 import 'messages.dart';
@@ -32,6 +33,17 @@ Future<String> groupIdToString({required GroupId groupId}) =>
 
 Future<GroupId> groupIdFromString({required String groupId}) =>
     RustLib.instance.api.crateApiUtilsGroupIdFromString(groupId: groupId);
+
+ThemeMode themeModeLight() =>
+    RustLib.instance.api.crateApiUtilsThemeModeLight();
+
+ThemeMode themeModeDark() => RustLib.instance.api.crateApiUtilsThemeModeDark();
+
+ThemeMode themeModeSystem() =>
+    RustLib.instance.api.crateApiUtilsThemeModeSystem();
+
+String themeModeToString({required ThemeMode themeMode}) =>
+    RustLib.instance.api.crateApiUtilsThemeModeToString(themeMode: themeMode);
 
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<GroupId>>
 abstract class GroupId implements RustOpaqueInterface {}
