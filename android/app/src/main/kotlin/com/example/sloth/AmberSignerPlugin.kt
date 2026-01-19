@@ -263,7 +263,7 @@ class AmberSignerPlugin :
         pendingResult = result
         currentRequestId = id
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:$eventJson"))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:${Uri.encode(eventJson)}"))
         intent.`package` = packageName
         intent.putExtra("type", "sign_event")
         intent.putExtra("id", id)
@@ -408,7 +408,7 @@ class AmberSignerPlugin :
         pendingResult = result
         currentRequestId = id
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:$content"))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:${Uri.encode(content)}"))
         intent.`package` = packageName
         intent.putExtra("type", type)
         intent.putExtra("pubkey", pubkey)
@@ -531,14 +531,14 @@ class AmberSignerPlugin :
     }
 
     private fun getSignerPackageName(): String? {
-        val context = activity ?: return null
-        val prefs = context.getSharedPreferences("amber_signer_prefs", Context.MODE_PRIVATE)
+        val ctx = context ?: return null
+        val prefs = ctx.getSharedPreferences("amber_signer_prefs", Context.MODE_PRIVATE)
         return prefs.getString("signer_package_name", null)
     }
 
     private fun setSignerPackageName(packageName: String) {
-        val context = activity ?: return
-        val prefs = context.getSharedPreferences("amber_signer_prefs", Context.MODE_PRIVATE)
+        val ctx = context ?: return
+        val prefs = ctx.getSharedPreferences("amber_signer_prefs", Context.MODE_PRIVATE)
         prefs.edit().putString("signer_package_name", packageName).apply()
     }
 }
