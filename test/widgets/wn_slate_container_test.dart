@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Text, Hero;
+import 'package:flutter/material.dart' show Container, EdgeInsets, Hero, Text;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 import '../test_helpers.dart' show mountWidget;
@@ -35,6 +35,27 @@ void main() {
         expect(find.byType(Hero), findsOneWidget);
         final hero = tester.widget<Hero>(find.byType(Hero));
         expect(hero.tag, 'custom-tag');
+      });
+    });
+
+    group('with custom padding', () {
+      testWidgets('applies custom padding to container', (WidgetTester tester) async {
+        const customPadding = EdgeInsets.only(left: 10, right: 10, top: 10);
+        final widget = const WnSlateContainer(
+          padding: customPadding,
+          child: Text('Custom padding child'),
+        );
+        await mountWidget(widget, tester);
+
+        final container = tester.widget<Container>(
+          find
+              .descendant(
+                of: find.byType(WnSlateContainer),
+                matching: find.byType(Container),
+              )
+              .last,
+        );
+        expect(container.padding, customPadding);
       });
     });
   });

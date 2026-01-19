@@ -8,10 +8,12 @@ class WnSlateContainer extends StatelessWidget {
     super.key,
     required this.child,
     this.tag,
+    this.padding,
   });
 
   final Widget child;
   final String? tag;
+  final EdgeInsetsGeometry? padding;
 
   BoxDecoration _decoration(ThemeColors colors) {
     return BoxDecoration(
@@ -53,7 +55,7 @@ class WnSlateContainer extends StatelessWidget {
               type: MaterialType.transparency,
               child: Container(
                 margin: EdgeInsets.symmetric(horizontal: 10.w),
-                padding: EdgeInsets.all(14.w),
+                padding: padding ?? EdgeInsets.all(14.w),
                 decoration: _decoration(colors),
               ),
             );
@@ -62,7 +64,7 @@ class WnSlateContainer extends StatelessWidget {
         type: MaterialType.transparency,
         child: Container(
           margin: EdgeInsets.symmetric(horizontal: 10.w),
-          padding: EdgeInsets.all(14.w),
+          padding: padding ?? EdgeInsets.all(14.w),
           decoration: _decoration(colors),
           child: child,
         ),

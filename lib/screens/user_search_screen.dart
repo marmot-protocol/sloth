@@ -11,6 +11,7 @@ import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/utils/formatting.dart' show formatPublicKey, npubFromHex;
 import 'package:sloth/utils/metadata.dart' show presentName;
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_fade_overlay.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_search_field.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -37,6 +38,7 @@ class UserSearchScreen extends HookConsumerWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
           child: WnSlateContainer(
+            padding: EdgeInsets.only(left: 14.w, right: 14.w, top: 14.w),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -47,7 +49,6 @@ class UserSearchScreen extends HookConsumerWidget {
                   controller: searchController,
                   onChanged: (value) => searchQuery.value = value,
                 ),
-                Gap(8.h),
                 Expanded(
                   child: state.isLoading
                       ? Center(
@@ -63,15 +64,22 @@ class UserSearchScreen extends HookConsumerWidget {
                             style: TextStyle(color: colors.foregroundTertiary),
                           ),
                         )
-                      : ListView.builder(
-                          itemCount: state.users.length,
-                          itemBuilder: (context, index) {
-                            final user = state.users[index];
-                            return _UserListTile(
-                              user: user,
-                              onTap: () => _handleUserTap(context, user.pubkey),
-                            );
-                          },
+                      : Stack(
+                          children: [
+                            ListView.builder(
+                              padding: EdgeInsets.symmetric(vertical: 12.h),
+                              itemCount: state.users.length,
+                              itemBuilder: (context, index) {
+                                final user = state.users[index];
+                                return _UserListTile(
+                                  user: user,
+                                  onTap: () => _handleUserTap(context, user.pubkey),
+                                );
+                              },
+                            ),
+                            WnFadeOverlay.top(color: colors.backgroundTertiary),
+                            WnFadeOverlay.bottom(color: colors.backgroundTertiary),
+                          ],
                         ),
                 ),
               ],
