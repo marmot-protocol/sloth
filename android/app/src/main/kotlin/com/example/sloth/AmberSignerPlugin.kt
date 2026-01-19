@@ -186,7 +186,7 @@ class AmberSignerPlugin :
                 data = Uri.parse("$NOSTRSIGNER_SCHEME:")
             }
         val infos = context.packageManager.queryIntentActivities(intent, 0)
-        return infos.size > 0
+        return infos.isNotEmpty()
     }
 
     private fun getPublicKey(
@@ -211,6 +211,9 @@ class AmberSignerPlugin :
 
         try {
             currentActivity.startActivityForResult(intent, REQUEST_CODE_SIGNER)
+        } catch (e: android.content.ActivityNotFoundException) {
+            pendingResult = null
+            result.error("NO_SIGNER", "No signer app found: ${e.message}", null)
         } catch (e: Exception) {
             pendingResult = null
             result.error("LAUNCH_ERROR", "Failed to launch signer: ${e.message}", null)
@@ -310,6 +313,7 @@ class AmberSignerPlugin :
             }
         } catch (e: Exception) {
             // Content resolver not available, fall back to intent
+            android.util.Log.d("AmberSignerPlugin", "Content resolver failed, falling back to intent: ${e.message}")
         }
 
         return null
@@ -459,6 +463,7 @@ class AmberSignerPlugin :
             }
         } catch (e: Exception) {
             // Content resolver not available, fall back to intent
+            android.util.Log.d("AmberSignerPlugin", "Content resolver failed for $type, falling back to intent: ${e.message}")
         }
 
         return null
