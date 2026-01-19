@@ -88,6 +88,26 @@ void main() {
       expect(capturedIsValid, true);
     });
 
+    testWidgets('sets isValid to false immediately on text change', (tester) async {
+      late bool capturedIsValid;
+
+      final widget = _TestWidget(
+        onBuild: (controller, isValid, validationError, paste) {
+          capturedIsValid = isValid;
+        },
+      );
+      await mountWidget(widget, tester);
+
+      await tester.enterText(find.byType(TextField), 'wss://relay.example.com');
+      await tester.pump(const Duration(milliseconds: 600));
+      expect(capturedIsValid, true);
+
+      await tester.enterText(find.byType(TextField), 'wss://relay.example.com/test');
+      await tester.pump();
+
+      expect(capturedIsValid, false);
+    });
+
     testWidgets('returns error for invalid URL format', (tester) async {
       late String? capturedError;
 

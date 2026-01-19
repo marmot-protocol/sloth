@@ -67,6 +67,7 @@ useAddRelay() {
 
   void onUrlChanged() {
     debounceTimer.value?.cancel();
+    isValid.value = false;
     debounceTimer.value = Timer(const Duration(milliseconds: 500), validateRelayUrl);
   }
 
