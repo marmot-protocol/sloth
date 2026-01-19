@@ -12,6 +12,7 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/services/message_service.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
+import 'package:sloth/widgets/wn_fade_overlay.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -107,26 +108,7 @@ class ChatScreen extends HookConsumerWidget {
                               );
                             },
                           ),
-                          Positioned(
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
-                            height: 20.h,
-                            child: IgnorePointer(
-                              child: Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      colors.backgroundPrimary.withValues(alpha: 0),
-                                      colors.backgroundPrimary,
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
+                          WnFadeOverlay.bottom(color: colors.backgroundPrimary),
                         ],
                       ),
               ),
