@@ -22,6 +22,20 @@ const _slothMetadata = FlutterMetadata(
 
 late AsyncSnapshot<FlutterMetadata> Function() getResult;
 
+Future<void> _mountHookWithNullablePubkey(WidgetTester tester, String? pubkey) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: HookBuilder(
+        builder: (context) {
+          final result = useUserMetadata(context, pubkey);
+          getResult = () => result;
+          return const SizedBox();
+        },
+      ),
+    ),
+  );
+}
+
 Future<void> _mountHook(WidgetTester tester, String pubkey) async {
   await tester.pumpWidget(
     MaterialApp(
@@ -190,6 +204,24 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(_api.calls.length, 2);
+      });
+    });
+
+    group('nullable pubkey', () {
+      testWidgets('returns none connection state when pubkey is null', (tester) async {
+        await _mountHookWithNullablePubkey(tester, null);
+        await tester.pump();
+
+        expect(getResult().connectionState, equals(ConnectionState.none));
+        expect(getResult().data, isNull);
+      });
+
+      testWidgets('does not make API call when pubkey is null', (tester) async {
+        _api.calls.clear();
+        await _mountHookWithNullablePubkey(tester, null);
+        await tester.pump();
+
+        expect(_api.calls, isEmpty);
       });
     });
   });

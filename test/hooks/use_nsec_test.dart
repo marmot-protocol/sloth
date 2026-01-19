@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
@@ -47,6 +48,19 @@ Future<void> _pump(WidgetTester tester, List overrides) async {
             return const SizedBox();
           },
         ),
+      ),
+    ),
+  );
+}
+
+Future<void> _pumpWithNullablePubkey(WidgetTester tester, String? pubkey) async {
+  await tester.pumpWidget(
+    MaterialApp(
+      home: HookBuilder(
+        builder: (context) {
+          result = useNsec(pubkey);
+          return const SizedBox();
+        },
       ),
     ),
   );
@@ -136,6 +150,28 @@ void main() {
       container.read(pubkeyNotifierProvider.notifier).update('new_pubkey');
       await tester.pumpAndSettle();
 
+      expect(result.state.nsec, isNull);
+      expect(result.state.isLoading, isFalse);
+      expect(result.state.error, isNull);
+    });
+
+    testWidgets('handles null pubkey gracefully', (tester) async {
+      await _pumpWithNullablePubkey(tester, null);
+      await tester.pump();
+
+      expect(result.state.nsec, isNull);
+      expect(result.state.isLoading, isFalse);
+      expect(result.state.error, isNull);
+    });
+
+    testWidgets('loadNsec is no-op when pubkey is null', (tester) async {
+      await _pumpWithNullablePubkey(tester, null);
+      await tester.pump();
+
+      await result.loadNsec();
+      await tester.pumpAndSettle();
+
+      // State should remain unchanged - no loading, no error, no nsec
       expect(result.state.nsec, isNull);
       expect(result.state.isLoading, isFalse);
       expect(result.state.error, isNull);

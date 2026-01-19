@@ -106,6 +106,30 @@ void main() {
         expect(getClipboard(), 'secret-value');
       });
 
+      testWidgets('copies updated value when value prop changes', (tester) async {
+        // This test verifies the fix: copy should use controller.text (the displayed value)
+        // not the stale initial value prop
+        await mountWidget(
+          const WnCopyableField(
+            label: 'Label',
+            value: 'initial-value',
+          ),
+          tester,
+        );
+
+        // Rebuild with new value
+        await mountWidget(
+          const WnCopyableField(
+            label: 'Label',
+            value: 'updated-value',
+          ),
+          tester,
+        );
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        expect(getClipboard(), 'updated-value');
+      });
+
       testWidgets('shows snackbar when copiedMessage is provided', (tester) async {
         await mountWidget(
           const WnCopyableField(

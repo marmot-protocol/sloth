@@ -149,5 +149,22 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(DeveloperSettingsScreen), findsOneWidget);
     });
+
+    testWidgets('renders empty widget when pubkey becomes null', (tester) async {
+      // This test verifies that hooks are called unconditionally and
+      // the screen handles null pubkey gracefully without breaking hook ordering
+      await pumpSettingsScreen(tester);
+
+      // Verify screen is showing normally first
+      expect(find.text('Settings'), findsOneWidget);
+
+      // Now simulate the pubkey becoming null
+      mockAuth.state = const AsyncData(null);
+      await tester.pump();
+
+      // The screen should now render an empty widget without throwing
+      // The settings content should no longer be visible
+      expect(find.text('Edit profile'), findsNothing);
+    });
   });
 }

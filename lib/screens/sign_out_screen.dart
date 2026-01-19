@@ -20,10 +20,6 @@ class SignOutScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final pubkey = ref.watch(authProvider).value;
-
-    if (pubkey == null) {
-      return const SizedBox.shrink();
-    }
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
@@ -32,6 +28,10 @@ class SignOutScreen extends HookConsumerWidget {
       loadNsec();
       return null;
     }, [pubkey]);
+
+    if (pubkey == null) {
+      return const SizedBox.shrink();
+    }
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
