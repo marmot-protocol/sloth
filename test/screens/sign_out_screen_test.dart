@@ -10,9 +10,10 @@ import 'package:sloth/widgets/wn_text_form_field.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
     return 'npub1test${hexPubkey.substring(0, 10)}';
@@ -22,12 +23,6 @@ class _MockApi implements RustLibApi {
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
-
-  @override
-  Future<void> crateApiAccountsLogout({required String pubkey}) async {}
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -156,6 +151,26 @@ void main() {
 
       expect(mockAuth.logoutCalled, isTrue);
       expect(find.byType(HomeScreen), findsOneWidget);
+    });
+
+    testWidgets('renders empty widget when pubkey becomes null during logout', (tester) async {
+      // This test verifies the fix for issue #35: during logout, there's a race
+      // condition where authProvider sets pubkey to null but widgets are still
+      // mounted and try to rebuild. The screen should handle this gracefully
+      // by returning SizedBox.shrink() instead of throwing.
+      await pumpSignOutScreen(tester);
+
+      // Verify screen is showing normally first
+      expect(find.text('Sign out'), findsWidgets);
+
+      // Now simulate the logout race condition by setting pubkey to null
+      mockAuth.state = const AsyncData(null);
+      await tester.pump();
+
+      // The screen should now render an empty widget without throwing
+      // The sign out content should no longer be visible
+      expect(find.text('Are you sure you want to sign out?'), findsNothing);
+      expect(find.byType(WnTextFormField), findsNothing);
     });
   });
 }

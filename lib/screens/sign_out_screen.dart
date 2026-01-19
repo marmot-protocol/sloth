@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
@@ -10,8 +9,8 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
+import 'package:sloth/widgets/wn_secret_field.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 
 class SignOutScreen extends HookConsumerWidget {
@@ -45,19 +44,6 @@ class SignOutScreen extends HookConsumerWidget {
       }
       return null;
     }, [state.nsec]);
-
-    void copyPrivateKey() {
-      final nsec = state.nsec;
-      if (nsec != null) {
-        Clipboard.setData(ClipboardData(text: nsec));
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('Private key copied to clipboard'),
-            duration: Duration(seconds: 2),
-          ),
-        );
-      }
-    }
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
@@ -113,46 +99,14 @@ class SignOutScreen extends HookConsumerWidget {
                             ),
                           ),
                           Gap(16.h),
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Expanded(
-                                child: WnTextFormField(
-                                  label: 'Private key',
-                                  placeholder: '',
-                                  controller: privateKeyController,
-                                  readOnly: true,
-                                  obscureText: obscurePrivateKey.value,
-                                  suffixIcon: IconButton(
-                                    onPressed: togglePrivateKeyVisibility,
-                                    icon: Icon(
-                                      obscurePrivateKey.value
-                                          ? Icons.visibility_outlined
-                                          : Icons.visibility_off_outlined,
-                                      size: 20.w,
-                                      color: colors.foregroundPrimary,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Gap(4.w),
-                              Padding(
-                                padding: EdgeInsets.only(bottom: 4.h),
-                                child: IconButton(
-                                  onPressed: copyPrivateKey,
-                                  icon: Icon(
-                                    Icons.copy,
-                                    color: colors.foregroundPrimary,
-                                    size: 20.w,
-                                  ),
-                                  style: IconButton.styleFrom(
-                                    backgroundColor: colors.backgroundPrimary,
-                                    minimumSize: Size(44.w, 44.h),
-                                    padding: EdgeInsets.all(14.w),
-                                  ),
-                                ),
-                              ),
-                            ],
+                          WnSecretField(
+                            label: 'Private key',
+                            value: state.nsec ?? '',
+                            controller: privateKeyController,
+                            obscurable: true,
+                            obscured: obscurePrivateKey.value,
+                            onToggleVisibility: togglePrivateKeyVisibility,
+                            copiedMessage: 'Private key copied to clipboard',
                           ),
                           Gap(32.h),
                           SizedBox(
