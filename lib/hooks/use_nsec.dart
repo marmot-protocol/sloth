@@ -33,7 +33,7 @@ class NsecState {
   NsecState state,
   Future<void> Function() loadNsec,
 })
-useNsec(String pubkey) {
+useNsec(String? pubkey) {
   final state = useState(const NsecState());
 
   useEffect(() {
@@ -42,6 +42,7 @@ useNsec(String pubkey) {
   }, [pubkey]);
 
   Future<void> loadNsec() async {
+    if (pubkey == null) return;
     state.value = state.value.copyWith(isLoading: true, clearError: true);
     try {
       final nsec = await accounts_api.exportAccountNsec(pubkey: pubkey);

@@ -184,10 +184,10 @@ Screen (watches providers)
 - Errors wrapped in `ApiError` enum using `thiserror`
 - Files in `lib/src/rust/` are auto-generated - DO NOT EDIT manually
 
-## PR Checklist
+## Commit Checklist
 
-1. Run `just precommit` before submitting
+1. Run `just precommit` before submitting - this will check formatting and linting. ENSURE this passes before you make a commit.
 2. Ensure all tests pass
 3. Coverage meets 80% minimum
-4. Update `CHANGELOG.md` for user-facing changes
+4. You MUST Update `CHANGELOG.md` for any user-facing changes
 5. Follow existing code patterns and naming conventions

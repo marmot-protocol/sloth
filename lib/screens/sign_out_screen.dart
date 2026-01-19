@@ -5,31 +5,44 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_nsec.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/utils/formatting.dart';
+import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 
-class ProfileKeysScreen extends HookConsumerWidget {
-  const ProfileKeysScreen({super.key});
+class SignOutScreen extends HookConsumerWidget {
+  const SignOutScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final pubkey = ref.watch(accountPubkeyProvider);
-    final npub = npubFromPubkey(pubkey);
+    final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
+    final isLoggingOut = useState(false);
 
     useEffect(() {
       loadNsec();
       return null;
     }, [pubkey]);
 
+    if (pubkey == null) {
+      return const SizedBox.shrink();
+    }
+
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
+    }
+
+    Future<void> signOut() async {
+      isLoggingOut.value = true;
+      await ref.read(authProvider.notifier).logout();
+      if (context.mounted) {
+        Routes.goToHome(context);
+      }
     }
 
     return Scaffold(
@@ -41,7 +54,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Profile keys'),
+                const WnScreenHeader(title: 'Sign out'),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -50,21 +63,30 @@ class ProfileKeysScreen extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Gap(24.h),
-                          WnCopyableField(
-                            label: 'Public key',
-                            value: npub ?? '',
-                            copiedMessage: 'Public key copied to clipboard',
+                          const WnWarningBox(
+                            title: 'Are you sure you want to sign out?',
+                            description:
+                                'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.',
                           ),
-                          Gap(12.h),
+                          Gap(24.h),
                           Text(
-                            'Your public key (npub) can be shared with others. It\'s used to identify you on the network.',
+                            'Back up your private key',
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: colors.foregroundPrimary,
+                            ),
+                          ),
+                          Gap(8.h),
+                          Text(
+                            'Copy your private key to restore your account on another device.',
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                               color: colors.foregroundTertiary,
                             ),
                           ),
-                          Gap(36.h),
+                          Gap(16.h),
                           WnCopyableField(
                             label: 'Private key',
                             value: state.nsec ?? '',
@@ -73,20 +95,14 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             onToggleVisibility: togglePrivateKeyVisibility,
                             copiedMessage: 'Private key copied to clipboard',
                           ),
-                          Gap(10.h),
-                          Text(
-                            'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.',
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.foregroundTertiary,
+                          Gap(32.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: WnFilledButton(
+                              text: 'Sign out',
+                              onPressed: signOut,
+                              loading: isLoggingOut.value,
                             ),
-                          ),
-                          Gap(12.h),
-                          const WnWarningBox(
-                            title: 'Keep your private key secure',
-                            description:
-                                'Don\'t share your private key publicly, and use it only to log in to other Nostr apps.',
                           ),
                           Gap(24.h),
                         ],

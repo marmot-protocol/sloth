@@ -68,7 +68,8 @@ void main() {
     group('when copying lightning address', () {
       testWidgets('shows feedback message', (tester) async {
         await pumpDonateScreen(tester);
-        await tester.tap(find.text('whitenoise@npub.cash'));
+        // Tap the first copy button (lightning address)
+        await tester.tap(find.byKey(const Key('copy_button')).first);
         await tester.pump();
 
         expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
@@ -77,7 +78,8 @@ void main() {
       testWidgets('saves lightning address to clipboard', (tester) async {
         final getClipboard = mockClipboard();
         await pumpDonateScreen(tester);
-        await tester.tap(find.text('whitenoise@npub.cash'));
+        // Tap the first copy button (lightning address)
+        await tester.tap(find.byKey(const Key('copy_button')).first);
         await tester.pump();
 
         expect(getClipboard(), 'whitenoise@npub.cash');
@@ -87,9 +89,8 @@ void main() {
     group('when copying bitcoin address', () {
       testWidgets('shows feedback message', (tester) async {
         await pumpDonateScreen(tester);
-        await tester.tap(
-          find.textContaining('sp1qqvp56mxcj9pz9xudvlch5g4ah5hrc8rj6neu25p'),
-        );
+        // Tap the second copy button (bitcoin address)
+        await tester.tap(find.byKey(const Key('copy_button')).last);
         await tester.pump();
 
         expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
@@ -98,9 +99,8 @@ void main() {
       testWidgets('saves bitcoin address to clipboard', (tester) async {
         final getClipboard = mockClipboard();
         await pumpDonateScreen(tester);
-        await tester.tap(
-          find.textContaining('sp1qqvp56mxcj9pz9xudvlch5g4ah5hrc8rj6neu25p'),
-        );
+        // Tap the second copy button (bitcoin address)
+        await tester.tap(find.byKey(const Key('copy_button')).last);
         await tester.pump();
 
         expect(
