@@ -199,6 +199,11 @@ class AmberSignerPlugin :
                 return
             }
 
+        if (pendingResult != null) {
+            result.error("REQUEST_IN_PROGRESS", "Another signer request is already in progress", null)
+            return
+        }
+
         pendingResult = result
         currentRequestId = null
 
@@ -249,6 +254,11 @@ class AmberSignerPlugin :
                 result.error("NO_ACTIVITY", "Activity not available", null)
                 return
             }
+
+        if (pendingResult != null) {
+            result.error("REQUEST_IN_PROGRESS", "Another signer request is already in progress", null)
+            return
+        }
 
         pendingResult = result
         currentRequestId = id
@@ -389,6 +399,11 @@ class AmberSignerPlugin :
                 result.error("NO_ACTIVITY", "Activity not available", null)
                 return
             }
+
+        if (pendingResult != null) {
+            result.error("REQUEST_IN_PROGRESS", "Another signer request is already in progress", null)
+            return
+        }
 
         pendingResult = result
         currentRequestId = id
