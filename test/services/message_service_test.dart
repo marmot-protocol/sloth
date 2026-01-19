@@ -57,7 +57,7 @@ void main() {
 
   setUp(() {
     mockApi.sentMessages.clear();
-    service = const MessageService('test_pubkey');
+    service = const MessageService(pubkey: 'test_pubkey', groupId: 'group1');
   });
 
   group('sendTextMessage', () {
@@ -169,7 +169,7 @@ void main() {
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
-      expect(tags[1].vec, ['p', 'author_pubkey']);
+      expect(tags[1].vec, ['p', 'author_pubkey', '']);
     });
 
     test('sends k tag with messageKind', () async {
@@ -182,6 +182,99 @@ void main() {
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
       expect(tags[2].vec, ['k', '9']);
+    });
+  });
+
+  group('sendReaction', () {
+    test('sends reaction message once', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '👍',
+      );
+
+      expect(mockApi.sentMessages.length, 1);
+    });
+
+    test('calls API with pubkey from constructor', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '👍',
+      );
+
+      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+    });
+
+    test('calls API with groupId from constructor', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '👍',
+      );
+
+      expect(mockApi.sentMessages.first.groupId, 'group1');
+    });
+
+    test('calls API with emoji as message', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '🔥',
+      );
+
+      expect(mockApi.sentMessages.first.message, '🔥');
+    });
+
+    test('calls API with reaction kind (7)', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '👍',
+      );
+
+      expect(mockApi.sentMessages.first.kind, 7);
+    });
+
+    test('sends e tag with messageId', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '👍',
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[0].vec, ['e', 'msg123']);
+    });
+
+    test('sends p tag with messagePubkey', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+        emoji: '👍',
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[1].vec, ['p', 'author_pubkey', '']);
+    });
+
+    test('sends k tag with messageKind', () async {
+      await service.sendReaction(
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 42,
+        emoji: '👍',
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[2].vec, ['k', '42']);
     });
   });
 }
