@@ -24,8 +24,8 @@ class WnCopyableField extends HookWidget {
   final VoidCallback? onToggleVisibility;
   final String? copiedMessage;
 
-  void _handleCopy(BuildContext context) {
-    Clipboard.setData(ClipboardData(text: value));
+  void _handleCopy(BuildContext context, String text) {
+    Clipboard.setData(ClipboardData(text: text));
     if (copiedMessage != null) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -74,7 +74,7 @@ class WnCopyableField extends HookWidget {
           padding: EdgeInsets.only(bottom: 4.h),
           child: IconButton(
             key: const Key('copy_button'),
-            onPressed: () => _handleCopy(context),
+            onPressed: () => _handleCopy(context, controller.text),
             icon: Icon(
               Icons.copy,
               color: colors.foregroundPrimary,

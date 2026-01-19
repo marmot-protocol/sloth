@@ -7,9 +7,9 @@ import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 

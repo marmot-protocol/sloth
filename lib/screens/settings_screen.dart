@@ -19,11 +19,11 @@ class SettingsScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final pubkey = ref.watch(authProvider).value;
+    final metadataSnapshot = useUserMetadata(context, pubkey);
 
     if (pubkey == null) {
       return const SizedBox.shrink();
     }
-    final metadataSnapshot = useUserMetadata(context, pubkey);
     final npub = npubFromPubkey(pubkey);
 
     final metadata = metadataSnapshot.data;

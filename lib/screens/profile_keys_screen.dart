@@ -7,8 +7,8 @@ import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/utils/formatting.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 

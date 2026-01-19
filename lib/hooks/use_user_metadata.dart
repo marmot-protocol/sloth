@@ -6,14 +6,14 @@ import 'package:sloth/src/rust/api/metadata.dart';
 
 AsyncSnapshot<FlutterMetadata> useUserMetadata(
   BuildContext context,
-  String pubkey,
+  String? pubkey,
 ) {
   final refreshKey = useState(0);
 
   useRouteRefresh(context, () => refreshKey.value++);
 
   final future = useMemoized(
-    () => UserMetadataService(pubkey).fetch(),
+    () => pubkey != null ? UserMetadataService(pubkey).fetch() : null,
     [pubkey, refreshKey.value],
   );
   return useFuture(future);
