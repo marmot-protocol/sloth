@@ -7,51 +7,16 @@ import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_wn_api.dart';
 
-class _MockThemeMode implements rust_api.ThemeMode {
-  final String mode;
-  const _MockThemeMode(this.mode);
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
-
-class _MockAppSettings implements rust_api.AppSettings {
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
-
 class _MockApi extends MockWnApi {
-  String currentThemeMode = 'system';
   bool shouldFailGetAppSettings = false;
   bool shouldFailUpdateThemeMode = false;
-
-  @override
-  rust_api.ThemeMode crateApiUtilsThemeModeLight() => const _MockThemeMode('light');
-
-  @override
-  rust_api.ThemeMode crateApiUtilsThemeModeDark() => const _MockThemeMode('dark');
-
-  @override
-  rust_api.ThemeMode crateApiUtilsThemeModeSystem() => const _MockThemeMode('system');
-
-  @override
-  String crateApiUtilsThemeModeToString({required rust_api.ThemeMode themeMode}) {
-    return (themeMode as _MockThemeMode).mode;
-  }
 
   @override
   Future<rust_api.AppSettings> crateApiGetAppSettings() async {
     if (shouldFailGetAppSettings) {
       throw Exception('Failed to get app settings');
     }
-    return _MockAppSettings();
-  }
-
-  @override
-  Future<rust_api.ThemeMode> crateApiAppSettingsThemeMode({
-    required rust_api.AppSettings appSettings,
-  }) async {
-    return _MockThemeMode(currentThemeMode);
+    return MockAppSettings();
   }
 
   @override
@@ -61,7 +26,7 @@ class _MockApi extends MockWnApi {
     if (shouldFailUpdateThemeMode) {
       throw Exception('Failed to update theme mode');
     }
-    currentThemeMode = (themeMode as _MockThemeMode).mode;
+    await super.crateApiUpdateThemeMode(themeMode: themeMode);
   }
 }
 
@@ -75,7 +40,7 @@ void main() {
   });
 
   setUp(() {
-    mockApi.currentThemeMode = 'system';
+    mockApi.reset();
     mockApi.shouldFailGetAppSettings = false;
     mockApi.shouldFailUpdateThemeMode = false;
     container = ProviderContainer();

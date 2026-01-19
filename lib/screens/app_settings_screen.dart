@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/providers/theme_provider.dart';
 import 'package:sloth/widgets/wn_dropdown_selector.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
-class AppSettingsScreen extends HookConsumerWidget {
+class AppSettingsScreen extends ConsumerWidget {
   const AppSettingsScreen({super.key});
 
   static const _themeOptions = [

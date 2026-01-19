@@ -36,6 +36,7 @@ class _MockApi extends MockWnApi {
   final List<String> sentMessages = [];
   Exception? sendError;
 
+  @override
   void reset() {
     controller?.close();
     controller = null;

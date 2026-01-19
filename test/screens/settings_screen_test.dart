@@ -12,27 +12,12 @@ import 'package:sloth/screens/network_screen.dart';
 import 'package:sloth/screens/profile_keys_screen.dart';
 import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
-import 'package:sloth/screens/wip_screen.dart';
-import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
-
-class _MockThemeMode implements rust_api.ThemeMode {
-  final String mode;
-  const _MockThemeMode(this.mode);
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
-
-class _MockAppSettings implements rust_api.AppSettings {
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
 
 class _MockApi extends MockWnApi {
   @override
@@ -54,37 +39,6 @@ class _MockApi extends MockWnApi {
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
-
-  @override
-  rust_api.ThemeMode crateApiUtilsThemeModeLight() => const _MockThemeMode('light');
-
-  @override
-  rust_api.ThemeMode crateApiUtilsThemeModeDark() => const _MockThemeMode('dark');
-
-  @override
-  rust_api.ThemeMode crateApiUtilsThemeModeSystem() => const _MockThemeMode('system');
-
-  @override
-  String crateApiUtilsThemeModeToString({required rust_api.ThemeMode themeMode}) {
-    return (themeMode as _MockThemeMode).mode;
-  }
-
-  @override
-  Future<rust_api.AppSettings> crateApiGetAppSettings() async {
-    return _MockAppSettings();
-  }
-
-  @override
-  Future<rust_api.ThemeMode> crateApiAppSettingsThemeMode({
-    required rust_api.AppSettings appSettings,
-  }) async {
-    return const _MockThemeMode('system');
-  }
-
-  @override
-  Future<void> crateApiUpdateThemeMode({
-    required rust_api.ThemeMode themeMode,
-  }) async {}
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -103,7 +57,16 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  setUpAll(() => RustLib.initMock(api: _MockApi()));
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.reset();
+  });
 
   late _MockAuthNotifier mockAuth;
 

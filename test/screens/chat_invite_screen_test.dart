@@ -46,6 +46,7 @@ class _MockApi extends MockWnApi {
   bool declineCalled = false;
   Exception? errorToThrow;
 
+  @override
   void reset() {
     messages = [];
     groupName = 'Test Group';

@@ -29,6 +29,7 @@ class _MockApi extends MockWnApi {
   StreamController<ChatListStreamItem>? controller;
   List<ChatSummary> initialChats = [];
 
+  @override
   void reset() {
     controller?.close();
     controller = null;
