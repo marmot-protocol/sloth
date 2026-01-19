@@ -152,12 +152,12 @@ useNetworkRelays(String pubkey) {
     ]);
   }
 
-  void pollRelayStatus(String url) async {
+  void awaitRelayConnection(String url) async {
     const maxAttempts = 10;
-    const pollInterval = Duration(milliseconds: 500);
+    const retryInterval = Duration(milliseconds: 500);
 
     for (var i = 0; i < maxAttempts; i++) {
-      await Future.delayed(pollInterval);
+      await Future.delayed(retryInterval);
 
       if (!isMountedRef.value) return;
 
@@ -194,7 +194,7 @@ useNetworkRelays(String pubkey) {
       await fetchRelaysForCategory(category);
       await fetchRelayStatuses();
 
-      pollRelayStatus(url);
+      awaitRelayConnection(url);
     } catch (e) {
       _logger.severe('Failed to add relay', e);
       updateCategoryState(

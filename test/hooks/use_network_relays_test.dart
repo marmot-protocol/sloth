@@ -14,8 +14,8 @@ class MockApi implements RustLibApi {
   List<Relay> keyPackageRelays = [];
   List<(String, String)> relayStatuses = [];
   bool shouldThrow = false;
-  bool shouldThrowOnStatusPoll = false;
-  int statusPollCount = 0;
+  bool shouldThrowOnStatusRetry = false;
+  int statusRetryCount = 0;
 
   @override
   Future<RelayType> crateApiRelaysRelayTypeNip65() async => MockRelayType('nip65');
@@ -97,9 +97,9 @@ class MockApi implements RustLibApi {
     required String pubkey,
   }) async {
     if (shouldThrow) throw Exception('Network error');
-    statusPollCount++;
-    if (shouldThrowOnStatusPoll && statusPollCount > 1) {
-      throw Exception('Poll error');
+    statusRetryCount++;
+    if (shouldThrowOnStatusRetry && statusRetryCount > 1) {
+      throw Exception('Retry error');
     }
     return relayStatuses;
   }
@@ -143,8 +143,8 @@ void main() {
     mockApi.keyPackageRelays = [];
     mockApi.relayStatuses = [];
     mockApi.shouldThrow = false;
-    mockApi.shouldThrowOnStatusPoll = false;
-    mockApi.statusPollCount = 0;
+    mockApi.shouldThrowOnStatusRetry = false;
+    mockApi.statusRetryCount = 0;
   });
 
   group('RelayListState', () {
@@ -336,7 +336,7 @@ void main() {
       await tester.pump(const Duration(milliseconds: 600));
     });
 
-    testWidgets('polls relay status after adding until connected', (tester) async {
+    testWidgets('awaits relay connection after adding until connected', (tester) async {
       mockApi.relayStatuses = [('wss://newrelay.com', 'Connecting')];
 
       await pump(tester);
@@ -352,7 +352,7 @@ void main() {
       expect(hook.state.relayStatuses['wss://newrelay.com'], 'Connected');
     });
 
-    testWidgets('stops polling when status changes from connecting', (tester) async {
+    testWidgets('stops awaiting when status changes from connecting', (tester) async {
       mockApi.relayStatuses = [('wss://newrelay.com', 'Disconnected')];
 
       await pump(tester);
@@ -364,9 +364,9 @@ void main() {
       expect(hook.state.relayStatuses['wss://newrelay.com'], 'Disconnected');
     });
 
-    testWidgets('stops polling when status fetch throws error', (tester) async {
+    testWidgets('stops awaiting when status fetch throws error', (tester) async {
       mockApi.relayStatuses = [('wss://newrelay.com', 'Connecting')];
-      mockApi.shouldThrowOnStatusPoll = true;
+      mockApi.shouldThrowOnStatusRetry = true;
 
       await pump(tester);
       await hook.addRelay('wss://newrelay.com', RelayCategory.normal);
