@@ -1,18 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:gap/gap.dart';
 import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/widgets/wn_text_form_field.dart';
 
-class WnCopyableField extends StatelessWidget {
+class WnCopyableField extends HookWidget {
   const WnCopyableField({
     super.key,
     required this.label,
     required this.value,
+    this.obscurable = false,
+    this.obscured = true,
+    this.onToggleVisibility,
     this.copiedMessage,
   });
 
   final String label;
   final String value;
+  final bool obscurable;
+  final bool obscured;
+  final VoidCallback? onToggleVisibility;
   final String? copiedMessage;
 
   void _handleCopy(BuildContext context) {
@@ -30,51 +39,51 @@ class WnCopyableField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final controller = useTextEditingController(text: value);
 
-    return Column(
-      spacing: 8.h,
-      crossAxisAlignment: CrossAxisAlignment.start,
+    useEffect(() {
+      controller.text = value;
+      return null;
+    }, [value]);
+
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            color: colors.foregroundPrimary,
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
+        Expanded(
+          child: WnTextFormField(
+            label: label,
+            placeholder: '',
+            controller: controller,
+            readOnly: true,
+            obscureText: obscurable && obscured,
+            suffixIcon: obscurable
+                ? IconButton(
+                    key: const Key('visibility_toggle'),
+                    onPressed: onToggleVisibility,
+                    icon: Icon(
+                      obscured ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                      size: 20.w,
+                      color: colors.foregroundPrimary,
+                    ),
+                  )
+                : null,
           ),
         ),
-        GestureDetector(
-          onTap: () => _handleCopy(context),
-          child: Container(
-            width: double.infinity,
-            padding: EdgeInsets.all(12.w),
-            decoration: BoxDecoration(
-              color: colors.backgroundPrimary,
-              border: Border.all(color: colors.foregroundTertiary),
-              borderRadius: BorderRadius.circular(8.r),
+        Gap(4.w),
+        Padding(
+          padding: EdgeInsets.only(bottom: 4.h),
+          child: IconButton(
+            key: const Key('copy_button'),
+            onPressed: () => _handleCopy(context),
+            icon: Icon(
+              Icons.copy,
+              color: colors.foregroundPrimary,
+              size: 20.w,
             ),
-            child: Row(
-              spacing: 8.w,
-              children: [
-                Expanded(
-                  child: Text(
-                    value,
-                    style: TextStyle(
-                      color: colors.foregroundTertiary,
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
-                    ),
-                    maxLines: 2,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-                Icon(
-                  Icons.copy,
-                  key: const Key('copy_button'),
-                  color: colors.foregroundTertiary,
-                  size: 20.w,
-                ),
-              ],
+            style: IconButton.styleFrom(
+              backgroundColor: colors.backgroundPrimary,
+              minimumSize: Size(44.w, 44.h),
+              padding: EdgeInsets.all(14.w),
             ),
           ),
         ),

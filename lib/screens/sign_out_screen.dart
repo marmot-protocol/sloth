@@ -9,7 +9,7 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_secret_field.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 
@@ -26,24 +26,12 @@ class SignOutScreen extends HookConsumerWidget {
     }
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
-    final privateKeyController = useTextEditingController();
     final isLoggingOut = useState(false);
 
     useEffect(() {
       loadNsec();
-      return () {
-        privateKeyController.clear();
-      };
-    }, [pubkey]);
-
-    useEffect(() {
-      if (state.nsec != null) {
-        privateKeyController.text = state.nsec!;
-      } else {
-        privateKeyController.clear();
-      }
       return null;
-    }, [state.nsec]);
+    }, [pubkey]);
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
@@ -99,10 +87,9 @@ class SignOutScreen extends HookConsumerWidget {
                             ),
                           ),
                           Gap(16.h),
-                          WnSecretField(
+                          WnCopyableField(
                             label: 'Private key',
                             value: state.nsec ?? '',
-                            controller: privateKeyController,
                             obscurable: true,
                             obscured: obscurePrivateKey.value,
                             onToggleVisibility: togglePrivateKeyVisibility,

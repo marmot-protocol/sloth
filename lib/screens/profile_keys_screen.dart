@@ -8,7 +8,7 @@ import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_secret_field.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 
@@ -22,27 +22,11 @@ class ProfileKeysScreen extends HookConsumerWidget {
     final npub = npubFromPubkey(pubkey);
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
-    final publicKeyController = useTextEditingController();
-    final privateKeyController = useTextEditingController();
 
     useEffect(() {
       loadNsec();
-      return () {
-        privateKeyController.clear();
-      };
-    }, [pubkey]);
-
-    useEffect(() {
-      if (npub != null) {
-        publicKeyController.text = npub;
-      }
-      if (state.nsec != null) {
-        privateKeyController.text = state.nsec!;
-      } else {
-        privateKeyController.clear();
-      }
       return null;
-    }, [npub, state.nsec]);
+    }, [pubkey]);
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
@@ -66,10 +50,9 @@ class ProfileKeysScreen extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Gap(24.h),
-                          WnSecretField(
+                          WnCopyableField(
                             label: 'Public key',
                             value: npub ?? '',
-                            controller: publicKeyController,
                             copiedMessage: 'Public key copied to clipboard',
                           ),
                           Gap(12.h),
@@ -82,10 +65,9 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             ),
                           ),
                           Gap(36.h),
-                          WnSecretField(
+                          WnCopyableField(
                             label: 'Private key',
                             value: state.nsec ?? '',
-                            controller: privateKeyController,
                             obscurable: true,
                             obscured: obscurePrivateKey.value,
                             onToggleVisibility: togglePrivateKeyVisibility,
