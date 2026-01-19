@@ -43,22 +43,9 @@ class WnDropdownSelector<T> extends StatelessWidget {
           ),
         ),
         Gap(4.h),
-        DropdownButtonFormField<T>(
-          initialValue: value,
-          icon: Icon(
-            Icons.keyboard_arrow_down,
-            color: colors.foregroundPrimary,
-          ),
-          dropdownColor: colors.backgroundPrimary,
-          borderRadius: BorderRadius.circular(8.r),
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w600,
-            color: colors.foregroundPrimary,
-            fontFamily: 'Manrope',
-          ),
+        InputDecorator(
           decoration: InputDecoration(
-            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+            contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(color: colors.foregroundTertiary),
@@ -68,17 +55,36 @@ class WnDropdownSelector<T> extends StatelessWidget {
               borderSide: BorderSide(color: colors.foregroundTertiary),
             ),
           ),
-          items: options.map((option) {
-            return DropdownMenuItem<T>(
-              value: option.value,
-              child: Text(option.label),
-            );
-          }).toList(),
-          onChanged: (newValue) {
-            if (newValue != null) {
-              onChanged(newValue);
-            }
-          },
+          child: DropdownButtonHideUnderline(
+            child: DropdownButton<T>(
+              value: value,
+              isExpanded: true,
+              icon: Icon(
+                Icons.keyboard_arrow_down,
+                key: const Key('dropdown_icon'),
+                color: colors.foregroundPrimary,
+              ),
+              dropdownColor: colors.backgroundPrimary,
+              borderRadius: BorderRadius.circular(8.r),
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w600,
+                color: colors.foregroundPrimary,
+                fontFamily: 'Manrope',
+              ),
+              items: options.map((option) {
+                return DropdownMenuItem<T>(
+                  value: option.value,
+                  child: Text(option.label),
+                );
+              }).toList(),
+              onChanged: (newValue) {
+                if (newValue != null) {
+                  onChanged(newValue);
+                }
+              },
+            ),
+          ),
         ),
       ],
     );

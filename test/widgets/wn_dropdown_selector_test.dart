@@ -127,7 +127,7 @@ void main() {
         tester,
       );
 
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
     testWidgets('works with int values', (tester) async {

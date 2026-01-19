@@ -30,8 +30,13 @@ void main() {
     mockApi.reset();
   });
 
-  Future<void> pumpAppSettingsScreen(WidgetTester tester) async {
-    mockApi.currentThemeMode = 'system';
+  Future<void> pumpAppSettingsScreen(
+    WidgetTester tester, {
+    String? initialThemeMode,
+  }) async {
+    if (initialThemeMode != null) {
+      mockApi.currentThemeMode = initialThemeMode;
+    }
 
     await mountTestApp(
       tester,
@@ -156,7 +161,7 @@ void main() {
 
     testWidgets('displays dropdown icon', (tester) async {
       await pumpAppSettingsScreen(tester);
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
   });
 }
