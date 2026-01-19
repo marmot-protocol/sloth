@@ -37,7 +37,7 @@ class HomeScreen extends HookConsumerWidget {
             ? 'Login cancelled'
             : 'Amber error: ${e.message}';
       } catch (e) {
-        amberError.value = e.toString();
+        amberError.value = 'Unable to connect to Amber. Please try again.';
       } finally {
         isAmberLoading.value = false;
       }

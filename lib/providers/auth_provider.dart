@@ -132,6 +132,11 @@ class AuthNotifier extends AsyncNotifier<String?> {
       await amberNotifier.disconnect();
       _logger.warning('Amber signing failed: ${e.message}');
       rethrow;
+    } catch (e) {
+      // Catch any other unexpected errors and cleanup
+      await amberNotifier.disconnect();
+      _logger.warning('Amber login failed with unexpected error: $e');
+      rethrow;
     }
   }
 
@@ -140,10 +145,11 @@ class AuthNotifier extends AsyncNotifier<String?> {
     final storage = ref.read(secureStorageProvider);
     final method = await storage.read(key: _loginMethodKey);
     if (method == null) return null;
-    return LoginMethod.values.firstWhere(
-      (e) => e.name == method,
-      orElse: () => LoginMethod.nsec,
-    );
+    final loginMethod = LoginMethod.values.where((e) => e.name == method).firstOrNull;
+    if (loginMethod == null) {
+      throw StateError('Unknown login method in storage: $method');
+    }
+    return loginMethod;
   }
 
   /// Whether the current session is using Amber for signing.

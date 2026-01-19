@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math' show min;
 
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
@@ -116,7 +117,8 @@ class AmberSignerService {
       }
 
       final response = AmberSignerResponse.fromMap(result);
-      _logger.info('Got public key from signer: ${response.result?.substring(0, 8)}...');
+      final preview = response.result?.substring(0, min(8, response.result!.length)) ?? '';
+      _logger.info('Got public key from signer: $preview...');
 
       if (response.result == null || response.result!.isEmpty) {
         throw const AmberSignerException('NO_PUBKEY', 'Signer did not return a public key');
