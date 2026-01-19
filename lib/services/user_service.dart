@@ -1,12 +1,16 @@
+import 'package:logging/logging.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart' as users_api;
+import 'package:sloth/src/rust/api/users.dart' show User;
 
-class UserMetadataService {
+final _logger = Logger('UserService');
+
+class UserService {
   final String pubkey;
 
-  const UserMetadataService(this.pubkey);
+  const UserService(this.pubkey);
 
-  Future<FlutterMetadata> fetch() async {
+  Future<FlutterMetadata> fetchMetadata() async {
     final userMetadata = await users_api.userMetadata(
       pubkey: pubkey,
       blockingDataSync: false,
@@ -19,6 +23,17 @@ class UserMetadataService {
     }
 
     return userMetadata;
+  }
+
+  Future<User?> fetchUser() async {
+    try {
+      final user = await users_api.getUser(pubkey: pubkey, blockingDataSync: false);
+      if (!_isMetadataEmpty(user.metadata)) return user;
+      return await users_api.getUser(pubkey: pubkey, blockingDataSync: true);
+    } catch (e) {
+      _logger.warning('Failed to fetch user', e);
+      return null;
+    }
   }
 
   bool _isMetadataEmpty(FlutterMetadata userMetadata) {
