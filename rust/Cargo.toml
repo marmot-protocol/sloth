@@ -31,7 +31,7 @@ nostr-sdk = { version = "0.43", features = [
 
 thiserror = "2.0.12"
 
-whitenoise = { version = "0.1.0", git = "https://github.com/marmot-protocol/whitenoise-rs", rev = "3139acef555a2c71d6ea4fdaebcb3b40cef74878" }
+whitenoise = { version = "0.1.0", git = "https://github.com/marmot-protocol/whitenoise-rs", rev = "bafec4b9d6982cf29ac5e45d38354c3f3c35e106" }
 # whitenoise = { version = "0.1.0", path = "../../whitenoise" }
 
 [lints.rust]

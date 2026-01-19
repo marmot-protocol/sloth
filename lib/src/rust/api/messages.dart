@@ -48,18 +48,6 @@ Stream<MessageStreamItem> subscribeToGroupMessages({required String groupId}) =>
       groupId: groupId,
     );
 
-/// Marks a message as read for the given account.
-///
-/// Updates the `last_read_message_id` for the account-group pair containing
-/// the specified message. This is used to compute unread counts in the chat list.
-Future<void> markRead({
-  required String accountPubkey,
-  required String messageId,
-}) => RustLib.instance.api.crateApiMessagesMarkRead(
-  accountPubkey: accountPubkey,
-  messageId: messageId,
-);
-
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<Tag>>
 abstract class Tag implements RustOpaqueInterface {}
 
