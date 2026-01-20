@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/screens/app_settings_screen.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
@@ -11,7 +12,6 @@ import 'package:sloth/screens/network_screen.dart';
 import 'package:sloth/screens/profile_keys_screen.dart';
 import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
-import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
@@ -57,7 +57,16 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  setUpAll(() => RustLib.initMock(api: _MockApi()));
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.reset();
+  });
 
   late _MockAuthNotifier mockAuth;
 
@@ -121,11 +130,11 @@ void main() {
       expect(find.byType(NetworkScreen), findsOneWidget);
     });
 
-    testWidgets('tapping App settings navigates to WIP screen', (tester) async {
+    testWidgets('tapping App settings navigates to AppSettingsScreen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.text('App settings'));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(AppSettingsScreen), findsOneWidget);
     });
 
     testWidgets('tapping Donate navigates to Donate screen', (tester) async {

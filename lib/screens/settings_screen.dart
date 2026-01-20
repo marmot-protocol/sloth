@@ -117,7 +117,7 @@ class SettingsScreen extends HookConsumerWidget {
                 _SettingsTile(
                   svgPath: 'assets/svgs/settings.svg',
                   label: 'App settings',
-                  onTap: () => Routes.pushToWip(context),
+                  onTap: () => Routes.pushToAppSettings(context),
                 ),
                 _SettingsTile(
                   svgPath: 'assets/svgs/favorite.svg',

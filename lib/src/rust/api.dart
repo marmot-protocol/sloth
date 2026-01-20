@@ -47,6 +47,9 @@ Future<AppSettings> getAppSettings() => RustLib.instance.api.crateApiGetAppSetti
 Future<void> updateThemeMode({required ThemeMode themeMode}) =>
     RustLib.instance.api.crateApiUpdateThemeMode(themeMode: themeMode);
 
+Future<ThemeMode> appSettingsThemeMode({required AppSettings appSettings}) =>
+    RustLib.instance.api.crateApiAppSettingsThemeMode(appSettings: appSettings);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<AppSettings>>
 abstract class AppSettings implements RustOpaqueInterface {}
 

@@ -3,6 +3,7 @@
 //! This module provides essential utility functions for the White Noise Flutter application,
 //! including key management, relay operations, and data conversions.
 
+use crate::api::ThemeMode;
 use crate::api::error::ApiError;
 use flutter_rust_bridge::frb;
 use mdk_core::prelude::GroupId;
@@ -56,4 +57,28 @@ pub fn group_id_to_string(group_id: &GroupId) -> String {
 pub fn group_id_from_string(group_id: &str) -> Result<GroupId, ApiError> {
     let bytes = ::hex::decode(group_id)?;
     Ok(GroupId::from_slice(&bytes))
+}
+
+#[frb(sync)]
+pub fn theme_mode_light() -> ThemeMode {
+    ThemeMode::Light
+}
+
+#[frb(sync)]
+pub fn theme_mode_dark() -> ThemeMode {
+    ThemeMode::Dark
+}
+
+#[frb(sync)]
+pub fn theme_mode_system() -> ThemeMode {
+    ThemeMode::System
+}
+
+#[frb(sync)]
+pub fn theme_mode_to_string(theme_mode: &ThemeMode) -> String {
+    match theme_mode {
+        ThemeMode::Light => "light".to_string(),
+        ThemeMode::Dark => "dark".to_string(),
+        ThemeMode::System => "system".to_string(),
+    }
 }

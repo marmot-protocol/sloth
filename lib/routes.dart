@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
 import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/screens/app_settings_screen.dart' show AppSettingsScreen;
 import 'package:sloth/screens/chat_invite_screen.dart' show ChatInviteScreen;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
 import 'package:sloth/screens/chat_screen.dart' show ChatScreen;
@@ -29,6 +30,7 @@ abstract final class Routes {
   static const _chatList = '/chats';
   static const _settings = '/settings';
   static const _donate = '/donate';
+  static const _appSettings = '/app-settings';
   static const _wip = '/wip';
   static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
@@ -95,6 +97,13 @@ abstract final class Routes {
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
             child: const DonateScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _appSettings,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const AppSettingsScreen(),
           ),
         ),
         GoRoute(
@@ -239,6 +248,10 @@ abstract final class Routes {
 
   static void pushToDonate(BuildContext context) {
     GoRouter.of(context).push(_donate);
+  }
+
+  static void pushToAppSettings(BuildContext context) {
+    GoRouter.of(context).push(_appSettings);
   }
 
   static void goToOnboarding(BuildContext context) {

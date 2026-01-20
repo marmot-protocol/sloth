@@ -148,6 +148,7 @@ just generate
   - `mountWidget(child, tester)` - Mount single widget
   - `mountStackedWidget(child, tester)` - Mount widget in Stack
 - Mock Rust API using `RustLib.initMock(api: mockApi)`
+- Prefer `find.byKey()` over `find.byIcon()` - add keys to icons in widgets and use `find.byKey(const Key('icon_name'))` in tests
 
 ## Sloth Mode Philosophy
 
