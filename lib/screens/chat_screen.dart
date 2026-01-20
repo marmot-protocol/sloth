@@ -217,7 +217,7 @@ class _ChatInput extends StatelessWidget {
                         width: 44.w,
                         height: 44.h,
                         decoration: BoxDecoration(
-                          color: colors.backgroundSecondary,
+                          color: colors.fillPrimary,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Icon(

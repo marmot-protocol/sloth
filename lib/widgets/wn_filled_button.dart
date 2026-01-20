@@ -24,13 +24,11 @@ class WnFilledButton extends StatelessWidget {
       onPressed: (loading || disabled) ? null : onPressed,
       style: FilledButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
-        backgroundColor: disabled
-            ? colors.backgroundSecondary.withValues(alpha: 0.9)
-            : colors.backgroundSecondary,
+        backgroundColor: disabled ? colors.fillPrimary.withValues(alpha: 0.9) : colors.fillPrimary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
         ),
-        overlayColor: colors.backgroundSecondary.withValues(alpha: 0.8),
+        overlayColor: colors.fillPrimary.withValues(alpha: 0.8),
       ),
       child: loading
           ? SizedBox.square(

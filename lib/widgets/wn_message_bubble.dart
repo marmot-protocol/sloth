@@ -23,7 +23,7 @@ class WnMessageBubble extends StatelessWidget {
         margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
         padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
         decoration: BoxDecoration(
-          color: colors.backgroundSecondary.withValues(alpha: isOwnMessage ? 0.9 : 0.1),
+          color: colors.fillPrimary.withValues(alpha: isOwnMessage ? 0.9 : 0.1),
           borderRadius: BorderRadius.circular(8.r),
         ),
         child: Text(
