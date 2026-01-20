@@ -18,13 +18,15 @@ MIN_COVERAGE=""
 
 
 print_error() {
-    local red_color="\e[31;1m%s\e[0m\n"
-    printf "${red_color}" "$1" >&2
+    printf '%b%s%b\n' "\e[31;1m" "$1" "\e[0m" >&2
 }
 
 print_success() {
-    local green_color="\e[32;1m%s\e[0m\n"
-    printf "${green_color}" "$1" >&2
+    printf '%b%s%b\n' "\e[32;1m" "$1" "\e[0m" >&2
+}
+
+print_warning() {
+    printf '%b%s%b\n' "\e[33;1m" "$1" "\e[0m" >&2
 }
 
 raise_error() {
@@ -51,6 +53,83 @@ parse_arguments() {
 check_lcov_file_presence() {
     if [ ! -f "$LCOV_FILE" ]; then
         raise_error "Error: $LCOV_FILE not found. Run 'flutter test --coverage' first."
+    fi
+}
+
+is_generated_file() {
+    local file="$1"
+    if [[ "$file" == *".freezed.dart" ]] || \
+       [[ "$file" == *".g.dart" ]] || \
+       [[ "$file" == lib/src/rust/* ]]; then
+        return 0
+    fi
+    return 1
+}
+
+count_lines() {
+    local file="$1"
+    wc -l < "$file" | tr -d ' '
+}
+
+get_covered_files() {
+    grep "^SF:" "$LCOV_FILE" | sed 's/^SF://' | sort -u
+}
+
+generate_zero_coverage_record() {
+    local file="$1"
+    local line_count="$2"
+
+    echo "SF:$file"
+    for ((i=1; i<=line_count; i++)); do
+        echo "DA:$i,0"
+    done
+    echo "LF:$line_count"
+    echo "LH:0"
+    echo "end_of_record"
+}
+
+print_missing_files_warning() {
+    local missing_count="$1"
+    shift
+    local missing_files=("$@")
+
+    if [ "$missing_count" -gt 0 ]; then
+        print_warning "⚠️  Found $missing_count file(s) with no test coverage:"
+        for file in "${missing_files[@]}"; do
+            print_warning "   - $file"
+        done
+    fi
+}
+
+inject_missing_files() {
+    local missing_count=0
+    local missing_files=()
+    local covered_files
+    covered_files=$(get_covered_files)
+
+    while IFS= read -r -d '' dart_file; do
+        dart_file="${dart_file#./}"
+
+        if is_generated_file "$dart_file"; then
+            continue
+        fi
+
+        if echo "$covered_files" | grep -qx "$dart_file"; then
+            continue
+        fi
+
+        local line_count
+        line_count=$(count_lines "$dart_file")
+
+        if [ "$line_count" -gt 0 ]; then
+            generate_zero_coverage_record "$dart_file" "$line_count" >> "$LCOV_FILE"
+            missing_files+=("$dart_file")
+            ((missing_count++))
+        fi
+    done < <(find lib -name "*.dart" -type f -print0 2>/dev/null)
+
+    if [ "$missing_count" -gt 0 ]; then
+        print_missing_files_warning "$missing_count" "${missing_files[@]}"
     fi
 }
 
@@ -135,6 +214,7 @@ print_coverage_result() {
 main() {
     parse_arguments "$@"
     check_lcov_file_presence
+    inject_missing_files
     filter_generated_files
 
     local coverage
