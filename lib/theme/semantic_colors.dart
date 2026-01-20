@@ -338,7 +338,7 @@ const _darkAccentColors = SemanticAccentColors(
     fill: _IndigoColors.indigo950,
     contentPrimary: _IndigoColors.indigo50,
     contentSecondary: _IndigoColors.indigo500,
-    border: _BlueColors.blue200,
+    border: _IndigoColors.indigo200,
   ),
   lime: AccentColorSet(
     fill: _LimeColors.lime950,

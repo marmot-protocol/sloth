@@ -211,7 +211,7 @@ class _ImageDisplay extends HookWidget {
       return Text(
         initials,
         style: TextStyle(
-          color: colors.fillContentPrimary,
+          color: colors.backgroundContentPrimary,
           fontSize: _size * 0.4,
           fontWeight: FontWeight.w600,
         ),
@@ -224,7 +224,7 @@ class _ImageDisplay extends HookWidget {
       width: _size * 0.4,
       height: _size * 0.4,
       colorFilter: ColorFilter.mode(
-        colors.fillContentPrimary,
+        colors.backgroundContentPrimary,
         BlendMode.srcIn,
       ),
     );
