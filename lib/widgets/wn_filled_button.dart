@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnFilledButton extends StatelessWidget {
   const WnFilledButton({
@@ -24,13 +24,11 @@ class WnFilledButton extends StatelessWidget {
       onPressed: (loading || disabled) ? null : onPressed,
       style: FilledButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
-        backgroundColor: disabled
-            ? colors.backgroundSecondary.withValues(alpha: 0.9)
-            : colors.backgroundSecondary,
+        backgroundColor: disabled ? colors.fillPrimary.withValues(alpha: 0.25) : colors.fillPrimary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
         ),
-        overlayColor: colors.backgroundSecondary.withValues(alpha: 0.8),
+        overlayColor: colors.fillPrimaryHover,
       ),
       child: loading
           ? SizedBox.square(
@@ -39,7 +37,7 @@ class WnFilledButton extends StatelessWidget {
                 key: const Key('loading_indicator'),
                 strokeWidth: 2.w,
                 strokeCap: StrokeCap.round,
-                color: colors.foregroundSecondary,
+                color: colors.fillContentPrimary,
               ),
             )
           : Text(
@@ -48,8 +46,8 @@ class WnFilledButton extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 16.sp,
                 color: disabled
-                    ? colors.foregroundSecondary.withValues(alpha: 0.9)
-                    : colors.foregroundSecondary,
+                    ? colors.fillContentPrimary.withValues(alpha: 0.25)
+                    : colors.fillContentPrimary,
               ),
             ),
     );

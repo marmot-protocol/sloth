@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
-import 'package:sloth/theme.dart' show ThemeColors;
+import 'package:sloth/theme.dart';
 
 class WnSlateContainer extends StatelessWidget {
   const WnSlateContainer({
@@ -15,10 +14,10 @@ class WnSlateContainer extends StatelessWidget {
   final String? tag;
   final EdgeInsetsGeometry? padding;
 
-  BoxDecoration _decoration(ThemeColors colors) {
+  BoxDecoration _decoration(SemanticColors colors) {
     return BoxDecoration(
       color: colors.backgroundTertiary,
-      border: Border.all(color: colors.foregroundTertiary),
+      border: Border.all(color: colors.borderSecondary),
       borderRadius: BorderRadius.circular(14.r),
       boxShadow: [
         BoxShadow(

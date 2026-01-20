@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
 
 class WnCopyableField extends HookWidget {
@@ -63,7 +63,7 @@ class WnCopyableField extends HookWidget {
                     icon: Icon(
                       obscured ? Icons.visibility_outlined : Icons.visibility_off_outlined,
                       size: 20.w,
-                      color: colors.foregroundPrimary,
+                      color: colors.backgroundContentPrimary,
                     ),
                   )
                 : null,
@@ -77,7 +77,7 @@ class WnCopyableField extends HookWidget {
             onPressed: () => _handleCopy(context, controller.text),
             icon: Icon(
               Icons.copy,
-              color: colors.foregroundPrimary,
+              color: colors.backgroundContentPrimary,
               size: 20.w,
             ),
             style: IconButton.styleFrom(

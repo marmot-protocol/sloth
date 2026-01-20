@@ -4,10 +4,10 @@ import 'package:flutter_hooks/flutter_hooks.dart'
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_signup.dart' show useSignup;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_image_picker.dart' show WnImagePicker;
 import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
@@ -85,7 +85,7 @@ class SignupScreen extends HookConsumerWidget {
                                 key: const Key('back_button'),
                                 onPressed: () => Routes.goBack(context),
                                 icon: const Icon(Icons.chevron_left),
-                                color: colors.foregroundTertiary,
+                                color: colors.backgroundContentTertiary,
                                 iconSize: 24.sp,
                               ),
                               Expanded(
@@ -94,7 +94,7 @@ class SignupScreen extends HookConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: colors.foregroundTertiary,
+                                    color: colors.backgroundContentTertiary,
                                   ),
                                 ),
                               ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -31,7 +31,7 @@ class DonateScreen extends StatelessWidget {
                 Text(
                   'As a not-for-profit, White Noise exists solely for your privacy and freedom, not for profit. Your support keeps us independent and uncompromised.',
                   style: TextStyle(
-                    color: colors.foregroundTertiary,
+                    color: colors.backgroundContentTertiary,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),

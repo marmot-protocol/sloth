@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart'
     show HookWidget, useAnimationController, useEffect;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_animated_pixel_overlay.dart';
 
 class WnPixelsLayer extends HookWidget {

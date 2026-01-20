@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart' show useTextEditingController,
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
@@ -69,7 +69,7 @@ class LoginScreen extends HookConsumerWidget {
                             key: const Key('back_button'),
                             onPressed: () => Routes.goBack(context),
                             icon: const Icon(Icons.chevron_left),
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                             iconSize: 24.sp,
                           ),
                           Expanded(
@@ -78,7 +78,7 @@ class LoginScreen extends HookConsumerWidget {
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
-                                color: context.colors.foregroundTertiary,
+                                color: context.colors.backgroundContentTertiary,
                               ),
                             ),
                           ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnDropdownOption<T> {
   const WnDropdownOption({
@@ -38,7 +38,7 @@ class WnDropdownSelector<T> extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: colors.foregroundPrimary,
+            color: colors.backgroundContentPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -48,11 +48,11 @@ class WnDropdownSelector<T> extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: colors.foregroundTertiary),
+              borderSide: BorderSide(color: colors.borderSecondary),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: colors.foregroundTertiary),
+              borderSide: BorderSide(color: colors.borderSecondary),
             ),
           ),
           child: DropdownButtonHideUnderline(
@@ -62,14 +62,14 @@ class WnDropdownSelector<T> extends StatelessWidget {
               icon: Icon(
                 Icons.keyboard_arrow_down,
                 key: const Key('dropdown_icon'),
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
               dropdownColor: colors.backgroundPrimary,
               borderRadius: BorderRadius.circular(8.r),
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
                 fontFamily: 'Manrope',
               ),
               items: options.map((option) {

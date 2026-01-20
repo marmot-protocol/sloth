@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_animated_pixel_overlay.dart';
 import 'package:sloth/widgets/wn_initials_avatar.dart';
 
@@ -68,7 +68,7 @@ class _AvatarContainer extends StatelessWidget {
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+        border: Border.all(color: colors.borderTertiary, width: 1.5),
       ),
       child: ClipOval(child: child),
     );

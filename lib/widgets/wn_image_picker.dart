@@ -6,8 +6,7 @@ import 'package:flutter_hooks/flutter_hooks.dart'
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:image_picker/image_picker.dart' show ImagePicker, ImageSource;
-import 'package:sloth/extensions/build_context.dart';
-import 'package:sloth/theme.dart' show ThemeColors;
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart' show formatInitials;
 import 'package:sloth/widgets/wn_animated_pixel_overlay.dart';
 
@@ -72,7 +71,7 @@ class WnImagePicker extends HookWidget {
               decoration: BoxDecoration(
                 color: colors.backgroundPrimary,
                 shape: BoxShape.circle,
-                border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+                border: Border.all(color: colors.borderSecondary, width: 1.5),
               ),
               child: Center(
                 child: SvgPicture.asset(
@@ -80,7 +79,7 @@ class WnImagePicker extends HookWidget {
                   width: 14.w,
                   height: 14.w,
                   colorFilter: ColorFilter.mode(
-                    colors.foregroundTertiary,
+                    colors.backgroundContentTertiary,
                     BlendMode.srcIn,
                   ),
                 ),
@@ -147,7 +146,7 @@ class _ImageDisplay extends HookWidget {
   }
 
   Widget _buildImageContainer({
-    required ThemeColors colors,
+    required SemanticColors colors,
     required Widget child,
     required bool loading,
     required AnimationController animationController,
@@ -157,8 +156,8 @@ class _ImageDisplay extends HookWidget {
       height: _size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+        color: colors.fillSecondary,
+        border: Border.all(color: colors.borderSecondary, width: 1.5),
       ),
       child: ClipOval(
         child: Stack(
@@ -192,27 +191,27 @@ class _ImageDisplay extends HookWidget {
     );
   }
 
-  Widget _buildInitials(ThemeColors colors) {
+  Widget _buildInitials(SemanticColors colors) {
     return Container(
       width: _size,
       height: _size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+        color: colors.fillContentSecondary,
+        border: Border.all(color: colors.borderSecondary, width: 1.5),
       ),
       child: Center(child: _buildInitialsContent(colors)),
     );
   }
 
-  Widget _buildInitialsContent(ThemeColors colors) {
+  Widget _buildInitialsContent(SemanticColors colors) {
     final initials = formatInitials(displayName);
 
     if (initials != null) {
       return Text(
         initials,
         style: TextStyle(
-          color: colors.foregroundSecondary,
+          color: colors.backgroundContentPrimary,
           fontSize: _size * 0.4,
           fontWeight: FontWeight.w600,
         ),
@@ -225,7 +224,7 @@ class _ImageDisplay extends HookWidget {
       width: _size * 0.4,
       height: _size * 0.4,
       colorFilter: ColorFilter.mode(
-        colors.foregroundSecondary,
+        colors.backgroundContentPrimary,
         BlendMode.srcIn,
       ),
     );

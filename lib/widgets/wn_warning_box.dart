@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnWarningBox extends StatelessWidget {
   const WnWarningBox({
@@ -28,11 +28,11 @@ class WnWarningBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final bgColor = backgroundColor ?? colors.error.withValues(alpha: 0.1);
-    final border = borderColor ?? colors.error.withValues(alpha: 0.3);
-    final iconC = iconColor ?? colors.error;
-    final titleC = titleColor ?? colors.error;
-    final descC = descriptionColor ?? colors.foregroundPrimary;
+    final bgColor = backgroundColor ?? colors.fillDestructive.withValues(alpha: 0.1);
+    final border = borderColor ?? colors.borderDestructivePrimary;
+    final iconC = iconColor ?? colors.fillDestructive;
+    final titleC = titleColor ?? colors.fillDestructive;
+    final descC = descriptionColor ?? colors.backgroundContentPrimary;
 
     return Container(
       padding: EdgeInsets.all(12.w),

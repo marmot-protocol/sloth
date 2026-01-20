@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/src/rust/api/relays.dart';
+import 'package:sloth/theme.dart';
 
 class WnRelayTile extends StatelessWidget {
   const WnRelayTile({
@@ -42,7 +42,7 @@ class WnRelayTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
-                      color: colors.foregroundPrimary,
+                      color: colors.backgroundContentPrimary,
                     ),
                   ),
                   GestureDetector(
@@ -51,7 +51,7 @@ class WnRelayTile extends StatelessWidget {
                     child: Icon(
                       Icons.close,
                       size: 24.w,
-                      color: colors.foregroundPrimary,
+                      color: colors.backgroundContentPrimary,
                     ),
                   ),
                 ],
@@ -61,7 +61,7 @@ class WnRelayTile extends StatelessWidget {
                 'Are you sure you want to remove this relay? This action cannot be undone.',
                 style: TextStyle(
                   fontSize: 14.sp,
-                  color: colors.foregroundTertiary,
+                  color: colors.backgroundContentTertiary,
                 ),
               ),
               Gap(24.h),
@@ -71,7 +71,7 @@ class WnRelayTile extends StatelessWidget {
                   key: const Key('cancel_delete_button'),
                   onPressed: () => Navigator.of(context).pop(false),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: colors.foregroundTertiary),
+                    side: BorderSide(color: colors.borderSecondary),
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
@@ -82,7 +82,7 @@ class WnRelayTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: colors.foregroundPrimary,
+                      color: colors.backgroundContentPrimary,
                     ),
                   ),
                 ),
@@ -94,7 +94,7 @@ class WnRelayTile extends StatelessWidget {
                   key: const Key('confirm_delete_button'),
                   onPressed: () => Navigator.of(context).pop(true),
                   style: FilledButton.styleFrom(
-                    backgroundColor: colors.error,
+                    backgroundColor: colors.fillDestructive,
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
@@ -105,7 +105,7 @@ class WnRelayTile extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: colors.foregroundSecondary,
+                      color: colors.fillContentPrimary,
                     ),
                   ),
                 ),
@@ -131,7 +131,7 @@ class WnRelayTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.backgroundPrimary,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: colors.foregroundTertiary.withValues(alpha: 0.3)),
+        border: Border.all(color: colors.borderTertiary),
       ),
       child: Row(
         children: [
@@ -141,10 +141,10 @@ class WnRelayTile extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: status == null
-                  ? colors.foregroundTertiary
+                  ? colors.backgroundContentTertiary
                   : isConnected
-                  ? colors.success
-                  : colors.error,
+                  ? colors.borderSuccess
+                  : colors.fillDestructive,
             ),
           ),
           Gap(12.w),
@@ -157,7 +157,7 @@ class WnRelayTile extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
-                    color: colors.foregroundPrimary,
+                    color: colors.backgroundContentPrimary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
@@ -168,7 +168,7 @@ class WnRelayTile extends StatelessWidget {
                     status!,
                     style: TextStyle(
                       fontSize: 11.sp,
-                      color: colors.foregroundTertiary,
+                      color: colors.backgroundContentTertiary,
                     ),
                   ),
                 ],
@@ -181,7 +181,7 @@ class WnRelayTile extends StatelessWidget {
               onPressed: () => _showDeleteConfirmation(context),
               icon: Icon(
                 Icons.remove_circle_outline,
-                color: colors.error,
+                color: colors.fillDestructive,
               ),
               iconSize: 20.w,
             ),

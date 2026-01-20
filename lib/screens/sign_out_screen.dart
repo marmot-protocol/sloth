@@ -3,10 +3,10 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -74,7 +74,7 @@ class SignOutScreen extends HookConsumerWidget {
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
-                              color: colors.foregroundPrimary,
+                              color: colors.backgroundContentPrimary,
                             ),
                           ),
                           Gap(8.h),
@@ -83,7 +83,7 @@ class SignOutScreen extends HookConsumerWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: colors.foregroundTertiary,
+                              color: colors.backgroundContentSecondary,
                             ),
                           ),
                           Gap(16.h),

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/routes.dart' show Routes;
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
 import 'package:sloth/widgets/wn_screen_header.dart' show WnScreenHeader;
@@ -35,7 +35,7 @@ class WipScreen extends StatelessWidget {
                         Text(
                           '🦥',
                           style: TextStyle(
-                            color: colors.foregroundPrimary,
+                            color: colors.backgroundContentPrimary,
                             fontSize: 56.sp,
                             fontWeight: FontWeight.w600,
                           ),
@@ -44,7 +44,7 @@ class WipScreen extends StatelessWidget {
                         Text(
                           'Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise',
                           style: TextStyle(
-                            color: colors.foregroundTertiary,
+                            color: colors.backgroundContentTertiary,
                             fontSize: 14.sp,
                             fontWeight: FontWeight.w500,
                           ),

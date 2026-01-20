@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnOutlinedButton extends StatelessWidget {
   const WnOutlinedButton({
@@ -25,15 +25,15 @@ class WnOutlinedButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
         side: BorderSide(
-          color: disabled
-              ? colors.foregroundTertiary.withValues(alpha: 0.5)
-              : colors.foregroundTertiary,
+          color: disabled ? colors.borderTertiary.withValues(alpha: 0.25) : colors.borderTertiary,
         ),
-        backgroundColor: colors.backgroundPrimary,
+        backgroundColor: disabled
+            ? colors.fillSecondary.withValues(alpha: 0.25)
+            : colors.fillSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
         ),
-        overlayColor: colors.backgroundPrimary.withValues(alpha: 0.8),
+        overlayColor: colors.fillSecondaryHover,
       ),
       child: loading
           ? SizedBox.square(
@@ -42,7 +42,7 @@ class WnOutlinedButton extends StatelessWidget {
                 key: const Key('loading_indicator'),
                 strokeWidth: 2.w,
                 strokeCap: StrokeCap.round,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
             )
           : Text(
@@ -51,8 +51,8 @@ class WnOutlinedButton extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 16.sp,
                 color: disabled
-                    ? colors.foregroundPrimary.withValues(alpha: 0.5)
-                    : colors.foregroundPrimary,
+                    ? colors.fillContentSecondary.withValues(alpha: 0.25)
+                    : colors.fillContentSecondary,
               ),
             ),
     );

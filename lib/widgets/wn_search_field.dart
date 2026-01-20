@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnSearchField extends StatelessWidget {
   const WnSearchField({
@@ -27,20 +27,20 @@ class WnSearchField extends StatelessWidget {
       style: TextStyle(
         fontSize: 14.sp,
         fontWeight: FontWeight.w500,
-        color: colors.foregroundPrimary,
+        color: colors.backgroundContentPrimary,
       ),
       decoration: InputDecoration(
         hintText: placeholder,
         hintStyle: TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.w500,
-          color: colors.foregroundTertiary,
+          color: colors.backgroundContentTertiary,
         ),
         prefixIcon: Icon(
           Icons.search,
           key: const Key('search_icon'),
           size: 20.sp,
-          color: colors.foregroundTertiary,
+          color: colors.backgroundContentTertiary,
         ),
         filled: true,
         fillColor: colors.backgroundTertiary,
@@ -50,11 +50,11 @@ class WnSearchField extends StatelessWidget {
         ),
         enabledBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: colors.foregroundTertiary),
+          borderSide: BorderSide(color: colors.borderTertiary),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.circular(8.r),
-          borderSide: BorderSide(color: colors.foregroundPrimary),
+          borderSide: BorderSide(color: colors.borderPrimary),
         ),
       ),
     );

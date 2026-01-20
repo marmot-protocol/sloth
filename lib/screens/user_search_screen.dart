@@ -3,11 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_user_search.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/users.dart' show User;
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart' show formatPublicKey, npubFromHex;
 import 'package:sloth/utils/metadata.dart' show presentName;
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -53,7 +53,7 @@ class UserSearchScreen extends HookConsumerWidget {
                   child: state.isLoading
                       ? Center(
                           child: CircularProgressIndicator(
-                            color: colors.foregroundPrimary,
+                            color: colors.backgroundContentPrimary,
                             strokeCap: StrokeCap.round,
                           ),
                         )
@@ -61,7 +61,7 @@ class UserSearchScreen extends HookConsumerWidget {
                       ? Center(
                           child: Text(
                             state.hasSearchQuery ? 'No results' : 'No follows yet',
-                            style: TextStyle(color: colors.foregroundTertiary),
+                            style: TextStyle(color: colors.backgroundContentTertiary),
                           ),
                         )
                       : Stack(
@@ -121,7 +121,7 @@ class _UserListTile extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16.sp,
                 fontWeight: FontWeight.w600,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
               overflow: TextOverflow.ellipsis,
             )
@@ -129,7 +129,7 @@ class _UserListTile extends StatelessWidget {
               formattedPubKey,
               style: TextStyle(
                 fontSize: 12.sp,
-                color: colors.foregroundTertiary,
+                color: colors.backgroundContentTertiary,
               ),
             ),
       subtitle: hasDisplayName
@@ -137,7 +137,7 @@ class _UserListTile extends StatelessWidget {
               formattedPubKey,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: colors.foregroundTertiary,
+                color: colors.backgroundContentTertiary,
                 fontWeight: FontWeight.w500,
               ),
             )

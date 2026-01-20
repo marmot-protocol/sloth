@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState, useEditProfile;
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
 import 'package:sloth/widgets/wn_outlined_button.dart';
@@ -56,7 +56,7 @@ class EditProfileScreen extends HookConsumerWidget {
                       state.currentMetadata == null
                           ? 'Error loading profile: ${state.error}'
                           : 'Error: ${state.error}',
-                      style: TextStyle(color: colors.error),
+                      style: TextStyle(color: colors.fillDestructive),
                     ),
                   )
                 else
@@ -102,11 +102,11 @@ class EditProfileScreen extends HookConsumerWidget {
                               title: 'Profile is public',
                               description:
                                   'Your profile information will be visible to everyone on the network.',
-                              backgroundColor: colors.foregroundSecondary.withValues(alpha: 0.1),
-                              borderColor: colors.foregroundPrimary,
-                              iconColor: colors.foregroundPrimary,
-                              titleColor: colors.foregroundPrimary,
-                              descriptionColor: colors.foregroundTertiary,
+                              backgroundColor: colors.backgroundTertiary,
+                              borderColor: colors.borderPrimary,
+                              iconColor: colors.backgroundContentPrimary,
+                              titleColor: colors.backgroundContentPrimary,
+                              descriptionColor: colors.backgroundContentTertiary,
                               icon: Icons.info_outline,
                             ),
                             Gap(16.h),

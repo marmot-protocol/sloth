@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/routes.dart' show Routes;
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
@@ -33,7 +33,7 @@ class HomeScreen extends StatelessWidget {
                         SvgPicture.asset(
                           'assets/svgs/whitenoise.svg',
                           colorFilter: ColorFilter.mode(
-                            colors.foregroundPrimary,
+                            colors.backgroundContentPrimary,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -45,7 +45,7 @@ class HomeScreen extends StatelessWidget {
                             fontWeight: FontWeight.w700,
                             fontSize: 48.sp,
                             letterSpacing: -0.6.sp,
-                            color: context.colors.foregroundPrimary,
+                            color: context.colors.backgroundContentPrimary,
                           ),
                         ),
                         Text(
@@ -55,7 +55,7 @@ class HomeScreen extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18.sp,
                             letterSpacing: 0.1.sp,
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                           ),
                         ),
                         Text(
@@ -65,7 +65,7 @@ class HomeScreen extends StatelessWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18.sp,
                             letterSpacing: 0.1.sp,
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                           ),
                         ),
                       ],

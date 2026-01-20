@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_chat_avatar.dart';
 import 'package:sloth/hooks/use_chat_input.dart';
 import 'package:sloth/hooks/use_chat_messages.dart';
@@ -11,6 +10,7 @@ import 'package:sloth/hooks/use_chat_scroll.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/services/message_service.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_fade_overlay.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
@@ -72,7 +72,7 @@ class ChatScreen extends HookConsumerWidget {
                 child: isLoading
                     ? Center(
                         child: CircularProgressIndicator(
-                          color: colors.foregroundPrimary,
+                          color: colors.backgroundContentPrimary,
                         ),
                       )
                     : messageCount == 0
@@ -80,7 +80,7 @@ class ChatScreen extends HookConsumerWidget {
                         child: Text(
                           'No messages yet',
                           style: TextStyle(
-                            color: colors.foregroundTertiary,
+                            color: colors.backgroundContentTertiary,
                             fontSize: 14.sp,
                           ),
                         ),
@@ -162,11 +162,11 @@ class _ChatInput extends StatelessWidget {
               textCapitalization: TextCapitalization.sentences,
               style: TextStyle(
                 fontSize: 14.sp,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
               decoration: InputDecoration(
                 hintText: 'Message',
-                hintStyle: TextStyle(color: colors.foregroundTertiary),
+                hintStyle: TextStyle(color: colors.backgroundContentTertiary),
                 filled: true,
                 fillColor: colors.backgroundTertiary,
                 contentPadding: EdgeInsets.symmetric(
@@ -176,12 +176,12 @@ class _ChatInput extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
                   borderSide: BorderSide(
-                    color: colors.foregroundTertiary.withValues(alpha: 0.5),
+                    color: colors.borderTertiary,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: colors.foregroundPrimary),
+                  borderSide: BorderSide(color: colors.borderPrimary),
                 ),
               ),
             ),
@@ -199,12 +199,12 @@ class _ChatInput extends StatelessWidget {
                         width: 44.w,
                         height: 44.h,
                         decoration: BoxDecoration(
-                          color: colors.backgroundSecondary,
+                          color: colors.fillPrimary,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Icon(
                           Icons.arrow_upward,
-                          color: colors.foregroundSecondary,
+                          color: colors.fillContentPrimary,
                           size: 20.sp,
                         ),
                       ),
