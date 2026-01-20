@@ -9,29 +9,29 @@ import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDi
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/providers/theme_provider.dart' show themeProvider;
 import 'package:sloth/routes.dart' show Routes;
-import 'package:sloth/src/rust/api.dart' show createWhitenoiseConfig, initializeWhitenoise;
+import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RustLib.init();
-  await _initializeWhitenoise();
-
-  final container = ProviderContainer();
-  await container.read(authProvider.future);
-
+  final container = await initializeAppContainer();
   runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
 }
 
-Future<void> _initializeWhitenoise() async {
+Future<ProviderContainer> initializeAppContainer() async {
   final dir = await getApplicationDocumentsDirectory();
   final dataDir = '${dir.path}/whitenoise/data';
   final logsDir = '${dir.path}/whitenoise/logs';
   await Directory(dataDir).create(recursive: true);
   await Directory(logsDir).create(recursive: true);
-  final config = await createWhitenoiseConfig(dataDir: dataDir, logsDir: logsDir);
-  await initializeWhitenoise(config: config);
+  final config = await rust_api.createWhitenoiseConfig(dataDir: dataDir, logsDir: logsDir);
+  await rust_api.initializeWhitenoise(config: config);
+
+  final container = ProviderContainer();
+  await container.read(authProvider.future);
+  return container;
 }
 
 class MyApp extends ConsumerStatefulWidget {
