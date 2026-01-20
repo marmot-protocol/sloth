@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_add_relay.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 
 class WnAddRelayBottomSheet extends HookWidget {
@@ -61,7 +61,7 @@ class WnAddRelayBottomSheet extends HookWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: colors.foregroundTertiary.withValues(alpha: 0.3),
+                  color: colors.backgroundContentTertiary.withValues(alpha: 0.3),
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -72,7 +72,7 @@ class WnAddRelayBottomSheet extends HookWidget {
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
             ),
             Gap(16.h),
@@ -81,7 +81,7 @@ class WnAddRelayBottomSheet extends HookWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w600,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
             ),
             Gap(8.h),
@@ -93,14 +93,14 @@ class WnAddRelayBottomSheet extends HookWidget {
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
-                      color: colors.foregroundPrimary,
+                      color: colors.backgroundContentPrimary,
                     ),
                     decoration: InputDecoration(
                       hintText: 'wss://relay.example.com',
                       hintStyle: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w600,
-                        color: colors.foregroundTertiary,
+                        color: colors.backgroundContentTertiary,
                       ),
                       filled: true,
                       fillColor: colors.backgroundPrimary,
@@ -110,11 +110,11 @@ class WnAddRelayBottomSheet extends HookWidget {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
-                        borderSide: BorderSide(color: colors.foregroundTertiary),
+                        borderSide: BorderSide(color: colors.backgroundContentTertiary),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
-                        borderSide: BorderSide(color: colors.foregroundTertiary),
+                        borderSide: BorderSide(color: colors.backgroundContentTertiary),
                       ),
                     ),
                   ),
@@ -129,12 +129,12 @@ class WnAddRelayBottomSheet extends HookWidget {
                     decoration: BoxDecoration(
                       color: colors.backgroundPrimary,
                       borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: colors.foregroundTertiary),
+                      border: Border.all(color: colors.backgroundContentTertiary),
                     ),
                     child: Icon(
                       Icons.content_paste,
                       size: 20.w,
-                      color: colors.foregroundPrimary,
+                      color: colors.backgroundContentPrimary,
                     ),
                   ),
                 ),
@@ -145,8 +145,8 @@ class WnAddRelayBottomSheet extends HookWidget {
               Container(
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
-                  color: colors.error.withValues(alpha: 0.1),
-                  border: Border.all(color: colors.error),
+                  color: colors.fillDestructive.withValues(alpha: 0.1),
+                  border: Border.all(color: colors.fillDestructive),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Column(
@@ -157,13 +157,13 @@ class WnAddRelayBottomSheet extends HookWidget {
                         Icon(
                           Icons.warning_amber_rounded,
                           size: 16.w,
-                          color: colors.error,
+                          color: colors.fillDestructive,
                         ),
                         Gap(8.w),
                         Text(
                           'Relay not supported',
                           style: TextStyle(
-                            color: colors.foregroundPrimary,
+                            color: colors.backgroundContentPrimary,
                             fontWeight: FontWeight.w600,
                             fontSize: 14.sp,
                           ),
@@ -174,7 +174,7 @@ class WnAddRelayBottomSheet extends HookWidget {
                     Text(
                       validationError,
                       style: TextStyle(
-                        color: colors.foregroundPrimary,
+                        color: colors.backgroundContentPrimary,
                         fontWeight: FontWeight.w500,
                         fontSize: 12.sp,
                       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnTextFormField extends StatelessWidget {
   const WnTextFormField({
@@ -45,7 +45,7 @@ class WnTextFormField extends StatelessWidget {
           label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: colors.foregroundPrimary,
+            color: colors.backgroundContentPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -61,14 +61,14 @@ class WnTextFormField extends StatelessWidget {
           style: TextStyle(
             fontSize: 14.sp,
             fontWeight: FontWeight.w600,
-            color: hasError ? colors.error : colors.foregroundPrimary,
+            color: hasError ? colors.fillDestructive : colors.backgroundContentPrimary,
           ),
           decoration: InputDecoration(
             hintText: placeholder,
             hintStyle: TextStyle(
               fontSize: 14.sp,
               fontWeight: FontWeight.w600,
-              color: colors.foregroundTertiary,
+              color: colors.backgroundContentTertiary,
             ),
             filled: true,
             fillColor: colors.backgroundPrimary,
@@ -79,19 +79,19 @@ class WnTextFormField extends StatelessWidget {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
-                color: hasError ? colors.error : colors.foregroundTertiary,
+                color: hasError ? colors.fillDestructive : colors.backgroundContentTertiary,
               ),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
-                color: colors.foregroundTertiary.withValues(alpha: 0.5),
+                color: colors.backgroundContentTertiary.withValues(alpha: 0.5),
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
-                color: hasError ? colors.error : colors.foregroundTertiary,
+                color: hasError ? colors.fillDestructive : colors.backgroundContentTertiary,
               ),
             ),
             suffixIcon: suffixIcon,
@@ -107,7 +107,7 @@ class WnTextFormField extends StatelessWidget {
                 Icons.error_outline_rounded,
                 key: const Key('error_icon'),
                 size: 14.sp,
-                color: colors.error,
+                color: colors.fillDestructive,
               ),
               Gap(4.w),
               Expanded(
@@ -116,7 +116,7 @@ class WnTextFormField extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 12.sp,
                     fontWeight: FontWeight.w500,
-                    color: colors.error,
+                    color: colors.fillDestructive,
                   ),
                 ),
               ),

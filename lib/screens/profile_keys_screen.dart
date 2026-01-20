@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -61,7 +61,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: colors.foregroundTertiary,
+                              color: colors.backgroundContentTertiary,
                             ),
                           ),
                           Gap(36.h),
@@ -79,7 +79,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: colors.foregroundTertiary,
+                              color: colors.backgroundContentTertiary,
                             ),
                           ),
                           Gap(12.h),

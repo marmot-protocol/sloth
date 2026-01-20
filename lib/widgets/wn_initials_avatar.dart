@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart' show formatInitials;
 
 class WnInitialsAvatar extends StatelessWidget {
@@ -28,7 +28,7 @@ class WnInitialsAvatar extends StatelessWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+        border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
       ),
       clipBehavior: Clip.antiAlias,
       child: showContent
@@ -37,7 +37,7 @@ class WnInitialsAvatar extends StatelessWidget {
                   ? Text(
                       initials,
                       style: TextStyle(
-                        color: colors.foregroundSecondary,
+                        color: colors.fillContentPrimary,
                         fontSize: avatarSize * 0.4,
                         fontWeight: FontWeight.w600,
                       ),
@@ -48,7 +48,7 @@ class WnInitialsAvatar extends StatelessWidget {
                       width: avatarSize * 0.4,
                       height: avatarSize * 0.4,
                       colorFilter: ColorFilter.mode(
-                        colors.foregroundSecondary,
+                        colors.fillContentPrimary,
                         BlendMode.srcIn,
                       ),
                     ),

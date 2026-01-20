@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -60,7 +60,7 @@ class SettingsScreen extends HookConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 16.sp,
                                   fontWeight: FontWeight.w600,
-                                  color: colors.foregroundPrimary,
+                                  color: colors.backgroundContentPrimary,
                                 ),
                               ),
                             Row(
@@ -72,7 +72,7 @@ class SettingsScreen extends HookConsumerWidget {
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: colors.foregroundTertiary,
+                                      color: colors.backgroundContentTertiary,
                                     ),
                                   ),
                                 ),
@@ -83,7 +83,7 @@ class SettingsScreen extends HookConsumerWidget {
                                   icon: Icon(
                                     Icons.qr_code,
                                     size: 24.w,
-                                    color: colors.foregroundTertiary,
+                                    color: colors.backgroundContentTertiary,
                                   ),
                                   padding: EdgeInsets.zero,
                                   constraints: BoxConstraints(
@@ -170,7 +170,7 @@ class _SettingsTile extends StatelessWidget {
               width: 24.w,
               height: 24.w,
               colorFilter: ColorFilter.mode(
-                colors.foregroundPrimary,
+                colors.backgroundContentPrimary,
                 BlendMode.srcIn,
               ),
             ),
@@ -179,7 +179,7 @@ class _SettingsTile extends StatelessWidget {
               child: Text(
                 label,
                 style: TextStyle(
-                  color: colors.foregroundPrimary,
+                  color: colors.backgroundContentPrimary,
                   fontSize: 16.sp,
                   fontWeight: FontWeight.w600,
                 ),

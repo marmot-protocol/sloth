@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/user_metadata_service.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/src/rust/api/groups.dart' show GroupType;
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_animated_avatar.dart';
 
@@ -83,11 +83,11 @@ class ChatListTile extends HookWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(color: colors.foregroundPrimary),
+        style: TextStyle(color: colors.backgroundContentPrimary),
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: colors.foregroundTertiary),
+        style: TextStyle(color: colors.backgroundContentTertiary),
       ),
     );
   }

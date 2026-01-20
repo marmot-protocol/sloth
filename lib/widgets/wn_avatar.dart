@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_initials_avatar.dart';
 
 class WnAvatar extends StatelessWidget {
@@ -34,7 +34,7 @@ class WnAvatar extends StatelessWidget {
             final imageWithBorder = Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+                border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
               ),
               child: ClipOval(child: child),
             );

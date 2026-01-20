@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/theme.dart';
 
 class WnScreenHeader extends StatelessWidget {
   const WnScreenHeader({
@@ -22,7 +22,7 @@ class WnScreenHeader extends StatelessWidget {
           child: Text(
             title,
             style: TextStyle(
-              color: colors.foregroundPrimary,
+              color: colors.backgroundContentPrimary,
               fontSize: 16.sp,
               fontWeight: FontWeight.w600,
             ),
@@ -33,7 +33,7 @@ class WnScreenHeader extends StatelessWidget {
           onPressed: () => Routes.goBack(context),
           icon: Icon(
             Icons.close,
-            color: colors.foregroundPrimary,
+            color: colors.backgroundContentPrimary,
           ),
           iconSize: 24.w,
         ),

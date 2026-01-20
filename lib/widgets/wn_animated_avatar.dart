@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_animated_pixel_overlay.dart';
 import 'package:sloth/widgets/wn_initials_avatar.dart';
 
@@ -80,7 +80,7 @@ class WnAnimatedAvatar extends HookWidget {
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.foregroundTertiary, width: 1.5),
+        border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(

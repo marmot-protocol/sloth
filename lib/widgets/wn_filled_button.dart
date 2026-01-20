@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnFilledButton extends StatelessWidget {
   const WnFilledButton({
@@ -39,7 +39,7 @@ class WnFilledButton extends StatelessWidget {
                 key: const Key('loading_indicator'),
                 strokeWidth: 2.w,
                 strokeCap: StrokeCap.round,
-                color: colors.foregroundSecondary,
+                color: colors.fillContentPrimary,
               ),
             )
           : Text(
@@ -48,8 +48,8 @@ class WnFilledButton extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 16.sp,
                 color: disabled
-                    ? colors.foregroundSecondary.withValues(alpha: 0.9)
-                    : colors.foregroundSecondary,
+                    ? colors.fillContentPrimary.withValues(alpha: 0.9)
+                    : colors.fillContentPrimary,
               ),
             ),
     );

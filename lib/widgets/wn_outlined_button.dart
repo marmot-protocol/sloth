@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
+import 'package:sloth/theme.dart';
 
 class WnOutlinedButton extends StatelessWidget {
   const WnOutlinedButton({
@@ -26,8 +26,8 @@ class WnOutlinedButton extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 14.h),
         side: BorderSide(
           color: disabled
-              ? colors.foregroundTertiary.withValues(alpha: 0.5)
-              : colors.foregroundTertiary,
+              ? colors.backgroundContentTertiary.withValues(alpha: 0.5)
+              : colors.backgroundContentTertiary,
         ),
         backgroundColor: colors.backgroundPrimary,
         shape: RoundedRectangleBorder(
@@ -42,7 +42,7 @@ class WnOutlinedButton extends StatelessWidget {
                 key: const Key('loading_indicator'),
                 strokeWidth: 2.w,
                 strokeCap: StrokeCap.round,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
               ),
             )
           : Text(
@@ -51,8 +51,8 @@ class WnOutlinedButton extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 16.sp,
                 color: disabled
-                    ? colors.foregroundPrimary.withValues(alpha: 0.5)
-                    : colors.foregroundPrimary,
+                    ? colors.backgroundContentPrimary.withValues(alpha: 0.5)
+                    : colors.backgroundContentPrimary,
               ),
             ),
     );

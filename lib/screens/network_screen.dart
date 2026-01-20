@@ -3,9 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_network_relays.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
 import 'package:sloth/widgets/wn_relay_tile.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -48,7 +48,7 @@ class NetworkScreen extends HookConsumerWidget {
                   child: Text(
                     title,
                     style: TextStyle(
-                      color: colors.foregroundTertiary,
+                      color: colors.backgroundContentTertiary,
                       fontWeight: FontWeight.w600,
                       fontSize: 16.sp,
                     ),
@@ -76,7 +76,7 @@ class NetworkScreen extends HookConsumerWidget {
                   ),
                   textStyle: TextStyle(
                     fontSize: 12.sp,
-                    color: colors.foregroundSecondary,
+                    color: colors.fillContentPrimary,
                   ),
                   padding: EdgeInsets.all(12.w),
                   child: Padding(
@@ -84,7 +84,7 @@ class NetworkScreen extends HookConsumerWidget {
                     child: Icon(
                       key: infoIconKey,
                       Icons.info_outline,
-                      color: colors.foregroundTertiary,
+                      color: colors.backgroundContentTertiary,
                       size: 18.w,
                     ),
                   ),
@@ -100,7 +100,7 @@ class NetworkScreen extends HookConsumerWidget {
               child: Icon(
                 key: addIconKey,
                 Icons.add,
-                color: colors.foregroundPrimary,
+                color: colors.backgroundContentPrimary,
                 size: 23.w,
               ),
             ),
@@ -118,7 +118,7 @@ class NetworkScreen extends HookConsumerWidget {
         return Center(
           child: Text(
             'Error loading relays',
-            style: TextStyle(color: colors.error),
+            style: TextStyle(color: colors.fillDestructive),
           ),
         );
       }
@@ -131,7 +131,7 @@ class NetworkScreen extends HookConsumerWidget {
               'No relays configured',
               style: TextStyle(
                 fontSize: 14.sp,
-                color: colors.foregroundTertiary,
+                color: colors.backgroundContentTertiary,
               ),
             ),
           ),

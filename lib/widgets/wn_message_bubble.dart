@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/src/rust/api/messages.dart';
+import 'package:sloth/theme.dart';
 
 class WnMessageBubble extends StatelessWidget {
   final ChatMessage message;
@@ -29,7 +29,7 @@ class WnMessageBubble extends StatelessWidget {
         child: Text(
           message.content,
           style: TextStyle(
-            color: isOwnMessage ? colors.foregroundSecondary : colors.foregroundPrimary,
+            color: isOwnMessage ? colors.fillContentPrimary : colors.backgroundContentPrimary,
             fontSize: 14.sp,
           ),
         ),

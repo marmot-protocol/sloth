@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -76,7 +76,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                   style: TextStyle(
                                     fontSize: 18.sp,
                                     fontWeight: FontWeight.w600,
-                                    color: colors.foregroundPrimary,
+                                    color: colors.backgroundContentPrimary,
                                   ),
                                 ),
                               Gap(18.h),
@@ -92,7 +92,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                         style: TextStyle(
                                           fontSize: 14.sp,
                                           fontWeight: FontWeight.w500,
-                                          color: colors.foregroundTertiary,
+                                          color: colors.backgroundContentTertiary,
                                         ),
                                       ),
                                     ),
@@ -102,7 +102,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                       icon: Icon(
                                         Icons.copy,
                                         size: 24.w,
-                                        color: colors.foregroundPrimary,
+                                        color: colors.backgroundContentPrimary,
                                       ),
                                       padding: EdgeInsets.zero,
                                       constraints: BoxConstraints(
@@ -121,7 +121,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                   gapless: false,
                                   eyeStyle: QrEyeStyle(
                                     eyeShape: QrEyeShape.square,
-                                    color: colors.foregroundPrimary,
+                                    color: colors.backgroundContentPrimary,
                                   ),
                                   backgroundColor: colors.backgroundPrimary,
                                 ),
@@ -132,7 +132,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
-                                  color: colors.foregroundTertiary,
+                                  color: colors.backgroundContentTertiary,
                                 ),
                               ),
                             ],
