@@ -55,8 +55,8 @@ void main() {
 
       final result = AccentColorSet.lerp(accent, other, 0);
 
-      expect(result.fill.value, accent.fill.value);
-      expect(result.contentPrimary.value, accent.contentPrimary.value);
+      expect(result.fill.toARGB32(), accent.fill.toARGB32());
+      expect(result.contentPrimary.toARGB32(), accent.contentPrimary.toARGB32());
     });
 
     test('lerp at 1 returns second AccentColorSet colors', () {
@@ -69,8 +69,8 @@ void main() {
 
       final result = AccentColorSet.lerp(accent, other, 1);
 
-      expect(result.fill.value, other.fill.value);
-      expect(result.contentPrimary.value, other.contentPrimary.value);
+      expect(result.fill.toARGB32(), other.fill.toARGB32());
+      expect(result.contentPrimary.toARGB32(), other.contentPrimary.toARGB32());
     });
   });
 
