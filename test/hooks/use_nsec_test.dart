@@ -176,5 +176,21 @@ void main() {
       expect(result.state.isLoading, isFalse);
       expect(result.state.error, isNull);
     });
+
+    testWidgets('nsec remains null when error occurs on fresh state', (tester) async {
+      mockApi.shouldThrow = true;
+      await _pump(tester, overrides);
+      await tester.pump();
+
+      // Verify initial state has no nsec
+      expect(result.state.nsec, isNull);
+
+      await result.loadNsec();
+      await tester.pumpAndSettle();
+
+      // After error, nsec should still be null (copyWith preserves null when nsec not provided)
+      expect(result.state.nsec, isNull);
+      expect(result.state.error, isNotNull);
+    });
   });
 }
