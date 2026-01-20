@@ -206,7 +206,7 @@ class _KeyPackageTile extends StatelessWidget {
                   package.id,
                   style: TextStyle(
                     fontSize: 11.sp,
-                    color: colors.backgroundContentTertiary,
+                    color: colors.backgroundContentSecondary,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

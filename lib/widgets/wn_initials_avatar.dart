@@ -27,8 +27,8 @@ class WnInitialsAvatar extends StatelessWidget {
       height: avatarSize,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.fillPrimary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.borderSecondary, width: 1.5),
+        color: colors.fillSecondary,
+        border: Border.all(color: colors.borderTertiary, width: 1.5),
       ),
       clipBehavior: Clip.antiAlias,
       child: showContent
@@ -37,7 +37,7 @@ class WnInitialsAvatar extends StatelessWidget {
                   ? Text(
                       initials,
                       style: TextStyle(
-                        color: colors.fillContentPrimary,
+                        color: colors.fillContentSecondary,
                         fontSize: avatarSize * 0.4,
                         fontWeight: FontWeight.w600,
                       ),
@@ -48,7 +48,7 @@ class WnInitialsAvatar extends StatelessWidget {
                       width: avatarSize * 0.4,
                       height: avatarSize * 0.4,
                       colorFilter: ColorFilter.mode(
-                        colors.fillContentPrimary,
+                        colors.fillContentSecondary,
                         BlendMode.srcIn,
                       ),
                     ),

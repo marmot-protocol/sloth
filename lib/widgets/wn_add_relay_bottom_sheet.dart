@@ -61,7 +61,7 @@ class WnAddRelayBottomSheet extends HookWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: colors.backgroundContentTertiary.withValues(alpha: 0.3),
+                  color: colors.borderTertiary,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),

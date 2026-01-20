@@ -156,7 +156,7 @@ class _ImageDisplay extends HookWidget {
       height: _size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.fillPrimary.withValues(alpha: 0.4),
+        color: colors.fillSecondary,
         border: Border.all(color: colors.borderSecondary, width: 1.5),
       ),
       child: ClipOval(
@@ -197,7 +197,7 @@ class _ImageDisplay extends HookWidget {
       height: _size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.fillPrimary.withValues(alpha: 0.4),
+        color: colors.fillContentSecondary,
         border: Border.all(color: colors.borderSecondary, width: 1.5),
       ),
       child: Center(child: _buildInitialsContent(colors)),

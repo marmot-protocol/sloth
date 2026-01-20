@@ -83,7 +83,7 @@ class SignOutScreen extends HookConsumerWidget {
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentTertiary,
+                              color: colors.backgroundContentSecondary,
                             ),
                           ),
                           Gap(16.h),
