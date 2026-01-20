@@ -11,6 +11,7 @@ ChatMessage _message(
   String content = 'test',
   String pubkey = 'pubkey',
   bool isDeleted = false,
+  ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
   id: id,
   pubkey: pubkey,
@@ -20,7 +21,7 @@ ChatMessage _message(
   isReply: false,
   isDeleted: isDeleted,
   contentTokens: const [],
-  reactions: const ReactionSummary(byEmoji: [], userReactions: []),
+  reactions: reactions,
   mediaAttachments: const [],
   kind: 9,
 );
@@ -44,6 +45,22 @@ class _MockApi implements RustLibApi {
     controller?.add(
       MessageStreamItem.update(
         update: MessageUpdate(trigger: UpdateTrigger.messageDeleted, message: message),
+      ),
+    );
+  }
+
+  void emitReactionAdded(ChatMessage message) {
+    controller?.add(
+      MessageStreamItem.update(
+        update: MessageUpdate(trigger: UpdateTrigger.reactionAdded, message: message),
+      ),
+    );
+  }
+
+  void emitReactionRemoved(ChatMessage message) {
+    controller?.add(
+      MessageStreamItem.update(
+        update: MessageUpdate(trigger: UpdateTrigger.reactionRemoved, message: message),
       ),
     );
   }
@@ -301,6 +318,87 @@ void main() {
 
           expect(getResult().latestMessagePubkey, 'bob');
         });
+      });
+    });
+
+    group('reactionAdded', () {
+      testWidgets('does not change message count', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pumpAndSettle();
+
+        final reactionsAfter = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['user1']),
+          ],
+          userReactions: const [],
+        );
+        _api.emitReactionAdded(_message('m1', DateTime(2024), reactions: reactionsAfter));
+        await tester.pumpAndSettle();
+
+        expect(getResult().messageCount, 1);
+      });
+
+      testWidgets('updates message reactions', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pumpAndSettle();
+
+        expect(getResult().getMessage(0).reactions.byEmoji, isEmpty);
+
+        final reactionsAfter = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['user1']),
+          ],
+          userReactions: const [],
+        );
+        _api.emitReactionAdded(_message('m1', DateTime(2024), reactions: reactionsAfter));
+        await tester.pumpAndSettle();
+
+        expect(getResult().getMessage(0).reactions.byEmoji, hasLength(1));
+        expect(getResult().getMessage(0).reactions.byEmoji.first.emoji, '👍');
+      });
+    });
+
+    group('reactionRemoved', () {
+      testWidgets('does not change message count', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        final initialReactions = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['user1']),
+          ],
+          userReactions: const [],
+        );
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024), reactions: initialReactions)]);
+        await tester.pumpAndSettle();
+
+        _api.emitReactionRemoved(_message('m1', DateTime(2024)));
+        await tester.pumpAndSettle();
+
+        expect(getResult().messageCount, 1);
+      });
+
+      testWidgets('updates message reactions', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        final initialReactions = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['user1']),
+          ],
+          userReactions: const [],
+        );
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024), reactions: initialReactions)]);
+        await tester.pumpAndSettle();
+
+        expect(getResult().getMessage(0).reactions.byEmoji, hasLength(1));
+
+        _api.emitReactionRemoved(_message('m1', DateTime(2024)));
+        await tester.pumpAndSettle();
+
+        expect(getResult().getMessage(0).reactions.byEmoji, isEmpty);
       });
     });
   });
