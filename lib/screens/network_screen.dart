@@ -64,7 +64,7 @@ class NetworkScreen extends HookConsumerWidget {
                   verticalOffset: 20.h,
                   margin: EdgeInsets.symmetric(horizontal: 16.w),
                   decoration: BoxDecoration(
-                    color: colors.backgroundSecondary,
+                    color: colors.fillPrimary,
                     borderRadius: BorderRadius.circular(8.r),
                     boxShadow: [
                       BoxShadow(

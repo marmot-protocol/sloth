@@ -87,7 +87,7 @@ class ChatListTile extends HookWidget {
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: colors.backgroundContentTertiary),
+        style: TextStyle(color: colors.backgroundContentSecondary),
       ),
     );
   }

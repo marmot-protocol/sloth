@@ -34,7 +34,7 @@ class WnAvatar extends StatelessWidget {
             final imageWithBorder = Container(
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
+                border: Border.all(color: colors.borderSecondary, width: 1.5),
               ),
               child: ClipOval(child: child),
             );

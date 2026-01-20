@@ -194,12 +194,12 @@ class _ChatInput extends StatelessWidget {
                 enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
                   borderSide: BorderSide(
-                    color: colors.backgroundContentTertiary.withValues(alpha: 0.5),
+                    color: colors.borderTertiary,
                   ),
                 ),
                 focusedBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: colors.backgroundContentPrimary),
+                  borderSide: BorderSide(color: colors.borderPrimary),
                 ),
               ),
             ),
@@ -217,7 +217,7 @@ class _ChatInput extends StatelessWidget {
                         width: 44.w,
                         height: 44.h,
                         decoration: BoxDecoration(
-                          color: colors.backgroundSecondary,
+                          color: colors.fillPrimary,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Icon(

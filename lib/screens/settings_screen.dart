@@ -72,7 +72,7 @@ class SettingsScreen extends HookConsumerWidget {
                                     style: TextStyle(
                                       fontSize: 12.sp,
                                       fontWeight: FontWeight.w500,
-                                      color: colors.backgroundContentTertiary,
+                                      color: colors.backgroundContentSecondary,
                                     ),
                                   ),
                                 ),

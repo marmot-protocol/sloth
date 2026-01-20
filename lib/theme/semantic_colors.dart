@@ -514,8 +514,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     borderInfo: _BlueColors.blue500,
     borderSuccess: _GreenColors.green500,
     borderWarning: _OrangeColors.orange500,
-    // Shadow Colors
-    shadow: Color(0x0A0D120F),
+    shadow: _BaseColors.black,
     // Accent Colors
     accent: _lightAccentColors,
   );
@@ -558,7 +557,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     borderSuccess: _GreenColors.green500,
     borderWarning: _OrangeColors.orange500,
     // Shadow Colors
-    shadow: Color(0x1AFAFAFA),
+    shadow: _BaseColors.black,
     // Accent Colors
     accent: _darkAccentColors,
   );

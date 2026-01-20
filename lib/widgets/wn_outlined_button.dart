@@ -25,15 +25,15 @@ class WnOutlinedButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
         side: BorderSide(
-          color: disabled
-              ? colors.backgroundContentTertiary.withValues(alpha: 0.5)
-              : colors.backgroundContentTertiary,
+          color: disabled ? colors.borderTertiary.withValues(alpha: 0.25) : colors.borderTertiary,
         ),
-        backgroundColor: colors.backgroundPrimary,
+        backgroundColor: disabled
+            ? colors.fillSecondary.withValues(alpha: 0.25)
+            : colors.fillSecondary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.r),
         ),
-        overlayColor: colors.backgroundPrimary.withValues(alpha: 0.8),
+        overlayColor: colors.fillSecondaryHover,
       ),
       child: loading
           ? SizedBox.square(
@@ -51,8 +51,8 @@ class WnOutlinedButton extends StatelessWidget {
                 fontWeight: FontWeight.w600,
                 fontSize: 16.sp,
                 color: disabled
-                    ? colors.backgroundContentPrimary.withValues(alpha: 0.5)
-                    : colors.backgroundContentPrimary,
+                    ? colors.fillContentSecondary.withValues(alpha: 0.25)
+                    : colors.fillContentSecondary,
               ),
             ),
     );

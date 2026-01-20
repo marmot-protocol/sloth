@@ -61,7 +61,7 @@ class WnAddRelayBottomSheet extends HookWidget {
                 width: 40.w,
                 height: 4.h,
                 decoration: BoxDecoration(
-                  color: colors.backgroundContentTertiary.withValues(alpha: 0.3),
+                  color: colors.borderTertiary,
                   borderRadius: BorderRadius.circular(2.r),
                 ),
               ),
@@ -110,11 +110,11 @@ class WnAddRelayBottomSheet extends HookWidget {
                       ),
                       enabledBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
-                        borderSide: BorderSide(color: colors.backgroundContentTertiary),
+                        borderSide: BorderSide(color: colors.borderSecondary),
                       ),
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(8.r),
-                        borderSide: BorderSide(color: colors.backgroundContentTertiary),
+                        borderSide: BorderSide(color: colors.borderSecondary),
                       ),
                     ),
                   ),
@@ -129,7 +129,7 @@ class WnAddRelayBottomSheet extends HookWidget {
                     decoration: BoxDecoration(
                       color: colors.backgroundPrimary,
                       borderRadius: BorderRadius.circular(8.r),
-                      border: Border.all(color: colors.backgroundContentTertiary),
+                      border: Border.all(color: colors.borderSecondary),
                     ),
                     child: Icon(
                       Icons.content_paste,
@@ -146,7 +146,7 @@ class WnAddRelayBottomSheet extends HookWidget {
                 padding: EdgeInsets.all(12.w),
                 decoration: BoxDecoration(
                   color: colors.fillDestructive.withValues(alpha: 0.1),
-                  border: Border.all(color: colors.fillDestructive),
+                  border: Border.all(color: colors.borderDestructivePrimary),
                   borderRadius: BorderRadius.circular(8.r),
                 ),
                 child: Column(

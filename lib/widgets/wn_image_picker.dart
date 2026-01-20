@@ -71,7 +71,7 @@ class WnImagePicker extends HookWidget {
               decoration: BoxDecoration(
                 color: colors.backgroundPrimary,
                 shape: BoxShape.circle,
-                border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
+                border: Border.all(color: colors.borderSecondary, width: 1.5),
               ),
               child: Center(
                 child: SvgPicture.asset(
@@ -156,8 +156,8 @@ class _ImageDisplay extends HookWidget {
       height: _size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
+        color: colors.fillSecondary,
+        border: Border.all(color: colors.borderSecondary, width: 1.5),
       ),
       child: ClipOval(
         child: Stack(
@@ -197,8 +197,8 @@ class _ImageDisplay extends HookWidget {
       height: _size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: colors.backgroundSecondary.withValues(alpha: 0.4),
-        border: Border.all(color: colors.backgroundContentTertiary, width: 1.5),
+        color: colors.fillContentSecondary,
+        border: Border.all(color: colors.borderSecondary, width: 1.5),
       ),
       child: Center(child: _buildInitialsContent(colors)),
     );
