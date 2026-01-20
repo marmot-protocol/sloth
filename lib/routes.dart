@@ -21,6 +21,7 @@ import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/share_profile_screen.dart' show ShareProfileScreen;
 import 'package:sloth/screens/sign_out_screen.dart' show SignOutScreen;
 import 'package:sloth/screens/signup_screen.dart' show SignupScreen;
+import 'package:sloth/screens/user_search_screen.dart' show UserSearchScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
 
 abstract final class Routes {
@@ -39,6 +40,7 @@ abstract final class Routes {
   static const _editProfile = '/edit-profile';
   static const _signOut = '/sign-out';
   static const _network = '/network';
+  static const _userSearch = '/user-search';
   static const _invite = '/invites/:mlsGroupId';
   static const _chat = '/chats/:groupId';
   static const _publicRoutes = {_home, _login, _signup};
@@ -163,6 +165,13 @@ abstract final class Routes {
           ),
         ),
         GoRoute(
+          path: _userSearch,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const UserSearchScreen(),
+          ),
+        ),
+        GoRoute(
           name: 'invite',
           path: _invite,
           pageBuilder: (context, state) => _navigationTransition(
@@ -276,6 +285,10 @@ abstract final class Routes {
 
   static void pushToSignOut(BuildContext context) {
     GoRouter.of(context).push(_signOut);
+  }
+
+  static void pushToUserSearch(BuildContext context) {
+    GoRouter.of(context).push(_userSearch);
   }
 
   static void pushToInvite(BuildContext context, String mlsGroupId) {

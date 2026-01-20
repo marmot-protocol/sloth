@@ -8,7 +8,7 @@ import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
-import 'package:sloth/widgets/wn_animated_avatar.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -65,9 +65,17 @@ void main() {
     _api.shouldThrow = false;
   });
 
-  Future<void> pumpTile(WidgetTester tester, ChatSummary chatSummary) async {
+  Future<void> pumpTile(
+    WidgetTester tester,
+    ChatSummary chatSummary, {
+    bool settle = true,
+  }) async {
     await mountWidget(ChatListTile(chatSummary: chatSummary), tester);
-    await tester.pumpAndSettle();
+    if (settle) {
+      await tester.pumpAndSettle();
+    } else {
+      await tester.pump();
+    }
   }
 
   group('ChatListTile', () {
@@ -211,14 +219,18 @@ void main() {
       testWidgets('receives expected name', (tester) async {
         await pumpTile(tester, _chatSummary(name: 'My Group'));
 
-        final avatar = tester.widget<WnAnimatedAvatar>(find.byType(WnAnimatedAvatar));
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.displayName, 'My Group');
       });
 
       testWidgets('uses groupImagePath for groups', (tester) async {
-        await pumpTile(tester, _chatSummary(groupImagePath: '/path/to/image'));
+        await pumpTile(
+          tester,
+          _chatSummary(groupImagePath: '/path/to/image'),
+          settle: false,
+        );
 
-        final avatar = tester.widget<WnAnimatedAvatar>(find.byType(WnAnimatedAvatar));
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.pictureUrl, '/path/to/image');
       });
 
@@ -229,9 +241,10 @@ void main() {
             groupType: GroupType.directMessage,
             groupImageUrl: 'https://example.com/avatar.png',
           ),
+          settle: false,
         );
 
-        final avatar = tester.widget<WnAnimatedAvatar>(find.byType(WnAnimatedAvatar));
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.pictureUrl, 'https://example.com/avatar.png');
       });
     });

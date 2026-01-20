@@ -5,7 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/settings_screen.dart';
-import 'package:sloth/screens/wip_screen.dart';
+import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
@@ -18,9 +18,6 @@ class _MockApi extends MockWnApi {
     required bool blockingDataSync,
     required String pubkey,
   }) async => const FlutterMetadata(custom: {});
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -72,11 +69,11 @@ void main() {
       expect(find.byType(SettingsScreen), findsOneWidget);
     });
 
-    testWidgets('tapping chat add icon navigates to WIP screen', (tester) async {
+    testWidgets('tapping chat add icon navigates to user search screen', (tester) async {
       await pumpChatListScreen(tester);
       await tester.tap(find.byKey(const Key('chat_add_button')));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(UserSearchScreen), findsOneWidget);
     });
   });
 }

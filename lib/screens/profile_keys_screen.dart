@@ -19,7 +19,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final pubkey = ref.watch(accountPubkeyProvider);
-    final npub = npubFromPubkey(pubkey);
+    final npub = npubFromHex(pubkey);
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
 

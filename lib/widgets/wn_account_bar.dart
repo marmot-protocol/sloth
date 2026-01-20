@@ -36,7 +36,7 @@ class WnAccountBar extends HookConsumerWidget {
         IconButton(
           key: const Key('chat_add_button'),
           onPressed: () {
-            Routes.pushToWip(context);
+            Routes.pushToUserSearch(context);
           },
           icon: SvgPicture.asset(
             'assets/svgs/chat-add.svg',
