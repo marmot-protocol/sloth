@@ -6,9 +6,10 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/screens/chat_invite_screen.dart';
 import 'package:sloth/screens/chat_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
-import 'package:sloth/screens/wip_screen.dart';
+import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
+import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
@@ -61,6 +62,14 @@ class _MockApi extends MockWnApi {
     epoch: BigInt.zero,
     state: GroupState.active,
   );
+
+  @override
+  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
+    required String pubkey,
+    required String groupId,
+  }) async {
+    return [];
+  }
 }
 
 class _MockAuthNotifier extends AuthNotifier {
@@ -106,12 +115,11 @@ void main() {
       expect(find.byType(SettingsScreen), findsOneWidget);
     });
 
-    testWidgets('tapping chat icon navigates to WIP screen', (tester) async {
+    testWidgets('tapping chat icon navigates to user search', (tester) async {
       await pumpChatListScreen(tester);
       await tester.tap(find.byKey(const Key('chat_add_button')));
       await tester.pumpAndSettle();
-
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(UserSearchScreen), findsOneWidget);
     });
 
     group('without chats', () {

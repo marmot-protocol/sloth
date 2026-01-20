@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sloth/routes.dart' show Routes;
-import 'package:sloth/services/user_metadata_service.dart';
+import 'package:sloth/services/user_service.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_animated_avatar.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 class ChatListTile extends HookWidget {
   final ChatSummary chatSummary;
@@ -28,7 +28,7 @@ class ChatListTile extends HookWidget {
         if (!isPending || !hasWelcomer) return null;
 
         try {
-          return UserMetadataService(chatSummary.welcomerPubkey!).fetch();
+          return UserService(chatSummary.welcomerPubkey!).fetchMetadata();
         } catch (_) {
           return null;
         }
@@ -77,9 +77,10 @@ class ChatListTile extends HookWidget {
       onTap: isPending
           ? () => Routes.pushToInvite(context, chatSummary.mlsGroupId)
           : () => Routes.goToChat(context, chatSummary.mlsGroupId),
-      leading: WnAnimatedAvatar(
+      leading: WnAvatar(
         pictureUrl: pictureUrl,
         displayName: avatarName,
+        animated: true,
       ),
       title: Text(
         title,

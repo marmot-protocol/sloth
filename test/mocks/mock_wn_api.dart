@@ -4,6 +4,7 @@ import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 class MockThemeMode implements rust_api.ThemeMode {
@@ -21,6 +22,16 @@ class MockAppSettings implements rust_api.AppSettings {
 
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
+
+  @override
+  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
+    return [];
+  }
+
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    return 'npub1test${hexPubkey.substring(0, 10)}';
+  }
 
   @override
   Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({

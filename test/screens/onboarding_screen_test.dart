@@ -5,6 +5,7 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
+import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import '../mocks/mock_wn_api.dart';
@@ -79,11 +80,11 @@ void main() {
       expect(find.byType(SettingsScreen), findsOneWidget);
     });
 
-    testWidgets('tapping chat icon navigates to WIP screen', (tester) async {
+    testWidgets('tapping chat icon navigates to user search', (tester) async {
       await pumpOnboardingScreen(tester);
       await tester.tap(find.byKey(const Key('chat_add_button')));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(UserSearchScreen), findsOneWidget);
     });
   });
 }

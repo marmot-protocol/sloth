@@ -24,7 +24,6 @@ class SettingsScreen extends HookConsumerWidget {
     if (pubkey == null) {
       return const SizedBox.shrink();
     }
-    final npub = npubFromPubkey(pubkey);
 
     final metadata = metadataSnapshot.data;
     final displayName = presentName(metadata);
@@ -67,7 +66,7 @@ class SettingsScreen extends HookConsumerWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    npub != null ? formatPublicKey(npub) : formatPublicKey(pubkey),
+                                    formatPublicKey(npubFromHex(pubkey) ?? pubkey),
                                     maxLines: 2,
                                     style: TextStyle(
                                       fontSize: 12.sp,

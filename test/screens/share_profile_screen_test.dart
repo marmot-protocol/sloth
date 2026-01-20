@@ -15,11 +15,6 @@ import '../test_helpers.dart';
 
 class _MockApi extends MockWnApi {
   @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
     required bool blockingDataSync,
     required String pubkey,
@@ -78,7 +73,7 @@ void main() {
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpShareProfileScreen(tester);
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(find.byKey(const Key('close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -87,7 +82,7 @@ void main() {
       final getClipboard = mockClipboard();
       await pumpShareProfileScreen(tester);
       await tester.pumpAndSettle();
-      final copyButton = find.byIcon(Icons.copy);
+      final copyButton = find.byKey(const Key('copy_button'));
       expect(copyButton, findsOneWidget);
       await tester.tap(copyButton);
       await tester.pump();
@@ -97,7 +92,7 @@ void main() {
     testWidgets('shows success message when copying public key', (tester) async {
       await pumpShareProfileScreen(tester);
       await tester.pumpAndSettle();
-      final copyButton = find.byIcon(Icons.copy);
+      final copyButton = find.byKey(const Key('copy_button'));
       await tester.tap(copyButton);
       await tester.pump();
       expect(find.text('Public key copied to clipboard'), findsOneWidget);
