@@ -29,7 +29,7 @@ class WnWarningBox extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final bgColor = backgroundColor ?? colors.fillDestructive.withValues(alpha: 0.1);
-    final border = borderColor ?? colors.fillDestructive.withValues(alpha: 0.3);
+    final border = borderColor ?? colors.borderDestructivePrimary;
     final iconC = iconColor ?? colors.fillDestructive;
     final titleC = titleColor ?? colors.fillDestructive;
     final descC = descriptionColor ?? colors.backgroundContentPrimary;

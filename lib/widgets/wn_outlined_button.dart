@@ -25,9 +25,7 @@ class WnOutlinedButton extends StatelessWidget {
       style: OutlinedButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: 14.h),
         side: BorderSide(
-          color: disabled
-              ? colors.backgroundContentTertiary.withValues(alpha: 0.5)
-              : colors.backgroundContentTertiary,
+          color: disabled ? colors.borderTertiary : colors.borderSecondary,
         ),
         backgroundColor: colors.backgroundPrimary,
         shape: RoundedRectangleBorder(

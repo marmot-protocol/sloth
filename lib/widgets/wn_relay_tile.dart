@@ -71,7 +71,7 @@ class WnRelayTile extends StatelessWidget {
                   key: const Key('cancel_delete_button'),
                   onPressed: () => Navigator.of(context).pop(false),
                   style: OutlinedButton.styleFrom(
-                    side: BorderSide(color: colors.backgroundContentTertiary),
+                    side: BorderSide(color: colors.borderSecondary),
                     padding: EdgeInsets.symmetric(vertical: 14.h),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(8.r),
@@ -131,7 +131,7 @@ class WnRelayTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.backgroundPrimary,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: colors.backgroundContentTertiary.withValues(alpha: 0.3)),
+        border: Border.all(color: colors.borderTertiary),
       ),
       child: Row(
         children: [

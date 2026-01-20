@@ -185,7 +185,7 @@ class _KeyPackageTile extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.backgroundPrimary,
         borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: colors.backgroundContentTertiary.withValues(alpha: 0.3)),
+        border: Border.all(color: colors.borderTertiary),
       ),
       child: Row(
         children: [

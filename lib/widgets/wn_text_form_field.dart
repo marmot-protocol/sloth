@@ -79,19 +79,19 @@ class WnTextFormField extends StatelessWidget {
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
-                color: hasError ? colors.fillDestructive : colors.backgroundContentTertiary,
+                color: hasError ? colors.borderDestructivePrimary : colors.borderSecondary,
               ),
             ),
             disabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
-                color: colors.backgroundContentTertiary.withValues(alpha: 0.5),
+                color: colors.borderTertiary,
               ),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
               borderSide: BorderSide(
-                color: hasError ? colors.fillDestructive : colors.backgroundContentTertiary,
+                color: hasError ? colors.borderDestructivePrimary : colors.borderSecondary,
               ),
             ),
             suffixIcon: suffixIcon,

@@ -103,7 +103,7 @@ class EditProfileScreen extends HookConsumerWidget {
                               description:
                                   'Your profile information will be visible to everyone on the network.',
                               backgroundColor: colors.fillContentPrimary.withValues(alpha: 0.1),
-                              borderColor: colors.backgroundContentPrimary,
+                              borderColor: colors.borderPrimary,
                               iconColor: colors.backgroundContentPrimary,
                               titleColor: colors.backgroundContentPrimary,
                               descriptionColor: colors.backgroundContentTertiary,

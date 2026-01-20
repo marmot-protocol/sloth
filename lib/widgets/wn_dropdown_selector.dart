@@ -48,11 +48,11 @@ class WnDropdownSelector<T> extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 4.h),
             enabledBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: colors.backgroundContentTertiary),
+              borderSide: BorderSide(color: colors.borderSecondary),
             ),
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(8.r),
-              borderSide: BorderSide(color: colors.backgroundContentTertiary),
+              borderSide: BorderSide(color: colors.borderSecondary),
             ),
           ),
           child: DropdownButtonHideUnderline(
