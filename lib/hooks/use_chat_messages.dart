@@ -39,12 +39,15 @@ ChatMessagesResult useChatMessages(String groupId) {
           );
         },
         update: (update) {
+          final message = update.message;
+
           if (update.trigger == UpdateTrigger.newMessage) {
-            final message = update.message;
             final newIndex = messageIds.value.length;
             messageIds.value.add(message.id);
             messagesById.value[message.id] = message;
             indexById.value[message.id] = newIndex;
+          } else if (update.trigger == UpdateTrigger.messageDeleted) {
+            messagesById.value[message.id] = message;
           }
 
           final lastId = messageIds.value.isNotEmpty ? messageIds.value.last : null;

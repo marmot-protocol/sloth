@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Send messages [PR #33](https://github.com/marmot-protocol/sloth/pull/33)
 - Network relays screen [PR #43](https://github.com/marmot-protocol/sloth/pull/43)
 - Search user by npub [PR #39](https://github.com/marmot-protocol/sloth/pull/39)
+- Delete messages [PR #49](https://github.com/marmot-protocol/sloth/pull/49)
 
 
 ### Changed

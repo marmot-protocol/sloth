@@ -10,10 +10,12 @@ import 'package:sloth/hooks/use_chat_scroll.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/services/message_service.dart';
+import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_fade_overlay.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
+import 'package:sloth/widgets/wn_message_menu.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
 final _logger = Logger('ChatScreen');
@@ -51,6 +53,20 @@ class ChatScreen extends HookConsumerWidget {
 
     Future<void> sendMessage(String message) async {
       await messageService.sendTextMessage(groupId: groupId, content: message);
+    }
+
+    void showMessageMenu(ChatMessage message) {
+      WnMessageMenu.show(
+        context,
+        message: message,
+        pubkey: pubkey,
+        onDelete: () => messageService.deleteMessage(
+          groupId: groupId,
+          messageId: message.id,
+          messagePubkey: message.pubkey,
+          messageKind: message.kind,
+        ),
+      );
     }
 
     return GestureDetector(
@@ -105,6 +121,7 @@ class ChatScreen extends HookConsumerWidget {
                                 key: ValueKey(message.id),
                                 message: message,
                                 isOwnMessage: isOwnMessage,
+                                onLongPress: () => showMessageMenu(message),
                               );
                             },
                           ),

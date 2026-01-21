@@ -18,14 +18,14 @@ import '../test_helpers.dart';
 const _testPubkey = 'test_pubkey';
 const _testGroupId = 'test_group_id';
 
-ChatMessage _message(String id) => ChatMessage(
+ChatMessage _message(String id, {bool isDeleted = false}) => ChatMessage(
   id: id,
   pubkey: 'other',
   content: 'Message $id',
   createdAt: DateTime(2024),
   tags: const [],
   isReply: false,
-  isDeleted: false,
+  isDeleted: isDeleted,
   contentTokens: const [],
   reactions: const ReactionSummary(byEmoji: [], userReactions: []),
   mediaAttachments: const [],
@@ -174,6 +174,13 @@ void main() {
         await pumpInviteScreen(tester);
 
         expect(find.text('You are invited to a secure chat'), findsNothing);
+      });
+
+      testWidgets('does not display deleted message text', (tester) async {
+        _api.messages = [_message('m1'), _message('m2', isDeleted: true)];
+        await pumpInviteScreen(tester);
+
+        expect(find.text('Message m2'), findsNothing);
       });
     });
 

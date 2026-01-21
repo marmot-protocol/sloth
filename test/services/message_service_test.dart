@@ -3,8 +3,25 @@ import 'package:sloth/services/message_service.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+class _MockTag implements Tag {
+  final List<String> vec;
+  _MockTag(this.vec);
+
+  @override
+  void dispose() {}
+
+  @override
+  bool get isDisposed => false;
+}
+
 class _MockApi implements RustLibApi {
-  final List<({String pubkey, String groupId, String message, int kind})> sentMessages = [];
+  final List<({String pubkey, String groupId, String message, int kind, List<Tag>? tags})>
+  sentMessages = [];
+
+  @override
+  Future<Tag> crateApiUtilsTagFromVec({required List<String> vec}) async {
+    return _MockTag(vec);
+  }
 
   @override
   Future<MessageWithTokens> crateApiMessagesSendMessageToGroup({
@@ -14,7 +31,7 @@ class _MockApi implements RustLibApi {
     required int kind,
     List<Tag>? tags,
   }) async {
-    sentMessages.add((pubkey: pubkey, groupId: groupId, message: message, kind: kind));
+    sentMessages.add((pubkey: pubkey, groupId: groupId, message: message, kind: kind, tags: tags));
     return MessageWithTokens(
       id: 'sent_${sentMessages.length}',
       pubkey: pubkey,
@@ -72,6 +89,99 @@ void main() {
       await service.sendTextMessage(groupId: 'group1', content: 'Hello');
 
       expect(mockApi.sentMessages.first.kind, 9);
+    });
+  });
+
+  group('deleteMessage', () {
+    test('sends deletion message once', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      expect(mockApi.sentMessages.length, 1);
+    });
+
+    test('calls API with pubkey', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+    });
+
+    test('calls API with groupId', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      expect(mockApi.sentMessages.first.groupId, 'group1');
+    });
+
+    test('calls API with empty message', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      expect(mockApi.sentMessages.first.message, '');
+    });
+
+    test('calls API with deletion kind (5)', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      expect(mockApi.sentMessages.first.kind, 5);
+    });
+
+    test('sends e tag with messageId', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[0].vec, ['e', 'msg123']);
+    });
+
+    test('sends p tag with messagePubkey', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[1].vec, ['p', 'author_pubkey']);
+    });
+
+    test('sends k tag with messageKind', () async {
+      await service.deleteMessage(
+        groupId: 'group1',
+        messageId: 'msg123',
+        messagePubkey: 'author_pubkey',
+        messageKind: 9,
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[2].vec, ['k', '9']);
     });
   });
 }

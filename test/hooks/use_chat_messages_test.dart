@@ -10,6 +10,7 @@ ChatMessage _message(
   DateTime createdAt, {
   String content = 'test',
   String pubkey = 'pubkey',
+  bool isDeleted = false,
 }) => ChatMessage(
   id: id,
   pubkey: pubkey,
@@ -17,7 +18,7 @@ ChatMessage _message(
   createdAt: createdAt,
   tags: const [],
   isReply: false,
-  isDeleted: false,
+  isDeleted: isDeleted,
   contentTokens: const [],
   reactions: const ReactionSummary(byEmoji: [], userReactions: []),
   mediaAttachments: const [],
@@ -35,6 +36,14 @@ class _MockApi implements RustLibApi {
     controller?.add(
       MessageStreamItem.update(
         update: MessageUpdate(trigger: UpdateTrigger.newMessage, message: message),
+      ),
+    );
+  }
+
+  void emitDeletedMessage(ChatMessage message) {
+    controller?.add(
+      MessageStreamItem.update(
+        update: MessageUpdate(trigger: UpdateTrigger.messageDeleted, message: message),
       ),
     );
   }
@@ -210,6 +219,32 @@ void main() {
 
           expect(getResult().latestMessageId, 'm2');
         });
+      });
+    });
+
+    group('messageDeleted', () {
+      testWidgets('does not change message count', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pumpAndSettle();
+
+        _api.emitDeletedMessage(_message('m1', DateTime(2024), isDeleted: true));
+        await tester.pumpAndSettle();
+
+        expect(getResult().messageCount, 1);
+      });
+
+      testWidgets('updates message isDeleted flag', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pumpAndSettle();
+
+        _api.emitDeletedMessage(_message('m1', DateTime(2024), isDeleted: true));
+        await tester.pumpAndSettle();
+
+        expect(getResult().getMessage(0).isDeleted, isTrue);
       });
     });
 
