@@ -608,6 +608,107 @@ void main() {
       // Back to just the selected item checkmark
       expect(find.byIcon(Icons.check), findsOneWidget);
     });
+
+    testWidgets('closes dropdown when isDisabled changes to true while open', (tester) async {
+      bool isDisabled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                body: Column(
+                  children: [
+                    WnDropdownSelector<String>(
+                      label: 'Test',
+                      options: const [
+                        WnDropdownOption(value: 'a', label: 'Option A'),
+                        WnDropdownOption(value: 'b', label: 'Option B'),
+                      ],
+                      value: 'a',
+                      onChanged: (_) {},
+                      isDisabled: isDisabled,
+                    ),
+                    ElevatedButton(
+                      key: const Key('disable_button'),
+                      onPressed: () => setState(() => isDisabled = true),
+                      child: const Text('Disable'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      // Open dropdown
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      // Verify dropdown is open
+      expect(find.byIcon(Icons.close), findsOneWidget);
+      expect(find.text('Option B'), findsOneWidget);
+
+      // Disable the dropdown
+      await tester.tap(find.byKey(const Key('disable_button')));
+      await tester.pumpAndSettle();
+
+      // Dropdown should be closed
+      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.text('Option B'), findsNothing);
+    });
+
+    testWidgets('does not call onChanged when selecting while disabled', (tester) async {
+      bool isDisabled = false;
+      String? selectedValue;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                body: Column(
+                  children: [
+                    WnDropdownSelector<String>(
+                      label: 'Test',
+                      options: const [
+                        WnDropdownOption(value: 'a', label: 'Option A'),
+                        WnDropdownOption(value: 'b', label: 'Option B'),
+                      ],
+                      value: 'a',
+                      onChanged: (value) => selectedValue = value,
+                      isDisabled: isDisabled,
+                    ),
+                    ElevatedButton(
+                      key: const Key('disable_button'),
+                      onPressed: () => setState(() => isDisabled = true),
+                      child: const Text('Disable'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      // Open dropdown
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      // Disable the dropdown while open (dropdown will close)
+      await tester.tap(find.byKey(const Key('disable_button')));
+      await tester.pumpAndSettle();
+
+      // Try to open again (should not work)
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      // Dropdown should remain closed
+      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(selectedValue, isNull);
+    });
   });
 
   group('WnDropdownOption', () {

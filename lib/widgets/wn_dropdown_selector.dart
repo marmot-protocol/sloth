@@ -79,6 +79,19 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
     super.dispose();
   }
 
+  @override
+  void didUpdateWidget(covariant WnDropdownSelector<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // Close dropdown if it becomes disabled while open
+    if (!oldWidget.isDisabled && widget.isDisabled && _isOpen) {
+      setState(() {
+        _isOpen = false;
+        _isHovered = false;
+      });
+      _animationController.reverse();
+    }
+  }
+
   void _toggleDropdown() {
     if (widget.isDisabled) return;
 
@@ -93,6 +106,8 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
   }
 
   void _selectOption(T value) {
+    if (widget.isDisabled) return;
+
     setState(() {
       _isOpen = false;
       _animationController.reverse();
@@ -211,6 +226,7 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
                             return _DropdownItem(
                               label: option.label,
                               isSelected: isSelected,
+                              isDisabled: widget.isDisabled,
                               height: _itemHeight,
                               onTap: () => _selectOption(option.value),
                               isLast: isLast,
@@ -245,6 +261,7 @@ class _DropdownItem extends StatefulWidget {
   const _DropdownItem({
     required this.label,
     required this.isSelected,
+    required this.isDisabled,
     required this.height,
     required this.onTap,
     this.isLast = false,
@@ -252,6 +269,7 @@ class _DropdownItem extends StatefulWidget {
 
   final String label;
   final bool isSelected;
+  final bool isDisabled;
   final double height;
   final VoidCallback onTap;
   final bool isLast;
@@ -270,14 +288,18 @@ class _DropdownItemState extends State<_DropdownItem> {
     // Selected items get a background highlight
     final backgroundColor = widget.isSelected ? colors.fillSecondary : colors.backgroundPrimary;
 
-    // Show checkmark for selected or hovered items
-    final showCheckmark = widget.isSelected || _isHovered;
+    // Show checkmark for selected or hovered items (not when disabled)
+    final showCheckmark = !widget.isDisabled && (widget.isSelected || _isHovered);
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      onEnter: (_) {
+        if (!widget.isDisabled) setState(() => _isHovered = true);
+      },
+      onExit: (_) {
+        if (!widget.isDisabled) setState(() => _isHovered = false);
+      },
       child: GestureDetector(
-        onTap: widget.onTap,
+        onTap: widget.isDisabled ? null : widget.onTap,
         child: Container(
           height: widget.height,
           width: double.infinity,
