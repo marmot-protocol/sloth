@@ -266,7 +266,6 @@ void main() {
           ],
           value: 'a',
           onChanged: (_) {},
-          size: WnDropdownSize.small,
         ),
         tester,
       );

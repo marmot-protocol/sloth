@@ -51,8 +51,7 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
   late AnimationController _animationController;
   late Animation<double> _expandAnimation;
 
-  double get _dropdownHeight =>
-      widget.size == WnDropdownSize.small ? 44.h : 56.h;
+  double get _dropdownHeight => widget.size == WnDropdownSize.small ? 44.h : 56.h;
   double get _itemHeight => widget.size == WnDropdownSize.small ? 44.h : 48.h;
 
   String get _selectedLabel {
@@ -107,8 +106,8 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
     final borderColor = widget.isError
         ? colors.borderDestructivePrimary
         : (_isHovered || _isOpen)
-            ? colors.borderPrimary
-            : colors.borderSecondary;
+        ? colors.borderPrimary
+        : colors.borderSecondary;
 
     final textColor = widget.isDisabled
         ? colors.backgroundContentTertiary
@@ -139,8 +138,7 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
             animation: _expandAnimation,
             builder: (context, child) {
               final totalOptionsHeight = widget.options.length * _itemHeight;
-              final currentHeight = _dropdownHeight +
-                  (totalOptionsHeight * _expandAnimation.value);
+              final currentHeight = _dropdownHeight + (totalOptionsHeight * _expandAnimation.value);
 
               return Container(
                 // Add 2 for border (1px top + 1px bottom)
@@ -148,9 +146,7 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8.r),
                   border: Border.all(color: borderColor),
-                  color: widget.isDisabled
-                      ? colors.backgroundSecondary
-                      : colors.backgroundPrimary,
+                  color: widget.isDisabled ? colors.backgroundSecondary : colors.backgroundPrimary,
                 ),
                 clipBehavior: Clip.antiAlias,
                 child: Column(
@@ -178,9 +174,7 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
                             SizedBox(
                               width: 24.sp,
                               child: Icon(
-                                _isOpen
-                                    ? Icons.close
-                                    : Icons.keyboard_arrow_down,
+                                _isOpen ? Icons.close : Icons.keyboard_arrow_down,
                                 key: const Key('dropdown_icon'),
                                 color: iconColor,
                                 size: 24.sp,
@@ -262,8 +256,7 @@ class _DropdownItemState extends State<_DropdownItem> {
     final colors = context.colors;
 
     // Selected items get a background highlight
-    final backgroundColor =
-        widget.isSelected ? colors.fillSecondary : colors.backgroundPrimary;
+    final backgroundColor = widget.isSelected ? colors.fillSecondary : colors.backgroundPrimary;
 
     // Show checkmark for selected or hovered items
     final showCheckmark = widget.isSelected || _isHovered;
