@@ -34,11 +34,13 @@ Future<String> groupIdToString({required GroupId groupId}) =>
 Future<GroupId> groupIdFromString({required String groupId}) =>
     RustLib.instance.api.crateApiUtilsGroupIdFromString(groupId: groupId);
 
-ThemeMode themeModeLight() => RustLib.instance.api.crateApiUtilsThemeModeLight();
+ThemeMode themeModeLight() =>
+    RustLib.instance.api.crateApiUtilsThemeModeLight();
 
 ThemeMode themeModeDark() => RustLib.instance.api.crateApiUtilsThemeModeDark();
 
-ThemeMode themeModeSystem() => RustLib.instance.api.crateApiUtilsThemeModeSystem();
+ThemeMode themeModeSystem() =>
+    RustLib.instance.api.crateApiUtilsThemeModeSystem();
 
 String themeModeToString({required ThemeMode themeMode}) =>
     RustLib.instance.api.crateApiUtilsThemeModeToString(themeMode: themeMode);
