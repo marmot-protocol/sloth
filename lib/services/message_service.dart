@@ -18,7 +18,6 @@ class MessageService {
   const MessageService({required this.pubkey, required this.groupId});
 
   Future<void> sendTextMessage({
-    required String groupId,
     required String content,
   }) async {
     _logger.info('Sending text message to group $groupId');
@@ -55,7 +54,6 @@ class MessageService {
   }
 
   Future<void> deleteMessage({
-    required String groupId,
     required String messageId,
     required String messagePubkey,
     required int messageKind,

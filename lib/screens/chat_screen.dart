@@ -55,7 +55,7 @@ class ChatScreen extends HookConsumerWidget {
     );
 
     Future<void> sendMessage(String message) async {
-      await messageService.sendTextMessage(groupId: groupId, content: message);
+      await messageService.sendTextMessage(content: message);
     }
 
     Future<void> sendReaction(ChatMessage message, String emoji) {
@@ -74,7 +74,6 @@ class ChatScreen extends HookConsumerWidget {
         message: message,
         pubkey: pubkey,
         onDelete: () => messageService.deleteMessage(
-          groupId: groupId,
           messageId: message.id,
           messagePubkey: message.pubkey,
           messageKind: message.kind,

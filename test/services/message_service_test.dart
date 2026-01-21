@@ -62,31 +62,31 @@ void main() {
 
   group('sendTextMessage', () {
     test('sends message once', () async {
-      await service.sendTextMessage(groupId: 'group1', content: 'Hello');
+      await service.sendTextMessage(content: 'Hello');
 
       expect(mockApi.sentMessages.length, 1);
     });
 
-    test('calls API with pubkey', () async {
-      await service.sendTextMessage(groupId: 'group1', content: 'Hello');
+    test('calls API with pubkey from constructor', () async {
+      await service.sendTextMessage(content: 'Hello');
 
       expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
     });
 
-    test('calls API with groupId', () async {
-      await service.sendTextMessage(groupId: 'group1', content: 'Hello');
+    test('calls API with groupId from constructor', () async {
+      await service.sendTextMessage(content: 'Hello');
 
       expect(mockApi.sentMessages.first.groupId, 'group1');
     });
 
     test('calls API with message content', () async {
-      await service.sendTextMessage(groupId: 'group1', content: 'Hello World');
+      await service.sendTextMessage(content: 'Hello World');
 
       expect(mockApi.sentMessages.first.message, 'Hello World');
     });
 
     test('calls API with text message kind (9)', () async {
-      await service.sendTextMessage(groupId: 'group1', content: 'Hello');
+      await service.sendTextMessage(content: 'Hello');
 
       expect(mockApi.sentMessages.first.kind, 9);
     });
@@ -95,7 +95,6 @@ void main() {
   group('deleteMessage', () {
     test('sends deletion message once', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -104,9 +103,8 @@ void main() {
       expect(mockApi.sentMessages.length, 1);
     });
 
-    test('calls API with pubkey', () async {
+    test('calls API with pubkey from constructor', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -115,9 +113,8 @@ void main() {
       expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
     });
 
-    test('calls API with groupId', () async {
+    test('calls API with groupId from constructor', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -128,7 +125,6 @@ void main() {
 
     test('calls API with empty message', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -139,7 +135,6 @@ void main() {
 
     test('calls API with deletion kind (5)', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -150,7 +145,6 @@ void main() {
 
     test('sends e tag with messageId', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -162,7 +156,6 @@ void main() {
 
     test('sends p tag with messagePubkey', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
@@ -174,7 +167,6 @@ void main() {
 
     test('sends k tag with messageKind', () async {
       await service.deleteMessage(
-        groupId: 'group1',
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
         messageKind: 9,
