@@ -86,6 +86,15 @@ void main() {
         expect(find.text('My Group'), findsOneWidget);
       });
 
+      testWidgets('shows name for DM with name', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(name: 'Alice', groupType: GroupType.directMessage),
+        );
+
+        expect(find.text('Alice'), findsOneWidget);
+      });
+
       testWidgets('shows "Unknown user" for DM without name', (tester) async {
         await pumpTile(
           tester,
