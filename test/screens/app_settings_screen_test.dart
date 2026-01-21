@@ -5,6 +5,7 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_dropdown_selector.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -75,10 +76,11 @@ void main() {
     testWidgets('can select Light theme from dropdown', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      // Tap the dropdown to open it
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Light').last);
+      await tester.tap(find.text('Light'));
       await tester.pumpAndSettle();
 
       expect(mockApi.currentThemeMode, 'light');
@@ -87,10 +89,10 @@ void main() {
     testWidgets('can select Dark theme from dropdown', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Dark').last);
+      await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
 
       expect(mockApi.currentThemeMode, 'dark');
@@ -100,10 +102,12 @@ void main() {
       mockApi.currentThemeMode = 'light';
       await pumpAppSettingsScreen(tester);
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('System').last);
+      // When open, System appears both in header (as Light) and in options
+      // We need to tap the System option in the list
+      await tester.tap(find.text('System'));
       await tester.pumpAndSettle();
 
       expect(mockApi.currentThemeMode, 'system');
@@ -112,10 +116,11 @@ void main() {
     testWidgets('dropdown shows all theme options', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
-      expect(find.text('System'), findsWidgets);
+      // System appears twice: in header and in options
+      expect(find.text('System'), findsNWidgets(2));
       expect(find.text('Light'), findsOneWidget);
       expect(find.text('Dark'), findsOneWidget);
     });
@@ -123,9 +128,9 @@ void main() {
     testWidgets('theme selection persists across navigation', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Dark').last);
+      await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('close_button')));
@@ -140,21 +145,21 @@ void main() {
     testWidgets('can switch themes multiple times', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Light').last);
+      await tester.tap(find.text('Light'));
       await tester.pumpAndSettle();
       expect(mockApi.currentThemeMode, 'light');
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('Dark').last);
+      await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
       expect(mockApi.currentThemeMode, 'dark');
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
-      await tester.tap(find.text('System').last);
+      await tester.tap(find.text('System'));
       await tester.pumpAndSettle();
       expect(mockApi.currentThemeMode, 'system');
     });
