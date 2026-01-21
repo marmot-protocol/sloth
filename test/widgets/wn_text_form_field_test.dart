@@ -156,5 +156,47 @@ void main() {
         expect(find.byKey(const Key('error_icon')), findsOneWidget);
       });
     });
+
+    group('with paste button', () {
+      testWidgets('does not display paste button when onPaste is null', (tester) async {
+        await mountWidget(
+          const WnTextFormField(
+            label: 'Label',
+            placeholder: 'hint',
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('paste_button')), findsNothing);
+      });
+
+      testWidgets('displays paste button when onPaste is provided', (tester) async {
+        await mountWidget(
+          WnTextFormField(
+            label: 'Label',
+            placeholder: 'hint',
+            onPaste: () {},
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('paste_button')), findsOneWidget);
+      });
+
+      testWidgets('calls onPaste when paste button is tapped', (tester) async {
+        bool pasteCalled = false;
+        await mountWidget(
+          WnTextFormField(
+            label: 'Label',
+            placeholder: 'hint',
+            onPaste: () {
+              pasteCalled = true;
+            },
+          ),
+          tester,
+        );
+        await tester.tap(find.byKey(const Key('paste_button')));
+        await tester.pump();
+        expect(pasteCalled, isTrue);
+      });
+    });
   });
 }

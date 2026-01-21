@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' show useTextEditingController, useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
+import 'package:sloth/hooks/use_login.dart' show useLogin;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
@@ -17,25 +17,14 @@ class LoginScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final controller = useTextEditingController();
-    final isLoading = useState(false);
-    final error = useState<String?>(null);
+    final (:controller, :state, :paste, :submit, :clearError) = useLogin(
+      (nsec) => ref.read(authProvider.notifier).login(nsec),
+    );
 
     Future<void> onSubmit() async {
-      final nsec = controller.text.trim();
-      if (nsec.isEmpty) return;
-
-      isLoading.value = true;
-      error.value = null;
-      try {
-        await ref.read(authProvider.notifier).login(nsec);
-        if (context.mounted) {
-          Routes.goToChatList(context);
-        }
-      } catch (e) {
-        error.value = e.toString();
-      } finally {
-        isLoading.value = false;
+      final success = await submit();
+      if (success && context.mounted) {
+        Routes.goToChatList(context);
       }
     }
 
@@ -44,7 +33,7 @@ class LoginScreen extends HookConsumerWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          WnPixelsLayer(isAnimating: isLoading.value),
+          WnPixelsLayer(isAnimating: state.isLoading),
           Positioned.fill(
             child: GestureDetector(
               key: const Key('login_background'),
@@ -91,15 +80,14 @@ class LoginScreen extends HookConsumerWidget {
                         controller: controller,
                         autofocus: true,
                         obscureText: true,
-                        errorText: error.value != null
-                            ? 'Oh no! An error occurred, please try again.'
-                            : null,
-                        onChanged: (_) => error.value = null,
+                        errorText: state.error,
+                        onChanged: (_) => clearError(),
+                        onPaste: paste,
                       ),
                       WnFilledButton(
                         text: 'Login',
                         onPressed: onSubmit,
-                        loading: isLoading.value,
+                        loading: state.isLoading,
                       ),
                     ],
                   ),
