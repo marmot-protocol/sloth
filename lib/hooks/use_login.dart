@@ -42,10 +42,20 @@ useLogin(LoginCallback login) {
   Future<void> paste() async {
     try {
       final clipboardData = await Clipboard.getData(Clipboard.kTextPlain);
-      if (clipboardData?.text != null) {
-        controller.text = clipboardData!.text!.trim();
-        state.value = state.value.copyWith(clearError: true);
+      if (clipboardData?.text == null) {
+        return;
       }
+
+      final trimmedText = clipboardData!.text!.trim();
+      if (trimmedText.isEmpty) {
+        state.value = state.value.copyWith(
+          error: 'Nothing to paste',
+        );
+        return;
+      }
+
+      controller.text = trimmedText;
+      state.value = state.value.copyWith(clearError: true);
     } catch (e) {
       _logger.warning('Failed to paste from clipboard: $e');
       state.value = state.value.copyWith(

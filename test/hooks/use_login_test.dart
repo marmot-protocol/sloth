@@ -266,7 +266,7 @@ void main() {
         expect(capturedState.error, isNull);
       });
 
-      testWidgets('handles empty clipboard gracefully', (tester) async {
+      testWidgets('handles null clipboard gracefully', (tester) async {
         late TextEditingController capturedController;
         late Future<void> Function() capturedPaste;
 
@@ -285,6 +285,69 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(capturedController.text, isEmpty);
+      });
+
+      testWidgets('trims whitespace from clipboard text', (tester) async {
+        late TextEditingController capturedController;
+        late Future<void> Function() capturedPaste;
+
+        final widget = _TestWidget(
+          loginCallback: (_) async {},
+          onBuild: (controller, state, paste, submit, clearError) {
+            capturedController = controller;
+            capturedPaste = paste;
+          },
+        );
+        await mountWidget(widget, tester);
+
+        setClipboardData({'text': '   nsec1pasted   '});
+
+        await capturedPaste();
+        await tester.pumpAndSettle();
+
+        expect(capturedController.text, 'nsec1pasted');
+      });
+
+      testWidgets('shows error when clipboard contains only whitespace', (tester) async {
+        late LoginState capturedState;
+        late Future<void> Function() capturedPaste;
+
+        final widget = _TestWidget(
+          loginCallback: (_) async {},
+          onBuild: (controller, state, paste, submit, clearError) {
+            capturedPaste = paste;
+            capturedState = state;
+          },
+        );
+        await mountWidget(widget, tester);
+
+        setClipboardData({'text': '   '});
+
+        await capturedPaste();
+        await tester.pumpAndSettle();
+
+        expect(capturedState.error, 'Nothing to paste');
+      });
+
+      testWidgets('shows error when clipboard is empty string', (tester) async {
+        late LoginState capturedState;
+        late Future<void> Function() capturedPaste;
+
+        final widget = _TestWidget(
+          loginCallback: (_) async {},
+          onBuild: (controller, state, paste, submit, clearError) {
+            capturedPaste = paste;
+            capturedState = state;
+          },
+        );
+        await mountWidget(widget, tester);
+
+        setClipboardData({'text': ''});
+
+        await capturedPaste();
+        await tester.pumpAndSettle();
+
+        expect(capturedState.error, 'Nothing to paste');
       });
 
       testWidgets('handles clipboard exception gracefully', (tester) async {
