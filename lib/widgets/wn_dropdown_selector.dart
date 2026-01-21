@@ -53,6 +53,7 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
 
   double get _dropdownHeight => widget.size == WnDropdownSize.small ? 44.h : 56.h;
   double get _itemHeight => widget.size == WnDropdownSize.small ? 44.h : 48.h;
+  static const int _maxVisibleItems = 5;
 
   String get _selectedLabel {
     final selected = widget.options.where((o) => o.value == widget.value);
@@ -103,7 +104,9 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    final borderColor = widget.isError
+    final borderColor = widget.isDisabled
+        ? colors.borderSecondary
+        : widget.isError
         ? colors.borderDestructivePrimary
         : (_isHovered || _isOpen)
         ? colors.borderPrimary
@@ -132,13 +135,22 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
         ),
         Gap(4.h),
         MouseRegion(
-          onEnter: (_) => setState(() => _isHovered = true),
-          onExit: (_) => setState(() => _isHovered = false),
+          onEnter: (_) {
+            if (!widget.isDisabled) setState(() => _isHovered = true);
+          },
+          onExit: (_) {
+            if (!widget.isDisabled) setState(() => _isHovered = false);
+          },
           child: AnimatedBuilder(
             animation: _expandAnimation,
             builder: (context, child) {
               final totalOptionsHeight = widget.options.length * _itemHeight;
-              final currentHeight = _dropdownHeight + (totalOptionsHeight * _expandAnimation.value);
+              final maxOptionsHeight = _maxVisibleItems * _itemHeight;
+              final constrainedOptionsHeight = totalOptionsHeight < maxOptionsHeight
+                  ? totalOptionsHeight
+                  : maxOptionsHeight;
+              final animatedOptionsHeight = constrainedOptionsHeight * _expandAnimation.value;
+              final currentHeight = _dropdownHeight + animatedOptionsHeight;
 
               return Container(
                 // Add 2 for border (1px top + 1px bottom)
@@ -186,24 +198,24 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
                     ),
                     // Options
                     if (_expandAnimation.value > 0)
-                      Expanded(
-                        child: SingleChildScrollView(
-                          physics: const NeverScrollableScrollPhysics(),
-                          child: Column(
-                            children: widget.options.asMap().entries.map((entry) {
-                              final index = entry.key;
-                              final option = entry.value;
-                              final isSelected = option.value == widget.value;
-                              final isLast = index == widget.options.length - 1;
-                              return _DropdownItem(
-                                label: option.label,
-                                isSelected: isSelected,
-                                height: _itemHeight,
-                                onTap: () => _selectOption(option.value),
-                                isLast: isLast,
-                              );
-                            }).toList(),
-                          ),
+                      SizedBox(
+                        height: animatedOptionsHeight,
+                        child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: widget.options.length,
+                          itemBuilder: (context, index) {
+                            final option = widget.options[index];
+                            final isSelected = option.value == widget.value;
+                            final isLast = index == widget.options.length - 1;
+                            return _DropdownItem(
+                              label: option.label,
+                              isSelected: isSelected,
+                              height: _itemHeight,
+                              onTap: () => _selectOption(option.value),
+                              isLast: isLast,
+                            );
+                          },
                         ),
                       ),
                   ],
