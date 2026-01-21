@@ -7,6 +7,7 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import '../mocks/mock_clipboard_paste.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -119,6 +120,35 @@ void main() {
             findsOneWidget,
           );
         });
+      });
+    });
+
+    group('paste button', () {
+      late void Function(Map<String, dynamic>?) setClipboardData;
+      late void Function() resetClipboard;
+
+      setUp(() {
+        final mock = mockClipboardPaste();
+        setClipboardData = mock.setData;
+        resetClipboard = mock.reset;
+      });
+
+      tearDown(() {
+        resetClipboard();
+      });
+
+      testWidgets('displays paste button', (tester) async {
+        await pumpLoginScreen(tester);
+        expect(find.byKey(const Key('paste_button')), findsOneWidget);
+      });
+
+      testWidgets('pastes clipboard text into field', (tester) async {
+        await pumpLoginScreen(tester);
+        setClipboardData({'text': 'nsec1pasted'});
+        await tester.tap(find.byKey(const Key('paste_button')));
+        await tester.pumpAndSettle();
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.controller?.text, 'nsec1pasted');
       });
     });
   });

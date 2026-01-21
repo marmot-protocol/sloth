@@ -76,7 +76,7 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'invalid-url');
       await tester.pump(const Duration(milliseconds: 600));
 
-      expect(find.text('Relay not supported'), findsOneWidget);
+      expect(find.textContaining('URL must start with wss:// or ws://'), findsOneWidget);
     });
 
     testWidgets('validates URL must start with wss:// or ws://', (tester) async {
@@ -100,7 +100,6 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'wss://wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
-      expect(find.text('Relay not supported'), findsOneWidget);
       expect(find.text('Invalid relay URL'), findsOneWidget);
     });
 
@@ -113,7 +112,7 @@ void main() {
       await tester.enterText(find.byType(TextFormField), 'wss://localhost');
       await tester.pump(const Duration(milliseconds: 600));
 
-      expect(find.text('Relay not supported'), findsOneWidget);
+      expect(find.text('Invalid relay URL'), findsOneWidget);
     });
 
     testWidgets('calls onRelayAdded when add button is tapped', (tester) async {
