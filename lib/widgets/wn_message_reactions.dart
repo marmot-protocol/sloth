@@ -1,0 +1,126 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sloth/src/rust/api/messages.dart' show EmojiReaction;
+import 'package:sloth/theme.dart';
+
+class WnMessageReactions extends StatelessWidget {
+  static const int maxVisibleReactions = 3;
+
+  final List<EmojiReaction> reactions;
+  final String? currentUserPubkey;
+  final bool isOwnMessage;
+  final void Function(String emoji)? onReaction;
+
+  const WnMessageReactions({
+    super.key,
+    required this.reactions,
+    required this.isOwnMessage,
+    this.currentUserPubkey,
+    this.onReaction,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (reactions.isEmpty) {
+      return const SizedBox.shrink();
+    }
+
+    final colors = context.colors;
+    final bubbleColor = isOwnMessage ? colors.fillPrimary : colors.fillSecondary;
+    final textColor = isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary;
+    final visibleReactions = reactions.take(maxVisibleReactions).toList();
+    final hasOverflow = reactions.length > maxVisibleReactions;
+
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (final reaction in visibleReactions)
+          _ReactionPill(
+            emoji: reaction.emoji,
+            count: reaction.count.toInt(),
+            users: reaction.users,
+            currentUserPubkey: currentUserPubkey,
+            borderColor: colors.backgroundPrimary,
+            backgroundColor: bubbleColor,
+            textColor: textColor,
+            onReaction: onReaction,
+          ),
+        if (hasOverflow)
+          Padding(
+            padding: EdgeInsets.only(left: 2.w),
+            child: Text(
+              '...',
+              style: TextStyle(
+                fontSize: 10.sp,
+                color: textColor,
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+class _ReactionPill extends StatelessWidget {
+  final String emoji;
+  final int count;
+  final List<String> users;
+  final String? currentUserPubkey;
+  final Color backgroundColor;
+  final Color borderColor;
+  final Color textColor;
+  final void Function(String emoji)? onReaction;
+
+  const _ReactionPill({
+    required this.emoji,
+    required this.count,
+    required this.users,
+    required this.backgroundColor,
+    required this.borderColor,
+    required this.textColor,
+    this.currentUserPubkey,
+    this.onReaction,
+  });
+
+  bool get _userHasReacted => currentUserPubkey != null && users.contains(currentUserPubkey);
+
+  @override
+  Widget build(BuildContext context) {
+    final pill = Container(
+      margin: EdgeInsets.only(right: 4.w),
+      decoration: BoxDecoration(
+        color: backgroundColor,
+        borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: borderColor),
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 1.h),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(emoji, style: TextStyle(fontSize: 14.sp)),
+            if (count > 1) ...[
+              SizedBox(width: 2.w),
+              Text(
+                count > 99 ? '99+' : count.toString(),
+                style: TextStyle(
+                  fontSize: 10.sp,
+                  color: textColor,
+                ),
+              ),
+            ],
+          ],
+        ),
+      ),
+    );
+
+    if (onReaction != null && !_userHasReacted) {
+      return GestureDetector(
+        onTap: () => onReaction!(emoji),
+        child: pill,
+      );
+    }
+
+    return pill;
+  }
+}
