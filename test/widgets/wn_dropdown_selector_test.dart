@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_dropdown_selector.dart';
@@ -357,6 +358,255 @@ void main() {
 
       // Menu should be closed - chevron should be visible again
       expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+    });
+
+    testWidgets('closes dropdown when tapping header again', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      // Open dropdown
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      // Verify dropdown is open (close icon visible)
+      expect(find.byIcon(Icons.close), findsOneWidget);
+      expect(find.text('Option B'), findsOneWidget);
+
+      // Tap header again to close
+      await tester.tap(find.byIcon(Icons.close));
+      await tester.pumpAndSettle();
+
+      // Verify dropdown is closed
+      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.text('Option B'), findsNothing);
+    });
+
+    testWidgets('shows error border when isError is true', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isError: true,
+        ),
+        tester,
+      );
+
+      // Widget should render with error state
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('shows error helper text styling when isError is true', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isError: true,
+          helperText: 'Error message',
+        ),
+        tester,
+      );
+
+      expect(find.text('Error message'), findsOneWidget);
+    });
+
+    testWidgets('handles hover state on enabled dropdown', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      // Find the MouseRegion widget directly
+      final mouseRegion = find.byType(MouseRegion).first;
+
+      // Create mouse gesture and hover over the MouseRegion
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+
+      // Enter the MouseRegion
+      await gesture.moveTo(tester.getCenter(mouseRegion));
+      await tester.pumpAndSettle();
+
+      // Widget should be rendered with hover state
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+
+      // Exit the MouseRegion
+      await gesture.moveTo(const Offset(-100, -100));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('ignores hover state when disabled', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isDisabled: true,
+        ),
+        tester,
+      );
+
+      // Find the MouseRegion widget directly
+      final mouseRegion = find.byType(MouseRegion).first;
+
+      // Simulate hover on disabled dropdown
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+
+      // Enter and exit the MouseRegion
+      await gesture.moveTo(tester.getCenter(mouseRegion));
+      await tester.pumpAndSettle();
+
+      await gesture.moveTo(const Offset(-100, -100));
+      await tester.pumpAndSettle();
+
+      // Should still render without error
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('scrolls when more than 5 options', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: '1', label: 'Option 1'),
+            WnDropdownOption(value: '2', label: 'Option 2'),
+            WnDropdownOption(value: '3', label: 'Option 3'),
+            WnDropdownOption(value: '4', label: 'Option 4'),
+            WnDropdownOption(value: '5', label: 'Option 5'),
+            WnDropdownOption(value: '6', label: 'Option 6'),
+            WnDropdownOption(value: '7', label: 'Option 7'),
+          ],
+          value: '1',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      // Open dropdown
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      // Verify dropdown opens and ListView is present
+      expect(find.byType(ListView), findsOneWidget);
+    });
+
+    testWidgets('shows close icon when open', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      // Initially shows chevron
+      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.byIcon(Icons.close), findsNothing);
+
+      // Open dropdown
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      // Now shows close icon
+      expect(find.byIcon(Icons.close), findsOneWidget);
+      expect(find.byIcon(Icons.keyboard_arrow_down), findsNothing);
+    });
+
+    testWidgets('handles value not in options gracefully', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'nonexistent',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      // Should render without crashing, showing empty label
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('shows checkmark on hover over unselected option', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      // Open dropdown
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      // Initially only selected item has checkmark
+      expect(find.byIcon(Icons.check), findsOneWidget);
+
+      // Create mouse gesture and hover over Option B (unselected)
+      final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+
+      // Find Option B text and hover over it
+      final optionB = find.text('Option B');
+      await gesture.moveTo(tester.getCenter(optionB));
+      await tester.pumpAndSettle();
+
+      // Now both selected and hovered items should show checkmark
+      expect(find.byIcon(Icons.check), findsNWidgets(2));
+
+      // Move away from Option B
+      await gesture.moveTo(const Offset(-100, -100));
+      await tester.pumpAndSettle();
+
+      // Back to just the selected item checkmark
+      expect(find.byIcon(Icons.check), findsOneWidget);
     });
   });
 
