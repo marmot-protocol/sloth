@@ -377,12 +377,12 @@ void main() {
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Verify dropdown is open (dropdown icon visible)
+      // Verify dropdown is open
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsOneWidget);
 
-      // Tap header again to close
-      await tester.tap(find.byKey(const Key('dropdown_icon')));
+      // Tap header text again to close (use .first since Option A appears in both header and list)
+      await tester.tap(find.text('Option A').first);
       await tester.pumpAndSettle();
 
       // Verify dropdown is closed
