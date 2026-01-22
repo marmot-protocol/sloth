@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/theme.dart';
@@ -18,7 +19,7 @@ enum WnDropdownSize {
   large, // 56px dropdown, 48px items
 }
 
-class WnDropdownSelector<T> extends StatefulWidget {
+class WnDropdownSelector<T> extends HookWidget {
   const WnDropdownSelector({
     super.key,
     required this.label,
@@ -41,97 +42,70 @@ class WnDropdownSelector<T> extends StatefulWidget {
   final bool isDisabled;
 
   @override
-  State<WnDropdownSelector<T>> createState() => _WnDropdownSelectorState<T>();
-}
-
-class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
-    with SingleTickerProviderStateMixin {
-  bool _isOpen = false;
-  bool _isHovered = false;
-  late AnimationController _animationController;
-  late Animation<double> _expandAnimation;
-
-  double get _dropdownHeight => widget.size == WnDropdownSize.small ? 44.h : 56.h;
-  double get _itemHeight => widget.size == WnDropdownSize.small ? 44.h : 48.h;
-  static const int _maxVisibleItems = 5;
-
-  String get _selectedLabel {
-    final selected = widget.options.where((o) => o.value == widget.value);
-    return selected.isNotEmpty ? selected.first.label : '';
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 120),
-      vsync: this,
-    );
-    _expandAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    );
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  @override
-  void didUpdateWidget(covariant WnDropdownSelector<T> oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    // Close dropdown if it becomes disabled while open
-    if (!oldWidget.isDisabled && widget.isDisabled && _isOpen) {
-      setState(() {
-        _isOpen = false;
-        _isHovered = false;
-      });
-      _animationController.reverse();
-    }
-  }
-
-  void _toggleDropdown() {
-    if (widget.isDisabled) return;
-
-    setState(() {
-      _isOpen = !_isOpen;
-      if (_isOpen) {
-        _animationController.forward();
-      } else {
-        _animationController.reverse();
-      }
-    });
-  }
-
-  void _selectOption(T value) {
-    if (widget.isDisabled) return;
-
-    setState(() {
-      _isOpen = false;
-      _animationController.reverse();
-    });
-    widget.onChanged(value);
-  }
-
-  @override
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    final borderColor = widget.isDisabled
+    final dropdownHeight = size == WnDropdownSize.small ? 44.h : 56.h;
+    final itemHeight = size == WnDropdownSize.small ? 44.h : 48.h;
+    const maxVisibleItems = 5;
+
+    final isOpen = useState(false);
+
+    final animationController = useAnimationController(
+      duration: const Duration(milliseconds: 120),
+    );
+
+    final expandAnimation = useMemoized(
+      () => CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+      [animationController],
+    );
+
+    // Close dropdown if it becomes disabled while open
+    useEffect(() {
+      if (isDisabled && isOpen.value) {
+        isOpen.value = false;
+        animationController.reverse();
+      }
+      return null;
+    }, [isDisabled]);
+
+    final selectedLabel = useMemoized(() {
+      final selected = options.where((o) => o.value == value);
+      return selected.isNotEmpty ? selected.first.label : '';
+    }, [options, value]);
+
+    void toggleDropdown() {
+      if (isDisabled) return;
+
+      isOpen.value = !isOpen.value;
+      if (isOpen.value) {
+        animationController.forward();
+      } else {
+        animationController.reverse();
+      }
+    }
+
+    void selectOption(T optionValue) {
+      if (isDisabled) return;
+
+      isOpen.value = false;
+      animationController.reverse();
+      onChanged(optionValue);
+    }
+
+    final borderColor = isDisabled
         ? colors.borderSecondary
-        : widget.isError
+        : isError
         ? colors.borderDestructivePrimary
-        : (_isHovered || _isOpen)
+        : isOpen.value
         ? colors.borderPrimary
         : colors.borderSecondary;
 
-    final textColor = widget.isDisabled
+    final textColor = isDisabled
         ? colors.backgroundContentTertiary
         : colors.backgroundContentPrimary;
 
-    final iconColor = widget.isDisabled
+    final iconColor = isDisabled
         ? colors.backgroundContentTertiary
         : colors.backgroundContentPrimary;
 
@@ -139,114 +113,100 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          widget.label,
+          label,
           style: TextStyle(
             fontSize: 14.sp,
-            color: widget.isDisabled
-                ? colors.backgroundContentTertiary
-                : colors.backgroundContentPrimary,
+            color: isDisabled ? colors.backgroundContentTertiary : colors.backgroundContentPrimary,
             fontWeight: FontWeight.w600,
           ),
         ),
         Gap(4.h),
-        MouseRegion(
-          onEnter: (_) {
-            if (!widget.isDisabled) setState(() => _isHovered = true);
-          },
-          onExit: (_) {
-            if (!widget.isDisabled) setState(() => _isHovered = false);
-          },
-          child: AnimatedBuilder(
-            animation: _expandAnimation,
-            builder: (context, child) {
-              final totalOptionsHeight = widget.options.length * _itemHeight;
-              final maxOptionsHeight = _maxVisibleItems * _itemHeight;
-              final constrainedOptionsHeight = totalOptionsHeight < maxOptionsHeight
-                  ? totalOptionsHeight
-                  : maxOptionsHeight;
-              final animatedOptionsHeight = constrainedOptionsHeight * _expandAnimation.value;
-              final currentHeight = _dropdownHeight + animatedOptionsHeight;
+        AnimatedBuilder(
+          animation: expandAnimation,
+          builder: (context, child) {
+            final totalOptionsHeight = options.length * itemHeight;
+            final maxOptionsHeight = maxVisibleItems * itemHeight;
+            final constrainedOptionsHeight = totalOptionsHeight < maxOptionsHeight
+                ? totalOptionsHeight
+                : maxOptionsHeight;
+            final animatedOptionsHeight = constrainedOptionsHeight * expandAnimation.value;
+            final currentHeight = dropdownHeight + animatedOptionsHeight;
 
-              return Container(
-                // Add 2 for border (1px top + 1px bottom)
-                height: currentHeight + 2,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8.r),
-                  border: Border.all(color: borderColor),
-                  color: widget.isDisabled ? colors.backgroundSecondary : colors.backgroundPrimary,
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: Column(
-                  children: [
-                    // Header / Field
-                    GestureDetector(
-                      onTap: _toggleDropdown,
-                      child: Container(
-                        height: _dropdownHeight,
-                        padding: EdgeInsets.symmetric(horizontal: 14.w),
-                        color: Colors.transparent,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                _selectedLabel,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: textColor,
-                                  fontFamily: 'Manrope',
-                                ),
+            return Container(
+              height: currentHeight + 2,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(color: borderColor),
+                color: isDisabled ? colors.backgroundSecondary : colors.backgroundPrimary,
+              ),
+              clipBehavior: Clip.antiAlias,
+              child: Column(
+                children: [
+                  GestureDetector(
+                    onTap: toggleDropdown,
+                    child: Container(
+                      height: dropdownHeight,
+                      padding: EdgeInsets.symmetric(horizontal: 14.w),
+                      color: Colors.transparent,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              selectedLabel,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w600,
+                                color: textColor,
+                                fontFamily: 'Manrope',
                               ),
                             ),
-                            SizedBox(
-                              width: 24.sp,
-                              child: Icon(
-                                _isOpen ? Icons.close : Icons.keyboard_arrow_down,
-                                key: const Key('dropdown_icon'),
-                                color: iconColor,
-                                size: 24.sp,
-                              ),
+                          ),
+                          SizedBox(
+                            width: 24.sp,
+                            child: Icon(
+                              isOpen.value ? Icons.close : Icons.keyboard_arrow_down,
+                              key: const Key('dropdown_icon'),
+                              color: iconColor,
+                              size: 24.sp,
                             ),
-                          ],
-                        ),
+                          ),
+                        ],
                       ),
                     ),
-                    // Options
-                    if (_expandAnimation.value > 0)
-                      SizedBox(
-                        height: animatedOptionsHeight,
-                        child: ListView.builder(
-                          padding: EdgeInsets.zero,
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: widget.options.length,
-                          itemBuilder: (context, index) {
-                            final option = widget.options[index];
-                            final isSelected = option.value == widget.value;
-                            final isLast = index == widget.options.length - 1;
-                            return _DropdownItem(
-                              label: option.label,
-                              isSelected: isSelected,
-                              isDisabled: widget.isDisabled,
-                              height: _itemHeight,
-                              onTap: () => _selectOption(option.value),
-                              isLast: isLast,
-                            );
-                          },
-                        ),
+                  ),
+                  if (expandAnimation.value > 0)
+                    SizedBox(
+                      height: animatedOptionsHeight,
+                      child: ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: options.length,
+                        itemBuilder: (context, index) {
+                          final option = options[index];
+                          final isSelected = option.value == value;
+                          final isLast = index == options.length - 1;
+                          return _DropdownItem(
+                            label: option.label,
+                            isSelected: isSelected,
+                            height: itemHeight,
+                            onTap: () => selectOption(option.value),
+                            isLast: isLast,
+                          );
+                        },
                       ),
-                  ],
-                ),
-              );
-            },
-          ),
+                    ),
+                ],
+              ),
+            );
+          },
         ),
-        if (widget.helperText != null) ...[
+        if (helperText != null) ...[
           Gap(4.h),
           Text(
-            widget.helperText!,
+            helperText!,
             style: TextStyle(
               fontSize: 12.sp,
-              color: widget.isError
+              color: isError
                   ? colors.backgroundContentDestructive
                   : colors.backgroundContentSecondary,
             ),
@@ -257,11 +217,10 @@ class _WnDropdownSelectorState<T> extends State<WnDropdownSelector<T>>
   }
 }
 
-class _DropdownItem extends StatefulWidget {
+class _DropdownItem extends StatelessWidget {
   const _DropdownItem({
     required this.label,
     required this.isSelected,
-    required this.isDisabled,
     required this.height,
     required this.onTap,
     this.isLast = false,
@@ -269,75 +228,55 @@ class _DropdownItem extends StatefulWidget {
 
   final String label;
   final bool isSelected;
-  final bool isDisabled;
   final double height;
   final VoidCallback onTap;
   final bool isLast;
 
   @override
-  State<_DropdownItem> createState() => _DropdownItemState();
-}
-
-class _DropdownItemState extends State<_DropdownItem> {
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    // Selected items get a background highlight
-    final backgroundColor = widget.isSelected ? colors.fillSecondary : colors.backgroundPrimary;
+    final backgroundColor = isSelected ? colors.fillSecondary : colors.backgroundPrimary;
 
-    // Show checkmark for selected or hovered items (not when disabled)
-    final showCheckmark = !widget.isDisabled && (widget.isSelected || _isHovered);
-
-    return MouseRegion(
-      onEnter: (_) {
-        if (!widget.isDisabled) setState(() => _isHovered = true);
-      },
-      onExit: (_) {
-        if (!widget.isDisabled) setState(() => _isHovered = false);
-      },
-      child: GestureDetector(
-        onTap: widget.isDisabled ? null : widget.onTap,
-        child: Container(
-          height: widget.height,
-          width: double.infinity,
-          padding: EdgeInsets.symmetric(horizontal: 14.w),
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: widget.isLast
-                ? BorderRadius.only(
-                    bottomLeft: Radius.circular(7.r),
-                    bottomRight: Radius.circular(7.r),
-                  )
-                : null,
-          ),
-          child: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  widget.label,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: colors.backgroundContentPrimary,
-                    fontFamily: 'Manrope',
-                  ),
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: height,
+        width: double.infinity,
+        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: isLast
+              ? BorderRadius.only(
+                  bottomLeft: Radius.circular(7.r),
+                  bottomRight: Radius.circular(7.r),
+                )
+              : null,
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Text(
+                label,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w600,
+                  color: colors.backgroundContentPrimary,
+                  fontFamily: 'Manrope',
                 ),
               ),
-              SizedBox(
-                width: 24.sp,
-                child: showCheckmark
-                    ? Icon(
-                        Icons.check,
-                        color: colors.backgroundContentPrimary,
-                        size: 24.sp,
-                      )
-                    : null,
-              ),
-            ],
-          ),
+            ),
+            SizedBox(
+              width: 24.sp,
+              child: isSelected
+                  ? Icon(
+                      Icons.check,
+                      color: colors.backgroundContentPrimary,
+                      size: 24.sp,
+                    )
+                  : null,
+            ),
+          ],
         ),
       ),
     );

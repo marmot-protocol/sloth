@@ -135,6 +135,14 @@ just generate
 - Files end with `_provider.dart`
 - Provider variables end with `Provider` (e.g., `authProvider`)
 
+### Comments
+
+- Other than doc comments; only leave comments on code that is really complex or potentially hard to understand.
+
+### Avoid StatefulWidget
+
+- In line with rules number 6 & 7 below in the [Sloth Mode Philosphy](#sloth-mode-philosophy), we should avoid the use of StatefulWidgets. Prefer to use providers (shared app-wide state) or hooks (widget-local state) instead.
+
 ## Testing
 
 **IMPORTANT: Test coverage is of utmost importance. Never submit a PR that reduces test coverage.**
