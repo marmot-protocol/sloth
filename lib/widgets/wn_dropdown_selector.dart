@@ -133,7 +133,7 @@ class WnDropdownSelector<T> extends HookWidget {
             final currentHeight = dropdownHeight + animatedOptionsHeight;
 
             return Container(
-              height: currentHeight + 2,
+              height: currentHeight + 2, // +2 for border (1px top + 1px bottom)
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: borderColor),
