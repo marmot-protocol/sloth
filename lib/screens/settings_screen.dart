@@ -9,6 +9,7 @@ import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -95,6 +96,13 @@ class SettingsScreen extends HookConsumerWidget {
                         ),
                       ),
                     ],
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: WnOutlinedButton(
+                    text: 'Switch Profile',
+                    onPressed: () => Routes.pushToSwitchProfile(context),
                   ),
                 ),
                 _SettingsTile(

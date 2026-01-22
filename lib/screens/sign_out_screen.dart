@@ -39,9 +39,17 @@ class SignOutScreen extends HookConsumerWidget {
 
     Future<void> signOut() async {
       isLoggingOut.value = true;
-      await ref.read(authProvider.notifier).logout();
+      final nextPubkey = await ref.read(authProvider.notifier).logout();
       if (context.mounted) {
-        Routes.goToHome(context);
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            if (nextPubkey != null) {
+              Routes.goBack(context);
+            } else {
+              Routes.goToHome(context);
+            }
+          }
+        });
       }
     }
 

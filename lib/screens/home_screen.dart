@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
-import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
+import 'package:sloth/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 
@@ -72,23 +70,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                WnSlateContainer(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      WnOutlinedButton(
-                        text: 'Login',
-                        onPressed: () {
-                          Routes.pushToLogin(context);
-                        },
-                      ),
-                      Gap(8.h),
-                      WnFilledButton(
-                        text: 'Sign Up',
-                        onPressed: () => Routes.pushToSignup(context),
-                      ),
-                    ],
-                  ),
+                const WnSlateContainer(
+                  child: WnAuthButtonsContainer(),
                 ),
                 Gap(44.h),
               ],
