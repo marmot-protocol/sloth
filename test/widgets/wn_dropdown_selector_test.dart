@@ -55,10 +55,10 @@ void main() {
         tester,
       );
 
-      await tester.tap(find.byType(DropdownButton<String>));
+      await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      expect(find.text('Option A'), findsWidgets);
+      expect(find.text('Option A'), findsNWidgets(2));
       expect(find.text('Option B'), findsOneWidget);
       expect(find.text('Option C'), findsOneWidget);
     });
@@ -79,10 +79,10 @@ void main() {
         tester,
       );
 
-      await tester.tap(find.byType(DropdownButton<String>));
+      await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Option B').last);
+      await tester.tap(find.text('Option B'));
       await tester.pumpAndSettle();
 
       expect(selectedValue, 'b');
@@ -105,10 +105,10 @@ void main() {
         tester,
       );
 
-      await tester.tap(find.byType(DropdownButton<ThemeMode>));
+      await tester.tap(find.text('System'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Dark').last);
+      await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
 
       expect(selectedMode, ThemeMode.dark);
@@ -147,10 +147,10 @@ void main() {
         tester,
       );
 
-      await tester.tap(find.byType(DropdownButton<int>));
+      await tester.tap(find.text('One'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Three').last);
+      await tester.tap(find.text('Three'));
       await tester.pumpAndSettle();
 
       expect(selectedValue, 3);
@@ -181,10 +181,10 @@ void main() {
 
       expect(find.text('Option A'), findsOneWidget);
 
-      await tester.tap(find.byType(DropdownButton<String>));
+      await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Option B').last);
+      await tester.tap(find.text('Option B'));
       await tester.pumpAndSettle();
 
       expect(find.text('Option B'), findsOneWidget);
@@ -205,6 +205,358 @@ void main() {
 
       expect(find.text('Only Option'), findsOneWidget);
     });
+
+    testWidgets('shows chevron icon when closed', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+    });
+
+    testWidgets('shows checkmark for selected item', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('checkmark_icon')), findsOneWidget);
+    });
+
+    testWidgets('supports small size variant', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('supports large size variant', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          size: WnDropdownSize.large,
+        ),
+        tester,
+      );
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('displays helper text when provided', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          helperText: 'This is helper text',
+        ),
+        tester,
+      );
+
+      expect(find.text('This is helper text'), findsOneWidget);
+    });
+
+    testWidgets('does not open when disabled', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isDisabled: true,
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option B'), findsNothing);
+    });
+
+    testWidgets('closes menu when selecting an option', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Option B'), findsOneWidget);
+
+      await tester.tap(find.text('Option B'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+    });
+
+    testWidgets('closes dropdown when tapping header again', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+      expect(find.text('Option B'), findsOneWidget);
+
+      await tester.tap(find.text('Option A').first);
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+      expect(find.text('Option B'), findsNothing);
+    });
+
+    testWidgets('shows error border when isError is true', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isError: true,
+        ),
+        tester,
+      );
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('shows error helper text styling when isError is true', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isError: true,
+          helperText: 'Error message',
+        ),
+        tester,
+      );
+
+      expect(find.text('Error message'), findsOneWidget);
+    });
+
+    testWidgets('scrolls when more than 5 options', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: '1', label: 'Option 1'),
+            WnDropdownOption(value: '2', label: 'Option 2'),
+            WnDropdownOption(value: '3', label: 'Option 3'),
+            WnDropdownOption(value: '4', label: 'Option 4'),
+            WnDropdownOption(value: '5', label: 'Option 5'),
+            WnDropdownOption(value: '6', label: 'Option 6'),
+            WnDropdownOption(value: '7', label: 'Option 7'),
+          ],
+          value: '1',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option 1'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(ListView), findsOneWidget);
+    });
+
+    testWidgets('shows close icon when open', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+    });
+
+    testWidgets('handles value not in options gracefully', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'nonexistent',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('closes dropdown when isDisabled changes to true while open', (tester) async {
+      bool isDisabled = false;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                body: Column(
+                  children: [
+                    WnDropdownSelector<String>(
+                      label: 'Test',
+                      options: const [
+                        WnDropdownOption(value: 'a', label: 'Option A'),
+                        WnDropdownOption(value: 'b', label: 'Option B'),
+                      ],
+                      value: 'a',
+                      onChanged: (_) {},
+                      isDisabled: isDisabled,
+                    ),
+                    ElevatedButton(
+                      key: const Key('disable_button'),
+                      onPressed: () => setState(() => isDisabled = true),
+                      child: const Text('Disable'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+      expect(find.text('Option B'), findsOneWidget);
+
+      await tester.tap(find.byKey(const Key('disable_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+      expect(find.text('Option B'), findsNothing);
+    });
+
+    testWidgets('does not call onChanged when selecting while disabled', (tester) async {
+      bool isDisabled = false;
+      String? selectedValue;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: StatefulBuilder(
+            builder: (context, setState) {
+              return Scaffold(
+                body: Column(
+                  children: [
+                    WnDropdownSelector<String>(
+                      label: 'Test',
+                      options: const [
+                        WnDropdownOption(value: 'a', label: 'Option A'),
+                        WnDropdownOption(value: 'b', label: 'Option B'),
+                      ],
+                      value: 'a',
+                      onChanged: (value) => selectedValue = value,
+                      isDisabled: isDisabled,
+                    ),
+                    ElevatedButton(
+                      key: const Key('disable_button'),
+                      onPressed: () => setState(() => isDisabled = true),
+                      child: const Text('Disable'),
+                    ),
+                  ],
+                ),
+              );
+            },
+          ),
+        ),
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('disable_button')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
+      expect(selectedValue, isNull);
+    });
   });
 
   group('WnDropdownOption', () {
@@ -220,6 +572,13 @@ void main() {
 
       expect(option.value, isNull);
       expect(option.label, 'None');
+    });
+  });
+
+  group('WnDropdownSize', () {
+    test('has small and large variants', () {
+      expect(WnDropdownSize.values, contains(WnDropdownSize.small));
+      expect(WnDropdownSize.values, contains(WnDropdownSize.large));
     });
   });
 }
