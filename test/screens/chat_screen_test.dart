@@ -32,6 +32,7 @@ ChatMessage _message(
   DateTime createdAt, {
   String pubkey = 'other',
   bool isDeleted = false,
+  ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
   id: id,
   pubkey: pubkey,
@@ -41,7 +42,7 @@ ChatMessage _message(
   isReply: false,
   isDeleted: isDeleted,
   contentTokens: const [],
-  reactions: const ReactionSummary(byEmoji: [], userReactions: []),
+  reactions: reactions,
   mediaAttachments: const [],
   kind: 9,
 );
@@ -52,8 +53,10 @@ class _MockApi extends MockWnApi {
   String groupName = 'Test Group';
   final List<String> sentMessages = [];
   final List<({String groupId, int kind, List<Tag>? tags})> deletionCalls = [];
+  final List<({String groupId, String message, int kind, List<Tag>? tags})> reactionCalls = [];
   Exception? sendError;
   Exception? deleteError;
+  Exception? reactionError;
   int _sendCallCount = 0;
 
   @override
@@ -64,8 +67,10 @@ class _MockApi extends MockWnApi {
     groupName = 'Test Group';
     sentMessages.clear();
     deletionCalls.clear();
+    reactionCalls.clear();
     sendError = null;
     deleteError = null;
+    reactionError = null;
     _sendCallCount = 0;
   }
 
@@ -91,11 +96,14 @@ class _MockApi extends MockWnApi {
     List<Tag>? tags,
   }) async {
     _sendCallCount++;
-    // Deletion messages have kind 5
-    // NIP-09: https://github.com/nostr-protocol/nips/blob/master/09.md
+    // NIP-09: Deletion messages have kind 5
+    // NIP-25: Reaction messages have kind 7
     if (kind == 5) {
       if (deleteError != null) throw deleteError!;
       deletionCalls.add((groupId: groupId, kind: kind, tags: tags));
+    } else if (kind == 7) {
+      if (reactionError != null) throw reactionError!;
+      reactionCalls.add((groupId: groupId, message: message, kind: kind, tags: tags));
     } else {
       if (sendError != null) throw sendError!;
       sentMessages.add(message);
@@ -471,6 +479,22 @@ void main() {
         expect(find.byType(WnMessageMenu), findsNothing);
       });
 
+      testWidgets('unfocuses text field when opening', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isTrue);
+
+        await longPressMessage(tester, 'm1');
+
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+
       group('message deletion', () {
         testWidgets('calls API when Delete is tapped', (tester) async {
           _api.initialMessages = [
@@ -544,6 +568,181 @@ void main() {
           expect(_api.deletionCalls.length, 0);
           expect(find.text('Failed to delete message. Please try again.'), findsOneWidget);
           expect(find.byType(WnMessageMenu), findsNothing);
+        });
+      });
+
+      group('message reactions', () {
+        testWidgets('calls API when reaction is tapped', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024)),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('❤'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls.length, 1);
+        });
+
+        testWidgets('sends correct emoji as reaction', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024)),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('🚀'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls.first.message, '🚀');
+        });
+
+        testWidgets('sends reaction to correct group', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024)),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('❤'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls.first.groupId, _testGroupId);
+        });
+
+        testWidgets('includes message reference in reaction tags', (tester) async {
+          _api.initialMessages = [
+            _message('msg_to_react', DateTime(2024)),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'msg_to_react');
+
+          await tester.tap(find.text('❤'));
+          await tester.pumpAndSettle();
+
+          final tags = _api.reactionCalls.first.tags!.cast<_MockTag>();
+          expect(tags[0].vec, ['e', 'msg_to_react']);
+        });
+
+        testWidgets('closes menu after sending reaction', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024)),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('❤'));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(WnMessageMenu), findsNothing);
+        });
+
+        testWidgets('shows error snackbar when reaction fails', (tester) async {
+          _api.reactionError = Exception('Network error');
+          _api.initialMessages = [
+            _message('m1', DateTime(2024)),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+
+          await tester.tap(find.text('❤'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls.length, 0);
+          expect(find.text('Failed to send reaction. Please try again.'), findsOneWidget);
+          expect(find.byType(WnMessageMenu), findsNothing);
+        });
+      });
+    });
+
+    group('reaction pills', () {
+      testWidgets('appears when reaction event arrives', (tester) async {
+        _api.initialMessages = [_message('m1', DateTime(2024))];
+        await pumpChatScreen(tester);
+        expect(find.text('🎉'), findsNothing);
+
+        final reactions = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '🎉', count: BigInt.one, users: const ['other']),
+          ],
+          userReactions: const [],
+        );
+        _api.emitMessage(_message('m1', DateTime(2024), reactions: reactions));
+        await tester.pumpAndSettle();
+
+        expect(find.text('🎉'), findsWidgets);
+      });
+
+      group('when user has no reaction to the message', () {
+        ReactionSummary reactionFromOther(String emoji) => ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: emoji, count: BigInt.one, users: const ['other']),
+          ],
+          userReactions: const [],
+        );
+
+        testWidgets('calls API when reaction pill is tapped', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), reactions: reactionFromOther('👍')),
+          ];
+          await pumpChatScreen(tester);
+
+          await tester.tap(find.text('👍'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls.length, 1);
+        });
+
+        testWidgets('sends correct emoji from tapped pill', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), reactions: reactionFromOther('🔥')),
+          ];
+          await pumpChatScreen(tester);
+
+          await tester.tap(find.text('🔥'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls.first.message, '🔥');
+        });
+
+        testWidgets('includes message reference in reaction tags', (tester) async {
+          _api.initialMessages = [
+            _message('msg_with_reaction', DateTime(2024), reactions: reactionFromOther('👍')),
+          ];
+          await pumpChatScreen(tester);
+
+          await tester.tap(find.text('👍'));
+          await tester.pumpAndSettle();
+
+          final tags = _api.reactionCalls.first.tags!.cast<_MockTag>();
+          expect(tags[0].vec, ['e', 'msg_with_reaction']);
+        });
+      });
+
+      group('when user has a reaction to the message', () {
+        testWidgets('does not call API when tapping own reaction', (tester) async {
+          final ownReaction = ReactionSummary(
+            byEmoji: [
+              EmojiReaction(emoji: '👍', count: BigInt.one, users: const [_testPubkey]),
+            ],
+            userReactions: [
+              UserReaction(emoji: '👍', user: _testPubkey, createdAt: DateTime(2024)),
+            ],
+          );
+          _api.initialMessages = [_message('m1', DateTime(2024), reactions: ownReaction)];
+          await pumpChatScreen(tester);
+
+          await tester.tap(find.text('👍'));
+          await tester.pumpAndSettle();
+
+          expect(_api.reactionCalls, isEmpty);
         });
       });
     });

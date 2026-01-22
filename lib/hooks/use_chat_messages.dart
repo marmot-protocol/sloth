@@ -46,7 +46,7 @@ ChatMessagesResult useChatMessages(String groupId) {
             messageIds.value.add(message.id);
             messagesById.value[message.id] = message;
             indexById.value[message.id] = newIndex;
-          } else if (update.trigger == UpdateTrigger.messageDeleted) {
+          } else {
             messagesById.value[message.id] = message;
           }
 

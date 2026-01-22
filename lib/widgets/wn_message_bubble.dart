@@ -2,17 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_message_reactions.dart';
 
 class WnMessageBubble extends StatelessWidget {
   final ChatMessage message;
   final bool isOwnMessage;
+  final String? currentUserPubkey;
   final VoidCallback? onLongPress;
+  final void Function(String emoji)? onReaction;
 
   const WnMessageBubble({
     super.key,
     required this.message,
     required this.isOwnMessage,
+    this.currentUserPubkey,
     this.onLongPress,
+    this.onReaction,
   });
 
   @override
@@ -22,25 +27,55 @@ class WnMessageBubble extends StatelessWidget {
     }
 
     final colors = context.colors;
+    final hasReactions = message.reactions.byEmoji.isNotEmpty;
 
     return Align(
       alignment: isOwnMessage ? Alignment.centerRight : Alignment.centerLeft,
-      child: GestureDetector(
-        onLongPress: onLongPress,
-        child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-          decoration: BoxDecoration(
-            color: isOwnMessage ? colors.fillPrimary : colors.fillSecondary,
-            borderRadius: BorderRadius.circular(8.r),
-          ),
-          child: Text(
-            message.content,
-            style: TextStyle(
-              color: isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary,
-              fontSize: 14.sp,
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: 12.w,
+          right: 12.w,
+          top: 4.h,
+          bottom: hasReactions ? 14.h : 4.h,
+        ),
+        child: Stack(
+          clipBehavior: Clip.none,
+          children: [
+            GestureDetector(
+              onLongPress: onLongPress,
+              child: Container(
+                padding: EdgeInsets.only(
+                  left: 12.w,
+                  right: 12.w,
+                  top: 8.h,
+                  bottom: hasReactions ? 14.h : 8.h,
+                ),
+                decoration: BoxDecoration(
+                  color: isOwnMessage ? colors.fillPrimary : colors.fillSecondary,
+                  borderRadius: BorderRadius.circular(8.r),
+                ),
+                child: Text(
+                  message.content,
+                  style: TextStyle(
+                    color: isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary,
+                    fontSize: 14.sp,
+                  ),
+                ),
+              ),
             ),
-          ),
+            if (hasReactions)
+              Positioned(
+                bottom: -10.h,
+                left: isOwnMessage ? 4.w : null,
+                right: isOwnMessage ? null : 4.w,
+                child: WnMessageReactions(
+                  reactions: message.reactions.byEmoji,
+                  isOwnMessage: isOwnMessage,
+                  currentUserPubkey: currentUserPubkey,
+                  onReaction: onReaction,
+                ),
+              ),
+          ],
         ),
       ),
     );

@@ -143,6 +143,7 @@ class ChatInviteScreen extends HookConsumerWidget {
                         return WnMessageBubble(
                           message: message,
                           isOwnMessage: isOwnMessage,
+                          currentUserPubkey: pubkey,
                         );
                       },
                     ),

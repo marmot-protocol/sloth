@@ -42,7 +42,10 @@ class ChatScreen extends HookConsumerWidget {
     final groupAvatarSnapshot = useChatAvatar(pubkey, groupId);
     final scrollController = useScrollController();
     final input = useChatInput();
-    final messageService = useMemoized(() => MessageService(pubkey), [pubkey]);
+    final messageService = useMemoized(
+      () => MessageService(pubkey: pubkey, groupId: groupId),
+      [pubkey, groupId],
+    );
 
     useChatScroll(
       scrollController: scrollController,
@@ -52,20 +55,30 @@ class ChatScreen extends HookConsumerWidget {
     );
 
     Future<void> sendMessage(String message) async {
-      await messageService.sendTextMessage(groupId: groupId, content: message);
+      await messageService.sendTextMessage(content: message);
+    }
+
+    Future<void> sendReaction(ChatMessage message, String emoji) {
+      return messageService.sendReaction(
+        messageId: message.id,
+        messagePubkey: message.pubkey,
+        messageKind: message.kind,
+        emoji: emoji,
+      );
     }
 
     void showMessageMenu(ChatMessage message) {
+      FocusScope.of(context).unfocus();
       WnMessageMenu.show(
         context,
         message: message,
         pubkey: pubkey,
         onDelete: () => messageService.deleteMessage(
-          groupId: groupId,
           messageId: message.id,
           messagePubkey: message.pubkey,
           messageKind: message.kind,
         ),
+        onReaction: (emoji) => sendReaction(message, emoji),
       );
     }
 
@@ -121,7 +134,9 @@ class ChatScreen extends HookConsumerWidget {
                                 key: ValueKey(message.id),
                                 message: message,
                                 isOwnMessage: isOwnMessage,
+                                currentUserPubkey: pubkey,
                                 onLongPress: () => showMessageMenu(message),
+                                onReaction: (emoji) => sendReaction(message, emoji),
                               );
                             },
                           ),

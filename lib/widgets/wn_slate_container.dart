@@ -16,7 +16,7 @@ class WnSlateContainer extends StatelessWidget {
 
   BoxDecoration _decoration(SemanticColors colors) {
     return BoxDecoration(
-      color: colors.backgroundTertiary,
+      color: colors.backgroundSecondary,
       border: Border.all(color: colors.borderSecondary),
       borderRadius: BorderRadius.circular(14.r),
       boxShadow: [

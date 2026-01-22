@@ -23,6 +23,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Search user by npub [PR #39](https://github.com/marmot-protocol/sloth/pull/39)
 - Delete messages [PR #49](https://github.com/marmot-protocol/sloth/pull/49)
 - Paste nsec login [PR #59](https://github.com/marmot-protocol/sloth/pull/59)
+- Reactions [PR #60](https://github.com/marmot-protocol/sloth/pull/60)
 
 
 ### Changed

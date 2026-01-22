@@ -2,9 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
+import 'package:sloth/widgets/wn_message_reactions.dart';
 import '../test_helpers.dart';
 
-ChatMessage _message({String content = 'Hello world', bool isDeleted = false}) => ChatMessage(
+ChatMessage _message({
+  String content = 'Hello world',
+  bool isDeleted = false,
+  ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
+}) => ChatMessage(
   id: 'msg1',
   pubkey: 'pubkey',
   content: content,
@@ -13,7 +18,7 @@ ChatMessage _message({String content = 'Hello world', bool isDeleted = false}) =
   isReply: false,
   isDeleted: isDeleted,
   contentTokens: const [],
-  reactions: const ReactionSummary(byEmoji: [], userReactions: []),
+  reactions: reactions,
   mediaAttachments: const [],
   kind: 9,
 );
@@ -79,6 +84,77 @@ void main() {
         await tester.longPress(find.byType(GestureDetector));
 
         expect(called, isTrue);
+      });
+    });
+
+    group('reactions', () {
+      testWidgets('does not show reactions when empty', (tester) async {
+        await mountWidget(
+          WnMessageBubble(message: _message(), isOwnMessage: false),
+          tester,
+        );
+
+        expect(find.byType(WnMessageReactions), findsNothing);
+      });
+
+      testWidgets('shows reactions when present', (tester) async {
+        final reactions = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.from(2), users: const ['u1', 'u2']),
+          ],
+          userReactions: const [],
+        );
+        await mountWidget(
+          WnMessageBubble(message: _message(reactions: reactions), isOwnMessage: false),
+          tester,
+        );
+
+        expect(find.byType(WnMessageReactions), findsOneWidget);
+        expect(find.text('👍'), findsOneWidget);
+      });
+
+      testWidgets('passes currentUserPubkey to reactions', (tester) async {
+        final reactions = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['currentUser']),
+          ],
+          userReactions: const [],
+        );
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(reactions: reactions),
+            isOwnMessage: false,
+            currentUserPubkey: 'currentUser',
+          ),
+          tester,
+        );
+
+        final reactionBubbles = tester.widget<WnMessageReactions>(find.byType(WnMessageReactions));
+        expect(reactionBubbles.currentUserPubkey, 'currentUser');
+      });
+
+      testWidgets('passes onReaction to reactions', (tester) async {
+        final reactions = ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['other']),
+          ],
+          userReactions: const [],
+        );
+        String? tappedEmoji;
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(reactions: reactions),
+            isOwnMessage: false,
+            currentUserPubkey: 'currentUser',
+            onReaction: (emoji) => tappedEmoji = emoji,
+          ),
+          tester,
+        );
+
+        await tester.tap(find.text('👍'));
+        await tester.pump();
+
+        expect(tappedEmoji, '👍');
       });
     });
   });
