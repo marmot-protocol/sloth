@@ -37,6 +37,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
     users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
     await storage.write(key: _storageKey, value: account.pubkey);
     state = AsyncData(account.pubkey);
+    ref.read(isAddingAccountProvider.notifier).set(false);
     _logger.info('Login successful');
   }
 
@@ -46,21 +47,68 @@ class AuthNotifier extends AsyncNotifier<String?> {
     final account = await accounts_api.createIdentity();
     await storage.write(key: _storageKey, value: account.pubkey);
     state = AsyncData(account.pubkey);
+    ref.read(isAddingAccountProvider.notifier).set(false);
     _logger.info('Signup successful - identity created');
     return account.pubkey;
   }
 
-  Future<void> logout() async {
+  Future<String?> logout() async {
     final pubkey = state.value;
-    if (pubkey == null) return;
+    if (pubkey == null) return null;
 
     _logger.info('Logout started');
     final storage = ref.read(secureStorageProvider);
     await accounts_api.logout(pubkey: pubkey);
     await storage.delete(key: _storageKey);
+
+    try {
+      final remainingAccounts = await accounts_api.getAccounts();
+      final otherAccounts = remainingAccounts.where((a) => a.pubkey != pubkey).toList();
+      if (otherAccounts.isNotEmpty) {
+        final nextAccount = otherAccounts.first;
+        await storage.write(key: _storageKey, value: nextAccount.pubkey);
+        state = AsyncData(nextAccount.pubkey);
+        _logger.info('Logout successful - switched to another account');
+        return nextAccount.pubkey;
+      }
+    } catch (e, stackTrace) {
+      _logger.severe('Failed to switch to next account after logout', e, stackTrace);
+    }
+
     state = const AsyncData(null);
-    _logger.info('Logout successful');
+    _logger.info('Logout successful - no remaining accounts');
+    return null;
+  }
+
+  Future<void> switchProfile(String pubkey) async {
+    _logger.info('Switching profile');
+    final storage = ref.read(secureStorageProvider);
+    try {
+      await accounts_api.getAccount(pubkey: pubkey);
+      await storage.write(key: _storageKey, value: pubkey);
+      state = AsyncData(pubkey);
+      _logger.info('Profile switched successfully');
+    } catch (e) {
+      if (e is ApiError && e.message.contains('Account not found')) {
+        _logger.warning('Account not found during switch');
+        await storage.delete(key: _storageKey);
+        state = const AsyncData(null);
+      } else {
+        rethrow;
+      }
+    }
   }
 }
 
 final authProvider = AsyncNotifierProvider<AuthNotifier, String?>(AuthNotifier.new);
+
+class IsAddingAccountNotifier extends Notifier<bool> {
+  @override
+  bool build() => false;
+
+  void set(bool value) => state = value;
+}
+
+final isAddingAccountProvider = NotifierProvider<IsAddingAccountNotifier, bool>(
+  IsAddingAccountNotifier.new,
+);
