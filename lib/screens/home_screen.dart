@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
-import 'package:sloth/extensions/build_context.dart';
 import 'package:sloth/providers/amber_provider.dart' show amberProvider;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/amber_signer_service.dart' show AmberSignerException;
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
@@ -61,7 +61,7 @@ class HomeScreen extends HookConsumerWidget {
                         SvgPicture.asset(
                           'assets/svgs/whitenoise.svg',
                           colorFilter: ColorFilter.mode(
-                            colors.foregroundPrimary,
+                            colors.backgroundContentPrimary,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -73,7 +73,7 @@ class HomeScreen extends HookConsumerWidget {
                             fontWeight: FontWeight.w700,
                             fontSize: 48.sp,
                             letterSpacing: -0.6.sp,
-                            color: context.colors.foregroundPrimary,
+                            color: context.colors.backgroundContentPrimary,
                           ),
                         ),
                         Text(
@@ -83,7 +83,7 @@ class HomeScreen extends HookConsumerWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18.sp,
                             letterSpacing: 0.1.sp,
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                           ),
                         ),
                         Text(
@@ -93,7 +93,7 @@ class HomeScreen extends HookConsumerWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18.sp,
                             letterSpacing: 0.1.sp,
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                           ),
                         ),
                       ],
@@ -119,7 +119,7 @@ class HomeScreen extends HookConsumerWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: colors.foregroundTertiary,
+                              color: colors.backgroundContentTertiary,
                             ),
                           ),
                         ],
