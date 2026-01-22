@@ -55,12 +55,10 @@ void main() {
         tester,
       );
 
-      // Tap the dropdown field to open it
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Header shows selected value, plus options list shows all three
-      expect(find.text('Option A'), findsNWidgets(2)); // header + option
+      expect(find.text('Option A'), findsNWidgets(2));
       expect(find.text('Option B'), findsOneWidget);
       expect(find.text('Option C'), findsOneWidget);
     });
@@ -81,11 +79,9 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Select Option B (it's the only one with that text)
       await tester.tap(find.text('Option B'));
       await tester.pumpAndSettle();
 
@@ -109,11 +105,9 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('System'));
       await tester.pumpAndSettle();
 
-      // Select Dark
       await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
 
@@ -153,11 +147,9 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('One'));
       await tester.pumpAndSettle();
 
-      // Select Three
       await tester.tap(find.text('Three'));
       await tester.pumpAndSettle();
 
@@ -189,15 +181,12 @@ void main() {
 
       expect(find.text('Option A'), findsOneWidget);
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Select Option B
       await tester.tap(find.text('Option B'));
       await tester.pumpAndSettle();
 
-      // Now Option B should be in the header
       expect(find.text('Option B'), findsOneWidget);
     });
 
@@ -231,7 +220,6 @@ void main() {
         tester,
       );
 
-      // Initially shows dropdown icon
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
@@ -249,11 +237,9 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Should show checkmark for selected item
       expect(find.byKey(const Key('checkmark_icon')), findsOneWidget);
     });
 
@@ -322,11 +308,9 @@ void main() {
         tester,
       );
 
-      // Try to open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Should not show Option B (dropdown shouldn't open)
       expect(find.text('Option B'), findsNothing);
     });
 
@@ -344,18 +328,14 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Dropdown should be open - Option B visible
       expect(find.text('Option B'), findsOneWidget);
 
-      // Select Option B
       await tester.tap(find.text('Option B'));
       await tester.pumpAndSettle();
 
-      // Menu should be closed - dropdown icon should be visible again
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
@@ -373,19 +353,15 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Verify dropdown is open
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsOneWidget);
 
-      // Tap header text again to close (use .first since Option A appears in both header and list)
       await tester.tap(find.text('Option A').first);
       await tester.pumpAndSettle();
 
-      // Verify dropdown is closed
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsNothing);
     });
@@ -404,7 +380,6 @@ void main() {
         tester,
       );
 
-      // Widget should render with error state
       expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
     });
 
@@ -445,11 +420,9 @@ void main() {
         tester,
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option 1'));
       await tester.pumpAndSettle();
 
-      // Verify dropdown opens and ListView is present
       expect(find.byType(ListView), findsOneWidget);
     });
 
@@ -467,14 +440,11 @@ void main() {
         tester,
       );
 
-      // Initially shows dropdown icon
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Still shows dropdown icon (now as close icon)
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
@@ -492,7 +462,6 @@ void main() {
         tester,
       );
 
-      // Should render without crashing, showing empty label
       expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
     });
 
@@ -529,19 +498,15 @@ void main() {
         ),
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Verify dropdown is open
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsOneWidget);
 
-      // Disable the dropdown
       await tester.tap(find.byKey(const Key('disable_button')));
       await tester.pumpAndSettle();
 
-      // Dropdown should be closed
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsNothing);
     });
@@ -580,19 +545,15 @@ void main() {
         ),
       );
 
-      // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Disable the dropdown while open (dropdown will close)
       await tester.tap(find.byKey(const Key('disable_button')));
       await tester.pumpAndSettle();
 
-      // Try to open again (should not work)
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Dropdown should remain closed
       expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(selectedValue, isNull);
     });

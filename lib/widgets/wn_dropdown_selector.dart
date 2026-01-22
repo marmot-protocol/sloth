@@ -15,8 +15,8 @@ class WnDropdownOption<T> {
 }
 
 enum WnDropdownSize {
-  small, // 44px dropdown, 44px items
-  large, // 56px dropdown, 48px items
+  small,
+  large,
 }
 
 class WnDropdownSelector<T> extends HookWidget {
@@ -60,7 +60,6 @@ class WnDropdownSelector<T> extends HookWidget {
       [animationController],
     );
 
-    // Close dropdown if it becomes disabled while open
     useEffect(() {
       if (isDisabled && isOpen.value) {
         isOpen.value = false;
