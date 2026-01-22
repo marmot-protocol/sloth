@@ -6,6 +6,8 @@ import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../mocks/mock_account_pubkey_notifier.dart';
+
 class _MockApi implements RustLibApi {
   bool shouldThrow = false;
 
@@ -19,15 +21,6 @@ class _MockApi implements RustLibApi {
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
-
-class _PubkeyNotifier extends Notifier<String> {
-  @override
-  String build() => 'test_pubkey';
-
-  void update(String pubkey) {
-    state = pubkey;
-  }
 }
 
 late ({
@@ -78,7 +71,7 @@ void main() {
   setUp(() {
     mockApi.shouldThrow = false;
     overrides = [
-      accountPubkeyProvider.overrideWith((ref) => 'test_pubkey'),
+      accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
     ];
   });
 
@@ -118,9 +111,8 @@ void main() {
     });
 
     testWidgets('state is cleared when pubkey changes', (tester) async {
-      final pubkeyNotifierProvider = NotifierProvider<_PubkeyNotifier, String>(_PubkeyNotifier.new);
       final testOverrides = [
-        accountPubkeyProvider.overrideWith((ref) => ref.watch(pubkeyNotifierProvider)),
+        accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
       ];
 
       await tester.pumpWidget(
@@ -147,7 +139,8 @@ void main() {
 
       final element = tester.element(find.byType(HookConsumer));
       final container = ProviderScope.containerOf(element);
-      container.read(pubkeyNotifierProvider.notifier).update('new_pubkey');
+      final notifier = container.read(accountPubkeyProvider.notifier) as MockAccountPubkeyNotifier;
+      notifier.update('new_pubkey');
       await tester.pumpAndSettle();
 
       expect(result.state.nsec, isNull);
