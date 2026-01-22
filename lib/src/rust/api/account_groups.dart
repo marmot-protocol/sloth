@@ -62,6 +62,11 @@ class AccountGroup {
   /// The last message the user has read in this group (hex EventId).
   /// Used to compute unread counts.
   final String? lastReadMessageId;
+
+  /// Pin order for chat list sorting.
+  /// - `None` = not pinned (appears after pinned chats)
+  /// - `Some(n)` = pinned, lower values appear first
+  final PlatformInt64? pinOrder;
   final PlatformInt64 createdAt;
   final PlatformInt64 updatedAt;
 
@@ -72,6 +77,7 @@ class AccountGroup {
     this.userConfirmation,
     this.welcomerPubkey,
     this.lastReadMessageId,
+    this.pinOrder,
     required this.createdAt,
     required this.updatedAt,
   });
@@ -84,6 +90,7 @@ class AccountGroup {
       userConfirmation.hashCode ^
       welcomerPubkey.hashCode ^
       lastReadMessageId.hashCode ^
+      pinOrder.hashCode ^
       createdAt.hashCode ^
       updatedAt.hashCode;
 
@@ -98,6 +105,7 @@ class AccountGroup {
           userConfirmation == other.userConfirmation &&
           welcomerPubkey == other.welcomerPubkey &&
           lastReadMessageId == other.lastReadMessageId &&
+          pinOrder == other.pinOrder &&
           createdAt == other.createdAt &&
           updatedAt == other.updatedAt;
 }

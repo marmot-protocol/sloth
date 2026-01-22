@@ -26,6 +26,10 @@ pub struct AccountGroup {
     /// The last message the user has read in this group (hex EventId).
     /// Used to compute unread counts.
     pub last_read_message_id: Option<String>,
+    /// Pin order for chat list sorting.
+    /// - `None` = not pinned (appears after pinned chats)
+    /// - `Some(n)` = pinned, lower values appear first
+    pub pin_order: Option<i64>,
     pub created_at: i64,
     pub updated_at: i64,
 }
@@ -39,6 +43,7 @@ impl From<WhitenoiseAccountGroup> for AccountGroup {
             user_confirmation: ag.user_confirmation,
             welcomer_pubkey: ag.welcomer_pubkey.map(|pk| pk.to_hex()),
             last_read_message_id: ag.last_read_message_id.map(|id| id.to_hex()),
+            pin_order: ag.pin_order,
             created_at: ag.created_at.timestamp_millis(),
             updated_at: ag.updated_at.timestamp_millis(),
         }
@@ -54,6 +59,7 @@ impl From<&WhitenoiseAccountGroup> for AccountGroup {
             user_confirmation: ag.user_confirmation,
             welcomer_pubkey: ag.welcomer_pubkey.map(|pk| pk.to_hex()),
             last_read_message_id: ag.last_read_message_id.map(|id| id.to_hex()),
+            pin_order: ag.pin_order,
             created_at: ag.created_at.timestamp_millis(),
             updated_at: ag.updated_at.timestamp_millis(),
         }

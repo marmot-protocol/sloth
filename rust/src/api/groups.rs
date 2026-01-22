@@ -160,7 +160,7 @@ impl From<WhitenoiseGroupState> for GroupState {
 
 // Define our own GroupType enum that can be used by Dart
 #[frb]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub enum GroupType {
     DirectMessage,
     Group,

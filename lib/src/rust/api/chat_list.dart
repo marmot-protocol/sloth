@@ -15,10 +15,29 @@ part 'chat_list.freezed.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`
 
+/// Sets the pin order for a chat.
+///
+/// Pinned chats appear before unpinned chats in the chat list.
+/// Lower pin_order values appear first among pinned chats.
+///
+/// - `pin_order = None` = unpin the chat
+/// - `pin_order = Some(n)` = pin the chat with order n
+Future<void> setChatPinOrder({
+  required String accountPubkey,
+  required String mlsGroupId,
+  PlatformInt64? pinOrder,
+}) => RustLib.instance.api.crateApiChatListSetChatPinOrder(
+  accountPubkey: accountPubkey,
+  mlsGroupId: mlsGroupId,
+  pinOrder: pinOrder,
+);
+
 /// Retrieves the chat list for an account.
 ///
-/// Returns a list of chat summaries sorted by last activity (most recent first).
-/// Groups without messages are sorted by creation date.
+/// Returns a list of chat summaries sorted by:
+/// 1. Pinned chats first (sorted by pin_order, lower values first)
+/// 2. Unpinned chats sorted by last activity (most recent first)
+/// 3. Groups without messages are sorted by creation date
 Future<List<ChatSummary>> getChatList({required String accountPubkey}) =>
     RustLib.instance.api.crateApiChatListGetChatList(
       accountPubkey: accountPubkey,
@@ -123,6 +142,11 @@ class ChatSummary {
   /// Number of unread messages in this chat
   final BigInt unreadCount;
 
+  /// Pin order for chat list sorting.
+  /// - `None` = not pinned (appears after pinned chats)
+  /// - `Some(n)` = pinned, lower values appear first
+  final PlatformInt64? pinOrder;
+
   const ChatSummary({
     required this.mlsGroupId,
     this.name,
@@ -134,6 +158,7 @@ class ChatSummary {
     required this.pendingConfirmation,
     this.welcomerPubkey,
     required this.unreadCount,
+    this.pinOrder,
   });
 
   @override
@@ -147,7 +172,8 @@ class ChatSummary {
       lastMessage.hashCode ^
       pendingConfirmation.hashCode ^
       welcomerPubkey.hashCode ^
-      unreadCount.hashCode;
+      unreadCount.hashCode ^
+      pinOrder.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -163,5 +189,6 @@ class ChatSummary {
           lastMessage == other.lastMessage &&
           pendingConfirmation == other.pendingConfirmation &&
           welcomerPubkey == other.welcomerPubkey &&
-          unreadCount == other.unreadCount;
+          unreadCount == other.unreadCount &&
+          pinOrder == other.pinOrder;
 }
