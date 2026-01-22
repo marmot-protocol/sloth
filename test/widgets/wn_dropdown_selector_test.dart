@@ -231,8 +231,8 @@ void main() {
         tester,
       );
 
-      // Initially shows chevron down
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      // Initially shows dropdown icon
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
     testWidgets('shows checkmark for selected item', (tester) async {
@@ -254,10 +254,10 @@ void main() {
       await tester.pumpAndSettle();
 
       // Should show checkmark for selected item
-      expect(find.byIcon(Icons.check), findsOneWidget);
+      expect(find.byKey(const Key('checkmark_icon')), findsOneWidget);
     });
 
-    testWidgets('respects small size variant', (tester) async {
+    testWidgets('supports small size variant', (tester) async {
       await mountWidget(
         WnDropdownSelector<String>(
           label: 'Test',
@@ -273,7 +273,7 @@ void main() {
       expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
     });
 
-    testWidgets('respects large size variant', (tester) async {
+    testWidgets('supports large size variant', (tester) async {
       await mountWidget(
         WnDropdownSelector<String>(
           label: 'Test',
@@ -355,8 +355,8 @@ void main() {
       await tester.tap(find.text('Option B'));
       await tester.pumpAndSettle();
 
-      // Menu should be closed - chevron should be visible again
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      // Menu should be closed - dropdown icon should be visible again
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
     testWidgets('closes dropdown when tapping header again', (tester) async {
@@ -377,16 +377,16 @@ void main() {
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Verify dropdown is open (close icon visible)
-      expect(find.byIcon(Icons.close), findsOneWidget);
+      // Verify dropdown is open (dropdown icon visible)
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsOneWidget);
 
       // Tap header again to close
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(find.byKey(const Key('dropdown_icon')));
       await tester.pumpAndSettle();
 
       // Verify dropdown is closed
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsNothing);
     });
 
@@ -467,17 +467,15 @@ void main() {
         tester,
       );
 
-      // Initially shows chevron
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
-      expect(find.byIcon(Icons.close), findsNothing);
+      // Initially shows dropdown icon
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
 
       // Open dropdown
       await tester.tap(find.text('Option A'));
       await tester.pumpAndSettle();
 
-      // Now shows close icon
-      expect(find.byIcon(Icons.close), findsOneWidget);
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsNothing);
+      // Still shows dropdown icon (now as close icon)
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
     });
 
     testWidgets('handles value not in options gracefully', (tester) async {
@@ -536,7 +534,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Verify dropdown is open
-      expect(find.byIcon(Icons.close), findsOneWidget);
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsOneWidget);
 
       // Disable the dropdown
@@ -544,7 +542,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Dropdown should be closed
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(find.text('Option B'), findsNothing);
     });
 
@@ -595,7 +593,7 @@ void main() {
       await tester.pumpAndSettle();
 
       // Dropdown should remain closed
-      expect(find.byIcon(Icons.keyboard_arrow_down), findsOneWidget);
+      expect(find.byKey(const Key('dropdown_icon')), findsOneWidget);
       expect(selectedValue, isNull);
     });
   });

@@ -271,6 +271,7 @@ class _DropdownItem extends StatelessWidget {
               child: isSelected
                   ? Icon(
                       Icons.check,
+                      key: const Key('checkmark_icon'),
                       color: colors.backgroundContentPrimary,
                       size: 24.sp,
                     )
