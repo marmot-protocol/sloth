@@ -179,6 +179,7 @@ class _AccountTile extends HookConsumerWidget {
             ),
             if (isCurrent)
               Icon(
+                key: const Key('current_account_checkmark'),
                 Icons.check_circle,
                 color: colors.backgroundContentPrimary,
                 size: 24.w,
