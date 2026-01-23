@@ -96,7 +96,7 @@ void main() {
       );
     });
 
-    testWidgets('has no color filter when neither color nor IconTheme is set', (tester) async {
+    testWidgets('renders when neither color nor IconTheme is set', (tester) async {
       await mountWidget(
         const WnIcon(WnIcons.warning),
         tester,
@@ -120,6 +120,131 @@ void main() {
       );
       final wnIcon = tester.widget<WnIcon>(find.byType(WnIcon));
       expect(wnIcon.icon, WnIcons.heart);
+    });
+
+    testWidgets('handles very small size', (tester) async {
+      await mountWidget(
+        const WnIcon(WnIcons.warning, size: 1),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(svgPicture.width, 1);
+      expect(svgPicture.height, 1);
+    });
+
+    testWidgets('handles large size', (tester) async {
+      await mountWidget(
+        const WnIcon(WnIcons.warning, size: 256),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(svgPicture.width, 256);
+      expect(svgPicture.height, 256);
+    });
+
+    testWidgets('handles fractional size', (tester) async {
+      await mountWidget(
+        const WnIcon(WnIcons.warning, size: 12.5),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(svgPicture.width, 12.5);
+      expect(svgPicture.height, 12.5);
+    });
+
+    testWidgets('handles transparent color', (tester) async {
+      const transparentColor = Color(0x00FFFFFF);
+      await mountWidget(
+        const WnIcon(WnIcons.warning, color: transparentColor),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(
+        svgPicture.colorFilter,
+        const ColorFilter.mode(transparentColor, BlendMode.srcIn),
+      );
+    });
+
+    testWidgets('handles semi-transparent color', (tester) async {
+      const semiTransparentColor = Color(0x80FF0000);
+      await mountWidget(
+        const WnIcon(WnIcons.warning, color: semiTransparentColor),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(
+        svgPicture.colorFilter,
+        const ColorFilter.mode(semiTransparentColor, BlendMode.srcIn),
+      );
+    });
+
+    testWidgets('nested IconTheme overrides parent', (tester) async {
+      const parentColor = Color(0xFF0000FF);
+      const childColor = Color(0xFFFF0000);
+
+      await mountWidget(
+        const IconTheme(
+          data: IconThemeData(color: parentColor),
+          child: Column(
+            children: [
+              WnIcon(WnIcons.warning, key: Key('parent_icon')),
+              IconTheme(
+                data: IconThemeData(color: childColor),
+                child: WnIcon(WnIcons.search, key: Key('child_icon')),
+              ),
+            ],
+          ),
+        ),
+        tester,
+      );
+
+      final parentIcon = tester.widget<WnIcon>(find.byKey(const Key('parent_icon')));
+      final childIcon = tester.widget<WnIcon>(find.byKey(const Key('child_icon')));
+
+      // Find SVG pictures by their parent WnIcon keys
+      final parentSvg = tester.widget<SvgPicture>(
+        find.descendant(
+          of: find.byKey(const Key('parent_icon')),
+          matching: find.byType(SvgPicture),
+        ),
+      );
+      final childSvg = tester.widget<SvgPicture>(
+        find.descendant(
+          of: find.byKey(const Key('child_icon')),
+          matching: find.byType(SvgPicture),
+        ),
+      );
+
+      expect(parentIcon.icon, WnIcons.warning);
+      expect(childIcon.icon, WnIcons.search);
+      expect(
+        parentSvg.colorFilter,
+        const ColorFilter.mode(parentColor, BlendMode.srcIn),
+      );
+      expect(
+        childSvg.colorFilter,
+        const ColorFilter.mode(childColor, BlendMode.srcIn),
+      );
+    });
+  });
+
+  group('WnIcons validation', () {
+    test('all icons have non-empty filenames', () {
+      for (final icon in WnIcons.values) {
+        expect(icon.filename, isNotEmpty, reason: 'Icon ${icon.name} has empty filename');
+      }
+    });
+
+    test('all icon paths start with assets/svgs/', () {
+      for (final icon in WnIcons.values) {
+        expect(icon.path, startsWith('assets/svgs/'));
+      }
+    });
+
+    test('all icon paths end with .svg', () {
+      for (final icon in WnIcons.values) {
+        expect(icon.path, endsWith('.svg'));
+      }
     });
   });
 }

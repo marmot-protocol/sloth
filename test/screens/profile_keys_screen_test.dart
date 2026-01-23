@@ -187,27 +187,21 @@ void main() {
       final visibilityToggle = find.byKey(const Key('visibility_toggle'));
       expect(visibilityToggle, findsOneWidget);
 
-      var icons = find.byType(WnIcon).evaluate();
-      var hasViewIcon = icons.any((e) => (e.widget as WnIcon).icon == WnIcons.view);
-      expect(hasViewIcon, isTrue);
+      final visibilityIcon = find.descendant(
+        of: visibilityToggle,
+        matching: find.byType(WnIcon),
+      );
+      expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
 
       await tester.tap(visibilityToggle);
       await tester.pump();
 
-      icons = find.byType(WnIcon).evaluate();
-      var hasViewOffIcon = icons.any((e) => (e.widget as WnIcon).icon == WnIcons.viewOff);
-      hasViewIcon = icons.any((e) => (e.widget as WnIcon).icon == WnIcons.view);
-      expect(hasViewOffIcon, isTrue);
-      expect(hasViewIcon, isFalse);
+      expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.viewOff);
 
       await tester.tap(visibilityToggle);
       await tester.pump();
 
-      icons = find.byType(WnIcon).evaluate();
-      hasViewIcon = icons.any((e) => (e.widget as WnIcon).icon == WnIcons.view);
-      hasViewOffIcon = icons.any((e) => (e.widget as WnIcon).icon == WnIcons.viewOff);
-      expect(hasViewIcon, isTrue);
-      expect(hasViewOffIcon, isFalse);
+      expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
     });
   });
 }
