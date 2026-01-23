@@ -38,6 +38,10 @@ pub struct ChatSummary {
     pub welcomer_pubkey: Option<String>,
     /// Number of unread messages in this chat
     pub unread_count: u64,
+    /// Pin order for chat list sorting.
+    /// - `None` = not pinned (appears after pinned chats)
+    /// - `Some(n)` = pinned, lower values appear first
+    pub pin_order: Option<i64>,
 }
 
 impl From<WhitenoiseChatListItem> for ChatSummary {
@@ -55,6 +59,7 @@ impl From<WhitenoiseChatListItem> for ChatSummary {
             pending_confirmation: item.pending_confirmation,
             welcomer_pubkey: item.welcomer_pubkey.map(|pk| pk.to_hex()),
             unread_count: item.unread_count as u64,
+            pin_order: item.pin_order,
         }
     }
 }
@@ -114,10 +119,38 @@ pub enum ChatListStreamItem {
     Update { update: ChatListUpdate },
 }
 
+/// Sets the pin order for a chat.
+///
+/// Pinned chats appear before unpinned chats in the chat list.
+/// Lower pin_order values appear first among pinned chats.
+///
+/// - `pin_order = None` = unpin the chat
+/// - `pin_order = Some(n)` = pin the chat with order n
+#[frb]
+pub async fn set_chat_pin_order(
+    account_pubkey: String,
+    mls_group_id: String,
+    pin_order: Option<i64>,
+) -> Result<(), ApiError> {
+    let whitenoise = Whitenoise::get_instance()?;
+    let pubkey = PublicKey::parse(&account_pubkey)?;
+    let group_id_bytes = hex::decode(&mls_group_id)?;
+    let group_id = mdk_core::prelude::GroupId::from_slice(&group_id_bytes);
+    let account = whitenoise.find_account_by_pubkey(&pubkey).await?;
+
+    whitenoise
+        .set_chat_pin_order(&account, &group_id, pin_order)
+        .await?;
+
+    Ok(())
+}
+
 /// Retrieves the chat list for an account.
 ///
-/// Returns a list of chat summaries sorted by last activity (most recent first).
-/// Groups without messages are sorted by creation date.
+/// Returns a list of chat summaries sorted by:
+/// 1. Pinned chats first (sorted by pin_order, lower values first)
+/// 2. Unpinned chats sorted by last activity (most recent first)
+/// 3. Groups without messages are sorted by creation date
 #[frb]
 pub async fn get_chat_list(account_pubkey: String) -> Result<Vec<ChatSummary>, ApiError> {
     let whitenoise = Whitenoise::get_instance()?;
