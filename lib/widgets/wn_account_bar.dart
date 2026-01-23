@@ -39,7 +39,7 @@ class WnAccountBar extends HookConsumerWidget {
             Routes.pushToUserSearch(context);
           },
           icon: SvgPicture.asset(
-            'assets/svgs/chat-add.svg',
+            'assets/svgs/new_chat.svg',
             width: 24.w,
             height: 24.w,
             colorFilter: ColorFilter.mode(

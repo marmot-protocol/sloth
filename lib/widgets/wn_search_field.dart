@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnSearchField extends StatelessWidget {
   const WnSearchField({
@@ -36,8 +37,8 @@ class WnSearchField extends StatelessWidget {
           fontWeight: FontWeight.w500,
           color: colors.backgroundContentTertiary,
         ),
-        prefixIcon: Icon(
-          Icons.search,
+        prefixIcon: WnIcon(
+          WnIcons.search,
           key: const Key('search_icon'),
           size: 20.sp,
           color: colors.backgroundContentTertiary,

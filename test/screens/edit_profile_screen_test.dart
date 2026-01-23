@@ -9,6 +9,7 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
 
 import '../mocks/mock_secure_storage.dart';
@@ -129,7 +130,8 @@ void main() {
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpEditProfileScreen(tester);
-      await tester.tap(find.byIcon(Icons.close));
+      final closeIcon = find.byType(WnIcon).first;
+      await tester.tap(closeIcon);
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });

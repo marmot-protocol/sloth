@@ -10,6 +10,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -100,9 +101,8 @@ class ShareProfileScreen extends HookConsumerWidget {
                                     IconButton(
                                       key: const Key('copy_button'),
                                       onPressed: npub != null ? () => copyToClipboard(npub) : null,
-                                      icon: Icon(
-                                        Icons.copy,
-                                        size: 24.w,
+                                      icon: WnIcon(
+                                        WnIcons.copy,
                                         color: colors.backgroundContentPrimary,
                                       ),
                                       padding: EdgeInsets.zero,

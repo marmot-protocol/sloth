@@ -4,6 +4,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
 
 class WnCopyableField extends HookWidget {
@@ -60,8 +61,8 @@ class WnCopyableField extends HookWidget {
                 ? IconButton(
                     key: const Key('visibility_toggle'),
                     onPressed: onToggleVisibility,
-                    icon: Icon(
-                      obscured ? Icons.visibility_outlined : Icons.visibility_off_outlined,
+                    icon: WnIcon(
+                      obscured ? WnIcons.view : WnIcons.viewOff,
                       size: 20.w,
                       color: colors.backgroundContentPrimary,
                     ),
@@ -75,8 +76,8 @@ class WnCopyableField extends HookWidget {
           child: IconButton(
             key: const Key('copy_button'),
             onPressed: () => _handleCopy(context, controller.text),
-            icon: Icon(
-              Icons.copy,
+            icon: WnIcon(
+              WnIcons.copy,
               color: colors.backgroundContentPrimary,
               size: 20.w,
             ),

@@ -14,6 +14,7 @@ import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_fade_overlay.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_message_menu.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -234,8 +235,8 @@ class _ChatInput extends StatelessWidget {
                           color: colors.fillPrimary,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: Icon(
-                          Icons.arrow_upward,
+                        child: WnIcon(
+                          WnIcons.arrowUp,
                           color: colors.fillContentPrimary,
                           size: 20.sp,
                         ),

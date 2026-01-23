@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnChatHeader extends StatelessWidget {
   const WnChatHeader({
@@ -26,8 +27,8 @@ class WnChatHeader extends StatelessWidget {
         IconButton(
           key: const Key('back_button'),
           onPressed: onBack,
-          icon: Icon(
-            Icons.chevron_left,
+          icon: WnIcon(
+            WnIcons.chevronLeft,
             color: colors.backgroundContentTertiary,
             size: 28.w,
           ),
@@ -51,6 +52,7 @@ class WnChatHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
+        // TODO: Replace with SVG icon when more_horizontal.svg is available
         IconButton(
           key: const Key('menu_button'),
           onPressed: onMenuTap,

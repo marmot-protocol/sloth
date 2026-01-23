@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/auth_provider.dart';
@@ -9,6 +8,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -79,9 +79,8 @@ class SettingsScreen extends HookConsumerWidget {
                                 IconButton(
                                   key: const Key('qr_code_button'),
                                   onPressed: () => Routes.pushToShareProfile(context),
-                                  icon: Icon(
-                                    Icons.qr_code,
-                                    size: 24.w,
+                                  icon: WnIcon(
+                                    WnIcons.qrCode,
                                     color: colors.backgroundContentTertiary,
                                   ),
                                   padding: EdgeInsets.zero,
@@ -99,37 +98,37 @@ class SettingsScreen extends HookConsumerWidget {
                   ),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/user.svg',
+                  icon: WnIcons.user,
                   label: 'Edit profile',
                   onTap: () => Routes.pushToEditProfile(context),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/password.svg',
+                  icon: WnIcons.key,
                   label: 'Profile keys',
                   onTap: () => Routes.pushToProfileKeys(context),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/relays.svg',
+                  icon: WnIcons.network,
                   label: 'Network relays',
                   onTap: () => Routes.pushToNetwork(context),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/settings.svg',
+                  icon: WnIcons.settings,
                   label: 'App settings',
                   onTap: () => Routes.pushToAppSettings(context),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/favorite.svg',
+                  icon: WnIcons.heart,
                   label: 'Donate to White Noise',
                   onTap: () => Routes.pushToDonate(context),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/development.svg',
+                  icon: WnIcons.developerSettings,
                   label: 'Developer settings',
                   onTap: () => Routes.pushToDeveloperSettings(context),
                 ),
                 _SettingsTile(
-                  svgPath: 'assets/svgs/logout.svg',
+                  icon: WnIcons.logout,
                   label: 'Sign out',
                   onTap: () => Routes.pushToSignOut(context),
                 ),
@@ -144,12 +143,12 @@ class SettingsScreen extends HookConsumerWidget {
 
 class _SettingsTile extends StatelessWidget {
   const _SettingsTile({
-    required this.svgPath,
+    required this.icon,
     required this.label,
     required this.onTap,
   });
 
-  final String svgPath;
+  final WnIcons icon;
   final String label;
   final VoidCallback onTap;
 
@@ -164,14 +163,9 @@ class _SettingsTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 12.h),
         child: Row(
           children: [
-            SvgPicture.asset(
-              svgPath,
-              width: 24.w,
-              height: 24.w,
-              colorFilter: ColorFilter.mode(
-                colors.backgroundContentPrimary,
-                BlendMode.srcIn,
-              ),
+            WnIcon(
+              icon,
+              color: colors.backgroundContentPrimary,
             ),
             SizedBox(width: 12.w),
             Expanded(

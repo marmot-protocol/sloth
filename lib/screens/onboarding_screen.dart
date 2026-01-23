@@ -6,6 +6,7 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -52,11 +53,11 @@ class OnboardingScreen extends ConsumerWidget {
                         IconButton(
                           key: const Key('close_button'),
                           onPressed: () => Routes.goToChatList(context),
-                          icon: Icon(
-                            Icons.close,
+                          icon: WnIcon(
+                            WnIcons.closeLarge,
+                            size: 20.w,
                             color: colors.backgroundContentTertiary,
                           ),
-                          iconSize: 20.w,
                         ),
                       ],
                     ),
