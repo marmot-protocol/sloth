@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -186,10 +187,9 @@ class _MessageMenuHeader extends StatelessWidget {
         GestureDetector(
           key: const Key('close_button'),
           onTap: onClose,
-          child: Icon(
-            Icons.close,
+          child: WnIcon(
+            WnIcons.closeLarge,
             color: colors.backgroundContentPrimary,
-            size: 24.w,
           ),
         ),
       ],
@@ -283,8 +283,8 @@ class _EmojiPickerButton extends StatelessWidget {
       onTap: onTap,
       child: Container(
         padding: EdgeInsets.all(8.w),
-        child: Icon(
-          Icons.add_reaction_outlined,
+        child: WnIcon(
+          WnIcons.addEmoji,
           color: colors.backgroundContentPrimary,
           size: 20.sp,
         ),

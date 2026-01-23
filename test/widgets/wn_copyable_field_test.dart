@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import '../mocks/mock_clipboard.dart';
 import '../test_helpers.dart';
 
@@ -62,7 +63,7 @@ void main() {
       expect(find.byKey(const Key('visibility_toggle')), findsOneWidget);
     });
 
-    testWidgets('shows visibility_outlined icon when obscured', (tester) async {
+    testWidgets('shows view icon when obscured', (tester) async {
       await mountWidget(
         const WnCopyableField(
           label: 'Label',
@@ -71,10 +72,15 @@ void main() {
         ),
         tester,
       );
-      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
+      final icons = find.byType(WnIcon);
+      final viewIcon = icons.evaluate().where((e) {
+        final widget = e.widget as WnIcon;
+        return widget.icon == WnIcons.view;
+      });
+      expect(viewIcon.length, 1);
     });
 
-    testWidgets('shows visibility_off_outlined icon when not obscured', (tester) async {
+    testWidgets('shows view_off icon when not obscured', (tester) async {
       await mountWidget(
         const WnCopyableField(
           label: 'Label',
@@ -84,7 +90,12 @@ void main() {
         ),
         tester,
       );
-      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
+      final icons = find.byType(WnIcon);
+      final viewOffIcon = icons.evaluate().where((e) {
+        final widget = e.widget as WnIcon;
+        return widget.icon == WnIcons.viewOff;
+      });
+      expect(viewOffIcon.length, 1);
     });
 
     group('copy functionality', () {

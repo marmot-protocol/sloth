@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnDropdownOption<T> {
   const WnDropdownOption({
@@ -162,8 +163,8 @@ class WnDropdownSelector<T> extends HookWidget {
                           ),
                           SizedBox(
                             width: 24.sp,
-                            child: Icon(
-                              isOpen.value ? Icons.close : Icons.keyboard_arrow_down,
+                            child: WnIcon(
+                              isOpen.value ? WnIcons.closeLarge : WnIcons.chevronDown,
                               key: const Key('dropdown_icon'),
                               color: iconColor,
                               size: 24.sp,
@@ -268,8 +269,8 @@ class _DropdownItem extends StatelessWidget {
             SizedBox(
               width: 24.sp,
               child: isSelected
-                  ? Icon(
-                      Icons.check,
+                  ? WnIcon(
+                      WnIcons.checkmark,
                       key: const Key('checkmark_icon'),
                       color: colors.backgroundContentPrimary,
                       size: 24.sp,

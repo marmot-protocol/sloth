@@ -7,6 +7,7 @@ import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
@@ -57,9 +58,11 @@ class LoginScreen extends HookConsumerWidget {
                           IconButton(
                             key: const Key('back_button'),
                             onPressed: () => Routes.goBack(context),
-                            icon: const Icon(Icons.chevron_left),
-                            color: context.colors.backgroundContentTertiary,
-                            iconSize: 24.sp,
+                            icon: WnIcon(
+                              WnIcons.chevronLeft,
+                              size: 24.sp,
+                              color: context.colors.backgroundContentTertiary,
+                            ),
                           ),
                           Expanded(
                             child: Text(

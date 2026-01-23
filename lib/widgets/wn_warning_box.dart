@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnWarningBox extends StatelessWidget {
   const WnWarningBox({
@@ -13,7 +14,7 @@ class WnWarningBox extends StatelessWidget {
     this.iconColor,
     this.titleColor,
     this.descriptionColor,
-    this.icon = Icons.warning_amber_rounded,
+    this.icon = WnIcons.warning,
   });
 
   final String title;
@@ -23,7 +24,7 @@ class WnWarningBox extends StatelessWidget {
   final Color? iconColor;
   final Color? titleColor;
   final Color? descriptionColor;
-  final IconData icon;
+  final WnIcons icon;
 
   @override
   Widget build(BuildContext context) {
@@ -46,7 +47,7 @@ class WnWarningBox extends StatelessWidget {
         children: [
           Row(
             children: [
-              Icon(
+              WnIcon(
                 icon,
                 size: 20.w,
                 color: iconC,

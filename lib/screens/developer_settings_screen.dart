@@ -7,6 +7,7 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -217,11 +218,11 @@ class _KeyPackageTile extends StatelessWidget {
           IconButton(
             key: Key('delete_key_package_${package.id}'),
             onPressed: disabled ? null : onDelete,
-            icon: Icon(
-              Icons.delete_outline,
+            icon: WnIcon(
+              WnIcons.trashCan,
+              size: 20.w,
               color: disabled ? colors.backgroundContentTertiary : colors.fillDestructive,
             ),
-            iconSize: 20.w,
           ),
         ],
       ),

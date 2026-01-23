@@ -5,6 +5,7 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
@@ -85,7 +86,7 @@ void main() {
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpProfileKeysScreen(tester);
-      await tester.tap(find.byIcon(Icons.close));
+      await tester.tap(find.byKey(const Key('close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -124,7 +125,7 @@ void main() {
       final getClipboard = mockClipboard();
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final copyButtons = find.byIcon(Icons.copy);
+      final copyButtons = find.byKey(const Key('copy_button'));
       expect(copyButtons, findsNWidgets(2));
       await tester.tap(copyButtons.first);
       await tester.pump();
@@ -135,7 +136,7 @@ void main() {
       final getClipboard = mockClipboard();
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final copyButtons = find.byIcon(Icons.copy);
+      final copyButtons = find.byKey(const Key('copy_button'));
       expect(copyButtons, findsNWidgets(2));
       await tester.tap(copyButtons.last);
       await tester.pump();
@@ -145,7 +146,7 @@ void main() {
     testWidgets('shows success message when copying public key', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final copyButtons = find.byIcon(Icons.copy);
+      final copyButtons = find.byKey(const Key('copy_button'));
       await tester.tap(copyButtons.first);
       await tester.pump();
       expect(find.text('Public key copied to clipboard'), findsOneWidget);
@@ -154,7 +155,7 @@ void main() {
     testWidgets('shows success message when copying private key', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final copyButtons = find.byIcon(Icons.copy);
+      final copyButtons = find.byKey(const Key('copy_button'));
       await tester.tap(copyButtons.last);
       await tester.pump();
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
@@ -172,7 +173,7 @@ void main() {
       final controllerBefore = tester.widget<TextFormField>(textField).controller;
       expect(controllerBefore?.text, startsWith('nsec1'));
 
-      final copyButtons = find.byIcon(Icons.copy);
+      final copyButtons = find.byKey(const Key('copy_button'));
       await tester.tap(copyButtons.last);
       await tester.pump();
 
@@ -183,16 +184,24 @@ void main() {
     testWidgets('tapping visibility toggle shows/hides private key', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final visibilityButtons = find.byIcon(Icons.visibility_outlined);
-      expect(visibilityButtons, findsOneWidget);
-      await tester.tap(visibilityButtons.first);
+      final visibilityToggle = find.byKey(const Key('visibility_toggle'));
+      expect(visibilityToggle, findsOneWidget);
+
+      final visibilityIcon = find.descendant(
+        of: visibilityToggle,
+        matching: find.byType(WnIcon),
+      );
+      expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
+
+      await tester.tap(visibilityToggle);
       await tester.pump();
-      expect(find.byIcon(Icons.visibility_off_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.visibility_outlined), findsNothing);
-      await tester.tap(find.byIcon(Icons.visibility_off_outlined).first);
+
+      expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.viewOff);
+
+      await tester.tap(visibilityToggle);
       await tester.pump();
-      expect(find.byIcon(Icons.visibility_outlined), findsOneWidget);
-      expect(find.byIcon(Icons.visibility_off_outlined), findsNothing);
+
+      expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
     });
   });
 }

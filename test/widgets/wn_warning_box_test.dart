@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_warning_box.dart' show WnWarningBox;
 import '../test_helpers.dart' show mountWidget;
 
@@ -29,18 +30,21 @@ void main() {
         description: 'Warning description',
       );
       await mountWidget(widget, tester);
-      expect(find.byIcon(Icons.warning_amber_rounded), findsOneWidget);
+      expect(find.byType(WnIcon), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byType(WnIcon));
+      expect(icon.icon, WnIcons.warning);
     });
 
     testWidgets('displays custom icon when provided', (tester) async {
       const widget = WnWarningBox(
         title: 'Warning Title',
         description: 'Warning description',
-        icon: Icons.info_outline,
+        icon: WnIcons.information,
       );
       await mountWidget(widget, tester);
-      expect(find.byIcon(Icons.info_outline), findsOneWidget);
-      expect(find.byIcon(Icons.warning_amber_rounded), findsNothing);
+      expect(find.byType(WnIcon), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byType(WnIcon));
+      expect(icon.icon, WnIcons.information);
     });
 
     testWidgets('applies custom backgroundColor when provided', (tester) async {
@@ -89,7 +93,7 @@ void main() {
         iconColor: customColor,
       );
       await mountWidget(widget, tester);
-      final icon = tester.widget<Icon>(find.byIcon(Icons.warning_amber_rounded));
+      final icon = tester.widget<WnIcon>(find.byType(WnIcon));
       expect(icon.color, customColor);
     });
 

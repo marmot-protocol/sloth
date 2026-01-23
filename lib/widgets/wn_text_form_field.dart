@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnTextFormField extends StatelessWidget {
   const WnTextFormField({
@@ -118,10 +119,12 @@ class WnTextFormField extends StatelessWidget {
                     borderRadius: BorderRadius.circular(8.r),
                     border: Border.all(color: colors.borderSecondary),
                   ),
-                  child: Icon(
-                    Icons.content_paste,
-                    size: 20.w,
-                    color: colors.backgroundContentPrimary,
+                  child: Center(
+                    child: WnIcon(
+                      WnIcons.paste,
+                      size: 20.w,
+                      color: colors.backgroundContentPrimary,
+                    ),
                   ),
                 ),
               ),
@@ -132,8 +135,8 @@ class WnTextFormField extends StatelessWidget {
           Gap(6.h),
           Row(
             children: [
-              Icon(
-                Icons.error_outline_rounded,
+              WnIcon(
+                WnIcons.error,
                 key: const Key('error_icon'),
                 size: 14.sp,
                 color: colors.fillDestructive,

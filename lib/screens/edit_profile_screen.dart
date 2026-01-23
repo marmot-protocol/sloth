@@ -7,6 +7,7 @@ import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState,
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
 import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -107,7 +108,7 @@ class EditProfileScreen extends HookConsumerWidget {
                               iconColor: colors.backgroundContentPrimary,
                               titleColor: colors.backgroundContentPrimary,
                               descriptionColor: colors.backgroundContentTertiary,
-                              icon: Icons.info_outline,
+                              icon: WnIcons.information,
                             ),
                             Gap(16.h),
                           ],

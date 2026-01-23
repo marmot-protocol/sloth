@@ -7,6 +7,7 @@ import 'package:sloth/hooks/use_network_relays.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_relay_tile.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -81,9 +82,9 @@ class NetworkScreen extends HookConsumerWidget {
                   padding: EdgeInsets.all(12.w),
                   child: Padding(
                     padding: EdgeInsets.all(4.w),
-                    child: Icon(
+                    child: WnIcon(
+                      WnIcons.information,
                       key: infoIconKey,
-                      Icons.info_outline,
                       color: colors.backgroundContentTertiary,
                       size: 18.w,
                     ),
@@ -97,9 +98,9 @@ class NetworkScreen extends HookConsumerWidget {
             behavior: HitTestBehavior.opaque,
             child: Padding(
               padding: EdgeInsets.all(4.w),
-              child: Icon(
+              child: WnIcon(
+                WnIcons.addCircle,
                 key: addIconKey,
-                Icons.add,
                 color: colors.backgroundContentPrimary,
                 size: 23.w,
               ),

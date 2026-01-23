@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:sloth/src/rust/api/relays.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnRelayTile extends StatelessWidget {
   const WnRelayTile({
@@ -48,9 +49,8 @@ class WnRelayTile extends StatelessWidget {
                   GestureDetector(
                     key: const Key('close_delete_dialog'),
                     onTap: () => Navigator.of(context).pop(false),
-                    child: Icon(
-                      Icons.close,
-                      size: 24.w,
+                    child: WnIcon(
+                      WnIcons.closeLarge,
                       color: colors.backgroundContentPrimary,
                     ),
                   ),
@@ -179,11 +179,11 @@ class WnRelayTile extends StatelessWidget {
             IconButton(
               key: Key('delete_relay_${relay.url}'),
               onPressed: () => _showDeleteConfirmation(context),
-              icon: Icon(
-                Icons.remove_circle_outline,
+              icon: WnIcon(
+                WnIcons.removeCircle,
+                size: 20.w,
                 color: colors.fillDestructive,
               ),
-              iconSize: 20.w,
             ),
         ],
       ),

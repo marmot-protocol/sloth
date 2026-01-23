@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 class WnScreenHeader extends StatelessWidget {
   const WnScreenHeader({
@@ -31,11 +32,10 @@ class WnScreenHeader extends StatelessWidget {
         IconButton(
           key: const Key('close_button'),
           onPressed: () => Routes.goBack(context),
-          icon: Icon(
-            Icons.close,
+          icon: WnIcon(
+            WnIcons.closeLarge,
             color: colors.backgroundContentPrimary,
           ),
-          iconSize: 24.w,
         ),
       ],
     );
