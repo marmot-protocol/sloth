@@ -43,31 +43,3 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
-
-# FVM Version Cache
-.fvm/
-
-
-# Rust documentation build cache
-rust/tmp_docs/
-RUST_FFI_GUIDE.md
-# Generated Cargo config (auto-generated per environment)
-rust/.cargo/config.toml
-# Rust build artifacts (Cargo/rust-analyzer)
-target/
-
-# Git worktrees
-/trees/*
-!/trees/.gitkeep
-# AI tools
-opencode.json
-.opencode/
-.cursor/
-
-# Flutter DevTools
-devtools_options.yaml
-# Widgetbook
-/widgetbook/build/
-/widgetbook/android/local.properties
-/widgetbook/ios/Pods/
-/widgetbook/macos/Pods/

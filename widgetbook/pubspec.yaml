@@ -1,0 +1,40 @@
+name: sloth_widgetbook
+description: Widget catalog for Sloth app design review
+publish_to: 'none'
+
+environment:
+  sdk: ^3.10.3 
+  flutter: ">=3.38.4 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  sloth:
+    path: ../
+  widgetbook: ^3.10.0
+  widgetbook_annotation: ^3.2.0
+  flutter_screenutil: ^5.9.3
+  url_launcher: ^6.3.1
+
+dev_dependencies:
+  flutter_lints: ^5.0.0
+  widgetbook_generator: ^3.9.0
+  build_runner: ^2.7.1
+
+flutter:
+  uses-material-design: true
+
+  # Reference assets from parent package
+  assets:
+    - ../assets/images/
+    - ../assets/svgs/
+
+  fonts:
+    - family: Manrope
+      fonts:
+        - asset: ../assets/fonts/Manrope-Regular.ttf
+          weight: 400
+        - asset: ../assets/fonts/Manrope-SemiBold.ttf
+          weight: 600
+        - asset: ../assets/fonts/Manrope-Bold.ttf
+          weight: 700
