@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -245,6 +247,151 @@ void main() {
       for (final icon in WnIcons.values) {
         expect(icon.path, endsWith('.svg'));
       }
+    });
+  });
+
+  group('WnIcons asset files', () {
+    test('all icons have corresponding SVG files on disk', () {
+      for (final icon in WnIcons.values) {
+        final file = File(icon.path);
+        expect(
+          file.existsSync(),
+          isTrue,
+          reason: 'Missing SVG file for icon ${icon.name}: ${icon.path}',
+        );
+      }
+    });
+
+    test('no orphaned SVG files without enum entries', () {
+      final assetDir = Directory('assets/svgs');
+      final svgFiles = assetDir
+          .listSync()
+          .whereType<File>()
+          .where((f) => f.path.endsWith('.svg'))
+          .map((f) => f.path.split('/').last.replaceAll('.svg', ''))
+          .toSet();
+
+      final enumFilenames = WnIcons.values.map((e) => e.filename).toSet();
+
+      // Files that exist but have no enum entry (excluding non-icon SVGs)
+      final knownNonIconSvgs = {'pixels', 'whitenoise'};
+      final orphanedFiles = svgFiles.difference(enumFilenames).difference(knownNonIconSvgs);
+
+      expect(
+        orphanedFiles,
+        isEmpty,
+        reason: 'Found SVG files without enum entries: $orphanedFiles',
+      );
+    });
+  });
+
+  group('WnIcon default behavior', () {
+    testWidgets('uses default size when size is null', (tester) async {
+      await mountWidget(
+        const WnIcon(WnIcons.warning),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      // Default size is 24.w which scales with ScreenUtil
+      // Just verify it has a reasonable positive size (scaled from 24)
+      expect(svgPicture.width, greaterThan(0));
+      expect(svgPicture.height, greaterThan(0));
+      expect(svgPicture.width, svgPicture.height); // Should be square
+    });
+
+    testWidgets('uses default size consistently across different icons', (tester) async {
+      double? firstSize;
+      for (final icon in [WnIcons.search, WnIcons.heart, WnIcons.settings]) {
+        await mountWidget(
+          WnIcon(icon),
+          tester,
+        );
+        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        if (firstSize == null) {
+          firstSize = svgPicture.width;
+        } else {
+          expect(
+            svgPicture.width,
+            firstSize,
+            reason: 'Icon ${icon.name} should have same default size as other icons',
+          );
+        }
+        expect(svgPicture.width, svgPicture.height, reason: 'Icon ${icon.name} should be square');
+      }
+    });
+
+    testWidgets('explicit size overrides default', (tester) async {
+      await mountWidget(
+        const WnIcon(WnIcons.warning, size: 48),
+        tester,
+      );
+      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      expect(svgPicture.width, 48);
+      expect(svgPicture.height, 48);
+    });
+  });
+
+  group('WnIcon accessibility', () {
+    testWidgets('can be wrapped with Semantics for accessibility', (tester) async {
+      await mountWidget(
+        Semantics(
+          label: 'Search',
+          child: const WnIcon(WnIcons.search),
+        ),
+        tester,
+      );
+
+      expect(find.bySemanticsLabel('Search'), findsOneWidget);
+    });
+
+    testWidgets('works inside IconButton with tooltip for accessibility', (tester) async {
+      await mountWidget(
+        IconButton(
+          icon: const WnIcon(WnIcons.settings),
+          tooltip: 'Settings',
+          onPressed: () {},
+        ),
+        tester,
+      );
+
+      expect(find.byTooltip('Settings'), findsOneWidget);
+      expect(find.byType(WnIcon), findsOneWidget);
+    });
+
+    testWidgets('excludes from semantics when wrapped with ExcludeSemantics', (tester) async {
+      await mountWidget(
+        ExcludeSemantics(
+          child: Semantics(
+            label: 'Hidden icon',
+            child: const WnIcon(WnIcons.warning),
+          ),
+        ),
+        tester,
+      );
+
+      expect(find.bySemanticsLabel('Hidden icon'), findsNothing);
+      expect(find.byType(WnIcon), findsOneWidget);
+    });
+
+    testWidgets('multiple icons can have distinct semantic labels', (tester) async {
+      await mountWidget(
+        Row(
+          children: [
+            Semantics(
+              label: 'Search button',
+              child: const WnIcon(WnIcons.search),
+            ),
+            Semantics(
+              label: 'Settings button',
+              child: const WnIcon(WnIcons.settings),
+            ),
+          ],
+        ),
+        tester,
+      );
+
+      expect(find.bySemanticsLabel('Search button'), findsOneWidget);
+      expect(find.bySemanticsLabel('Settings button'), findsOneWidget);
     });
   });
 }

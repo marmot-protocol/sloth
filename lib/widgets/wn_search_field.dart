@@ -37,12 +37,16 @@ class WnSearchField extends StatelessWidget {
           fontWeight: FontWeight.w500,
           color: colors.backgroundContentTertiary,
         ),
-        prefixIcon: WnIcon(
-          WnIcons.search,
-          key: const Key('search_icon'),
-          size: 20.sp,
-          color: colors.backgroundContentTertiary,
+        prefixIcon: Padding(
+          padding: EdgeInsets.only(left: 14.w, right: 10.w),
+          child: WnIcon(
+            WnIcons.search,
+            key: const Key('search_icon'),
+            size: 20.sp,
+            color: colors.backgroundContentTertiary,
+          ),
         ),
+        prefixIconConstraints: const BoxConstraints(),
         filled: true,
         fillColor: colors.backgroundTertiary,
         contentPadding: EdgeInsets.symmetric(
