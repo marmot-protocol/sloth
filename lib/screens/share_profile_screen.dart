@@ -103,7 +103,9 @@ class ShareProfileScreen extends HookConsumerWidget {
                                       onPressed: npub != null ? () => copyToClipboard(npub) : null,
                                       icon: WnIcon(
                                         WnIcons.copy,
-                                        color: colors.backgroundContentPrimary,
+                                        color: npub != null
+                                            ? colors.backgroundContentPrimary
+                                            : colors.backgroundContentTertiary,
                                       ),
                                       padding: EdgeInsets.zero,
                                       constraints: BoxConstraints(
