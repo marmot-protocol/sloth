@@ -143,7 +143,7 @@ class WnRelayTile extends StatelessWidget {
               color: status == null
                   ? colors.backgroundContentTertiary
                   : isConnected
-                  ? colors.borderSuccess
+                  ? colors.intentionSuccessContent
                   : colors.fillDestructive,
             ),
           ),

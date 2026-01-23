@@ -253,9 +253,6 @@ void main() {
           borderTertiary: Colors.blue,
           borderDestructivePrimary: Colors.orange,
           borderDestructiveSecondary: Colors.purple,
-          borderInfo: Colors.cyan,
-          borderSuccess: Colors.teal,
-          borderWarning: Colors.amber,
         );
 
         expect(updated.borderPrimary, Colors.red);
@@ -263,9 +260,28 @@ void main() {
         expect(updated.borderTertiary, Colors.blue);
         expect(updated.borderDestructivePrimary, Colors.orange);
         expect(updated.borderDestructiveSecondary, Colors.purple);
-        expect(updated.borderInfo, Colors.cyan);
-        expect(updated.borderSuccess, Colors.teal);
-        expect(updated.borderWarning, Colors.amber);
+      });
+
+      test('returns new instance with updated intention colors', () {
+        final updated = SemanticColors.light.copyWith(
+          intentionInfoBackground: Colors.cyan,
+          intentionInfoContent: Colors.blue,
+          intentionSuccessBackground: Colors.teal,
+          intentionSuccessContent: Colors.green,
+          intentionWarningBackground: Colors.amber,
+          intentionWarningContent: Colors.orange,
+          intentionErrorBackground: Colors.pink,
+          intentionErrorContent: Colors.red,
+        );
+
+        expect(updated.intentionInfoBackground, Colors.cyan);
+        expect(updated.intentionInfoContent, Colors.blue);
+        expect(updated.intentionSuccessBackground, Colors.teal);
+        expect(updated.intentionSuccessContent, Colors.green);
+        expect(updated.intentionWarningBackground, Colors.amber);
+        expect(updated.intentionWarningContent, Colors.orange);
+        expect(updated.intentionErrorBackground, Colors.pink);
+        expect(updated.intentionErrorContent, Colors.red);
       });
 
       test('returns new instance with updated shadow', () {
@@ -625,26 +641,66 @@ void main() {
           ),
         );
         expect(
-          result.borderInfo,
+          result.intentionInfoBackground,
           Color.lerp(
-            SemanticColors.light.borderInfo,
-            SemanticColors.dark.borderInfo,
+            SemanticColors.light.intentionInfoBackground,
+            SemanticColors.dark.intentionInfoBackground,
             0.5,
           ),
         );
         expect(
-          result.borderSuccess,
+          result.intentionInfoContent,
           Color.lerp(
-            SemanticColors.light.borderSuccess,
-            SemanticColors.dark.borderSuccess,
+            SemanticColors.light.intentionInfoContent,
+            SemanticColors.dark.intentionInfoContent,
             0.5,
           ),
         );
         expect(
-          result.borderWarning,
+          result.intentionSuccessBackground,
           Color.lerp(
-            SemanticColors.light.borderWarning,
-            SemanticColors.dark.borderWarning,
+            SemanticColors.light.intentionSuccessBackground,
+            SemanticColors.dark.intentionSuccessBackground,
+            0.5,
+          ),
+        );
+        expect(
+          result.intentionSuccessContent,
+          Color.lerp(
+            SemanticColors.light.intentionSuccessContent,
+            SemanticColors.dark.intentionSuccessContent,
+            0.5,
+          ),
+        );
+        expect(
+          result.intentionWarningBackground,
+          Color.lerp(
+            SemanticColors.light.intentionWarningBackground,
+            SemanticColors.dark.intentionWarningBackground,
+            0.5,
+          ),
+        );
+        expect(
+          result.intentionWarningContent,
+          Color.lerp(
+            SemanticColors.light.intentionWarningContent,
+            SemanticColors.dark.intentionWarningContent,
+            0.5,
+          ),
+        );
+        expect(
+          result.intentionErrorBackground,
+          Color.lerp(
+            SemanticColors.light.intentionErrorBackground,
+            SemanticColors.dark.intentionErrorBackground,
+            0.5,
+          ),
+        );
+        expect(
+          result.intentionErrorContent,
+          Color.lerp(
+            SemanticColors.light.intentionErrorContent,
+            SemanticColors.dark.intentionErrorContent,
             0.5,
           ),
         );

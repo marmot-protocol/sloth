@@ -196,7 +196,7 @@ void main() {
         ),
       );
       final decoration = container.decoration as BoxDecoration;
-      expect(decoration.color, SemanticColors.light.borderSuccess);
+      expect(decoration.color, SemanticColors.light.intentionSuccessContent);
     });
 
     testWidgets('displays status indicator for disconnected relays', (tester) async {
