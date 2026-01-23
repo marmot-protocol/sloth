@@ -235,10 +235,12 @@ class _ChatInput extends StatelessWidget {
                           color: colors.fillPrimary,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
-                        child: WnIcon(
-                          WnIcons.arrowUp,
-                          color: colors.fillContentPrimary,
-                          size: 20.sp,
+                        child: Center(
+                          child: WnIcon(
+                            WnIcons.arrowUp,
+                            color: colors.fillContentPrimary,
+                            size: 20.sp,
+                          ),
                         ),
                       ),
                     ),

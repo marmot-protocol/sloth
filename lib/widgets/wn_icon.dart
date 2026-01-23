@@ -101,11 +101,12 @@ class WnIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final s = size ?? 24.w;
+    final resolvedColor = color ?? IconTheme.of(context).color;
     return SvgPicture.asset(
       icon.path,
       width: s,
       height: s,
-      colorFilter: color != null ? ColorFilter.mode(color!, BlendMode.srcIn) : null,
+      colorFilter: resolvedColor != null ? ColorFilter.mode(resolvedColor, BlendMode.srcIn) : null,
     );
   }
 }
