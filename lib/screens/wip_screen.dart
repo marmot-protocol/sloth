@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
@@ -24,7 +25,7 @@ class WipScreen extends StatelessWidget {
               spacing: 16.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Sloths working'),
+                WnScreenHeader(title: context.l10n.slothsWorking),
                 Expanded(
                   child: Center(
                     child: Column(
@@ -42,7 +43,7 @@ class WipScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          'Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise',
+                          context.l10n.wipMessage,
                           style: TextStyle(
                             color: colors.backgroundContentTertiary,
                             fontSize: 14.sp,
@@ -52,13 +53,13 @@ class WipScreen extends StatelessWidget {
                         ),
                         Gap(4.h),
                         WnFilledButton(
-                          text: 'Donate',
+                          text: context.l10n.donate,
                           onPressed: () {
                             Routes.pushToDonate(context);
                           },
                         ),
                         WnOutlinedButton(
-                          text: 'Go back',
+                          text: context.l10n.goBack,
                           onPressed: () {
                             Routes.goBack(context);
                           },

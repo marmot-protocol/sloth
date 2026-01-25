@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
 import 'package:sloth/hooks/use_signup.dart' show useSignup;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
@@ -93,7 +94,7 @@ class SignupScreen extends HookConsumerWidget {
                               ),
                               Expanded(
                                 child: Text(
-                                  'Setup profile',
+                                  context.l10n.setupProfile,
                                   style: TextStyle(
                                     fontSize: 16.sp,
                                     fontWeight: FontWeight.w600,
@@ -118,15 +119,15 @@ class SignupScreen extends HookConsumerWidget {
                             ),
                           ),
                           WnTextFormField(
-                            label: 'Choose a name',
-                            placeholder: 'Enter your name',
+                            label: context.l10n.chooseName,
+                            placeholder: context.l10n.enterYourName,
                             controller: displayNameController,
                             errorText: state.displayNameError,
                             onChanged: (_) => clearErrors(),
                           ),
                           WnTextFormField(
-                            label: 'Introduce yourself',
-                            placeholder: 'Write something about yourself',
+                            label: context.l10n.introduceYourself,
+                            placeholder: context.l10n.writeSomethingAboutYourself,
                             controller: bioController,
                             maxLines: 3,
                             minLines: 3,
@@ -137,12 +138,12 @@ class SignupScreen extends HookConsumerWidget {
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
                               WnOutlinedButton(
-                                text: 'Cancel',
+                                text: context.l10n.cancel,
                                 onPressed: () => Routes.goBack(context),
                                 disabled: state.isLoading,
                               ),
                               WnFilledButton(
-                                text: 'Sign Up',
+                                text: context.l10n.signUp,
                                 onPressed: onSubmit,
                                 loading: state.isLoading,
                                 disabled: state.isLoading,

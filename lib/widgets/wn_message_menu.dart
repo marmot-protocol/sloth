@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_icon.dart';
@@ -64,8 +65,8 @@ class WnMessageMenu extends StatelessWidget {
             } catch (_) {
               if (menuContext.mounted) {
                 ScaffoldMessenger.of(menuContext).showSnackBar(
-                  const SnackBar(
-                    content: Text('Failed to delete message. Please try again.'),
+                  SnackBar(
+                    content: Text(menuContext.l10n.failedToDeleteMessage),
                   ),
                 );
               }
@@ -79,8 +80,8 @@ class WnMessageMenu extends StatelessWidget {
             } catch (_) {
               if (menuContext.mounted) {
                 ScaffoldMessenger.of(menuContext).showSnackBar(
-                  const SnackBar(
-                    content: Text('Failed to send reaction. Please try again.'),
+                  SnackBar(
+                    content: Text(menuContext.l10n.failedToSendReaction),
                   ),
                 );
               }
@@ -145,14 +146,14 @@ class WnMessageMenu extends StatelessWidget {
           SizedBox(height: 16.h),
           WnOutlinedButton(
             key: const Key('reply_button'),
-            text: 'Reply',
+            text: context.l10n.reply,
             onPressed: onClose,
           ),
           if (onDelete != null) ...[
             Gap(8.h),
             WnOutlinedButton(
               key: const Key('delete_button'),
-              text: 'Delete',
+              text: context.l10n.delete,
               onPressed: onDelete,
             ),
           ],
@@ -177,7 +178,7 @@ class _MessageMenuHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Text(
-          'Message actions',
+          context.l10n.messageActions,
           style: TextStyle(
             color: colors.backgroundContentPrimary,
             fontSize: 16.sp,

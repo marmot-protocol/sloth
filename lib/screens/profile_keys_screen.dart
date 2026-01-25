@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
@@ -41,7 +42,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Profile keys'),
+                WnScreenHeader(title: context.l10n.profileKeys),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -51,13 +52,13 @@ class ProfileKeysScreen extends HookConsumerWidget {
                         children: [
                           Gap(24.h),
                           WnCopyableField(
-                            label: 'Public key',
+                            label: context.l10n.publicKey,
                             value: npub ?? '',
-                            copiedMessage: 'Public key copied to clipboard',
+                            copiedMessage: context.l10n.publicKeyCopied,
                           ),
                           Gap(12.h),
                           Text(
-                            'Your public key (npub) can be shared with others. It\'s used to identify you on the network.',
+                            context.l10n.publicKeyDescription,
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -66,16 +67,16 @@ class ProfileKeysScreen extends HookConsumerWidget {
                           ),
                           Gap(36.h),
                           WnCopyableField(
-                            label: 'Private key',
+                            label: context.l10n.privateKey,
                             value: state.nsec ?? '',
                             obscurable: true,
                             obscured: obscurePrivateKey.value,
                             onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: 'Private key copied to clipboard',
+                            copiedMessage: context.l10n.privateKeyCopied,
                           ),
                           Gap(10.h),
                           Text(
-                            'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.',
+                            context.l10n.privateKeyDescription,
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -83,10 +84,9 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             ),
                           ),
                           Gap(12.h),
-                          const WnWarningBox(
-                            title: 'Keep your private key secure',
-                            description:
-                                'Don\'t share your private key publicly, and use it only to log in to other Nostr apps.',
+                          WnWarningBox(
+                            title: context.l10n.keepPrivateKeySecure,
+                            description: context.l10n.privateKeyWarning,
                           ),
                           Gap(24.h),
                         ],

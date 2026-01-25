@@ -196,3 +196,64 @@ jobs:
         name: coverage-baseline
         path: coverage-baseline/coverage-baseline.txt
         retention-days: 90
+
+  l10n-validation:
+    name: L10n Validation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.38.4'
+        channel: 'stable'
+        cache: true
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Generate localizations
+      run: flutter gen-l10n
+
+    - name: Validate all locales have required keys
+      run: |
+        TEMPLATE="lib/l10n/app_en.arb"
+        ERRORS=0
+
+        # Extract keys from English template (excluding @metadata keys)
+        TEMPLATE_KEYS=$(grep -oE '^  "[^@][^"]*"' "$TEMPLATE" | tr -d ' "' | sort)
+
+        echo "=== L10n Validation ==="
+        echo "Template: $TEMPLATE"
+        echo "Template keys: $(echo "$TEMPLATE_KEYS" | wc -l | tr -d ' ')"
+        echo ""
+
+        for ARB in lib/l10n/app_*.arb; do
+          if [ "$ARB" = "$TEMPLATE" ]; then
+            continue
+          fi
+
+          LANG=$(basename "$ARB" .arb | sed 's/app_//')
+          ARB_KEYS=$(grep -oE '^  "[^@][^"]*"' "$ARB" | tr -d ' "' | sort)
+
+          MISSING=$(comm -23 <(echo "$TEMPLATE_KEYS") <(echo "$ARB_KEYS"))
+
+          if [ -n "$MISSING" ]; then
+            echo "❌ $LANG: Missing keys:"
+            echo "$MISSING" | sed 's/^/   - /'
+            ERRORS=$((ERRORS + 1))
+          else
+            echo "✅ $LANG: All keys present"
+          fi
+        done
+
+        echo ""
+        if [ $ERRORS -gt 0 ]; then
+          echo "::error::$ERRORS locale(s) have missing translation keys"
+          exit 1
+        else
+          echo "All locales validated successfully!"
+        fi

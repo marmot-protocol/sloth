@@ -1,0 +1,663 @@
+{
+  "@@locale": "en",
+
+  "appTitle": "White Noise",
+  "@appTitle": {
+    "description": "The application title displayed on home screen"
+  },
+
+  "tagline1": "Decentralized. Uncensorable.",
+  "@tagline1": {
+    "description": "First tagline on home screen"
+  },
+
+  "tagline2": "Secure Messaging.",
+  "@tagline2": {
+    "description": "Second tagline on home screen"
+  },
+
+  "login": "Login",
+  "@login": {
+    "description": "Login button text"
+  },
+
+  "signUp": "Sign Up",
+  "@signUp": {
+    "description": "Sign up button text"
+  },
+
+  "loginTitle": "Login to White Noise",
+  "@loginTitle": {
+    "description": "Title on login screen"
+  },
+
+  "enterPrivateKey": "Enter your private key",
+  "@enterPrivateKey": {
+    "description": "Label for private key input field"
+  },
+
+  "nsecPlaceholder": "nsec...",
+  "@nsecPlaceholder": {
+    "description": "Placeholder text for nsec input"
+  },
+
+  "setupProfile": "Setup profile",
+  "@setupProfile": {
+    "description": "Title on signup screen"
+  },
+
+  "chooseName": "Choose a name",
+  "@chooseName": {
+    "description": "Label for name input field"
+  },
+
+  "enterYourName": "Enter your name",
+  "@enterYourName": {
+    "description": "Placeholder for name input"
+  },
+
+  "introduceYourself": "Introduce yourself",
+  "@introduceYourself": {
+    "description": "Label for bio input field"
+  },
+
+  "writeSomethingAboutYourself": "Write something about yourself",
+  "@writeSomethingAboutYourself": {
+    "description": "Placeholder for bio input"
+  },
+
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Cancel button text"
+  },
+
+  "profileReady": "Your profile is ready!",
+  "@profileReady": {
+    "description": "Title on onboarding screen after signup"
+  },
+
+  "startConversationHint": "Start a conversation by adding friends or sharing your profile.",
+  "@startConversationHint": {
+    "description": "Hint text on onboarding screen"
+  },
+
+  "shareYourProfile": "Share your profile",
+  "@shareYourProfile": {
+    "description": "Button text to share profile"
+  },
+
+  "startChat": "Start a chat",
+  "@startChat": {
+    "description": "Button text to start a new chat"
+  },
+
+  "settings": "Settings",
+  "@settings": {
+    "description": "Settings screen title"
+  },
+
+  "editProfile": "Edit profile",
+  "@editProfile": {
+    "description": "Settings menu item"
+  },
+
+  "profileKeys": "Profile keys",
+  "@profileKeys": {
+    "description": "Settings menu item"
+  },
+
+  "networkRelays": "Network relays",
+  "@networkRelays": {
+    "description": "Settings menu item"
+  },
+
+  "appSettings": "App settings",
+  "@appSettings": {
+    "description": "Settings menu item"
+  },
+
+  "donateToWhiteNoise": "Donate to White Noise",
+  "@donateToWhiteNoise": {
+    "description": "Settings menu item"
+  },
+
+  "developerSettings": "Developer settings",
+  "@developerSettings": {
+    "description": "Settings menu item"
+  },
+
+  "signOut": "Sign out",
+  "@signOut": {
+    "description": "Settings menu item and button"
+  },
+
+  "appSettingsTitle": "App Settings",
+  "@appSettingsTitle": {
+    "description": "App settings screen title"
+  },
+
+  "theme": "Theme",
+  "@theme": {
+    "description": "Theme selector label"
+  },
+
+  "themeSystem": "System",
+  "@themeSystem": {
+    "description": "System theme option"
+  },
+
+  "themeLight": "Light",
+  "@themeLight": {
+    "description": "Light theme option"
+  },
+
+  "themeDark": "Dark",
+  "@themeDark": {
+    "description": "Dark theme option"
+  },
+
+  "profileKeysTitle": "Profile keys",
+  "@profileKeysTitle": {
+    "description": "Profile keys screen title"
+  },
+
+  "publicKey": "Public key",
+  "@publicKey": {
+    "description": "Public key label"
+  },
+
+  "publicKeyCopied": "Public key copied to clipboard",
+  "@publicKeyCopied": {
+    "description": "Snackbar message when public key is copied"
+  },
+
+  "publicKeyDescription": "Your public key (npub) can be shared with others. It's used to identify you on the network.",
+  "@publicKeyDescription": {
+    "description": "Description of public key"
+  },
+
+  "privateKey": "Private key",
+  "@privateKey": {
+    "description": "Private key label"
+  },
+
+  "privateKeyCopied": "Private key copied to clipboard",
+  "@privateKeyCopied": {
+    "description": "Snackbar message when private key is copied"
+  },
+
+  "privateKeyDescription": "Your private key (nsec) should be kept secret. Anyone with access to it can control your account.",
+  "@privateKeyDescription": {
+    "description": "Description of private key"
+  },
+
+  "keepPrivateKeySecure": "Keep your private key secure",
+  "@keepPrivateKeySecure": {
+    "description": "Warning box title for private key"
+  },
+
+  "privateKeyWarning": "Don't share your private key publicly, and use it only to log in to other Nostr apps.",
+  "@privateKeyWarning": {
+    "description": "Warning message about private key"
+  },
+
+  "editProfileTitle": "Edit profile",
+  "@editProfileTitle": {
+    "description": "Edit profile screen title"
+  },
+
+  "profileName": "Profile name",
+  "@profileName": {
+    "description": "Profile name input label"
+  },
+
+  "nostrAddress": "Nostr address",
+  "@nostrAddress": {
+    "description": "Nostr address input label"
+  },
+
+  "nostrAddressPlaceholder": "example@whitenoise.chat",
+  "@nostrAddressPlaceholder": {
+    "description": "Placeholder for Nostr address"
+  },
+
+  "aboutYou": "About you",
+  "@aboutYou": {
+    "description": "About input label"
+  },
+
+  "profileIsPublic": "Profile is public",
+  "@profileIsPublic": {
+    "description": "Warning box title for public profile"
+  },
+
+  "profilePublicDescription": "Your profile information will be visible to everyone on the network.",
+  "@profilePublicDescription": {
+    "description": "Description about public profile visibility"
+  },
+
+  "discardChanges": "Discard changes",
+  "@discardChanges": {
+    "description": "Discard changes button text"
+  },
+
+  "save": "Save",
+  "@save": {
+    "description": "Save button text"
+  },
+
+  "profileUpdatedSuccessfully": "Profile updated successfully",
+  "@profileUpdatedSuccessfully": {
+    "description": "Snackbar message when profile is updated"
+  },
+
+  "errorLoadingProfile": "Error loading profile: {error}",
+  "@errorLoadingProfile": {
+    "description": "Error message when profile fails to load",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "error": "Error: {error}",
+  "@error": {
+    "description": "Generic error message",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "networkRelaysTitle": "Network Relays",
+  "@networkRelaysTitle": {
+    "description": "Network relays screen title"
+  },
+
+  "myRelays": "My Relays",
+  "@myRelays": {
+    "description": "My relays section header"
+  },
+
+  "myRelaysHelp": "Relays you have defined for use across all your Nostr applications.",
+  "@myRelaysHelp": {
+    "description": "Help text for my relays"
+  },
+
+  "inboxRelays": "Inbox Relays",
+  "@inboxRelays": {
+    "description": "Inbox relays section header"
+  },
+
+  "inboxRelaysHelp": "Relays used to receive invitations and start secure conversations with new users.",
+  "@inboxRelaysHelp": {
+    "description": "Help text for inbox relays"
+  },
+
+  "keyPackageRelays": "Key Package Relays",
+  "@keyPackageRelays": {
+    "description": "Key package relays section header"
+  },
+
+  "keyPackageRelaysHelp": "Relays that store your secure key so others can invite you to encrypted conversations.",
+  "@keyPackageRelaysHelp": {
+    "description": "Help text for key package relays"
+  },
+
+  "errorLoadingRelays": "Error loading relays",
+  "@errorLoadingRelays": {
+    "description": "Error message when relays fail to load"
+  },
+
+  "noRelaysConfigured": "No relays configured",
+  "@noRelaysConfigured": {
+    "description": "Message when no relays are configured"
+  },
+
+  "donateTitle": "Donate to White Noise",
+  "@donateTitle": {
+    "description": "Donate screen title"
+  },
+
+  "donateDescription": "As a not-for-profit, White Noise exists solely for your privacy and freedom, not for profit. Your support keeps us independent and uncompromised.",
+  "@donateDescription": {
+    "description": "Donate screen description"
+  },
+
+  "lightningAddress": "Lightning Address",
+  "@lightningAddress": {
+    "description": "Lightning address label"
+  },
+
+  "bitcoinSilentPayment": "Bitcoin Silent Payment",
+  "@bitcoinSilentPayment": {
+    "description": "Bitcoin silent payment label"
+  },
+
+  "copiedToClipboardThankYou": "Copied to clipboard. Thank you! 🦥",
+  "@copiedToClipboardThankYou": {
+    "description": "Snackbar message when donation address is copied"
+  },
+
+  "shareProfileTitle": "Share profile",
+  "@shareProfileTitle": {
+    "description": "Share profile screen title"
+  },
+
+  "scanToConnect": "Scan to connect",
+  "@scanToConnect": {
+    "description": "Text below QR code"
+  },
+
+  "signOutTitle": "Sign out",
+  "@signOutTitle": {
+    "description": "Sign out screen title"
+  },
+
+  "signOutConfirmation": "Are you sure you want to sign out?",
+  "@signOutConfirmation": {
+    "description": "Sign out confirmation title"
+  },
+
+  "signOutWarning": "When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven't backed up your private key, you won't be able to use this profile on any other Nostr service.",
+  "@signOutWarning": {
+    "description": "Sign out warning message"
+  },
+
+  "backUpPrivateKey": "Back up your private key",
+  "@backUpPrivateKey": {
+    "description": "Back up private key section title"
+  },
+
+  "copyPrivateKeyHint": "Copy your private key to restore your account on another device.",
+  "@copyPrivateKeyHint": {
+    "description": "Hint for copying private key"
+  },
+
+  "noChatsYet": "No chats yet",
+  "@noChatsYet": {
+    "description": "Empty state title for chat list"
+  },
+
+  "startConversation": "Start a conversation",
+  "@startConversation": {
+    "description": "Empty state subtitle for chat list"
+  },
+
+  "noMessagesYet": "No messages yet",
+  "@noMessagesYet": {
+    "description": "Empty state for chat screen"
+  },
+
+  "messagePlaceholder": "Message",
+  "@messagePlaceholder": {
+    "description": "Placeholder for message input"
+  },
+
+  "failedToSendMessage": "Failed to send message. Please try again.",
+  "@failedToSendMessage": {
+    "description": "Error message when sending message fails"
+  },
+
+  "invitedToSecureChat": "You are invited to a secure chat",
+  "@invitedToSecureChat": {
+    "description": "Message when invited to a chat"
+  },
+
+  "decline": "Decline",
+  "@decline": {
+    "description": "Decline button text"
+  },
+
+  "accept": "Accept",
+  "@accept": {
+    "description": "Accept button text"
+  },
+
+  "failedToAcceptInvitation": "Failed to accept invitation: {error}",
+  "@failedToAcceptInvitation": {
+    "description": "Error when accepting invitation fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "failedToDeclineInvitation": "Failed to decline invitation: {error}",
+  "@failedToDeclineInvitation": {
+    "description": "Error when declining invitation fails",
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+
+  "startNewChat": "Start new chat",
+  "@startNewChat": {
+    "description": "User search screen title"
+  },
+
+  "noResults": "No results",
+  "@noResults": {
+    "description": "Empty search results message"
+  },
+
+  "noFollowsYet": "No follows yet",
+  "@noFollowsYet": {
+    "description": "Message when user has no follows"
+  },
+
+  "developerSettingsTitle": "Developer Settings",
+  "@developerSettingsTitle": {
+    "description": "Developer settings screen title"
+  },
+
+  "publishNewKeyPackage": "Publish New Key Package",
+  "@publishNewKeyPackage": {
+    "description": "Button to publish new key package"
+  },
+
+  "refreshKeyPackages": "Refresh Key Packages",
+  "@refreshKeyPackages": {
+    "description": "Button to refresh key packages"
+  },
+
+  "deleteAllKeyPackages": "Delete All Key Packages",
+  "@deleteAllKeyPackages": {
+    "description": "Button to delete all key packages"
+  },
+
+  "keyPackagesCount": "Key Packages ({count})",
+  "@keyPackagesCount": {
+    "description": "Key packages count header",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "noKeyPackagesFound": "No key packages found",
+  "@noKeyPackagesFound": {
+    "description": "Message when no key packages exist"
+  },
+
+  "packageNumber": "Package {number}",
+  "@packageNumber": {
+    "description": "Key package item title",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+
+  "ohNo": "Oh no!",
+  "@ohNo": {
+    "description": "Error screen exclamation"
+  },
+
+  "goBack": "Go back",
+  "@goBack": {
+    "description": "Go back button text"
+  },
+
+  "reportError": "Report error",
+  "@reportError": {
+    "description": "Report error button text"
+  },
+
+  "slothsWorking": "Sloths working",
+  "@slothsWorking": {
+    "description": "WIP screen title"
+  },
+
+  "wipMessage": "Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise",
+  "@wipMessage": {
+    "description": "WIP screen message"
+  },
+
+  "donate": "Donate",
+  "@donate": {
+    "description": "Donate button text"
+  },
+
+  "addRelay": "Add Relay",
+  "@addRelay": {
+    "description": "Add relay sheet title and button"
+  },
+
+  "enterRelayAddress": "Enter relay address",
+  "@enterRelayAddress": {
+    "description": "Label for relay address input"
+  },
+
+  "relayAddressPlaceholder": "wss://relay.example.com",
+  "@relayAddressPlaceholder": {
+    "description": "Placeholder for relay address input"
+  },
+
+  "removeRelay": "Remove Relay?",
+  "@removeRelay": {
+    "description": "Remove relay confirmation title"
+  },
+
+  "removeRelayConfirmation": "Are you sure you want to remove this relay? This action cannot be undone.",
+  "@removeRelayConfirmation": {
+    "description": "Remove relay confirmation message"
+  },
+
+  "remove": "Remove",
+  "@remove": {
+    "description": "Remove button text"
+  },
+
+  "messageActions": "Message actions",
+  "@messageActions": {
+    "description": "Message menu title"
+  },
+
+  "reply": "Reply",
+  "@reply": {
+    "description": "Reply button text"
+  },
+
+  "delete": "Delete",
+  "@delete": {
+    "description": "Delete button text"
+  },
+
+  "failedToDeleteMessage": "Failed to delete message. Please try again.",
+  "@failedToDeleteMessage": {
+    "description": "Error when deleting message fails"
+  },
+
+  "failedToSendReaction": "Failed to send reaction. Please try again.",
+  "@failedToSendReaction": {
+    "description": "Error when sending reaction fails"
+  },
+
+  "unknownUser": "Unknown user",
+  "@unknownUser": {
+    "description": "Fallback name for unknown user"
+  },
+
+  "unknownGroup": "Unknown group",
+  "@unknownGroup": {
+    "description": "Fallback name for unknown group"
+  },
+
+  "hasInvitedYouToSecureChat": "Has invited you to a secure chat",
+  "@hasInvitedYouToSecureChat": {
+    "description": "Invitation subtitle in chat list"
+  },
+
+  "userInvitedYouToSecureChat": "{name} has invited you to a secure chat",
+  "@userInvitedYouToSecureChat": {
+    "description": "Invitation subtitle with user name",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+
+  "youHaveBeenInvitedToSecureChat": "You have been invited to a secure chat",
+  "@youHaveBeenInvitedToSecureChat": {
+    "description": "Generic invitation subtitle"
+  },
+
+  "language": "Language",
+  "@language": {
+    "description": "Language selector label"
+  },
+
+  "languageSystem": "System",
+  "@languageSystem": {
+    "description": "System language option"
+  },
+
+  "languageUpdateFailed": "Failed to save language preference. Please try again.",
+  "@languageUpdateFailed": {
+    "description": "Error message when language update fails to persist"
+  },
+
+  "timeJustNow": "just now",
+  "@timeJustNow": {
+    "description": "Relative time for events that happened moments ago"
+  },
+
+  "timeMinutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "@timeMinutesAgo": {
+    "description": "Relative time for minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "timeHoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "@timeHoursAgo": {
+    "description": "Relative time for hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "timeDaysAgo": "{count, plural, =1{yesterday} other{{count} days ago}}",
+  "@timeDaysAgo": {
+    "description": "Relative time for days ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  }
+}

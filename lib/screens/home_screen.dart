@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
@@ -39,7 +40,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Gap(16.h),
                         Text(
-                          'White Noise',
+                          context.l10n.appTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -49,7 +50,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Decentralized. Uncensorable.',
+                          context.l10n.tagline1,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -59,7 +60,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Secure Messaging.',
+                          context.l10n.tagline2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -77,14 +78,14 @@ class HomeScreen extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       WnOutlinedButton(
-                        text: 'Login',
+                        text: context.l10n.login,
                         onPressed: () {
                           Routes.pushToLogin(context);
                         },
                       ),
                       Gap(8.h),
                       WnFilledButton(
-                        text: 'Sign Up',
+                        text: context.l10n.signUp,
                         onPressed: () => Routes.pushToSignup(context),
                       ),
                     ],

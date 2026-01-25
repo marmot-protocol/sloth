@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_chat_avatar.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/account_groups.dart' as account_groups_api;
@@ -56,7 +57,7 @@ class ChatInviteScreen extends HookConsumerWidget {
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to accept invitation: $e')),
+            SnackBar(content: Text(context.l10n.failedToAcceptInvitation(e.toString()))),
           );
         }
       } finally {
@@ -77,7 +78,7 @@ class ChatInviteScreen extends HookConsumerWidget {
       } catch (e) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Failed to decline invitation: $e')),
+            SnackBar(content: Text(context.l10n.failedToDeclineInvitation(e.toString()))),
           );
         }
       } finally {
@@ -127,7 +128,7 @@ class ChatInviteScreen extends HookConsumerWidget {
                   : messages.isEmpty
                   ? Center(
                       child: Text(
-                        'You are invited to a secure chat',
+                        context.l10n.invitedToSecureChat,
                         style: TextStyle(
                           color: colors.backgroundContentTertiary,
                           fontSize: 14.sp,
@@ -154,13 +155,13 @@ class ChatInviteScreen extends HookConsumerWidget {
                 spacing: 12.h,
                 children: [
                   WnOutlinedButton(
-                    text: 'Decline',
+                    text: context.l10n.decline,
                     loading: isDeclining.value,
                     disabled: isProcessing,
                     onPressed: handleDecline,
                   ),
                   WnFilledButton(
-                    text: 'Accept',
+                    text: context.l10n.accept,
                     loading: isAccepting.value,
                     disabled: isProcessing,
                     onPressed: handleAccept,

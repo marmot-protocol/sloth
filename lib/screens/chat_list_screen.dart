@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_chat_list.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/theme.dart';
@@ -52,7 +53,7 @@ class ChatListScreen extends HookConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'No chats yet',
+              context.l10n.noChatsYet,
               style: TextStyle(
                 color: colors.backgroundContentPrimary,
                 fontSize: 18,
@@ -61,7 +62,7 @@ class ChatListScreen extends HookConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              'Start a conversation',
+              context.l10n.startConversation,
               style: TextStyle(color: colors.backgroundContentTertiary, fontSize: 14),
               textAlign: TextAlign.center,
             ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
@@ -38,7 +39,7 @@ class SettingsScreen extends HookConsumerWidget {
               spacing: 16.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Settings'),
+                WnScreenHeader(title: context.l10n.settings),
                 Center(
                   child: Row(
                     spacing: 8.w,
@@ -99,37 +100,37 @@ class SettingsScreen extends HookConsumerWidget {
                 ),
                 _SettingsTile(
                   icon: WnIcons.user,
-                  label: 'Edit profile',
+                  label: context.l10n.editProfile,
                   onTap: () => Routes.pushToEditProfile(context),
                 ),
                 _SettingsTile(
                   icon: WnIcons.key,
-                  label: 'Profile keys',
+                  label: context.l10n.profileKeys,
                   onTap: () => Routes.pushToProfileKeys(context),
                 ),
                 _SettingsTile(
                   icon: WnIcons.network,
-                  label: 'Network relays',
+                  label: context.l10n.networkRelays,
                   onTap: () => Routes.pushToNetwork(context),
                 ),
                 _SettingsTile(
                   icon: WnIcons.settings,
-                  label: 'App settings',
+                  label: context.l10n.appSettings,
                   onTap: () => Routes.pushToAppSettings(context),
                 ),
                 _SettingsTile(
                   icon: WnIcons.heart,
-                  label: 'Donate to White Noise',
+                  label: context.l10n.donateToWhiteNoise,
                   onTap: () => Routes.pushToDonate(context),
                 ),
                 _SettingsTile(
                   icon: WnIcons.developerSettings,
-                  label: 'Developer settings',
+                  label: context.l10n.developerSettings,
                   onTap: () => Routes.pushToDeveloperSettings(context),
                 ),
                 _SettingsTile(
                   icon: WnIcons.logout,
-                  label: 'Sign out',
+                  label: context.l10n.signOut,
                   onTap: () => Routes.pushToSignOut(context),
                 ),
               ],

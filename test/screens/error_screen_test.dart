@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/screens/error_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 
@@ -63,7 +65,16 @@ void main() {
         await tester.pumpWidget(
           ScreenUtilInit(
             designSize: testDesignSize,
-            builder: (_, _) => MaterialApp.router(routerConfig: router),
+            builder: (_, _) => MaterialApp.router(
+              routerConfig: router,
+              localizationsDelegates: const [
+                AppLocalizations.delegate,
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: AppLocalizations.supportedLocales,
+            ),
           ),
         );
         router.push('/error');

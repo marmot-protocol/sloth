@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sloth/l10n/l10n.dart';
+import 'package:sloth/providers/locale_provider.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/user_service.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
@@ -8,7 +12,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
-class ChatListTile extends HookWidget {
+class ChatListTile extends HookConsumerWidget {
   final ChatSummary chatSummary;
 
   const ChatListTile({
@@ -17,7 +21,8 @@ class ChatListTile extends HookWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final formatters = ref.watch(localeFormattersProvider);
     final colors = context.colors;
     final isDm = chatSummary.groupType == GroupType.directMessage;
     final isPending = chatSummary.pendingConfirmation;
@@ -47,31 +52,35 @@ class ChatListTile extends HookWidget {
 
     if (isPending) {
       if (isDm) {
-        title = welcomerName ?? chatSummary.name ?? 'Unknown user';
+        title = welcomerName ?? chatSummary.name ?? context.l10n.unknownUser;
         pictureUrl = welcomerSnapshot.data?.picture ?? chatSummary.groupImageUrl;
         avatarName = welcomerName ?? chatSummary.name;
-        subtitle = 'Has invited you to a secure chat';
+        subtitle = context.l10n.hasInvitedYouToSecureChat;
       } else {
-        title = hasGroupName ? chatSummary.name! : 'Unknown group';
+        title = hasGroupName ? chatSummary.name! : context.l10n.unknownGroup;
         pictureUrl = chatSummary.groupImagePath;
         avatarName = hasGroupName ? chatSummary.name! : null;
         if (welcomerName != null) {
-          subtitle = '$welcomerName has invited you to a secure chat';
+          subtitle = context.l10n.userInvitedYouToSecureChat(welcomerName);
         } else {
-          subtitle = 'You have been invited to a secure chat';
+          subtitle = context.l10n.youHaveBeenInvitedToSecureChat;
         }
       }
     } else {
       if (isDm) {
-        title = hasGroupName ? chatSummary.name! : 'Unknown user';
+        title = hasGroupName ? chatSummary.name! : context.l10n.unknownUser;
         pictureUrl = chatSummary.groupImageUrl;
       } else {
-        title = hasGroupName ? chatSummary.name! : 'Unknown group';
+        title = hasGroupName ? chatSummary.name! : context.l10n.unknownGroup;
         pictureUrl = chatSummary.groupImagePath;
       }
       avatarName = hasGroupName ? chatSummary.name! : null;
       subtitle = chatSummary.lastMessage?.content ?? '';
     }
+
+    // Display timestamp: last message time or chat creation time
+    final timestamp = chatSummary.lastMessage?.createdAt ?? chatSummary.createdAt;
+    final formattedTime = formatters.formatRelativeTime(timestamp, context.l10n);
 
     return ListTile(
       onTap: isPending
@@ -89,6 +98,15 @@ class ChatListTile extends HookWidget {
       subtitle: Text(
         subtitle,
         style: TextStyle(color: colors.backgroundContentSecondary),
+        maxLines: 1,
+        overflow: TextOverflow.ellipsis,
+      ),
+      trailing: Text(
+        formattedTime,
+        style: TextStyle(
+          color: colors.backgroundContentTertiary,
+          fontSize: 12.sp,
+        ),
       ),
     );
   }

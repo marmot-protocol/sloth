@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_network_relays.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
@@ -118,7 +119,7 @@ class NetworkScreen extends HookConsumerWidget {
       if (relayState.error != null && relayState.relays.isEmpty) {
         return Center(
           child: Text(
-            'Error loading relays',
+            context.l10n.errorLoadingRelays,
             style: TextStyle(color: colors.fillDestructive),
           ),
         );
@@ -129,7 +130,7 @@ class NetworkScreen extends HookConsumerWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: Text(
-              'No relays configured',
+              context.l10n.noRelaysConfigured,
               style: TextStyle(
                 fontSize: 14.sp,
                 color: colors.backgroundContentTertiary,
@@ -162,7 +163,7 @@ class NetworkScreen extends HookConsumerWidget {
           child: WnSlateContainer(
             child: Column(
               children: [
-                const WnScreenHeader(title: 'Network Relays'),
+                WnScreenHeader(title: context.l10n.networkRelaysTitle),
                 Expanded(
                   child: ListView(
                     padding: EdgeInsets.only(top: 16.h),
@@ -172,9 +173,8 @@ class NetworkScreen extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             buildSectionHeader(
-                              title: 'My Relays',
-                              helpMessage:
-                                  'Relays you have defined for use across all your Nostr applications.',
+                              title: context.l10n.myRelays,
+                              helpMessage: context.l10n.myRelaysHelp,
                               infoIconKey: const Key('info_icon_my_relays'),
                               addIconKey: const Key('add_icon_my_relays'),
                               onAdd: () => showAddRelaySheet(RelayCategory.normal),
@@ -190,9 +190,8 @@ class NetworkScreen extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             buildSectionHeader(
-                              title: 'Inbox Relays',
-                              helpMessage:
-                                  'Relays used to receive invitations and start secure conversations with new users.',
+                              title: context.l10n.inboxRelays,
+                              helpMessage: context.l10n.inboxRelaysHelp,
                               infoIconKey: const Key('info_icon_inbox_relays'),
                               addIconKey: const Key('add_icon_inbox_relays'),
                               onAdd: () => showAddRelaySheet(RelayCategory.inbox),
@@ -208,9 +207,8 @@ class NetworkScreen extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             buildSectionHeader(
-                              title: 'Key Package Relays',
-                              helpMessage:
-                                  'Relays that store your secure key so others can invite you to encrypted conversations.',
+                              title: context.l10n.keyPackageRelays,
+                              helpMessage: context.l10n.keyPackageRelaysHelp,
                               infoIconKey: const Key('info_icon_key_package_relays'),
                               addIconKey: const Key('add_icon_key_package_relays'),
                               onAdd: () => showAddRelaySheet(RelayCategory.keyPackage),

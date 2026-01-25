@@ -1,0 +1,887 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:intl/intl.dart' as intl;
+
+import 'app_localizations_de.dart';
+import 'app_localizations_en.dart';
+import 'app_localizations_es.dart';
+import 'app_localizations_fr.dart';
+import 'app_localizations_it.dart';
+import 'app_localizations_pt.dart';
+import 'app_localizations_ru.dart';
+import 'app_localizations_tr.dart';
+
+// ignore_for_file: type=lint
+
+/// Callers can lookup localized strings with an instance of AppLocalizations
+/// returned by `AppLocalizations.of(context)`.
+///
+/// Applications need to include `AppLocalizations.delegate()` in their app's
+/// `localizationDelegates` list, and the locales they support in the app's
+/// `supportedLocales` list. For example:
+///
+/// ```dart
+/// import 'generated/app_localizations.dart';
+///
+/// return MaterialApp(
+///   localizationsDelegates: AppLocalizations.localizationsDelegates,
+///   supportedLocales: AppLocalizations.supportedLocales,
+///   home: MyApplicationHome(),
+/// );
+/// ```
+///
+/// ## Update pubspec.yaml
+///
+/// Please make sure to update your pubspec.yaml to include the following
+/// packages:
+///
+/// ```yaml
+/// dependencies:
+///   # Internationalization support.
+///   flutter_localizations:
+///     sdk: flutter
+///   intl: any # Use the pinned version from flutter_localizations
+///
+///   # Rest of dependencies
+/// ```
+///
+/// ## iOS Applications
+///
+/// iOS applications define key application metadata, including supported
+/// locales, in an Info.plist file that is built into the application bundle.
+/// To configure the locales supported by your app, you’ll need to edit this
+/// file.
+///
+/// First, open your project’s ios/Runner.xcworkspace Xcode workspace file.
+/// Then, in the Project Navigator, open the Info.plist file under the Runner
+/// project’s Runner folder.
+///
+/// Next, select the Information Property List item, select Add Item from the
+/// Editor menu, then select Localizations from the pop-up menu.
+///
+/// Select and expand the newly-created Localizations item then, for each
+/// locale your application supports, add a new item and select the locale
+/// you wish to add from the pop-up menu in the Value field. This list should
+/// be consistent with the languages listed in the AppLocalizations.supportedLocales
+/// property.
+abstract class AppLocalizations {
+  AppLocalizations(String locale) : localeName = intl.Intl.canonicalizedLocale(locale.toString());
+
+  final String localeName;
+
+  static AppLocalizations of(BuildContext context) {
+    return Localizations.of<AppLocalizations>(context, AppLocalizations)!;
+  }
+
+  static const LocalizationsDelegate<AppLocalizations> delegate = _AppLocalizationsDelegate();
+
+  /// A list of this localizations delegate along with the default localizations
+  /// delegates.
+  ///
+  /// Returns a list of localizations delegates containing this delegate along with
+  /// GlobalMaterialLocalizations.delegate, GlobalCupertinoLocalizations.delegate,
+  /// and GlobalWidgetsLocalizations.delegate.
+  ///
+  /// Additional delegates can be added by appending to this list in
+  /// MaterialApp. This list does not have to be used at all if a custom list
+  /// of delegates is preferred or required.
+  static const List<LocalizationsDelegate<dynamic>> localizationsDelegates =
+      <LocalizationsDelegate<dynamic>>[
+        delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+      ];
+
+  /// A list of this localizations delegate's supported locales.
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('de'),
+    Locale('en'),
+    Locale('es'),
+    Locale('fr'),
+    Locale('it'),
+    Locale('pt'),
+    Locale('ru'),
+    Locale('tr'),
+  ];
+
+  /// The application title displayed on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'White Noise'**
+  String get appTitle;
+
+  /// First tagline on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Decentralized. Uncensorable.'**
+  String get tagline1;
+
+  /// Second tagline on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Secure Messaging.'**
+  String get tagline2;
+
+  /// Login button text
+  ///
+  /// In en, this message translates to:
+  /// **'Login'**
+  String get login;
+
+  /// Sign up button text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign Up'**
+  String get signUp;
+
+  /// Title on login screen
+  ///
+  /// In en, this message translates to:
+  /// **'Login to White Noise'**
+  String get loginTitle;
+
+  /// Label for private key input field
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your private key'**
+  String get enterPrivateKey;
+
+  /// Placeholder text for nsec input
+  ///
+  /// In en, this message translates to:
+  /// **'nsec...'**
+  String get nsecPlaceholder;
+
+  /// Title on signup screen
+  ///
+  /// In en, this message translates to:
+  /// **'Setup profile'**
+  String get setupProfile;
+
+  /// Label for name input field
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a name'**
+  String get chooseName;
+
+  /// Placeholder for name input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get enterYourName;
+
+  /// Label for bio input field
+  ///
+  /// In en, this message translates to:
+  /// **'Introduce yourself'**
+  String get introduceYourself;
+
+  /// Placeholder for bio input
+  ///
+  /// In en, this message translates to:
+  /// **'Write something about yourself'**
+  String get writeSomethingAboutYourself;
+
+  /// Cancel button text
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// Title on onboarding screen after signup
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is ready!'**
+  String get profileReady;
+
+  /// Hint text on onboarding screen
+  ///
+  /// In en, this message translates to:
+  /// **'Start a conversation by adding friends or sharing your profile.'**
+  String get startConversationHint;
+
+  /// Button text to share profile
+  ///
+  /// In en, this message translates to:
+  /// **'Share your profile'**
+  String get shareYourProfile;
+
+  /// Button text to start a new chat
+  ///
+  /// In en, this message translates to:
+  /// **'Start a chat'**
+  String get startChat;
+
+  /// Settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Profile keys'**
+  String get profileKeys;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Network relays'**
+  String get networkRelays;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'App settings'**
+  String get appSettings;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Donate to White Noise'**
+  String get donateToWhiteNoise;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Developer settings'**
+  String get developerSettings;
+
+  /// Settings menu item and button
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOut;
+
+  /// App settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'App Settings'**
+  String get appSettingsTitle;
+
+  /// Theme selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// System theme option
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// Light theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// Dark theme option
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// Profile keys screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Profile keys'**
+  String get profileKeysTitle;
+
+  /// Public key label
+  ///
+  /// In en, this message translates to:
+  /// **'Public key'**
+  String get publicKey;
+
+  /// Snackbar message when public key is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Public key copied to clipboard'**
+  String get publicKeyCopied;
+
+  /// Description of public key
+  ///
+  /// In en, this message translates to:
+  /// **'Your public key (npub) can be shared with others. It\'s used to identify you on the network.'**
+  String get publicKeyDescription;
+
+  /// Private key label
+  ///
+  /// In en, this message translates to:
+  /// **'Private key'**
+  String get privateKey;
+
+  /// Snackbar message when private key is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Private key copied to clipboard'**
+  String get privateKeyCopied;
+
+  /// Description of private key
+  ///
+  /// In en, this message translates to:
+  /// **'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.'**
+  String get privateKeyDescription;
+
+  /// Warning box title for private key
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your private key secure'**
+  String get keepPrivateKeySecure;
+
+  /// Warning message about private key
+  ///
+  /// In en, this message translates to:
+  /// **'Don\'t share your private key publicly, and use it only to log in to other Nostr apps.'**
+  String get privateKeyWarning;
+
+  /// Edit profile screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfileTitle;
+
+  /// Profile name input label
+  ///
+  /// In en, this message translates to:
+  /// **'Profile name'**
+  String get profileName;
+
+  /// Nostr address input label
+  ///
+  /// In en, this message translates to:
+  /// **'Nostr address'**
+  String get nostrAddress;
+
+  /// Placeholder for Nostr address
+  ///
+  /// In en, this message translates to:
+  /// **'example@whitenoise.chat'**
+  String get nostrAddressPlaceholder;
+
+  /// About input label
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get aboutYou;
+
+  /// Warning box title for public profile
+  ///
+  /// In en, this message translates to:
+  /// **'Profile is public'**
+  String get profileIsPublic;
+
+  /// Description about public profile visibility
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile information will be visible to everyone on the network.'**
+  String get profilePublicDescription;
+
+  /// Discard changes button text
+  ///
+  /// In en, this message translates to:
+  /// **'Discard changes'**
+  String get discardChanges;
+
+  /// Save button text
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// Snackbar message when profile is updated
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated successfully'**
+  String get profileUpdatedSuccessfully;
+
+  /// Error message when profile fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading profile: {error}'**
+  String errorLoadingProfile(String error);
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String error(String error);
+
+  /// Network relays screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Network Relays'**
+  String get networkRelaysTitle;
+
+  /// My relays section header
+  ///
+  /// In en, this message translates to:
+  /// **'My Relays'**
+  String get myRelays;
+
+  /// Help text for my relays
+  ///
+  /// In en, this message translates to:
+  /// **'Relays you have defined for use across all your Nostr applications.'**
+  String get myRelaysHelp;
+
+  /// Inbox relays section header
+  ///
+  /// In en, this message translates to:
+  /// **'Inbox Relays'**
+  String get inboxRelays;
+
+  /// Help text for inbox relays
+  ///
+  /// In en, this message translates to:
+  /// **'Relays used to receive invitations and start secure conversations with new users.'**
+  String get inboxRelaysHelp;
+
+  /// Key package relays section header
+  ///
+  /// In en, this message translates to:
+  /// **'Key Package Relays'**
+  String get keyPackageRelays;
+
+  /// Help text for key package relays
+  ///
+  /// In en, this message translates to:
+  /// **'Relays that store your secure key so others can invite you to encrypted conversations.'**
+  String get keyPackageRelaysHelp;
+
+  /// Error message when relays fail to load
+  ///
+  /// In en, this message translates to:
+  /// **'Error loading relays'**
+  String get errorLoadingRelays;
+
+  /// Message when no relays are configured
+  ///
+  /// In en, this message translates to:
+  /// **'No relays configured'**
+  String get noRelaysConfigured;
+
+  /// Donate screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Donate to White Noise'**
+  String get donateTitle;
+
+  /// Donate screen description
+  ///
+  /// In en, this message translates to:
+  /// **'As a not-for-profit, White Noise exists solely for your privacy and freedom, not for profit. Your support keeps us independent and uncompromised.'**
+  String get donateDescription;
+
+  /// Lightning address label
+  ///
+  /// In en, this message translates to:
+  /// **'Lightning Address'**
+  String get lightningAddress;
+
+  /// Bitcoin silent payment label
+  ///
+  /// In en, this message translates to:
+  /// **'Bitcoin Silent Payment'**
+  String get bitcoinSilentPayment;
+
+  /// Snackbar message when donation address is copied
+  ///
+  /// In en, this message translates to:
+  /// **'Copied to clipboard. Thank you! 🦥'**
+  String get copiedToClipboardThankYou;
+
+  /// Share profile screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Share profile'**
+  String get shareProfileTitle;
+
+  /// Text below QR code
+  ///
+  /// In en, this message translates to:
+  /// **'Scan to connect'**
+  String get scanToConnect;
+
+  /// Sign out screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Sign out'**
+  String get signOutTitle;
+
+  /// Sign out confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to sign out?'**
+  String get signOutConfirmation;
+
+  /// Sign out warning message
+  ///
+  /// In en, this message translates to:
+  /// **'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.'**
+  String get signOutWarning;
+
+  /// Back up private key section title
+  ///
+  /// In en, this message translates to:
+  /// **'Back up your private key'**
+  String get backUpPrivateKey;
+
+  /// Hint for copying private key
+  ///
+  /// In en, this message translates to:
+  /// **'Copy your private key to restore your account on another device.'**
+  String get copyPrivateKeyHint;
+
+  /// Empty state title for chat list
+  ///
+  /// In en, this message translates to:
+  /// **'No chats yet'**
+  String get noChatsYet;
+
+  /// Empty state subtitle for chat list
+  ///
+  /// In en, this message translates to:
+  /// **'Start a conversation'**
+  String get startConversation;
+
+  /// Empty state for chat screen
+  ///
+  /// In en, this message translates to:
+  /// **'No messages yet'**
+  String get noMessagesYet;
+
+  /// Placeholder for message input
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get messagePlaceholder;
+
+  /// Error message when sending message fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send message. Please try again.'**
+  String get failedToSendMessage;
+
+  /// Message when invited to a chat
+  ///
+  /// In en, this message translates to:
+  /// **'You are invited to a secure chat'**
+  String get invitedToSecureChat;
+
+  /// Decline button text
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get decline;
+
+  /// Accept button text
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get accept;
+
+  /// Error when accepting invitation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to accept invitation: {error}'**
+  String failedToAcceptInvitation(String error);
+
+  /// Error when declining invitation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to decline invitation: {error}'**
+  String failedToDeclineInvitation(String error);
+
+  /// User search screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Start new chat'**
+  String get startNewChat;
+
+  /// Empty search results message
+  ///
+  /// In en, this message translates to:
+  /// **'No results'**
+  String get noResults;
+
+  /// Message when user has no follows
+  ///
+  /// In en, this message translates to:
+  /// **'No follows yet'**
+  String get noFollowsYet;
+
+  /// Developer settings screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Developer Settings'**
+  String get developerSettingsTitle;
+
+  /// Button to publish new key package
+  ///
+  /// In en, this message translates to:
+  /// **'Publish New Key Package'**
+  String get publishNewKeyPackage;
+
+  /// Button to refresh key packages
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh Key Packages'**
+  String get refreshKeyPackages;
+
+  /// Button to delete all key packages
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Key Packages'**
+  String get deleteAllKeyPackages;
+
+  /// Key packages count header
+  ///
+  /// In en, this message translates to:
+  /// **'Key Packages ({count})'**
+  String keyPackagesCount(int count);
+
+  /// Message when no key packages exist
+  ///
+  /// In en, this message translates to:
+  /// **'No key packages found'**
+  String get noKeyPackagesFound;
+
+  /// Key package item title
+  ///
+  /// In en, this message translates to:
+  /// **'Package {number}'**
+  String packageNumber(int number);
+
+  /// Error screen exclamation
+  ///
+  /// In en, this message translates to:
+  /// **'Oh no!'**
+  String get ohNo;
+
+  /// Go back button text
+  ///
+  /// In en, this message translates to:
+  /// **'Go back'**
+  String get goBack;
+
+  /// Report error button text
+  ///
+  /// In en, this message translates to:
+  /// **'Report error'**
+  String get reportError;
+
+  /// WIP screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Sloths working'**
+  String get slothsWorking;
+
+  /// WIP screen message
+  ///
+  /// In en, this message translates to:
+  /// **'Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise'**
+  String get wipMessage;
+
+  /// Donate button text
+  ///
+  /// In en, this message translates to:
+  /// **'Donate'**
+  String get donate;
+
+  /// Add relay sheet title and button
+  ///
+  /// In en, this message translates to:
+  /// **'Add Relay'**
+  String get addRelay;
+
+  /// Label for relay address input
+  ///
+  /// In en, this message translates to:
+  /// **'Enter relay address'**
+  String get enterRelayAddress;
+
+  /// Placeholder for relay address input
+  ///
+  /// In en, this message translates to:
+  /// **'wss://relay.example.com'**
+  String get relayAddressPlaceholder;
+
+  /// Remove relay confirmation title
+  ///
+  /// In en, this message translates to:
+  /// **'Remove Relay?'**
+  String get removeRelay;
+
+  /// Remove relay confirmation message
+  ///
+  /// In en, this message translates to:
+  /// **'Are you sure you want to remove this relay? This action cannot be undone.'**
+  String get removeRelayConfirmation;
+
+  /// Remove button text
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get remove;
+
+  /// Message menu title
+  ///
+  /// In en, this message translates to:
+  /// **'Message actions'**
+  String get messageActions;
+
+  /// Reply button text
+  ///
+  /// In en, this message translates to:
+  /// **'Reply'**
+  String get reply;
+
+  /// Delete button text
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// Error when deleting message fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete message. Please try again.'**
+  String get failedToDeleteMessage;
+
+  /// Error when sending reaction fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to send reaction. Please try again.'**
+  String get failedToSendReaction;
+
+  /// Fallback name for unknown user
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown user'**
+  String get unknownUser;
+
+  /// Fallback name for unknown group
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown group'**
+  String get unknownGroup;
+
+  /// Invitation subtitle in chat list
+  ///
+  /// In en, this message translates to:
+  /// **'Has invited you to a secure chat'**
+  String get hasInvitedYouToSecureChat;
+
+  /// Invitation subtitle with user name
+  ///
+  /// In en, this message translates to:
+  /// **'{name} has invited you to a secure chat'**
+  String userInvitedYouToSecureChat(String name);
+
+  /// Generic invitation subtitle
+  ///
+  /// In en, this message translates to:
+  /// **'You have been invited to a secure chat'**
+  String get youHaveBeenInvitedToSecureChat;
+
+  /// Language selector label
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// System language option
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get languageSystem;
+
+  /// Error message when language update fails to persist
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to save language preference. Please try again.'**
+  String get languageUpdateFailed;
+
+  /// Relative time for events that happened moments ago
+  ///
+  /// In en, this message translates to:
+  /// **'just now'**
+  String get timeJustNow;
+
+  /// Relative time for minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute ago} other{{count} minutes ago}}'**
+  String timeMinutesAgo(int count);
+
+  /// Relative time for hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour ago} other{{count} hours ago}}'**
+  String timeHoursAgo(int count);
+
+  /// Relative time for days ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{yesterday} other{{count} days ago}}'**
+  String timeDaysAgo(int count);
+}
+
+class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
+  const _AppLocalizationsDelegate();
+
+  @override
+  Future<AppLocalizations> load(Locale locale) {
+    return SynchronousFuture<AppLocalizations>(lookupAppLocalizations(locale));
+  }
+
+  @override
+  bool isSupported(Locale locale) =>
+      <String>['de', 'en', 'es', 'fr', 'it', 'pt', 'ru', 'tr'].contains(locale.languageCode);
+
+  @override
+  bool shouldReload(_AppLocalizationsDelegate old) => false;
+}
+
+AppLocalizations lookupAppLocalizations(Locale locale) {
+  // Lookup logic when only language code is specified.
+  switch (locale.languageCode) {
+    case 'de':
+      return AppLocalizationsDe();
+    case 'en':
+      return AppLocalizationsEn();
+    case 'es':
+      return AppLocalizationsEs();
+    case 'fr':
+      return AppLocalizationsFr();
+    case 'it':
+      return AppLocalizationsIt();
+    case 'pt':
+      return AppLocalizationsPt();
+    case 'ru':
+      return AppLocalizationsRu();
+    case 'tr':
+      return AppLocalizationsTr();
+  }
+
+  throw FlutterError(
+    'AppLocalizations.delegate failed to load unsupported locale "$locale". This is likely '
+    'an issue with the localizations generation tool. Please file an issue '
+    'on GitHub with a reproducible sample app and the gen-l10n configuration '
+    'that was used.',
+  );
+}

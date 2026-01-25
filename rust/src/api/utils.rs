@@ -3,7 +3,7 @@
 //! This module provides essential utility functions for the White Noise Flutter application,
 //! including key management, relay operations, and data conversions.
 
-use crate::api::ThemeMode;
+use crate::api::{Language, ThemeMode};
 use crate::api::error::ApiError;
 use flutter_rust_bridge::frb;
 use mdk_core::prelude::GroupId;
@@ -80,5 +80,59 @@ pub fn theme_mode_to_string(theme_mode: &ThemeMode) -> String {
         ThemeMode::Light => "light".to_string(),
         ThemeMode::Dark => "dark".to_string(),
         ThemeMode::System => "system".to_string(),
+    }
+}
+
+#[frb(sync)]
+pub fn language_english() -> Language {
+    Language::English
+}
+
+#[frb(sync)]
+pub fn language_spanish() -> Language {
+    Language::Spanish
+}
+
+#[frb(sync)]
+pub fn language_french() -> Language {
+    Language::French
+}
+
+#[frb(sync)]
+pub fn language_german() -> Language {
+    Language::German
+}
+
+#[frb(sync)]
+pub fn language_italian() -> Language {
+    Language::Italian
+}
+
+#[frb(sync)]
+pub fn language_portuguese() -> Language {
+    Language::Portuguese
+}
+
+#[frb(sync)]
+pub fn language_russian() -> Language {
+    Language::Russian
+}
+
+#[frb(sync)]
+pub fn language_turkish() -> Language {
+    Language::Turkish
+}
+
+#[frb(sync)]
+pub fn language_to_string(language: &Language) -> String {
+    match language {
+        Language::English => "en".to_string(),
+        Language::Spanish => "es".to_string(),
+        Language::French => "fr".to_string(),
+        Language::German => "de".to_string(),
+        Language::Italian => "it".to_string(),
+        Language::Portuguese => "pt".to_string(),
+        Language::Russian => "ru".to_string(),
+        Language::Turkish => "tr".to_string(),
     }
 }
