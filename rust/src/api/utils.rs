@@ -3,8 +3,8 @@
 //! This module provides essential utility functions for the White Noise Flutter application,
 //! including key management, relay operations, and data conversions.
 
-use crate::api::{Language, ThemeMode};
 use crate::api::error::ApiError;
+use crate::api::{Language, ThemeMode};
 use flutter_rust_bridge::frb;
 use mdk_core::prelude::GroupId;
 use nostr_sdk::prelude::*;

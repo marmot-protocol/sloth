@@ -95,8 +95,9 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
 
   Locale _resolveSystemLocale() {
     final deviceLocale = PlatformDispatcher.instance.locale;
-    final isSupported = AppLocalizations.supportedLocales
-        .any((l) => l.languageCode == deviceLocale.languageCode);
+    final isSupported = AppLocalizations.supportedLocales.any(
+      (l) => l.languageCode == deviceLocale.languageCode,
+    );
     if (isSupported) {
       return Locale(deviceLocale.languageCode);
     }
@@ -113,8 +114,9 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
 
   String _resolveSystemLanguageCode() {
     final deviceLocale = PlatformDispatcher.instance.locale;
-    final isSupported = AppLocalizations.supportedLocales
-        .any((l) => l.languageCode == deviceLocale.languageCode);
+    final isSupported = AppLocalizations.supportedLocales.any(
+      (l) => l.languageCode == deviceLocale.languageCode,
+    );
     return isSupported ? deviceLocale.languageCode : 'en';
   }
 
