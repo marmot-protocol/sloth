@@ -13,19 +13,15 @@ import 'users.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `assert_receiver_is_total_eq`, `clone`, `clone`, `clone`, `eq`, `fmt`, `fmt`, `fmt`, `from`, `from`, `from`
 
-Future<List<Account>> getAccounts() =>
-    RustLib.instance.api.crateApiAccountsGetAccounts();
+Future<List<Account>> getAccounts() => RustLib.instance.api.crateApiAccountsGetAccounts();
 
 Future<Account> getAccount({required String pubkey}) =>
     RustLib.instance.api.crateApiAccountsGetAccount(pubkey: pubkey);
 
-Future<Account> createIdentity() =>
-    RustLib.instance.api.crateApiAccountsCreateIdentity();
+Future<Account> createIdentity() => RustLib.instance.api.crateApiAccountsCreateIdentity();
 
-Future<Account> login({required String nsecOrHexPrivkey}) => RustLib
-    .instance
-    .api
-    .crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
+Future<Account> login({required String nsecOrHexPrivkey}) =>
+    RustLib.instance.api.crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
 
 /// Login with an external signer (like Amber via NIP-55).
 ///
@@ -36,10 +32,8 @@ Future<Account> login({required String nsecOrHexPrivkey}) => RustLib
 /// # Arguments
 ///
 /// * `pubkey` - The user's public key (hex format) obtained from the external signer.
-Future<Account> loginWithExternalSigner({required String pubkey}) => RustLib
-    .instance
-    .api
-    .crateApiAccountsLoginWithExternalSigner(pubkey: pubkey);
+Future<Account> loginWithExternalSigner({required String pubkey}) =>
+    RustLib.instance.api.crateApiAccountsLoginWithExternalSigner(pubkey: pubkey);
 
 Future<void> logout({required String pubkey}) =>
     RustLib.instance.api.crateApiAccountsLogout(pubkey: pubkey);

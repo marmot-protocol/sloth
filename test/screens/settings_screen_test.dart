@@ -50,7 +50,7 @@ class _MockAuthNotifier extends AuthNotifier {
   }
 
   @override
-  Future<String?> logout() async {
+  Future<String?> logout({Future<void> Function()? onAmberDisconnect}) async {
     logoutCalled = true;
     return null;
   }
