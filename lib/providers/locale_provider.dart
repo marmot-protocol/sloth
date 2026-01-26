@@ -126,14 +126,6 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
     return _languageCodeToRust(languageCode);
   }
 
-  String _resolveSystemLanguageCode() {
-    final deviceLocale = PlatformDispatcher.instance.locale;
-    final isSupported = AppLocalizations.supportedLocales.any(
-      (l) => l.languageCode == deviceLocale.languageCode,
-    );
-    return isSupported ? deviceLocale.languageCode : 'en';
-  }
-
   rust_api.Language _languageCodeToRust(String code) {
     return switch (code) {
       'en' => rust_utils.languageEnglish(),

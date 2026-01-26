@@ -381,7 +381,8 @@ void main() {
       await tester.tap(find.text('System').last);
       await tester.pumpAndSettle();
 
-      expect(mockApi.currentLanguage, isNotEmpty);
+      // System locale in tests defaults to 'en'
+      expect(mockApi.currentLanguage, 'en');
     });
 
     testWidgets('shows snackbar error when language update fails', (tester) async {

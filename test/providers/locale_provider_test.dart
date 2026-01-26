@@ -184,8 +184,8 @@ void main() {
       await container.read(localeProvider.future);
       mockApi.shouldFailUpdateLanguage = true;
 
-      expect(
-        () => container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr'))),
+      await expectLater(
+        container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr'))),
         throwsA(isA<LocalePersistenceException>()),
       );
     });

@@ -157,7 +157,7 @@ void main() {
       expect(find.text('Failed to fetch key packages'), findsOneWidget);
     });
 
-    testWidgets('displays multiple key packages with separators', (tester) async {
+    testWidgets('displays multiple key packages', (tester) async {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
