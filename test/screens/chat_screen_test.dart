@@ -1,15 +1,17 @@
 import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/screens/message_actions_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_message_menu.dart';
+
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -425,7 +427,7 @@ void main() {
       });
     });
 
-    group('message menu', () {
+    group('message actions', () {
       Future<void> longPressMessage(WidgetTester tester, String messageId) async {
         final messageFinder = find.text('Message $messageId');
         await tester.longPress(messageFinder);
@@ -440,7 +442,7 @@ void main() {
 
         await longPressMessage(tester, 'm1');
 
-        expect(find.byType(WnMessageMenu), findsOneWidget);
+        expect(find.byType(MessageActionsScreen), findsOneWidget);
       });
 
       testWidgets('shows Delete button for own message', (tester) async {
@@ -476,7 +478,7 @@ void main() {
         await tester.tap(find.byKey(const Key('close_button')));
         await tester.pumpAndSettle();
 
-        expect(find.byType(WnMessageMenu), findsNothing);
+        expect(find.byType(MessageActionsScreen), findsNothing);
       });
 
       testWidgets('unfocuses text field when opening', (tester) async {
@@ -495,6 +497,48 @@ void main() {
         expect(textField.focusNode!.hasFocus, isFalse);
       });
 
+      testWidgets('unfocuses text field when closing message actions', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isTrue);
+
+        await longPressMessage(tester, 'm1');
+        expect(textField.focusNode!.hasFocus, isFalse);
+
+        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MessageActionsScreen), findsNothing);
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+
+      testWidgets('unfocuses text field after selecting reaction', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isTrue);
+
+        await longPressMessage(tester, 'm1');
+        expect(textField.focusNode!.hasFocus, isFalse);
+
+        await tester.tap(find.text('❤'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MessageActionsScreen), findsNothing);
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+
       group('message deletion', () {
         testWidgets('calls API when Delete is tapped', (tester) async {
           _api.initialMessages = [
@@ -510,7 +554,7 @@ void main() {
           expect(_api.deletionCalls.length, 1);
         });
 
-        testWidgets('closes menu after deletion', (tester) async {
+        testWidgets('close messages actions after deletion', (tester) async {
           _api.initialMessages = [
             _message('m1', DateTime(2024), pubkey: _testPubkey),
           ];
@@ -521,7 +565,7 @@ void main() {
           await tester.tap(find.text('Delete'));
           await tester.pumpAndSettle();
 
-          expect(find.byType(WnMessageMenu), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsNothing);
         });
 
         testWidgets('sends deletion to correct group', (tester) async {
@@ -567,7 +611,7 @@ void main() {
 
           expect(_api.deletionCalls.length, 0);
           expect(find.text('Failed to delete message. Please try again.'), findsOneWidget);
-          expect(find.byType(WnMessageMenu), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsNothing);
         });
       });
 
@@ -629,7 +673,7 @@ void main() {
           expect(tags[0].vec, ['e', 'msg_to_react']);
         });
 
-        testWidgets('closes menu after sending reaction', (tester) async {
+        testWidgets('closes message actions after sending reaction', (tester) async {
           _api.initialMessages = [
             _message('m1', DateTime(2024)),
           ];
@@ -640,7 +684,7 @@ void main() {
           await tester.tap(find.text('❤'));
           await tester.pumpAndSettle();
 
-          expect(find.byType(WnMessageMenu), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsNothing);
         });
 
         testWidgets('shows error snackbar when reaction fails', (tester) async {
@@ -657,7 +701,7 @@ void main() {
 
           expect(_api.reactionCalls.length, 0);
           expect(find.text('Failed to send reaction. Please try again.'), findsOneWidget);
-          expect(find.byType(WnMessageMenu), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsNothing);
         });
       });
     });
