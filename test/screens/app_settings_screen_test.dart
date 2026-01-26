@@ -62,11 +62,9 @@ void main() {
       expect(find.text('Theme'), findsOneWidget);
     });
 
-    testWidgets('displays current theme value in dropdown', (tester) async {
+    testWidgets('displays current theme and language values in dropdowns', (tester) async {
       await pumpAppSettingsScreen(tester);
-      // Theme dropdown shows "System" as default, language shows "English" by default
-      expect(find.text('System'), findsOneWidget);
-      expect(find.text('English'), findsOneWidget);
+      expect(find.text('System'), findsNWidgets(2));
     });
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
@@ -79,7 +77,6 @@ void main() {
     testWidgets('can select Light theme from dropdown', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      // Tap the dropdown to open it
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
@@ -108,8 +105,6 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
-      // When open, System appears in theme dropdown options and also in the language dropdown
-      // We need to tap the System option in the theme dropdown list - use first match
       await tester.tap(find.text('System').first);
       await tester.pumpAndSettle();
 
@@ -122,9 +117,7 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
 
-      // System appears twice: in theme header and in theme options list
-      // (language dropdown shows "English" by default, not "System")
-      expect(find.text('System'), findsNWidgets(2));
+      expect(find.text('System'), findsNWidgets(3));
       expect(find.text('Light'), findsOneWidget);
       expect(find.text('Dark'), findsOneWidget);
     });
@@ -163,7 +156,7 @@ void main() {
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
-      // Use first match since System appears in both theme and language dropdowns
+
       await tester.tap(find.text('System').first);
       await tester.pumpAndSettle();
       expect(mockApi.currentThemeMode, 'system');
@@ -182,7 +175,6 @@ void main() {
     });
 
     testWidgets('can select English from dropdown', (tester) async {
-      // Start with German so English isn't already selected
       mockApi.currentLanguage = 'de';
       await pumpAppSettingsScreen(tester);
 
@@ -196,7 +188,6 @@ void main() {
     });
 
     testWidgets('can select Spanish from dropdown', (tester) async {
-      // Start with English (default)
       mockApi.currentLanguage = 'en';
       await pumpAppSettingsScreen(tester);
 
@@ -242,7 +233,6 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
 
-      // Scroll down to find Italian (may be below fold)
       await tester.scrollUntilVisible(
         find.text('Italiano'),
         50.0,
@@ -263,7 +253,6 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
 
-      // Scroll down to find Portuguese (near bottom of list)
       await tester.scrollUntilVisible(
         find.text('Português'),
         50.0,
@@ -284,7 +273,6 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
 
-      // Scroll down to find Russian (near bottom of list)
       await tester.scrollUntilVisible(
         find.text('Русский'),
         50.0,
@@ -305,7 +293,6 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
 
-      // Scroll down to find Turkish (at bottom of list)
       await tester.scrollUntilVisible(
         find.text('Türkçe'),
         50.0,
@@ -320,17 +307,18 @@ void main() {
     });
 
     testWidgets('dropdown contains all 8 languages plus System', (tester) async {
-      mockApi.currentLanguage = 'de';
       await pumpAppSettingsScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
 
-      // Verify some visible languages first
+      expect(find.text('System'), findsNWidgets(3));
+
+      expect(find.text('Deutsch'), findsOneWidget);
       expect(find.text('English'), findsOneWidget);
       expect(find.text('Español'), findsOneWidget);
+      expect(find.text('Français'), findsOneWidget);
 
-      // Scroll to see more languages
       await tester.scrollUntilVisible(
         find.text('Türkçe'),
         50.0,
@@ -338,7 +326,9 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      // Verify Turkish is now visible
+      expect(find.text('Italiano'), findsOneWidget);
+      expect(find.text('Português'), findsOneWidget);
+      expect(find.text('Русский'), findsOneWidget);
       expect(find.text('Türkçe'), findsOneWidget);
     });
 
@@ -362,21 +352,18 @@ void main() {
     testWidgets('can switch languages multiple times', (tester) async {
       await pumpAppSettingsScreen(tester);
 
-      // Switch to Spanish
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Español'));
       await tester.pumpAndSettle();
       expect(mockApi.currentLanguage, 'es');
 
-      // Switch to French
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Français'));
       await tester.pumpAndSettle();
       expect(mockApi.currentLanguage, 'fr');
 
-      // Switch to German (avoiding English which would be duplicated)
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Deutsch'));
@@ -391,13 +378,9 @@ void main() {
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
 
-      // System appears twice: in theme header and in language options
-      // Use .last to tap the one in language dropdown options
       await tester.tap(find.text('System').last);
       await tester.pumpAndSettle();
 
-      // When System locale is selected, the resolved language is persisted
-      // The mock will still have a language code set (based on device locale fallback)
       expect(mockApi.currentLanguage, isNotEmpty);
     });
   });

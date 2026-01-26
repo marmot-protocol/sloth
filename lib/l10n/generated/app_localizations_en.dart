@@ -174,6 +174,12 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
+  String get profileLoadError => 'Unable to load profile. Please try again.';
+
+  @override
+  String get profileSaveError => 'Unable to save profile. Please try again.';
+
+  @override
   String get networkRelaysTitle => 'Network Relays';
 
   @override

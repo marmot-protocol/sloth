@@ -174,6 +174,14 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
+  String get profileLoadError =>
+      'Profil konnte nicht geladen werden. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get profileSaveError =>
+      'Profil konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.';
+
+  @override
   String get networkRelaysTitle => 'Netzwerk-Relays';
 
   @override

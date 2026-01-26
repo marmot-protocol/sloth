@@ -52,6 +52,8 @@
   "profileUpdatedSuccessfully": "Profil erfolgreich aktualisiert",
   "errorLoadingProfile": "Fehler beim Laden des Profils: {error}",
   "error": "Fehler: {error}",
+  "profileLoadError": "Profil konnte nicht geladen werden. Bitte versuchen Sie es erneut.",
+  "profileSaveError": "Profil konnte nicht gespeichert werden. Bitte versuchen Sie es erneut.",
   "networkRelaysTitle": "Netzwerk-Relays",
   "myRelays": "Meine Relays",
   "myRelaysHelp": "Relays, die du für alle deine Nostr-Anwendungen definiert hast.",

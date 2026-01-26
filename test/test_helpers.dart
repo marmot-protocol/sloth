@@ -36,6 +36,7 @@ Future<void> mountTestApp(
           builder: (context, ref, _) {
             return MaterialApp.router(
               routerConfig: Routes.build(ref),
+              locale: const Locale('en'),
               localizationsDelegates: _localizationsDelegates,
               supportedLocales: AppLocalizations.supportedLocales,
             );
@@ -53,6 +54,7 @@ Future<T Function()> mountHook<T>(
   late T result;
   await tester.pumpWidget(
     MaterialApp(
+      locale: const Locale('en'),
       localizationsDelegates: _localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
       home: _HookTestWidget<T>(useHook, (r) => result = r),
@@ -79,6 +81,7 @@ Future<void> mountWidget(Widget child, WidgetTester tester) async {
       designSize: testDesignSize,
       builder: (_, _) {
         return MaterialApp(
+          locale: const Locale('en'),
           localizationsDelegates: _localizationsDelegates,
           supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(body: child),
@@ -94,6 +97,7 @@ Future<void> mountStackedWidget(Widget child, WidgetTester tester) async {
     designSize: testDesignSize,
     builder: (_, _) {
       return MaterialApp(
+        locale: const Locale('en'),
         localizationsDelegates: _localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
         home: Scaffold(body: Stack(children: [child])),

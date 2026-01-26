@@ -67,6 +67,7 @@ void main() {
             designSize: testDesignSize,
             builder: (_, _) => MaterialApp.router(
               routerConfig: router,
+              locale: const Locale('en'),
               localizationsDelegates: const [
                 AppLocalizations.delegate,
                 GlobalMaterialLocalizations.delegate,

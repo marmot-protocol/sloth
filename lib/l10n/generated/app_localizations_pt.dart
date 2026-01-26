@@ -174,6 +174,12 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
+  String get profileLoadError => 'Não foi possível carregar o perfil. Por favor, tente novamente.';
+
+  @override
+  String get profileSaveError => 'Não foi possível salvar o perfil. Por favor, tente novamente.';
+
+  @override
   String get networkRelaysTitle => 'Relays de Rede';
 
   @override

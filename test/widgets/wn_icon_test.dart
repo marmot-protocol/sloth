@@ -103,7 +103,7 @@ void main() {
         const WnIcon(WnIcons.warning),
         tester,
       );
-      // IconTheme.of(context).color may return a default, so just verify widget renders
+
       expect(find.byType(SvgPicture), findsOneWidget);
     });
 
@@ -203,7 +203,6 @@ void main() {
       final parentIcon = tester.widget<WnIcon>(find.byKey(const Key('parent_icon')));
       final childIcon = tester.widget<WnIcon>(find.byKey(const Key('child_icon')));
 
-      // Find SVG pictures by their parent WnIcon keys
       final parentSvg = tester.widget<SvgPicture>(
         find.descendant(
           of: find.byKey(const Key('parent_icon')),
@@ -273,7 +272,6 @@ void main() {
 
       final enumFilenames = WnIcons.values.map((e) => e.filename).toSet();
 
-      // Files that exist but have no enum entry (excluding non-icon SVGs)
       final knownNonIconSvgs = {'pixels', 'whitenoise'};
       final orphanedFiles = svgFiles.difference(enumFilenames).difference(knownNonIconSvgs);
 
@@ -292,11 +290,10 @@ void main() {
         tester,
       );
       final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      // Default size is 24.w which scales with ScreenUtil
-      // Just verify it has a reasonable positive size (scaled from 24)
+
       expect(svgPicture.width, greaterThan(0));
       expect(svgPicture.height, greaterThan(0));
-      expect(svgPicture.width, svgPicture.height); // Should be square
+      expect(svgPicture.width, svgPicture.height);
     });
 
     testWidgets('uses default size consistently across different icons', (tester) async {

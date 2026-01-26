@@ -174,6 +174,12 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
+  String get profileLoadError => 'Profil yüklenemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get profileSaveError => 'Profil kaydedilemedi. Lütfen tekrar deneyin.';
+
+  @override
   String get networkRelaysTitle => 'Ağ Röleleri';
 
   @override

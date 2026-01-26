@@ -52,6 +52,8 @@
   "profileUpdatedSuccessfully": "Profil başarıyla güncellendi",
   "errorLoadingProfile": "Profil yüklenirken hata: {error}",
   "error": "Hata: {error}",
+  "profileLoadError": "Profil yüklenemedi. Lütfen tekrar deneyin.",
+  "profileSaveError": "Profil kaydedilemedi. Lütfen tekrar deneyin.",
   "networkRelaysTitle": "Ağ Röleleri",
   "myRelays": "Rölelerim",
   "myRelaysHelp": "Tüm Nostr uygulamalarınızda kullanmak üzere tanımladığınız röleler.",

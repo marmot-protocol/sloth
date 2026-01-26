@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState, useEditProfile;
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
@@ -15,6 +16,8 @@ import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
+
+final _logger = Logger('EditProfileScreen');
 
 class EditProfileScreen extends HookConsumerWidget {
   const EditProfileScreen({super.key});
@@ -52,16 +55,22 @@ class EditProfileScreen extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WnScreenHeader(title: context.l10n.editProfile),
-                if (state.error != null)
-                  Center(
-                    child: Text(
-                      state.currentMetadata == null
-                          ? context.l10n.errorLoadingProfile(state.error!)
-                          : context.l10n.error(state.error!),
-                      style: TextStyle(color: colors.fillDestructive),
-                    ),
-                  )
-                else
+                if (state.error != null) ...[
+                  Builder(
+                    builder: (context) {
+                      _logger.warning('Profile error: ${state.error}');
+                      final message = state.currentMetadata == null
+                          ? context.l10n.profileLoadError
+                          : context.l10n.profileSaveError;
+                      return Center(
+                        child: Text(
+                          message,
+                          style: TextStyle(color: colors.fillDestructive),
+                        ),
+                      );
+                    },
+                  ),
+                ] else
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(

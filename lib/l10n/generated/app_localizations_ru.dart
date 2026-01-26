@@ -173,6 +173,12 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
+  String get profileLoadError => 'Не удалось загрузить профиль. Пожалуйста, попробуйте снова.';
+
+  @override
+  String get profileSaveError => 'Не удалось сохранить профиль. Пожалуйста, попробуйте снова.';
+
+  @override
   String get networkRelaysTitle => 'Сетевые Реле';
 
   @override

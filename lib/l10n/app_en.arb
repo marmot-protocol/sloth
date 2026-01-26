@@ -271,6 +271,16 @@
     }
   },
 
+  "profileLoadError": "Unable to load profile. Please try again.",
+  "@profileLoadError": {
+    "description": "User-friendly error when profile fails to load"
+  },
+
+  "profileSaveError": "Unable to save profile. Please try again.",
+  "@profileSaveError": {
+    "description": "User-friendly error when profile fails to save"
+  },
+
   "networkRelaysTitle": "Network Relays",
   "@networkRelaysTitle": {
     "description": "Network relays screen title"

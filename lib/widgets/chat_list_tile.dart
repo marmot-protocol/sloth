@@ -78,7 +78,6 @@ class ChatListTile extends HookConsumerWidget {
       subtitle = chatSummary.lastMessage?.content ?? '';
     }
 
-    // Display timestamp: last message time or chat creation time
     final timestamp = chatSummary.lastMessage?.createdAt ?? chatSummary.createdAt;
     final formattedTime = formatters.formatRelativeTime(timestamp, context.l10n);
 

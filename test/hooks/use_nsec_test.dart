@@ -171,7 +171,6 @@ void main() {
       await result.loadNsec();
       await tester.pumpAndSettle();
 
-      // State should remain unchanged - no loading, no error, no nsec
       expect(result.state.nsec, isNull);
       expect(result.state.isLoading, isFalse);
       expect(result.state.error, isNull);
@@ -182,13 +181,11 @@ void main() {
       await _pump(tester, overrides);
       await tester.pump();
 
-      // Verify initial state has no nsec
       expect(result.state.nsec, isNull);
 
       await result.loadNsec();
       await tester.pumpAndSettle();
 
-      // After error, nsec should still be null (copyWith preserves null when nsec not provided)
       expect(result.state.nsec, isNull);
       expect(result.state.error, isNotNull);
     });

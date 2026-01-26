@@ -106,7 +106,6 @@ class MockWnApi implements RustLibApi {
     required FlutterMetadata metadata,
   }) async {}
 
-  // Theme methods
   @override
   rust_api.ThemeMode crateApiUtilsThemeModeLight() => const MockThemeMode('light');
 
@@ -145,7 +144,6 @@ class MockWnApi implements RustLibApi {
     }
   }
 
-  // Language methods
   @override
   rust_api.Language crateApiUtilsLanguageEnglish() => const MockLanguage('en');
 

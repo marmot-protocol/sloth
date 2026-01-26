@@ -52,6 +52,8 @@
   "profileUpdatedSuccessfully": "Профиль успешно обновлён",
   "errorLoadingProfile": "Ошибка загрузки профиля: {error}",
   "error": "Ошибка: {error}",
+  "profileLoadError": "Не удалось загрузить профиль. Пожалуйста, попробуйте снова.",
+  "profileSaveError": "Не удалось сохранить профиль. Пожалуйста, попробуйте снова.",
   "networkRelaysTitle": "Сетевые Реле",
   "myRelays": "Мои Реле",
   "myRelaysHelp": "Реле, которые вы определили для использования во всех ваших приложениях Nostr.",

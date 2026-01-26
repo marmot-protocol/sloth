@@ -224,7 +224,7 @@ jobs:
         ERRORS=0
 
         # Extract keys from English template (excluding @metadata keys)
-        TEMPLATE_KEYS=$(grep -oE '^  "[^@][^"]*"' "$TEMPLATE" | tr -d ' "' | sort)
+        TEMPLATE_KEYS=$(grep -oE '^[[:space:]]*"[^@][^"]*"' "$TEMPLATE" | tr -d ' "' | sort)
 
         echo "=== L10n Validation ==="
         echo "Template: $TEMPLATE"
@@ -237,7 +237,7 @@ jobs:
           fi
 
           LANG=$(basename "$ARB" .arb | sed 's/app_//')
-          ARB_KEYS=$(grep -oE '^  "[^@][^"]*"' "$ARB" | tr -d ' "' | sort)
+          ARB_KEYS=$(grep -oE '^[[:space:]]*"[^@][^"]*"' "$ARB" | tr -d ' "' | sort)
 
           MISSING=$(comm -23 <(echo "$TEMPLATE_KEYS") <(echo "$ARB_KEYS"))
 

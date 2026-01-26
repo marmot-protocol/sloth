@@ -52,6 +52,8 @@
   "profileUpdatedSuccessfully": "Profilo aggiornato con successo",
   "errorLoadingProfile": "Errore nel caricamento del profilo: {error}",
   "error": "Errore: {error}",
+  "profileLoadError": "Impossibile caricare il profilo. Riprova.",
+  "profileSaveError": "Impossibile salvare il profilo. Riprova.",
   "networkRelaysTitle": "Relay di Rete",
   "myRelays": "I Miei Relay",
   "myRelaysHelp": "Relay che hai definito per l'uso in tutte le tue applicazioni Nostr.",

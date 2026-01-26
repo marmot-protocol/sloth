@@ -52,6 +52,8 @@
   "profileUpdatedSuccessfully": "Perfil actualizado correctamente",
   "errorLoadingProfile": "Error al cargar el perfil: {error}",
   "error": "Error: {error}",
+  "profileLoadError": "No se pudo cargar el perfil. Por favor, inténtelo de nuevo.",
+  "profileSaveError": "No se pudo guardar el perfil. Por favor, inténtelo de nuevo.",
   "networkRelaysTitle": "Relés de Red",
   "myRelays": "Mis Relés",
   "myRelaysHelp": "Relés que has definido para usar en todas tus aplicaciones Nostr.",

@@ -68,7 +68,7 @@ void main() {
     group('when copying lightning address', () {
       testWidgets('shows feedback message', (tester) async {
         await pumpDonateScreen(tester);
-        // Tap the first copy button (lightning address)
+
         await tester.tap(find.byKey(const Key('copy_button')).first);
         await tester.pump();
 
@@ -78,7 +78,7 @@ void main() {
       testWidgets('saves lightning address to clipboard', (tester) async {
         final getClipboard = mockClipboard();
         await pumpDonateScreen(tester);
-        // Tap the first copy button (lightning address)
+
         await tester.tap(find.byKey(const Key('copy_button')).first);
         await tester.pump();
 
@@ -89,7 +89,7 @@ void main() {
     group('when copying bitcoin address', () {
       testWidgets('shows feedback message', (tester) async {
         await pumpDonateScreen(tester);
-        // Tap the second copy button (bitcoin address)
+
         await tester.tap(find.byKey(const Key('copy_button')).last);
         await tester.pump();
 
@@ -99,7 +99,7 @@ void main() {
       testWidgets('saves bitcoin address to clipboard', (tester) async {
         final getClipboard = mockClipboard();
         await pumpDonateScreen(tester);
-        // Tap the second copy button (bitcoin address)
+
         await tester.tap(find.byKey(const Key('copy_button')).last);
         await tester.pump();
 

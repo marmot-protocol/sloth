@@ -52,6 +52,8 @@
   "profileUpdatedSuccessfully": "Profil mis à jour avec succès",
   "errorLoadingProfile": "Erreur lors du chargement du profil : {error}",
   "error": "Erreur : {error}",
+  "profileLoadError": "Impossible de charger le profil. Veuillez réessayer.",
+  "profileSaveError": "Impossible d'enregistrer le profil. Veuillez réessayer.",
   "networkRelaysTitle": "Relais Réseau",
   "myRelays": "Mes Relais",
   "myRelaysHelp": "Relais que vous avez définis pour une utilisation dans toutes vos applications Nostr.",

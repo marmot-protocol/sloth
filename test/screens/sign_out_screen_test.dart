@@ -152,12 +152,11 @@ void main() {
       await pumpSignOutScreen(tester);
       await tester.pumpAndSettle();
 
-      // Scroll to the bottom to find the sign out button
       await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
       await tester.pumpAndSettle();
 
       final signOutButtons = find.text('Sign out');
-      // Find the button (not the header title)
+
       await tester.tap(signOutButtons.last);
       await tester.pumpAndSettle();
 
@@ -166,21 +165,13 @@ void main() {
     });
 
     testWidgets('renders empty widget when pubkey becomes null during logout', (tester) async {
-      // This test verifies the fix for issue #35: during logout, there's a race
-      // condition where authProvider sets pubkey to null but widgets are still
-      // mounted and try to rebuild. The screen should handle this gracefully
-      // by returning SizedBox.shrink() instead of throwing.
       await pumpSignOutScreen(tester);
 
-      // Verify screen is showing normally first
       expect(find.text('Sign out'), findsWidgets);
 
-      // Now simulate the logout race condition by setting pubkey to null
       mockAuth.state = const AsyncData(null);
       await tester.pump();
 
-      // The screen should now render an empty widget without throwing
-      // The sign out content should no longer be visible
       expect(find.text('Are you sure you want to sign out?'), findsNothing);
       expect(find.byType(WnTextFormField), findsNothing);
     });

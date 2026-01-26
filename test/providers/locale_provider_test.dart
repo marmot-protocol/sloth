@@ -3,10 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sloth/l10n/generated/app_localizations_en.dart';
+import 'package:sloth/providers/auth_provider.dart' show secureStorageProvider;
 import 'package:sloth/providers/locale_provider.dart';
 import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 
 class _MockApi extends MockWnApi {
@@ -34,6 +36,7 @@ class _MockApi extends MockWnApi {
 
 void main() {
   late _MockApi mockApi;
+  late MockSecureStorage mockStorage;
   late ProviderContainer container;
 
   setUpAll(() {
@@ -45,7 +48,12 @@ void main() {
     mockApi.reset();
     mockApi.shouldFailGetAppSettings = false;
     mockApi.shouldFailUpdateLanguage = false;
-    container = ProviderContainer();
+    mockStorage = MockSecureStorage();
+    container = ProviderContainer(
+      overrides: [
+        secureStorageProvider.overrideWithValue(mockStorage),
+      ],
+    );
   });
 
   tearDown(() {
@@ -53,8 +61,8 @@ void main() {
   });
 
   group('LocaleNotifier', () {
-    test('initializes with language from app settings', () async {
-      mockApi.currentLanguage = 'de';
+    test('initializes with language from secure storage', () async {
+      await mockStorage.write(key: 'locale_preference', value: 'de');
 
       final localeSetting = await container.read(localeProvider.future);
 
@@ -62,11 +70,10 @@ void main() {
       expect((localeSetting as SpecificLocale).locale.languageCode, 'de');
     });
 
-    test('returns English locale by default', () async {
+    test('returns SystemLocale by default when no preference stored', () async {
       final localeSetting = await container.read(localeProvider.future);
 
-      expect(localeSetting, isA<SpecificLocale>());
-      expect((localeSetting as SpecificLocale).locale.languageCode, 'en');
+      expect(localeSetting, isA<SystemLocale>());
     });
 
     test('setLocale updates to Spanish', () async {
@@ -140,7 +147,7 @@ void main() {
     });
 
     test('setLocale can switch back to English', () async {
-      mockApi.currentLanguage = 'de';
+      await mockStorage.write(key: 'locale_preference', value: 'de');
       await container.read(localeProvider.future);
       await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('en')));
 
@@ -150,8 +157,16 @@ void main() {
       expect(mockApi.currentLanguage, 'en');
     });
 
-    test('returns SystemLocale when getAppSettings fails', () async {
-      mockApi.shouldFailGetAppSettings = true;
+    test('returns SystemLocale when stored value is "system"', () async {
+      await mockStorage.write(key: 'locale_preference', value: 'system');
+
+      final localeSetting = await container.read(localeProvider.future);
+
+      expect(localeSetting, isA<SystemLocale>());
+    });
+
+    test('returns SystemLocale when stored locale is not supported', () async {
+      await mockStorage.write(key: 'locale_preference', value: 'xx');
 
       final localeSetting = await container.read(localeProvider.future);
 
@@ -169,7 +184,7 @@ void main() {
     });
 
     test('setLocale reverts state when persist fails', () async {
-      // Start with English
+      await mockStorage.write(key: 'locale_preference', value: 'en');
       await container.read(localeProvider.future);
       final initialState = container.read(localeProvider).value;
       expect((initialState as SpecificLocale).locale.languageCode, 'en');
@@ -178,23 +193,22 @@ void main() {
 
       try {
         await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
-      } on LocalePersistenceException {
-        // Expected
-      }
+      } on LocalePersistenceException catch (_) {}
 
-      // State should remain English
       final current = container.read(localeProvider).value;
       expect(current, isA<SpecificLocale>());
       expect((current as SpecificLocale).locale.languageCode, 'en');
     });
 
     test('setLocale to SystemLocale works', () async {
-      mockApi.currentLanguage = 'de';
+      await mockStorage.write(key: 'locale_preference', value: 'de');
       await container.read(localeProvider.future);
       await container.read(localeProvider.notifier).setLocale(const SystemLocale());
 
       final current = container.read(localeProvider).value;
       expect(current, isA<SystemLocale>());
+      final storedValue = await mockStorage.read(key: 'locale_preference');
+      expect(storedValue, 'system');
     });
 
     test('resolveLocale returns English for SpecificLocale(en)', () async {
@@ -218,19 +232,15 @@ void main() {
     test('can switch languages multiple times', () async {
       await container.read(localeProvider.future);
 
-      // Switch to Spanish
       await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('es')));
       expect(mockApi.currentLanguage, 'es');
 
-      // Switch to French
       await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
       expect(mockApi.currentLanguage, 'fr');
 
-      // Switch to Russian
       await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('ru')));
       expect(mockApi.currentLanguage, 'ru');
 
-      // Switch back to English
       await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('en')));
       expect(mockApi.currentLanguage, 'en');
     });
@@ -326,7 +336,7 @@ void main() {
       final formatters = LocaleFormatters('en');
       final date = DateTime(2026, 1, 25);
       final formatted = formatters.formatDateShort(date);
-      // US format: M/d/yy
+
       expect(formatted, contains('1'));
       expect(formatted, contains('25'));
       expect(formatted, contains('26'));
@@ -336,7 +346,7 @@ void main() {
       final formatters = LocaleFormatters('de');
       final date = DateTime(2026, 1, 25);
       final formatted = formatters.formatDateShort(date);
-      // German format uses dots as separators
+
       expect(formatted, contains('25'));
       expect(formatted, contains('.'));
     });
@@ -354,7 +364,7 @@ void main() {
       final formatters = LocaleFormatters('en');
       final time = DateTime(2026, 1, 25, 14, 30);
       final formatted = formatters.formatTime(time);
-      // Should contain either AM/PM format or 24h format
+
       expect(formatted.isNotEmpty, isTrue);
     });
 
@@ -411,7 +421,7 @@ void main() {
       final l10n = AppLocalizationsEn();
       final twoWeeksAgo = DateTime.now().subtract(const Duration(days: 14));
       final formatted = formatters.formatRelativeTime(twoWeeksAgo, l10n);
-      // Should fall back to medium date format
+
       expect(formatted, isNot(contains('ago')));
     });
   });

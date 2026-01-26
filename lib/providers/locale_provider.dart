@@ -5,12 +5,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/l10n/generated/app_localizations.dart';
+import 'package:sloth/providers/auth_provider.dart' show secureStorageProvider;
 import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/api/utils.dart' as rust_utils;
 
 final _logger = Logger('LocaleNotifier');
+const _localePreferenceKey = 'locale_preference';
+const _systemLocaleValue = 'system';
 
-/// Exception thrown when locale persistence fails
 class LocalePersistenceException implements Exception {
   final String message;
   final Object? cause;
@@ -20,7 +22,6 @@ class LocalePersistenceException implements Exception {
   String toString() => 'LocalePersistenceException: $message';
 }
 
-/// Represents the locale setting - either system default or a specific locale
 sealed class LocaleSetting {
   const LocaleSetting();
 }
@@ -51,30 +52,49 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
   @override
   Future<LocaleSetting> build() async {
     try {
-      final appSettings = await rust_api.getAppSettings();
-      final rustLanguage = await rust_api.appSettingsLanguage(appSettings: appSettings);
-      final languageCode = rust_utils.languageToString(language: rustLanguage);
-      return SpecificLocale(Locale(languageCode));
+      final storage = ref.read(secureStorageProvider);
+      final storedPreference = await storage.read(key: _localePreferenceKey);
+
+      if (storedPreference == null || storedPreference == _systemLocaleValue) {
+        return const SystemLocale();
+      }
+
+      // Validate that the stored language code is supported
+      final isSupported = AppLocalizations.supportedLocales.any(
+        (l) => l.languageCode == storedPreference,
+      );
+      if (isSupported) {
+        return SpecificLocale(Locale(storedPreference));
+      }
+
+      _logger.warning('Stored locale "$storedPreference" not supported, using system default');
+      return const SystemLocale();
     } catch (e) {
       _logger.warning('Failed to load locale settings, using system default: $e');
       return const SystemLocale();
     }
   }
 
-  /// Updates the locale setting.
-  ///
-  /// Persists the setting first, then updates UI state on success.
-  /// Throws [LocalePersistenceException] if persistence fails.
   Future<void> setLocale(LocaleSetting setting) async {
     final previousState = state.value;
     try {
+      final storage = ref.read(secureStorageProvider);
+
+      // Persist the preference to secure storage
+      final preferenceValue = switch (setting) {
+        SystemLocale() => _systemLocaleValue,
+        SpecificLocale(locale: final locale) => locale.languageCode,
+      };
+      await storage.write(key: _localePreferenceKey, value: preferenceValue);
+
+      // Update the rust API with the resolved language
       final rustLanguage = _settingToRustLanguage(setting);
       await rust_api.updateLanguage(language: rustLanguage);
+
       state = AsyncData(setting);
       _logger.info('Locale setting updated to: $setting');
     } catch (e) {
       _logger.warning('Failed to persist locale settings: $e');
-      // Ensure state remains unchanged on failure
       if (previousState != null) {
         state = AsyncData(previousState);
       }
@@ -82,9 +102,6 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
     }
   }
 
-  /// Resolves the actual locale to use based on the current setting.
-  /// If system locale, uses device locale (falling back to English if unsupported).
-  /// If specific locale, uses that locale directly.
   Locale resolveLocale() {
     final currentState = state.value ?? const SystemLocale();
     return switch (currentState) {
@@ -137,7 +154,6 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
 
 final localeProvider = AsyncNotifierProvider<LocaleNotifier, LocaleSetting>(LocaleNotifier.new);
 
-/// Helper to get the display name for a locale
 String getLanguageDisplayName(String languageCode) {
   return switch (languageCode) {
     'de' => 'Deutsch',
@@ -152,39 +168,31 @@ String getLanguageDisplayName(String languageCode) {
   };
 }
 
-/// Locale-aware formatting utilities
 class LocaleFormatters {
   final String _localeCode;
 
   LocaleFormatters(this._localeCode);
 
-  /// Formats a date in short format (e.g., "1/25/26" or "25.01.26")
   String formatDateShort(DateTime date) {
     return DateFormat.yMd(_localeCode).format(date);
   }
 
-  /// Formats a date in medium format (e.g., "Jan 25, 2026" or "25 janv. 2026")
   String formatDateMedium(DateTime date) {
     return DateFormat.yMMMd(_localeCode).format(date);
   }
 
-  /// Formats a date in long format (e.g., "January 25, 2026")
   String formatDateLong(DateTime date) {
     return DateFormat.yMMMMd(_localeCode).format(date);
   }
 
-  /// Formats time (e.g., "9:30 AM" or "09:30")
   String formatTime(DateTime time) {
     return DateFormat.jm(_localeCode).format(time);
   }
 
-  /// Formats date and time together
   String formatDateTime(DateTime dateTime) {
     return '${formatDateMedium(dateTime)} ${formatTime(dateTime)}';
   }
 
-  /// Formats a relative time (e.g., "2 hours ago", "yesterday")
-  /// Requires AppLocalizations for proper localized strings.
   String formatRelativeTime(DateTime dateTime, AppLocalizations l10n) {
     final now = DateTime.now();
     final difference = now.difference(dateTime);
@@ -202,12 +210,10 @@ class LocaleFormatters {
     }
   }
 
-  /// Formats a number with locale-appropriate grouping (e.g., "1,234" or "1.234")
   String formatNumber(num number) {
     return NumberFormat.decimalPattern(_localeCode).format(number);
   }
 
-  /// Formats a number as currency
   String formatCurrency(num amount, {String? symbol}) {
     final format = NumberFormat.currency(
       locale: _localeCode,
@@ -217,23 +223,28 @@ class LocaleFormatters {
     return format.format(amount).trim();
   }
 
-  /// Formats a number as a compact representation (e.g., "1.2K", "3.4M")
   String formatCompact(num number) {
     return NumberFormat.compact(locale: _localeCode).format(number);
   }
 
-  /// Formats a percentage (e.g., "85%" or "85 %")
   String formatPercent(double value) {
     return NumberFormat.percentPattern(_localeCode).format(value);
   }
 }
 
-/// Provider for locale-aware formatters
 final localeFormattersProvider = Provider<LocaleFormatters>((ref) {
   final localeSetting = ref.watch(localeProvider).value ?? const SystemLocale();
   final localeCode = switch (localeSetting) {
-    SystemLocale() => PlatformDispatcher.instance.locale.languageCode,
+    SystemLocale() => _resolveSystemLanguageCode(),
     SpecificLocale(locale: final locale) => locale.languageCode,
   };
   return LocaleFormatters(localeCode);
 });
+
+String _resolveSystemLanguageCode() {
+  final deviceLocale = PlatformDispatcher.instance.locale;
+  final isSupported = AppLocalizations.supportedLocales.any(
+    (l) => l.languageCode == deviceLocale.languageCode,
+  );
+  return isSupported ? deviceLocale.languageCode : 'en';
+}

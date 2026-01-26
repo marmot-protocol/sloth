@@ -420,6 +420,18 @@ abstract class AppLocalizations {
   /// **'Error: {error}'**
   String error(String error);
 
+  /// User-friendly error when profile fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to load profile. Please try again.'**
+  String get profileLoadError;
+
+  /// User-friendly error when profile fails to save
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to save profile. Please try again.'**
+  String get profileSaveError;
+
   /// Network relays screen title
   ///
   /// In en, this message translates to:

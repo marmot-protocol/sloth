@@ -96,8 +96,7 @@ class _MockApi extends MockWnApi {
     List<Tag>? tags,
   }) async {
     _sendCallCount++;
-    // NIP-09: Deletion messages have kind 5
-    // NIP-25: Reaction messages have kind 7
+
     if (kind == 5) {
       if (deleteError != null) throw deleteError!;
       deletionCalls.add((groupId: groupId, kind: kind, tags: tags));

@@ -118,8 +118,6 @@ void main() {
       });
 
       testWidgets('copies updated value when value prop changes', (tester) async {
-        // This test verifies the fix: copy should use controller.text (the displayed value)
-        // not the stale initial value prop
         await mountWidget(
           const WnCopyableField(
             label: 'Label',
@@ -128,7 +126,6 @@ void main() {
           tester,
         );
 
-        // Rebuild with new value
         await mountWidget(
           const WnCopyableField(
             label: 'Label',
