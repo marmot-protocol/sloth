@@ -56,6 +56,7 @@ l10n-check:
     fi
     @echo "✅ L10n files are up-to-date"
 
+
 # ==============================================================================
 # DEPENDENCIES
 # ==============================================================================
@@ -143,6 +144,10 @@ coverage-report:
   ./scripts/check-coverage.sh && \
   genhtml coverage/lcov.info -o coverage/html
   @echo "📊 Coverage report generated at coverage/html/index.html"
+
+validate-locales-keys:
+    @echo "🔍 Validating l10n keys..."
+    ./scripts/validate-locales-keys.sh
 
 # ==============================================================================
 # CLEANING
