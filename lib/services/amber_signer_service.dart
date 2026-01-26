@@ -154,6 +154,12 @@ class AmberSignerService {
         throw const AmberSignerException('NO_PUBKEY', 'Signer did not return a public key');
       }
 
+      // Save the signer package name if returned
+      if (response.packageName != null && response.packageName!.isNotEmpty) {
+        await setSignerPackageName(response.packageName!);
+        _logger.fine('Saved signer package name: ${response.packageName}');
+      }
+
       return response.result!;
     } on PlatformException catch (e) {
       _logger.warning('Failed to get public key: ${e.code} - ${e.message}');
