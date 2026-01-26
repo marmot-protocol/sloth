@@ -3,7 +3,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
