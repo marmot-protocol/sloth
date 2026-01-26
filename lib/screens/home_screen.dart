@@ -4,11 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
-import 'package:sloth/extensions/build_context.dart';
-import 'package:sloth/providers/amber_provider.dart' show amberProvider;
+import 'package:sloth/hooks/use_amber.dart' show useAmber;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/amber_signer_service.dart' show AmberSignerException;
+import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
 import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
@@ -20,15 +20,19 @@ class HomeScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final amberState = ref.watch(amberProvider);
-    final isAmberLoading = useState(false);
+    final amber = useAmber();
     final amberError = useState<String?>(null);
 
     Future<void> onAmberLogin() async {
-      isAmberLoading.value = true;
       amberError.value = null;
       try {
-        await ref.read(authProvider.notifier).loginWithAmber();
+        final pubkey = await amber.connect();
+        await ref
+            .read(authProvider.notifier)
+            .loginWithAmber(
+              pubkey: pubkey,
+              onDisconnect: amber.disconnect,
+            );
         if (context.mounted) {
           Routes.goToChatList(context);
         }
@@ -38,8 +42,6 @@ class HomeScreen extends HookConsumerWidget {
             : 'Amber error: ${e.message}';
       } catch (e) {
         amberError.value = 'Unable to connect to Amber. Please try again.';
-      } finally {
-        isAmberLoading.value = false;
       }
     }
 
@@ -48,7 +50,7 @@ class HomeScreen extends HookConsumerWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          WnPixelsLayer(isAnimating: isAmberLoading.value),
+          WnPixelsLayer(isAnimating: amber.isConnecting),
           SafeArea(
             child: Column(
               children: [
@@ -61,7 +63,7 @@ class HomeScreen extends HookConsumerWidget {
                         SvgPicture.asset(
                           'assets/svgs/whitenoise.svg',
                           colorFilter: ColorFilter.mode(
-                            colors.foregroundPrimary,
+                            colors.backgroundContentPrimary,
                             BlendMode.srcIn,
                           ),
                         ),
@@ -73,7 +75,7 @@ class HomeScreen extends HookConsumerWidget {
                             fontWeight: FontWeight.w700,
                             fontSize: 48.sp,
                             letterSpacing: -0.6.sp,
-                            color: context.colors.foregroundPrimary,
+                            color: context.colors.backgroundContentPrimary,
                           ),
                         ),
                         Text(
@@ -83,7 +85,7 @@ class HomeScreen extends HookConsumerWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18.sp,
                             letterSpacing: 0.1.sp,
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                           ),
                         ),
                         Text(
@@ -93,7 +95,7 @@ class HomeScreen extends HookConsumerWidget {
                             fontWeight: FontWeight.w600,
                             fontSize: 18.sp,
                             letterSpacing: 0.1.sp,
-                            color: context.colors.foregroundTertiary,
+                            color: context.colors.backgroundContentTertiary,
                           ),
                         ),
                       ],
@@ -105,12 +107,12 @@ class HomeScreen extends HookConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.stretch,
                     children: [
                       // Show Amber login button if Amber is available
-                      if (amberState.value?.isAvailable ?? false) ...[
+                      if (amber.isAvailable) ...[
                         WnFilledButton(
                           key: const Key('amber_login_button'),
                           text: 'Login with Amber',
                           onPressed: onAmberLogin,
-                          loading: isAmberLoading.value,
+                          loading: amber.isConnecting,
                         ),
                         if (amberError.value != null) ...[
                           Gap(4.h),
@@ -119,7 +121,7 @@ class HomeScreen extends HookConsumerWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: colors.foregroundTertiary,
+                              color: colors.backgroundContentTertiary,
                             ),
                           ),
                         ],
@@ -130,13 +132,13 @@ class HomeScreen extends HookConsumerWidget {
                         onPressed: () {
                           Routes.pushToLogin(context);
                         },
-                        disabled: isAmberLoading.value,
+                        disabled: amber.isConnecting,
                       ),
                       Gap(8.h),
                       WnFilledButton(
                         text: 'Sign Up',
                         onPressed: () => Routes.pushToSignup(context),
-                        disabled: isAmberLoading.value,
+                        disabled: amber.isConnecting,
                       ),
                     ],
                   ),

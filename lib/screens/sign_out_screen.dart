@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sloth/hooks/use_amber.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
@@ -21,6 +22,7 @@ class SignOutScreen extends HookConsumerWidget {
     final colors = context.colors;
     final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
+    final amber = useAmber();
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
 
@@ -39,7 +41,11 @@ class SignOutScreen extends HookConsumerWidget {
 
     Future<void> signOut() async {
       isLoggingOut.value = true;
-      await ref.read(authProvider.notifier).logout();
+      await ref
+          .read(authProvider.notifier)
+          .logout(
+            onAmberDisconnect: amber.disconnect,
+          );
       if (context.mounted) {
         Routes.goToHome(context);
       }
