@@ -4,7 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show WidgetRef;
 import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
 import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
-import 'package:sloth/providers/auth_provider.dart' show authProvider, isAddingAccountProvider;
+import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:sloth/screens/add_profile_screen.dart' show AddProfileScreen;
 import 'package:sloth/screens/app_settings_screen.dart' show AppSettingsScreen;
 import 'package:sloth/screens/chat_invite_screen.dart' show ChatInviteScreen;

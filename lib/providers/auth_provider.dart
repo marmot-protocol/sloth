@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
+import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/users.dart' as users_api;
@@ -101,14 +102,3 @@ class AuthNotifier extends AsyncNotifier<String?> {
 }
 
 final authProvider = AsyncNotifierProvider<AuthNotifier, String?>(AuthNotifier.new);
-
-class IsAddingAccountNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-
-  void set(bool value) => state = value;
-}
-
-final isAddingAccountProvider = NotifierProvider<IsAddingAccountNotifier, bool>(
-  IsAddingAccountNotifier.new,
-);
