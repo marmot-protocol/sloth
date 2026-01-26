@@ -37,9 +37,7 @@ class HomeScreen extends HookConsumerWidget {
           Routes.goToChatList(context);
         }
       } on AmberSignerException catch (e) {
-        amberError.value = e.code == 'USER_REJECTED'
-            ? 'Login cancelled'
-            : 'Amber error: ${e.message}';
+        amberError.value = e.userFriendlyMessage;
       } catch (e) {
         amberError.value = 'Unable to connect to Amber. Please try again.';
       }
