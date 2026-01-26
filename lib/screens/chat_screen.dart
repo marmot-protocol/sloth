@@ -68,9 +68,9 @@ class ChatScreen extends HookConsumerWidget {
       );
     }
 
-    void showMessageMenu(ChatMessage message) {
+    Future<void> showMessageMenu(ChatMessage message) async {
       FocusScope.of(context).unfocus();
-      MessageActionsScreen.show(
+      await MessageActionsScreen.show(
         context,
         message: message,
         pubkey: pubkey,
@@ -81,6 +81,7 @@ class ChatScreen extends HookConsumerWidget {
         ),
         onReaction: (emoji) => sendReaction(message, emoji),
       );
+      if (context.mounted) FocusManager.instance.primaryFocus?.unfocus();
     }
 
     return GestureDetector(

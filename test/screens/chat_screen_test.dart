@@ -497,6 +497,48 @@ void main() {
         expect(textField.focusNode!.hasFocus, isFalse);
       });
 
+      testWidgets('unfocuses text field when closing message actions', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isTrue);
+
+        await longPressMessage(tester, 'm1');
+        expect(textField.focusNode!.hasFocus, isFalse);
+
+        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MessageActionsScreen), findsNothing);
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+
+      testWidgets('unfocuses text field after selecting reaction', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isTrue);
+
+        await longPressMessage(tester, 'm1');
+        expect(textField.focusNode!.hasFocus, isFalse);
+
+        await tester.tap(find.text('❤'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(MessageActionsScreen), findsNothing);
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+
       group('message deletion', () {
         testWidgets('calls API when Delete is tapped', (tester) async {
           _api.initialMessages = [
