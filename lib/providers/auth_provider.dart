@@ -195,11 +195,12 @@ class AuthNotifier extends AsyncNotifier<String?> {
     final storage = ref.read(secureStorageProvider);
     final method = await storage.read(key: _loginMethodKey);
     if (method == null) return null;
-    final loginMethod = LoginMethod.values.where((e) => e.name == method).firstOrNull;
-    if (loginMethod == null) {
+
+    try {
+      return LoginMethod.values.firstWhere((e) => e.name == method);
+    } catch (e) {
       throw StateError('Unknown login method in storage: $method');
     }
-    return loginMethod;
   }
 
   /// Whether the current session is using Amber for signing.
