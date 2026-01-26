@@ -1,10 +1,26 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:sloth/providers/auth_provider.dart';
 
-final accountPubkeyProvider = Provider<String>((ref) {
-  final pubkey = ref.watch(authProvider).value;
-  if (pubkey == null) {
-    throw StateError('accountPubkeyProvider accessed without authentication');
+class AccountPubkeyNotifier extends Notifier<String> {
+  @override
+  String build() {
+    ref.listen(authProvider, (_, next) {
+      final pubkey = next.value;
+      if (pubkey != null && pubkey != state) {
+        state = pubkey;
+      } else if (pubkey == null && next.hasValue) {
+        ref.invalidateSelf();
+      }
+    });
+
+    final pubkey = ref.read(authProvider).value;
+    if (pubkey == null) {
+      throw StateError('accountPubkeyProvider accessed without authentication');
+    }
+    return pubkey;
   }
-  return pubkey;
-});
+}
+
+final accountPubkeyProvider = NotifierProvider<AccountPubkeyNotifier, String>(
+  AccountPubkeyNotifier.new,
+);

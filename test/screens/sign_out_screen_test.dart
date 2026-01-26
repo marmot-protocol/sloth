@@ -28,6 +28,7 @@ class _MockApi extends MockWnApi {
 
 class _MockAuthNotifier extends AuthNotifier {
   bool logoutCalled = false;
+  String? nextPubkeyAfterLogout;
 
   @override
   Future<String?> build() async {
@@ -36,9 +37,12 @@ class _MockAuthNotifier extends AuthNotifier {
   }
 
   @override
-  Future<void> logout() async {
+  Future<String?> logout() async {
     logoutCalled = true;
-    state = const AsyncData(null);
+    if (nextPubkeyAfterLogout == null) {
+      state = const AsyncData(null);
+    }
+    return nextPubkeyAfterLogout;
   }
 }
 
@@ -47,8 +51,11 @@ void main() {
 
   late _MockAuthNotifier mockAuth;
 
-  Future<void> pumpSignOutScreen(WidgetTester tester) async {
-    mockAuth = _MockAuthNotifier();
+  Future<void> pumpSignOutScreen(
+    WidgetTester tester, {
+    _MockAuthNotifier? authNotifier,
+  }) async {
+    mockAuth = authNotifier ?? _MockAuthNotifier();
 
     await mountTestApp(
       tester,
@@ -163,6 +170,23 @@ void main() {
 
       expect(mockAuth.logoutCalled, isTrue);
       expect(find.byType(HomeScreen), findsOneWidget);
+    });
+
+    testWidgets('signing out with another account returns to previous screen', (tester) async {
+      final authNotifier = _MockAuthNotifier();
+      authNotifier.nextPubkeyAfterLogout = 'another_pubkey';
+
+      await pumpSignOutScreen(tester, authNotifier: authNotifier);
+
+      await tester.drag(find.byType(SingleChildScrollView), const Offset(0, -300));
+      await tester.pumpAndSettle();
+
+      final signOutButtons = find.text('Sign out');
+      await tester.tap(signOutButtons.last);
+      await tester.pumpAndSettle();
+
+      expect(mockAuth.logoutCalled, isTrue);
+      expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
     testWidgets('renders empty widget when pubkey becomes null during logout', (tester) async {

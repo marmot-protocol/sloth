@@ -46,8 +46,9 @@ class _MockAuthNotifier extends AuthNotifier {
   }
 
   @override
-  Future<void> logout() async {
+  Future<String?> logout() async {
     logoutCalled = true;
+    return null;
   }
 }
 
@@ -153,6 +154,13 @@ void main() {
       await tester.tap(find.text('Developer settings'));
       await tester.pumpAndSettle();
       expect(find.byType(DeveloperSettingsScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping Switch Profile navigates to SwitchProfileScreen', (tester) async {
+      await pumpSettingsScreen(tester);
+      await tester.tap(find.text('Switch Profile'));
+      await tester.pumpAndSettle();
+      expect(find.text('Profiles'), findsOneWidget);
     });
 
     testWidgets('renders empty widget when pubkey becomes null', (tester) async {

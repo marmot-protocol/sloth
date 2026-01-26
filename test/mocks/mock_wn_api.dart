@@ -1,6 +1,9 @@
-import 'package:flutter_test/flutter_test.dart';
+import 'dart:async';
+
 import 'package:sloth/src/rust/api.dart' as rust_api;
+import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
+import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
@@ -22,6 +25,8 @@ class MockAppSettings implements rust_api.AppSettings {
 
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
+  List<Account> accounts = [];
+  Completer<List<Account>>? getAccountsCompleter;
 
   @override
   Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
@@ -69,7 +74,11 @@ class MockWnApi implements RustLibApi {
     required bool blockingDataSync,
     required String pubkey,
   }) async {
-    return const FlutterMetadata(custom: {});
+    return FlutterMetadata(
+      name: 'User $pubkey',
+      displayName: 'Display $pubkey',
+      custom: {},
+    );
   }
 
   @override
@@ -87,6 +96,25 @@ class MockWnApi implements RustLibApi {
 
   @override
   Future<void> crateApiAccountsLogout({required String pubkey}) async {}
+
+  @override
+  Future<List<Account>> crateApiAccountsGetAccounts() async {
+    if (getAccountsCompleter != null) {
+      return getAccountsCompleter!.future;
+    }
+    return accounts;
+  }
+
+  @override
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
+    final accountList = getAccountsCompleter != null
+        ? await getAccountsCompleter!.future
+        : accounts;
+    return accountList.firstWhere(
+      (a) => a.pubkey == pubkey,
+      orElse: () => throw const ApiError.whitenoise(message: 'Account not found'),
+    );
+  }
 
   @override
   Future<String> crateApiUtilsGetDefaultBlossomServerUrl() async => 'https://blossom.example.com';
@@ -138,6 +166,8 @@ class MockWnApi implements RustLibApi {
 
   void reset() {
     currentThemeMode = 'system';
+    accounts = [];
+    getAccountsCompleter = null;
   }
 
   @override

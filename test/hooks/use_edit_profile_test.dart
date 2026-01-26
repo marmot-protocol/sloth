@@ -9,6 +9,8 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../mocks/mock_account_pubkey_notifier.dart';
+
 class _MockApi implements RustLibApi {
   FlutterMetadata? updatedMetadata;
   String? updatedPubkey;
@@ -135,7 +137,7 @@ void main() {
     mockApi.shouldThrowOnUpdate = false;
     mockApi.shouldThrowOnUpload = false;
     overrides = [
-      accountPubkeyProvider.overrideWith((ref) => 'test_pubkey'),
+      accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
     ];
   });
 
