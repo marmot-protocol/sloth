@@ -1,4 +1,5 @@
 /// Application-wide constants.
+library;
 
 /// Default relay URLs for key package publishing.
 ///

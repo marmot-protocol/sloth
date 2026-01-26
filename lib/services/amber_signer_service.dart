@@ -84,7 +84,9 @@ class AmberSignerException implements Exception {
       case 'LAUNCH_ERROR':
         return 'Failed to launch signer app.';
       default:
-        return 'Amber error: $message';
+        // Log the raw error for debugging
+        _logger.warning('Unknown Amber error code: $code - $message');
+        return 'An error occurred with the signer. Please try again.';
     }
   }
 
