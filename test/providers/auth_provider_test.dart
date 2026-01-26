@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
@@ -16,6 +17,8 @@ class _MockRustLibApi implements RustLibApi {
   String? logoutCalledWithPubkey;
   final Set<String> existingAccounts = {};
   Object? getAccountError;
+  Object? getAccountsError;
+  List<Account> allAccounts = [];
 
   @override
   Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
@@ -59,6 +62,14 @@ class _MockRustLibApi implements RustLibApi {
   }
 
   @override
+  Future<List<Account>> crateApiAccountsGetAccounts() async {
+    if (getAccountsError != null) {
+      throw getAccountsError!;
+    }
+    return allAccounts;
+  }
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
@@ -78,6 +89,8 @@ void main() {
     mockApi.logoutCalledWithPubkey = null;
     mockApi.existingAccounts.clear();
     mockApi.getAccountError = null;
+    mockApi.getAccountsError = null;
+    mockApi.allAccounts = [];
     mockStorage = MockSecureStorage();
     container = ProviderContainer(
       overrides: [secureStorageProvider.overrideWithValue(mockStorage)],
@@ -157,6 +170,13 @@ void main() {
         expect(mockApi.metadataCalledWithPubkey, 'logged_in_pubkey');
         expect(mockApi.metadataCompleter.isCompleted, isFalse);
       });
+
+      test('resets isAddingAccountProvider to false', () async {
+        container.read(isAddingAccountProvider.notifier).set(true);
+        expect(container.read(isAddingAccountProvider), true);
+        await container.read(authProvider.notifier).login('nsec123');
+        expect(container.read(isAddingAccountProvider), false);
+      });
     });
 
     group('signup', () {
@@ -164,16 +184,23 @@ void main() {
         final pubkey = await container.read(authProvider.notifier).signup();
         expect(pubkey, 'created_pubkey');
       });
+
+      test('resets isAddingAccountProvider to false', () async {
+        container.read(isAddingAccountProvider.notifier).set(true);
+        expect(container.read(isAddingAccountProvider), true);
+        await container.read(authProvider.notifier).signup();
+        expect(container.read(isAddingAccountProvider), false);
+      });
     });
 
     group('logout', () {
-      test('clears state', () async {
+      test('clears state when no other accounts', () async {
         await container.read(authProvider.notifier).login('nsec123');
         await container.read(authProvider.notifier).logout();
         expect(container.read(authProvider).value, isNull);
       });
 
-      test('clears storage', () async {
+      test('clears storage when no other accounts', () async {
         await container.read(authProvider.notifier).login('nsec123');
         await container.read(authProvider.notifier).logout();
         expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
@@ -190,6 +217,67 @@ void main() {
         await container.read(authProvider.notifier).logout();
         expect(mockApi.logoutCalledWithPubkey, isNull);
         expect(container.read(authProvider).value, isNull);
+      });
+
+      test('switches to another account when available', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.existingAccounts.add('other_pubkey');
+        mockApi.allAccounts = [
+          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        final nextPubkey = await container.read(authProvider.notifier).logout();
+        expect(nextPubkey, 'other_pubkey');
+        expect(container.read(authProvider).value, 'other_pubkey');
+        expect(await mockStorage.read(key: 'active_account_pubkey'), 'other_pubkey');
+      });
+
+      test('filters out logged-out account when switching', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.existingAccounts.add('other_pubkey');
+        mockApi.allAccounts = [
+          Account(pubkey: 'logged_in_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        final nextPubkey = await container.read(authProvider.notifier).logout();
+        expect(nextPubkey, 'other_pubkey');
+        expect(container.read(authProvider).value, 'other_pubkey');
+      });
+
+      test('returns null when no other accounts', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        final nextPubkey = await container.read(authProvider.notifier).logout();
+        expect(nextPubkey, isNull);
+      });
+
+      test('returns null when getAccounts fails', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.getAccountsError = Exception('Network error');
+        final nextPubkey = await container.read(authProvider.notifier).logout();
+        expect(nextPubkey, isNull);
+        expect(container.read(authProvider).value, isNull);
+      });
+    });
+
+    group('switchProfile', () {
+      test('updates state to new pubkey', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.existingAccounts.add('new_pubkey');
+        await container.read(authProvider.notifier).switchProfile('new_pubkey');
+        expect(container.read(authProvider).value, 'new_pubkey');
+      });
+
+      test('updates storage with new pubkey', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.existingAccounts.add('new_pubkey');
+        await container.read(authProvider.notifier).switchProfile('new_pubkey');
+        expect(await mockStorage.read(key: 'active_account_pubkey'), 'new_pubkey');
+      });
+
+      test('clears state when account not found', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        await container.read(authProvider.notifier).switchProfile('nonexistent');
+        expect(container.read(authProvider).value, isNull);
+        expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
       });
     });
   });

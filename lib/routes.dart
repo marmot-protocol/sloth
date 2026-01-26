@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
 import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
+import 'package:sloth/screens/add_profile_screen.dart' show AddProfileScreen;
 import 'package:sloth/screens/app_settings_screen.dart' show AppSettingsScreen;
 import 'package:sloth/screens/chat_invite_screen.dart' show ChatInviteScreen;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
@@ -21,6 +23,7 @@ import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/share_profile_screen.dart' show ShareProfileScreen;
 import 'package:sloth/screens/sign_out_screen.dart' show SignOutScreen;
 import 'package:sloth/screens/signup_screen.dart' show SignupScreen;
+import 'package:sloth/screens/switch_profile_screen.dart' show SwitchProfileScreen;
 import 'package:sloth/screens/user_search_screen.dart' show UserSearchScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
 
@@ -39,6 +42,8 @@ abstract final class Routes {
   static const _shareProfile = '/share-profile';
   static const _editProfile = '/edit-profile';
   static const _signOut = '/sign-out';
+  static const _switchProfile = '/switch-profile';
+  static const _addProfile = '/add-profile';
   static const _network = '/network';
   static const _userSearch = '/user-search';
   static const _invite = '/invites/:mlsGroupId';
@@ -52,9 +57,10 @@ abstract final class Routes {
       redirect: (context, state) {
         final pubkey = ref.read(authProvider).value;
         final isOnPublicPage = _publicRoutes.contains(state.matchedLocation);
+        final isAddingAccount = ref.read(isAddingAccountProvider);
 
         if (pubkey == null && !isOnPublicPage) return _login;
-        if (pubkey != null && isOnPublicPage) return _chatList;
+        if (pubkey != null && isOnPublicPage && !isAddingAccount) return _chatList;
 
         return null;
       },
@@ -155,6 +161,20 @@ abstract final class Routes {
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
             child: const SignOutScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _switchProfile,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const SwitchProfileScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _addProfile,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const AddProfileScreen(),
           ),
         ),
         GoRoute(
@@ -285,6 +305,14 @@ abstract final class Routes {
 
   static void pushToSignOut(BuildContext context) {
     GoRouter.of(context).push(_signOut);
+  }
+
+  static void pushToSwitchProfile(BuildContext context) {
+    GoRouter.of(context).push(_switchProfile);
+  }
+
+  static void pushToAddProfile(BuildContext context) {
+    GoRouter.of(context).push(_addProfile);
   }
 
   static void pushToUserSearch(BuildContext context) {

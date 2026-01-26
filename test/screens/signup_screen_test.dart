@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData, ProviderScope;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/screens/onboarding_screen.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
@@ -126,6 +128,24 @@ void main() {
         await tester.enterText(find.byType(TextField).first, 'Test User');
         await tester.tap(find.text('Sign Up'));
         await tester.pumpAndSettle();
+        expect(find.byType(OnboardingScreen), findsNothing);
+      });
+
+      testWidgets('redirects to chat list when adding account', (tester) async {
+        await mountTestApp(tester, overrides: overrides);
+
+        final element = tester.element(find.byType(Scaffold));
+        final container = ProviderScope.containerOf(element);
+        container.read(isAddingAccountProvider.notifier).set(true);
+
+        Routes.pushToSignup(element);
+        await tester.pumpAndSettle();
+
+        await tester.enterText(find.byType(TextField).first, 'Test User');
+        await tester.tap(find.text('Sign Up'));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ChatListScreen), findsOneWidget);
         expect(find.byType(OnboardingScreen), findsNothing);
       });
     });

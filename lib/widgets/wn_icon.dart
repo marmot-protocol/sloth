@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 enum WnIcons {
   addCircle('add_circle'),
   addEmoji('add_emoji'),
+  addLarge('add_large'),
   appearance('appearance'),
   archive('archive'),
   arrowDown('arrow_down'),
@@ -49,6 +50,7 @@ enum WnIcons {
   logout('logout'),
   makeAdmin('make_admin'),
   message('message'),
+  more('more'),
   network('network'),
   newChat('new_chat'),
   newGroupChat('new_group_chat'),

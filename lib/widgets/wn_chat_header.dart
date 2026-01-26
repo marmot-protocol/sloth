@@ -52,12 +52,11 @@ class WnChatHeader extends StatelessWidget {
             overflow: TextOverflow.ellipsis,
           ),
         ),
-        // TODO: Replace with SVG icon when more_horizontal.svg is available
         IconButton(
           key: const Key('menu_button'),
           onPressed: onMenuTap,
-          icon: Icon(
-            Icons.more_horiz,
+          icon: WnIcon(
+            WnIcons.more,
             color: colors.backgroundContentTertiary,
             size: 24.w,
           ),

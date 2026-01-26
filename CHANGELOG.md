@@ -24,6 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delete messages [PR #49](https://github.com/marmot-protocol/sloth/pull/49)
 - Paste nsec login [PR #59](https://github.com/marmot-protocol/sloth/pull/59)
 - Reactions [PR #60](https://github.com/marmot-protocol/sloth/pull/60)
+- Add multi-account support [PR #78](https://github.com/marmot-protocol/sloth/pull/78)
 
 
 ### Changed

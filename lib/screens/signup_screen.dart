@@ -7,6 +7,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, Wid
 import 'package:sloth/hooks/use_signup.dart' show useSignup;
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
@@ -45,12 +46,17 @@ class SignupScreen extends HookConsumerWidget {
     }, [keyboardHeight]);
 
     Future<void> onSubmit() async {
+      final wasAddingAccount = ref.read(isAddingAccountProvider);
       final success = await submit(
         displayName: displayNameController.text.trim(),
         bio: bioController.text.trim(),
       );
       if (success && context.mounted) {
-        Routes.goToOnboarding(context);
+        if (wasAddingAccount) {
+          Routes.goToChatList(context);
+        } else {
+          Routes.goToOnboarding(context);
+        }
       }
     }
 

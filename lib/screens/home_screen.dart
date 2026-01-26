@@ -5,8 +5,7 @@ import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
-import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
+import 'package:sloth/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 
@@ -73,23 +72,8 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                WnSlateContainer(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      WnOutlinedButton(
-                        text: context.l10n.login,
-                        onPressed: () {
-                          Routes.pushToLogin(context);
-                        },
-                      ),
-                      Gap(8.h),
-                      WnFilledButton(
-                        text: context.l10n.signUp,
-                        onPressed: () => Routes.pushToSignup(context),
-                      ),
-                    ],
-                  ),
+                const WnSlateContainer(
+                  child: WnAuthButtonsContainer(),
                 ),
                 Gap(44.h),
               ],
