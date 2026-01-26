@@ -76,9 +76,16 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
 
   Future<void> setLocale(LocaleSetting setting) async {
     final previousState = state.value;
-    try {
-      final storage = ref.read(secureStorageProvider);
+    final storage = ref.read(secureStorageProvider);
 
+    String? previousPreference;
+    try {
+      previousPreference = await storage.read(key: _localePreferenceKey);
+    } catch (e) {
+      _logger.warning('Failed to read previous locale preference: $e');
+    }
+
+    try {
       final preferenceValue = switch (setting) {
         SystemLocale() => _systemLocaleValue,
         SpecificLocale(locale: final locale) => locale.languageCode,
@@ -92,6 +99,17 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
       _logger.info('Locale setting updated to: $setting');
     } catch (e) {
       _logger.warning('Failed to persist locale settings: $e');
+
+      try {
+        if (previousPreference != null) {
+          await storage.write(key: _localePreferenceKey, value: previousPreference);
+        } else {
+          await storage.delete(key: _localePreferenceKey);
+        }
+      } catch (restoreError) {
+        _logger.warning('Failed to restore previous locale preference: $restoreError');
+      }
+
       if (previousState != null) {
         state = AsyncData(previousState);
       }

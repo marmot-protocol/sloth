@@ -207,6 +207,50 @@ void main() {
       expect((current as SpecificLocale).locale.languageCode, 'en');
     });
 
+    test('setLocale reverts storage when rust API fails', () async {
+      await mockStorage.write(key: 'locale_preference', value: 'en');
+      await container.read(localeProvider.future);
+
+      mockApi.shouldFailUpdateLanguage = true;
+
+      try {
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
+      } on LocalePersistenceException catch (_) {}
+
+      final storedValue = await mockStorage.read(key: 'locale_preference');
+      expect(storedValue, 'en');
+    });
+
+    test('setLocale deletes storage when rust API fails and no previous preference', () async {
+      await container.read(localeProvider.future);
+      expect(await mockStorage.read(key: 'locale_preference'), isNull);
+
+      mockApi.shouldFailUpdateLanguage = true;
+
+      try {
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
+      } on LocalePersistenceException catch (_) {}
+
+      final storedValue = await mockStorage.read(key: 'locale_preference');
+      expect(storedValue, isNull);
+    });
+
+    test('setLocale reverts both state and storage atomically on failure', () async {
+      await mockStorage.write(key: 'locale_preference', value: 'de');
+      await container.read(localeProvider.future);
+
+      mockApi.shouldFailUpdateLanguage = true;
+
+      try {
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('es')));
+      } on LocalePersistenceException catch (_) {}
+
+      final current = container.read(localeProvider).value;
+      expect((current as SpecificLocale).locale.languageCode, 'de');
+      final storedValue = await mockStorage.read(key: 'locale_preference');
+      expect(storedValue, 'de');
+    });
+
     test('setLocale to SystemLocale works', () async {
       await mockStorage.write(key: 'locale_preference', value: 'de');
       await container.read(localeProvider.future);
