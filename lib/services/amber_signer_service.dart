@@ -60,6 +60,34 @@ class AmberSignerException implements Exception {
 
   const AmberSignerException(this.code, this.message);
 
+  /// Returns a user-friendly error message for this exception.
+  String get userFriendlyMessage {
+    switch (code) {
+      case 'USER_REJECTED':
+        return 'Login cancelled';
+      case 'NOT_CONNECTED':
+        return 'Not connected to Amber. Please try again.';
+      case 'NO_SIGNER':
+        return 'No signer app found. Please install Amber.';
+      case 'NO_RESPONSE':
+        return 'No response from signer. Please try again.';
+      case 'NO_PUBKEY':
+        return 'Unable to get public key from signer.';
+      case 'NO_RESULT':
+        return 'Signer did not return a result.';
+      case 'NO_EVENT':
+        return 'Signer did not return a signed event.';
+      case 'REQUEST_IN_PROGRESS':
+        return 'Another request is in progress. Please wait.';
+      case 'NO_ACTIVITY':
+        return 'Unable to launch signer. Please try again.';
+      case 'LAUNCH_ERROR':
+        return 'Failed to launch signer app.';
+      default:
+        return 'Amber error: $message';
+    }
+  }
+
   @override
   String toString() => 'AmberSignerException($code): $message';
 }

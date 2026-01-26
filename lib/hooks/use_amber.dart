@@ -20,8 +20,8 @@ const _amberEnabledKey = 'amber_enabled';
   Future<void> Function() disconnect,
 })
 useAmber() {
-  final amberService = const AmberSignerService();
-  final storage = const FlutterSecureStorage();
+  final amberService = useMemoized(() => const AmberSignerService());
+  final storage = useMemoized(() => const FlutterSecureStorage());
 
   final isAvailable = useState(false);
   final isConnecting = useState(false);

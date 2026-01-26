@@ -304,12 +304,13 @@ class AmberSignerPlugin :
                 )
 
             cursor?.use {
-                // Check if rejected
-                if (it.getColumnIndex("rejected") >= 0) {
-                    return null
-                }
-
                 if (it.moveToFirst()) {
+                    // Check if rejected (value should be non-null if rejected)
+                    val rejectedIndex = it.getColumnIndex("rejected")
+                    if (rejectedIndex >= 0 && !it.isNull(rejectedIndex)) {
+                        return null
+                    }
+
                     val resultIndex = it.getColumnIndex("result")
                     val eventIndex = it.getColumnIndex("event")
 
@@ -464,12 +465,13 @@ class AmberSignerPlugin :
                 )
 
             cursor?.use {
-                // Check if rejected
-                if (it.getColumnIndex("rejected") >= 0) {
-                    return null
-                }
-
                 if (it.moveToFirst()) {
+                    // Check if rejected (value should be non-null if rejected)
+                    val rejectedIndex = it.getColumnIndex("rejected")
+                    if (rejectedIndex >= 0 && !it.isNull(rejectedIndex)) {
+                        return null
+                    }
+
                     val resultIndex = it.getColumnIndex("result")
                     if (resultIndex >= 0) {
                         return it.getString(resultIndex)

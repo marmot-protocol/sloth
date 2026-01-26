@@ -9,6 +9,7 @@ import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/relays.dart' as relays_api;
 import 'package:sloth/src/rust/api/signer.dart' as signer_api;
 import 'package:sloth/src/rust/api/users.dart' as users_api;
+import 'package:sloth/utils/constants.dart';
 
 const _storageKey = 'active_account_pubkey';
 const _loginMethodKey = 'login_method';
@@ -167,13 +168,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
       if (existingRelays.isEmpty) {
         _logger.info('No key package relays found, adding defaults');
 
-        // Default key package relays
-        const defaultRelays = [
-          'wss://relay.damus.io',
-          'wss://nos.lol',
-        ];
-
-        for (final relayUrl in defaultRelays) {
+        for (final relayUrl in kDefaultKeyPackageRelays) {
           try {
             await accounts_api.addAccountRelay(
               pubkey: pubkey,

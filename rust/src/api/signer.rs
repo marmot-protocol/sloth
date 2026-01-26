@@ -153,6 +153,12 @@ impl NostrSigner for DartSigner {
 /// * `nip04_decrypt` - Callback for NIP-04 decryption. Takes (ciphertext, sender_pubkey), returns plaintext.
 /// * `nip44_encrypt` - Callback for NIP-44 encryption. Takes (plaintext, recipient_pubkey), returns ciphertext.
 /// * `nip44_decrypt` - Callback for NIP-44 decryption. Takes (ciphertext, sender_pubkey), returns plaintext.
+///
+/// # TODO
+///
+/// This orchestration (login → register → publish) should ideally be moved into the
+/// `whitenoise` crate as a single method to keep this API layer thin. The API layer
+/// should only handle translation between Dart and Rust types, not business logic.
 #[frb]
 pub async fn login_with_external_signer_and_callbacks(
     pubkey: String,
