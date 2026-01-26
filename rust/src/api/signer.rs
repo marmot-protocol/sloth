@@ -4,8 +4,8 @@
 //! Flutter/Dart callbacks, allowing external signers like Amber to be used
 //! for signing Nostr events.
 
-use flutter_rust_bridge::frb;
 use flutter_rust_bridge::DartFnFuture;
+use flutter_rust_bridge::frb;
 use nostr_sdk::prelude::*;
 use std::borrow::Cow;
 use std::fmt::Debug;
@@ -66,22 +66,17 @@ impl NostrSigner for DartSigner {
         Box::pin(async move { Ok(self.pubkey) })
     }
 
-    fn sign_event(
-        &self,
-        unsigned: UnsignedEvent,
-    ) -> BoxedFuture<'_, Result<Event, SignerError>> {
+    fn sign_event(&self, unsigned: UnsignedEvent) -> BoxedFuture<'_, Result<Event, SignerError>> {
         let sign_fn = self.sign_event.clone();
         Box::pin(async move {
             // Serialize the unsigned event to JSON
-            let unsigned_json = serde_json::to_string(&unsigned)
-                .map_err(SignerError::backend)?;
+            let unsigned_json = serde_json::to_string(&unsigned).map_err(SignerError::backend)?;
 
             // Call the Dart callback to sign
             let signed_json = sign_fn(unsigned_json).await;
 
             // Parse the signed event
-            let event: Event = serde_json::from_str(&signed_json)
-                .map_err(SignerError::backend)?;
+            let event: Event = serde_json::from_str(&signed_json).map_err(SignerError::backend)?;
 
             Ok(event)
         })

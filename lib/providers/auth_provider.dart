@@ -6,6 +6,7 @@ import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/services/amber_signer_service.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 import 'package:sloth/src/rust/api/error.dart';
+import 'package:sloth/src/rust/api/relays.dart' as relays_api;
 import 'package:sloth/src/rust/api/signer.dart' as signer_api;
 import 'package:sloth/src/rust/api/users.dart' as users_api;
 
@@ -61,14 +62,20 @@ class AuthNotifier extends AsyncNotifier<String?> {
   /// This will open the Amber app for the user to authorize this app.
   /// The pubkey is retrieved from Amber and used to find/create an account.
   /// The key package is signed and published using Amber.
-  Future<void> loginWithAmber() async {
+  ///
+  /// If the account has no key package relays configured, default relays
+  /// will be automatically added.
+  ///
+  /// Parameters:
+  /// - [pubkey]: The public key obtained from Amber
+  /// - [onDisconnect]: Callback to disconnect from Amber on error
+  Future<void> loginWithAmber({
+    required String pubkey,
+    required Future<void> Function() onDisconnect,
+  }) async {
     _logger.info('Amber login attempt started');
     final storage = ref.read(secureStorageProvider);
-    final amberService = ref.read(amberSignerServiceProvider);
-
-    // Connect to Amber and get the public key
-    final amberNotifier = ref.read(amberProvider.notifier);
-    final pubkey = await amberNotifier.connect();
+    const amberService = AmberSignerService();
 
     try {
       // Login with external signer using callbacks that route to Amber
@@ -119,6 +126,9 @@ class AuthNotifier extends AsyncNotifier<String?> {
         },
       );
 
+      // Ensure key package relays are configured
+      await _ensureKeyPackageRelays(account.pubkey);
+
       users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
       await storage.write(key: _storageKey, value: account.pubkey);
       await storage.write(key: _loginMethodKey, value: LoginMethod.amber.name);
@@ -126,19 +136,62 @@ class AuthNotifier extends AsyncNotifier<String?> {
       _logger.info('Amber login successful with key package published');
     } on ApiError catch (e) {
       // If login fails, disconnect from Amber and rethrow
-      await amberNotifier.disconnect();
+      await onDisconnect();
       _logger.warning('Amber login failed: ${e.message}');
       rethrow;
     } on AmberSignerException catch (e) {
       // If signing fails, disconnect from Amber and rethrow
-      await amberNotifier.disconnect();
+      await onDisconnect();
       _logger.warning('Amber signing failed: ${e.message}');
       rethrow;
     } catch (e) {
       // Catch any other unexpected errors and cleanup
-      await amberNotifier.disconnect();
+      await onDisconnect();
       _logger.warning('Amber login failed with unexpected error: $e');
       rethrow;
+    }
+  }
+
+  /// Ensures that the account has at least one key package relay configured.
+  ///
+  /// If no key package relays exist, adds default relays so the user can
+  /// be invited to encrypted conversations.
+  Future<void> _ensureKeyPackageRelays(String pubkey) async {
+    try {
+      final keyPackageRelayType = await relays_api.relayTypeKeyPackage();
+      final existingRelays = await accounts_api.accountRelays(
+        pubkey: pubkey,
+        relayType: keyPackageRelayType,
+      );
+
+      if (existingRelays.isEmpty) {
+        _logger.info('No key package relays found, adding defaults');
+
+        // Default key package relays
+        const defaultRelays = [
+          'wss://relay.damus.io',
+          'wss://nos.lol',
+        ];
+
+        for (final relayUrl in defaultRelays) {
+          try {
+            await accounts_api.addAccountRelay(
+              pubkey: pubkey,
+              url: relayUrl,
+              relayType: keyPackageRelayType,
+            );
+            _logger.info('Added default key package relay: $relayUrl');
+          } catch (e) {
+            _logger.warning('Failed to add default relay $relayUrl: $e');
+            // Continue adding other relays even if one fails
+          }
+        }
+      } else {
+        _logger.info('Key package relays already configured (${existingRelays.length} found)');
+      }
+    } catch (e) {
+      _logger.warning('Failed to ensure key package relays: $e');
+      // Don't throw - this is a best-effort enhancement
     }
   }
 
@@ -171,17 +224,16 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return account.pubkey;
   }
 
-  Future<String?> logout() async {
+  Future<String?> logout({Future<void> Function()? onAmberDisconnect}) async {
     final pubkey = state.value;
     if (pubkey == null) return null;
 
     _logger.info('Logout started');
     final storage = ref.read(secureStorageProvider);
 
-    // Disconnect from Amber if connected
-    final amberState = ref.read(amberProvider).value;
-    if (amberState?.isEnabled ?? false) {
-      await ref.read(amberProvider.notifier).disconnect();
+    // Disconnect from Amber if logged in via Amber
+    if (await isUsingAmber() && onAmberDisconnect != null) {
+      await onAmberDisconnect();
     }
 
     await accounts_api.logout(pubkey: pubkey);
