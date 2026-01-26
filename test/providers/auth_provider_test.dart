@@ -226,6 +226,18 @@ void main() {
         expect(await mockStorage.read(key: 'active_account_pubkey'), 'other_pubkey');
       });
 
+      test('filters out logged-out account when switching', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.existingAccounts.add('other_pubkey');
+        mockApi.allAccounts = [
+          Account(pubkey: 'logged_in_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        final nextPubkey = await container.read(authProvider.notifier).logout();
+        expect(nextPubkey, 'other_pubkey');
+        expect(container.read(authProvider).value, 'other_pubkey');
+      });
+
       test('returns null when no other accounts', () async {
         await container.read(authProvider.notifier).login('nsec123');
         final nextPubkey = await container.read(authProvider.notifier).logout();
