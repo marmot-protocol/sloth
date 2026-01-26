@@ -17,6 +17,7 @@ class WidgetbookApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Widgetbook.material(
+      initialRoute: '?path=introduction/resources',
       addons: [
         ThemeAddon(
           themes: [
