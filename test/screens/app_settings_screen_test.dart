@@ -383,5 +383,18 @@ void main() {
 
       expect(mockApi.currentLanguage, isNotEmpty);
     });
+
+    testWidgets('shows snackbar error when language update fails', (tester) async {
+      mockApi.shouldFailUpdateLanguage = true;
+      await pumpAppSettingsScreen(tester);
+
+      await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Español'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Failed to save language preference. Please try again.'), findsOneWidget);
+    });
   });
 }

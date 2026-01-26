@@ -31,6 +31,8 @@ class MockAppSettings implements rust_api.AppSettings {
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
   String currentLanguage = 'en';
+  bool shouldFailUpdateLanguage = false;
+  bool shouldFailNpubConversion = false;
 
   @override
   Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
@@ -39,6 +41,9 @@ class MockWnApi implements RustLibApi {
 
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    if (shouldFailNpubConversion) {
+      throw Exception('Invalid hex pubkey');
+    }
     return 'npub1test${hexPubkey.substring(0, 10)}';
   }
 
@@ -187,6 +192,9 @@ class MockWnApi implements RustLibApi {
   Future<void> crateApiUpdateLanguage({
     required rust_api.Language language,
   }) async {
+    if (shouldFailUpdateLanguage) {
+      throw Exception('Failed to update language');
+    }
     if (language is MockLanguage) {
       currentLanguage = language.code;
     }
@@ -195,6 +203,8 @@ class MockWnApi implements RustLibApi {
   void reset() {
     currentThemeMode = 'system';
     currentLanguage = 'en';
+    shouldFailUpdateLanguage = false;
+    shouldFailNpubConversion = false;
   }
 
   @override

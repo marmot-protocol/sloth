@@ -26,6 +26,8 @@ class _MockApi extends MockWnApi {
   );
 }
 
+late _MockApi _mockApi;
+
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
@@ -35,7 +37,14 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  setUpAll(() => RustLib.initMock(api: _MockApi()));
+  setUpAll(() {
+    _mockApi = _MockApi();
+    RustLib.initMock(api: _mockApi);
+  });
+
+  setUp(() {
+    _mockApi.reset();
+  });
 
   Future<void> pumpShareProfileScreen(WidgetTester tester) async {
     await mountTestApp(
@@ -96,6 +105,18 @@ void main() {
       await tester.tap(copyButton);
       await tester.pump();
       expect(find.text('Public key copied to clipboard'), findsOneWidget);
+    });
+
+    testWidgets('disables copy button when npub conversion fails', (tester) async {
+      _mockApi.shouldFailNpubConversion = true;
+      await pumpShareProfileScreen(tester);
+      await tester.pumpAndSettle();
+
+      final copyButton = find.byKey(const Key('copy_button'));
+      expect(copyButton, findsOneWidget);
+
+      final iconButton = tester.widget<IconButton>(copyButton);
+      expect(iconButton.onPressed, isNull);
     });
   });
 }

@@ -13,7 +13,6 @@ import '../mocks/mock_wn_api.dart';
 
 class _MockApi extends MockWnApi {
   bool shouldFailGetAppSettings = false;
-  bool shouldFailUpdateLanguage = false;
 
   @override
   Future<rust_api.AppSettings> crateApiGetAppSettings() async {
@@ -167,6 +166,14 @@ void main() {
 
     test('returns SystemLocale when stored locale is not supported', () async {
       await mockStorage.write(key: 'locale_preference', value: 'xx');
+
+      final localeSetting = await container.read(localeProvider.future);
+
+      expect(localeSetting, isA<SystemLocale>());
+    });
+
+    test('returns SystemLocale when storage read fails', () async {
+      mockStorage.shouldThrowOnRead = true;
 
       final localeSetting = await container.read(localeProvider.future);
 
@@ -423,6 +430,48 @@ void main() {
       final formatted = formatters.formatRelativeTime(twoWeeksAgo, l10n);
 
       expect(formatted, isNot(contains('ago')));
+    });
+
+    test('formatDateLong produces full date format', () {
+      final formatters = LocaleFormatters('en');
+      final date = DateTime(2026, 1, 25);
+      final formatted = formatters.formatDateLong(date);
+      expect(formatted, contains('January'));
+      expect(formatted, contains('25'));
+      expect(formatted, contains('2026'));
+    });
+
+    test('formatDateTime produces date and time together', () {
+      final formatters = LocaleFormatters('en');
+      final dateTime = DateTime(2026, 1, 25, 14, 30);
+      final formatted = formatters.formatDateTime(dateTime);
+      expect(formatted, contains('Jan'));
+      expect(formatted, contains('25'));
+      expect(formatted, contains('2026'));
+    });
+  });
+
+  group('LocalePersistenceException', () {
+    test('toString returns formatted message', () {
+      final exception = LocalePersistenceException('test error');
+      expect(exception.toString(), 'LocalePersistenceException: test error');
+    });
+
+    test('toString includes cause when provided', () {
+      final cause = Exception('root cause');
+      final exception = LocalePersistenceException('test error', cause);
+      expect(exception.toString(), 'LocalePersistenceException: test error');
+      expect(exception.cause, cause);
+    });
+  });
+
+  group('localeFormattersProvider', () {
+    test('uses specific locale when set', () async {
+      await mockStorage.write(key: 'locale_preference', value: 'de');
+      await container.read(localeProvider.future);
+
+      final formatters = container.read(localeFormattersProvider);
+      expect(formatters.formatNumber(1234567), '1.234.567');
     });
   });
 }

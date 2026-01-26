@@ -223,8 +223,9 @@ jobs:
         TEMPLATE="lib/l10n/app_en.arb"
         ERRORS=0
 
-        # Extract keys from English template (excluding @metadata keys)
-        TEMPLATE_KEYS=$(grep -oE '^[[:space:]]*"[^@][^"]*"' "$TEMPLATE" | tr -d ' "' | sort)
+        # Extract only top-level translation keys from English template
+        # Uses jq to get keys that don't start with @ (excludes @@locale and @metadata)
+        TEMPLATE_KEYS=$(jq -r 'keys[] | select(startswith("@") | not)' "$TEMPLATE" | sort)
 
         echo "=== L10n Validation ==="
         echo "Template: $TEMPLATE"
@@ -237,7 +238,7 @@ jobs:
           fi
 
           LANG=$(basename "$ARB" .arb | sed 's/app_//')
-          ARB_KEYS=$(grep -oE '^[[:space:]]*"[^@][^"]*"' "$ARB" | tr -d ' "' | sort)
+          ARB_KEYS=$(jq -r 'keys[] | select(startswith("@") | not)' "$ARB" | sort)
 
           MISSING=$(comm -23 <(echo "$TEMPLATE_KEYS") <(echo "$ARB_KEYS"))
 

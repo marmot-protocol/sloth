@@ -59,7 +59,6 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
         return const SystemLocale();
       }
 
-      // Validate that the stored language code is supported
       final isSupported = AppLocalizations.supportedLocales.any(
         (l) => l.languageCode == storedPreference,
       );
@@ -80,14 +79,12 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
     try {
       final storage = ref.read(secureStorageProvider);
 
-      // Persist the preference to secure storage
       final preferenceValue = switch (setting) {
         SystemLocale() => _systemLocaleValue,
         SpecificLocale(locale: final locale) => locale.languageCode,
       };
       await storage.write(key: _localePreferenceKey, value: preferenceValue);
 
-      // Update the rust API with the resolved language
       final rustLanguage = _settingToRustLanguage(setting);
       await rust_api.updateLanguage(language: rustLanguage);
 
