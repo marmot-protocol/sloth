@@ -17,6 +17,7 @@ class _MockRustLibApi implements RustLibApi {
   String? logoutCalledWithPubkey;
   final Set<String> existingAccounts = {};
   Object? getAccountError;
+  Object? getAccountsError;
   List<Account> allAccounts = [];
 
   @override
@@ -62,6 +63,9 @@ class _MockRustLibApi implements RustLibApi {
 
   @override
   Future<List<Account>> crateApiAccountsGetAccounts() async {
+    if (getAccountsError != null) {
+      throw getAccountsError!;
+    }
     return allAccounts;
   }
 
@@ -85,6 +89,7 @@ void main() {
     mockApi.logoutCalledWithPubkey = null;
     mockApi.existingAccounts.clear();
     mockApi.getAccountError = null;
+    mockApi.getAccountsError = null;
     mockApi.allAccounts = [];
     mockStorage = MockSecureStorage();
     container = ProviderContainer(
@@ -242,6 +247,14 @@ void main() {
         await container.read(authProvider.notifier).login('nsec123');
         final nextPubkey = await container.read(authProvider.notifier).logout();
         expect(nextPubkey, isNull);
+      });
+
+      test('returns null when getAccounts fails', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        mockApi.getAccountsError = Exception('Network error');
+        final nextPubkey = await container.read(authProvider.notifier).logout();
+        expect(nextPubkey, isNull);
+        expect(container.read(authProvider).value, isNull);
       });
     });
 
