@@ -37,9 +37,9 @@ class MessageService {
     required String emoji,
   }) async {
     final tags = await _eventReferenceTags(
-      messageId: messageId,
-      messagePubkey: messagePubkey,
-      messageKind: messageKind,
+      eventId: messageId,
+      eventPubkey: messagePubkey,
+      eventKind: messageKind,
     );
 
     _logger.info('Sending reaction to message $messageId');
@@ -53,19 +53,64 @@ class MessageService {
     _logger.info('Reaction sent successfully');
   }
 
-  Future<void> deleteMessage({
+  Future<void> toggleReaction({
+    required messages_api.ChatMessage message,
+    required String emoji,
+  }) async {
+    final existingReaction = message.reactions.userReactions
+        .where((r) => r.user == pubkey && r.emoji == emoji)
+        .firstOrNull;
+
+    if (existingReaction != null) {
+      await deleteReaction(
+        reactionId: existingReaction.reactionId,
+        reactionPubkey: pubkey,
+      );
+    } else {
+      await sendReaction(
+        messageId: message.id,
+        messagePubkey: message.pubkey,
+        messageKind: message.kind,
+        emoji: emoji,
+      );
+    }
+  }
+
+  Future<void> deleteTextMessage({
     required String messageId,
     required String messagePubkey,
-    required int messageKind,
   }) async {
-    _logger.info('Building deletion tags for message $messageId');
+    await _deleteEvent(
+      eventId: messageId,
+      eventPubkey: messagePubkey,
+      eventKind: _textMessageKind,
+    );
+  }
+
+  Future<void> deleteReaction({
+    required String reactionId,
+    required String reactionPubkey,
+  }) async {
+    await _deleteEvent(
+      eventId: reactionId,
+      eventPubkey: reactionPubkey,
+      eventKind: _reactionKind,
+    );
+  }
+
+  Future<void> _deleteEvent({
+    required String eventId,
+    required String eventPubkey,
+    required int eventKind,
+  }) async {
+    _logger.info('Building deletion tags for event $eventId');
     final tags = await _eventReferenceTags(
-      messageId: messageId,
-      messagePubkey: messagePubkey,
-      messageKind: messageKind,
+      eventId: eventId,
+      eventPubkey: eventPubkey,
+      eventKind: eventKind,
     );
 
-    _logger.info('Deleting message $messageId');
+    _logger.info('Deleting event $eventId');
     await messages_api.sendMessageToGroup(
       pubkey: pubkey,
       groupId: groupId,
@@ -73,18 +118,18 @@ class MessageService {
       tags: tags,
       kind: _deletionKind,
     );
-    _logger.info('Message $messageId deleted successfully');
+    _logger.info('Event $eventId deleted successfully');
   }
 
   Future<List<messages_api.Tag>> _eventReferenceTags({
-    required String messageId,
-    required String messagePubkey,
-    required int messageKind,
+    required String eventId,
+    required String eventPubkey,
+    required int eventKind,
   }) {
     return Future.wait([
-      utils_api.tagFromVec(vec: ['e', messageId]),
-      utils_api.tagFromVec(vec: ['p', messagePubkey, '']),
-      utils_api.tagFromVec(vec: ['k', messageKind.toString()]),
+      utils_api.tagFromVec(vec: ['e', eventId]),
+      utils_api.tagFromVec(vec: ['p', eventPubkey, '']),
+      utils_api.tagFromVec(vec: ['k', eventKind.toString()]),
     ]);
   }
 }

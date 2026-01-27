@@ -375,6 +375,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToSendReaction => 'Failed to send reaction. Please try again.';
 
   @override
+  String get failedToRemoveReaction => 'Failed to remove reaction. Please try again.';
+
+  @override
   String get unknownUser => 'Unknown user';
 
   @override

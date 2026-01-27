@@ -601,6 +601,11 @@
     "description": "Error when sending reaction fails"
   },
 
+  "failedToRemoveReaction": "Failed to remove reaction. Please try again.",
+  "@failedToRemoveReaction": {
+    "description": "Error when removing reaction fails"
+  },
+
   "unknownUser": "Unknown user",
   "@unknownUser": {
     "description": "Fallback name for unknown user"

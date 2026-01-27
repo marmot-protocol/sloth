@@ -380,6 +380,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Reaktion konnte nicht gesendet werden. Bitte erneut versuchen.';
 
   @override
+  String get failedToRemoveReaction =>
+      'Reaktion konnte nicht entfernt werden. Bitte erneut versuchen.';
+
+  @override
   String get unknownUser => 'Unbekannter Benutzer';
 
   @override

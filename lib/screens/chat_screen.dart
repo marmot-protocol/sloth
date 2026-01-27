@@ -60,13 +60,8 @@ class ChatScreen extends HookConsumerWidget {
       await messageService.sendTextMessage(content: message);
     }
 
-    Future<void> sendReaction(ChatMessage message, String emoji) {
-      return messageService.sendReaction(
-        messageId: message.id,
-        messagePubkey: message.pubkey,
-        messageKind: message.kind,
-        emoji: emoji,
-      );
+    Future<void> toggleReaction(ChatMessage message, String emoji) {
+      return messageService.toggleReaction(message: message, emoji: emoji);
     }
 
     Future<void> showMessageMenu(ChatMessage message) async {
@@ -75,12 +70,20 @@ class ChatScreen extends HookConsumerWidget {
         context,
         message: message,
         pubkey: pubkey,
-        onDelete: () => messageService.deleteMessage(
+        onDelete: () => messageService.deleteTextMessage(
+          messageId: message.id,
+          messagePubkey: message.pubkey,
+        ),
+        onAddReaction: (emoji) => messageService.sendReaction(
           messageId: message.id,
           messagePubkey: message.pubkey,
           messageKind: message.kind,
+          emoji: emoji,
         ),
-        onReaction: (emoji) => sendReaction(message, emoji),
+        onRemoveReaction: (reactionId) => messageService.deleteReaction(
+          reactionId: reactionId,
+          reactionPubkey: pubkey,
+        ),
       );
       if (context.mounted) FocusManager.instance.primaryFocus?.unfocus();
     }
@@ -139,7 +142,7 @@ class ChatScreen extends HookConsumerWidget {
                                 isOwnMessage: isOwnMessage,
                                 currentUserPubkey: pubkey,
                                 onLongPress: () => showMessageMenu(message),
-                                onReaction: (emoji) => sendReaction(message, emoji),
+                                onReaction: (emoji) => toggleReaction(message, emoji),
                               );
                             },
                           ),

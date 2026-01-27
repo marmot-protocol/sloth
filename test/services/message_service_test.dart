@@ -92,62 +92,56 @@ void main() {
     });
   });
 
-  group('deleteMessage', () {
+  group('deleteTextMessage', () {
     test('sends deletion message once', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       expect(mockApi.sentMessages.length, 1);
     });
 
     test('calls API with pubkey from constructor', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
     });
 
     test('calls API with groupId from constructor', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       expect(mockApi.sentMessages.first.groupId, 'group1');
     });
 
     test('calls API with empty message', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       expect(mockApi.sentMessages.first.message, '');
     });
 
     test('calls API with deletion kind (5)', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       expect(mockApi.sentMessages.first.kind, 5);
     });
 
     test('sends e tag with messageId', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
@@ -155,25 +149,203 @@ void main() {
     });
 
     test('sends p tag with messagePubkey', () async {
-      await service.deleteMessage(
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
       expect(tags[1].vec, ['p', 'author_pubkey', '']);
     });
 
-    test('sends k tag with messageKind', () async {
-      await service.deleteMessage(
+    test('sends k tag with text message kind (9)', () async {
+      await service.deleteTextMessage(
         messageId: 'msg123',
         messagePubkey: 'author_pubkey',
-        messageKind: 9,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
       expect(tags[2].vec, ['k', '9']);
+    });
+  });
+
+  group('deleteReaction', () {
+    test('sends deletion message once', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      expect(mockApi.sentMessages.length, 1);
+    });
+
+    test('calls API with pubkey from constructor', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+    });
+
+    test('calls API with groupId from constructor', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      expect(mockApi.sentMessages.first.groupId, 'group1');
+    });
+
+    test('calls API with empty message', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      expect(mockApi.sentMessages.first.message, '');
+    });
+
+    test('calls API with deletion kind (5)', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      expect(mockApi.sentMessages.first.kind, 5);
+    });
+
+    test('sends e tag with reactionId', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[0].vec, ['e', 'reaction123']);
+    });
+
+    test('sends p tag with reactionPubkey', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[1].vec, ['p', 'author_pubkey', '']);
+    });
+
+    test('sends k tag with reaction kind (7)', () async {
+      await service.deleteReaction(
+        reactionId: 'reaction123',
+        reactionPubkey: 'author_pubkey',
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[2].vec, ['k', '7']);
+    });
+  });
+
+  group('toggleReaction', () {
+    ChatMessage createMessage({
+      String id = 'msg123',
+      String pubkey = 'author_pubkey',
+      ReactionSummary? reactions,
+    }) => ChatMessage(
+      id: id,
+      pubkey: pubkey,
+      content: 'Test message',
+      createdAt: DateTime.now(),
+      tags: const [],
+      isReply: false,
+      isDeleted: false,
+      contentTokens: const [],
+      reactions: reactions ?? const ReactionSummary(byEmoji: [], userReactions: []),
+      mediaAttachments: const [],
+      kind: 9,
+    );
+
+    test('sends reaction when user has not reacted', () async {
+      final message = createMessage();
+
+      await service.toggleReaction(message: message, emoji: '👍');
+
+      expect(mockApi.sentMessages.length, 1);
+      expect(mockApi.sentMessages.first.kind, 7);
+      expect(mockApi.sentMessages.first.message, '👍');
+    });
+
+    test('deletes reaction when user has already reacted with same emoji', () async {
+      final message = createMessage(
+        reactions: ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['test_pubkey']),
+          ],
+          userReactions: [
+            UserReaction(
+              reactionId: 'reaction_to_delete',
+              user: 'test_pubkey',
+              emoji: '👍',
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
+      );
+
+      await service.toggleReaction(message: message, emoji: '👍');
+
+      expect(mockApi.sentMessages.length, 1);
+      expect(mockApi.sentMessages.first.kind, 5);
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[0].vec, ['e', 'reaction_to_delete']);
+    });
+
+    test('sends new reaction when user has reacted with different emoji', () async {
+      final message = createMessage(
+        reactions: ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['test_pubkey']),
+          ],
+          userReactions: [
+            UserReaction(
+              reactionId: 'existing_reaction',
+              user: 'test_pubkey',
+              emoji: '👍',
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
+      );
+
+      await service.toggleReaction(message: message, emoji: '❤');
+
+      expect(mockApi.sentMessages.length, 1);
+      expect(mockApi.sentMessages.first.kind, 7);
+      expect(mockApi.sentMessages.first.message, '❤');
+    });
+
+    test('sends reaction when other users have reacted but not current user', () async {
+      final message = createMessage(
+        reactions: ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['other_user']),
+          ],
+          userReactions: [
+            UserReaction(
+              reactionId: 'other_reaction',
+              user: 'other_user',
+              emoji: '👍',
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
+      );
+
+      await service.toggleReaction(message: message, emoji: '👍');
+
+      expect(mockApi.sentMessages.length, 1);
+      expect(mockApi.sentMessages.first.kind, 7);
+      expect(mockApi.sentMessages.first.message, '👍');
     });
   });
 

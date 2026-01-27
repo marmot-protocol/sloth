@@ -38,8 +38,6 @@ class WnMessageReactions extends StatelessWidget {
           _ReactionPill(
             emoji: reaction.emoji,
             count: reaction.count.toInt(),
-            users: reaction.users,
-            currentUserPubkey: currentUserPubkey,
             borderColor: colors.backgroundPrimary,
             backgroundColor: bubbleColor,
             textColor: textColor,
@@ -64,8 +62,6 @@ class WnMessageReactions extends StatelessWidget {
 class _ReactionPill extends StatelessWidget {
   final String emoji;
   final int count;
-  final List<String> users;
-  final String? currentUserPubkey;
   final Color backgroundColor;
   final Color borderColor;
   final Color textColor;
@@ -74,15 +70,11 @@ class _ReactionPill extends StatelessWidget {
   const _ReactionPill({
     required this.emoji,
     required this.count,
-    required this.users,
     required this.backgroundColor,
     required this.borderColor,
     required this.textColor,
-    this.currentUserPubkey,
     this.onReaction,
   });
-
-  bool get _userHasReacted => currentUserPubkey != null && users.contains(currentUserPubkey);
 
   @override
   Widget build(BuildContext context) {
@@ -114,7 +106,7 @@ class _ReactionPill extends StatelessWidget {
       ),
     );
 
-    if (onReaction != null && !_userHasReacted) {
+    if (onReaction != null) {
       return GestureDetector(
         onTap: () => onReaction!(emoji),
         child: pill,

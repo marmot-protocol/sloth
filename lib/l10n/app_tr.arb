@@ -114,6 +114,7 @@
   "delete": "Sil",
   "failedToDeleteMessage": "Mesaj silinemedi. Lütfen tekrar deneyin.",
   "failedToSendReaction": "Tepki gönderilemedi. Lütfen tekrar deneyin.",
+  "failedToRemoveReaction": "Tepki kaldırılamadı. Lütfen tekrar deneyin.",
   "unknownUser": "Bilinmeyen kullanıcı",
   "unknownGroup": "Bilinmeyen grup",
   "hasInvitedYouToSecureChat": "Sizi güvenli bir sohbete davet etti",

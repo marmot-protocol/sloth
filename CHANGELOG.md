@@ -26,7 +26,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reactions [PR #60](https://github.com/marmot-protocol/sloth/pull/60)
 - Add multi-account support [PR #78](https://github.com/marmot-protocol/sloth/pull/78)
 - Emoji picker for reactions [PR #81](https://github.com/marmot-protocol/sloth/pull/81)
-
+- Delete reactions [PR #95](https://github.com/marmot-protocol/sloth/pull/95)
 
 ### Changed
 - Change hooks that received refs to receive data [PR #27](https://github.com/marmot-protocol/sloth/pull/27)

@@ -147,10 +147,10 @@ void main() {
         expect(tappedEmoji, '👍');
       });
 
-      testWidgets('does not call onReaction when user taps pill they already reacted to', (
+      testWidgets('calls onReaction when user taps pill they already reacted to', (
         tester,
       ) async {
-        var callCount = 0;
+        String? tappedEmoji;
         await mountWidget(
           WnMessageReactions(
             reactions: [
@@ -158,7 +158,7 @@ void main() {
             ],
             isOwnMessage: false,
             currentUserPubkey: 'current_user',
-            onReaction: (_) => callCount++,
+            onReaction: (emoji) => tappedEmoji = emoji,
           ),
           tester,
         );
@@ -166,7 +166,7 @@ void main() {
         await tester.tap(find.text('👍'));
         await tester.pump();
 
-        expect(callCount, 0);
+        expect(tappedEmoji, '👍');
       });
 
       testWidgets('when onReaction is null nothing happens on tap', (tester) async {

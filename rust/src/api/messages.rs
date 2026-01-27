@@ -67,7 +67,8 @@ pub struct EmojiReaction {
 #[frb(non_opaque)]
 #[derive(Debug, Clone)]
 pub struct UserReaction {
-    pub user: String, // PublicKey converted to hex string
+    pub reaction_id: String,
+    pub user: String,
     pub emoji: String,
     pub created_at: DateTime<Utc>,
 }
@@ -229,6 +230,7 @@ impl From<&WhitenoiseReactionSummary> for ReactionSummary {
             .user_reactions
             .iter()
             .map(|user_reaction| UserReaction {
+                reaction_id: user_reaction.reaction_id.to_hex(),
                 user: user_reaction.user.to_hex(),
                 emoji: user_reaction.emoji.clone(),
                 created_at: {

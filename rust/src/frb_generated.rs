@@ -4526,10 +4526,12 @@ impl SseDecode for crate::api::users::User {
 impl SseDecode for crate::api::messages::UserReaction {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_reactionId = <String>::sse_decode(deserializer);
         let mut var_user = <String>::sse_decode(deserializer);
         let mut var_emoji = <String>::sse_decode(deserializer);
         let mut var_createdAt = <chrono::DateTime<chrono::Utc>>::sse_decode(deserializer);
         return crate::api::messages::UserReaction {
+            reaction_id: var_reactionId,
             user: var_user,
             emoji: var_emoji,
             created_at: var_createdAt,
@@ -5585,6 +5587,7 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::users::User> for crate::api::
 impl flutter_rust_bridge::IntoDart for crate::api::messages::UserReaction {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
+            self.reaction_id.into_into_dart().into_dart(),
             self.user.into_into_dart().into_dart(),
             self.emoji.into_into_dart().into_dart(),
             self.created_at.into_into_dart().into_dart(),
@@ -6553,6 +6556,7 @@ impl SseEncode for crate::api::users::User {
 impl SseEncode for crate::api::messages::UserReaction {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.reaction_id, serializer);
         <String>::sse_encode(self.user, serializer);
         <String>::sse_encode(self.emoji, serializer);
         <chrono::DateTime<chrono::Utc>>::sse_encode(self.created_at, serializer);

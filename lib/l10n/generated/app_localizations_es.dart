@@ -376,6 +376,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get failedToSendReaction => 'Error al enviar la reacción. Por favor, inténtalo de nuevo.';
 
   @override
+  String get failedToRemoveReaction =>
+      'Error al eliminar la reacción. Por favor, inténtalo de nuevo.';
+
+  @override
   String get unknownUser => 'Usuario desconocido';
 
   @override
