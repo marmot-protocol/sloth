@@ -31,8 +31,8 @@ nostr-sdk = { version = "0.43", features = [
 
 thiserror = "2.0.12"
 
-whitenoise = { version = "0.1.0", git = "https://github.com/marmot-protocol/whitenoise-rs", rev = "447092d6687104afffc824ef00bfc60d29de854a" }
-# whitenoise = { version = "0.1.0", path = "../../whitenoise" }
+whitenoise = { version = "0.1.0", git = "https://github.com/marmot-protocol/whitenoise-rs", rev = "8d175c1955f6833bb235eef79f22d53c5eeb57d3" }
+# whitenoise = { version = "0.1.0", path = "../../whitenoise-rs" }
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }
