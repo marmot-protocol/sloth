@@ -8,7 +8,7 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
 
 import '../mocks/mock_secure_storage.dart';
@@ -149,9 +149,9 @@ void main() {
     testWidgets('Save button is disabled when there are no changes', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final saveButton = find.byType(WnFilledButton);
+      final saveButton = find.widgetWithText(WnButton, 'Save');
       expect(saveButton, findsOneWidget);
-      final button = tester.widget<WnFilledButton>(saveButton);
+      final button = tester.widget<WnButton>(saveButton);
       expect(button.onPressed, isNull);
     });
 
@@ -162,8 +162,8 @@ void main() {
       expect(displayNameField, findsOneWidget);
       await tester.enterText(find.byType(TextFormField).first, 'New Name');
       await tester.pump();
-      final saveButton = find.byType(WnFilledButton);
-      final button = tester.widget<WnFilledButton>(saveButton);
+      final saveButton = find.widgetWithText(WnButton, 'Save');
+      final button = tester.widget<WnButton>(saveButton);
       expect(button.onPressed, isNotNull);
     });
 
@@ -231,8 +231,8 @@ void main() {
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(0), 'New Profile Name');
       await tester.pump();
-      final saveButton = find.byType(WnFilledButton);
-      final button = tester.widget<WnFilledButton>(saveButton);
+      final saveButton = find.widgetWithText(WnButton, 'Save');
+      final button = tester.widget<WnButton>(saveButton);
       expect(button.onPressed, isNotNull);
     });
 
@@ -243,8 +243,8 @@ void main() {
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(1), 'new@example.com');
       await tester.pump();
-      final saveButton = find.byType(WnFilledButton);
-      final button = tester.widget<WnFilledButton>(saveButton);
+      final saveButton = find.widgetWithText(WnButton, 'Save');
+      final button = tester.widget<WnButton>(saveButton);
       expect(button.onPressed, isNotNull);
     });
 
@@ -255,8 +255,8 @@ void main() {
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(2), 'New about text');
       await tester.pump();
-      final saveButton = find.byType(WnFilledButton);
-      final button = tester.widget<WnFilledButton>(saveButton);
+      final saveButton = find.widgetWithText(WnButton, 'Save');
+      final button = tester.widget<WnButton>(saveButton);
       expect(button.onPressed, isNotNull);
     });
 

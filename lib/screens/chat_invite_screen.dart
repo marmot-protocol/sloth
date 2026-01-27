@@ -10,10 +10,9 @@ import 'package:sloth/src/rust/api/account_groups.dart' as account_groups_api;
 import 'package:sloth/src/rust/api/messages.dart' as messages_api;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
 class ChatInviteScreen extends HookConsumerWidget {
@@ -154,13 +153,14 @@ class ChatInviteScreen extends HookConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 spacing: 12.h,
                 children: [
-                  WnOutlinedButton(
+                  WnButton(
                     text: context.l10n.decline,
+                    type: WnButtonType.outline,
                     loading: isDeclining.value,
                     disabled: isProcessing,
                     onPressed: handleDecline,
                   ),
-                  WnFilledButton(
+                  WnButton(
                     text: context.l10n.accept,
                     loading: isAccepting.value,
                     disabled: isProcessing,

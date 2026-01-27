@@ -7,7 +7,7 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
@@ -102,17 +102,17 @@ class _ActionButtons extends StatelessWidget {
       spacing: 8.h,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        WnFilledButton(
+        WnButton(
           text: context.l10n.publishNewKeyPackage,
           onPressed: onPublish,
           disabled: isLoading,
         ),
-        WnFilledButton(
+        WnButton(
           text: context.l10n.refreshKeyPackages,
           onPressed: onFetch,
           disabled: isLoading,
         ),
-        WnFilledButton(
+        WnButton(
           text: context.l10n.deleteAllKeyPackages,
           onPressed: onDeleteAll,
           disabled: isLoading,

@@ -10,10 +10,9 @@ import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_image_picker.dart' show WnImagePicker;
-import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
@@ -143,12 +142,13 @@ class SignupScreen extends HookConsumerWidget {
                             spacing: 8.h,
                             crossAxisAlignment: CrossAxisAlignment.stretch,
                             children: [
-                              WnOutlinedButton(
+                              WnButton(
                                 text: context.l10n.cancel,
+                                type: WnButtonType.outline,
                                 onPressed: () => Routes.goBack(context),
                                 disabled: state.isLoading,
                               ),
-                              WnFilledButton(
+                              WnButton(
                                 text: context.l10n.signUp,
                                 onPressed: onSubmit,
                                 loading: state.isLoading,

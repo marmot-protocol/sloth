@@ -8,8 +8,8 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
@@ -104,7 +104,7 @@ class SignOutScreen extends HookConsumerWidget {
                           Gap(32.h),
                           SizedBox(
                             width: double.infinity,
-                            child: WnFilledButton(
+                            child: WnButton(
                               text: context.l10n.signOut,
                               onPressed: signOut,
                               loading: isLoggingOut.value,

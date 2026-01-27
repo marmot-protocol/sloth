@@ -9,8 +9,8 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -68,7 +68,9 @@ class SettingsScreen extends HookConsumerWidget {
                               children: [
                                 Expanded(
                                   child: Text(
-                                    formatPublicKey(npubFromHex(pubkey) ?? pubkey),
+                                    formatPublicKey(
+                                      npubFromHex(pubkey) ?? pubkey,
+                                    ),
                                     maxLines: 2,
                                     style: TextStyle(
                                       fontSize: 12.sp,
@@ -101,8 +103,9 @@ class SettingsScreen extends HookConsumerWidget {
                 ),
                 SizedBox(
                   width: double.infinity,
-                  child: WnOutlinedButton(
+                  child: WnButton(
                     text: 'Switch Profile',
+                    type: WnButtonType.outline,
                     onPressed: () => Routes.pushToSwitchProfile(context),
                   ),
                 ),
@@ -172,10 +175,7 @@ class _SettingsTile extends StatelessWidget {
         padding: EdgeInsets.symmetric(vertical: 12.h),
         child: Row(
           children: [
-            WnIcon(
-              icon,
-              color: colors.backgroundContentPrimary,
-            ),
+            WnIcon(icon, color: colors.backgroundContentPrimary),
             SizedBox(width: 12.w),
             Expanded(
               child: Text(

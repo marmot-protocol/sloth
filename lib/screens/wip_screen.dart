@@ -4,8 +4,7 @@ import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
-import 'package:sloth/widgets/wn_outlined_button.dart' show WnOutlinedButton;
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart' show WnScreenHeader;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
 
@@ -52,14 +51,15 @@ class WipScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         Gap(4.h),
-                        WnFilledButton(
+                        WnButton(
                           text: context.l10n.donate,
                           onPressed: () {
                             Routes.pushToDonate(context);
                           },
                         ),
-                        WnOutlinedButton(
+                        WnButton(
                           text: context.l10n.goBack,
+                          type: WnButtonType.outline,
                           onPressed: () {
                             Routes.goBack(context);
                           },

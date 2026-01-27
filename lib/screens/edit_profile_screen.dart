@@ -8,10 +8,9 @@ import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState,
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
@@ -133,14 +132,15 @@ class EditProfileScreen extends HookConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         if (state.hasUnsavedChanges)
-                          WnOutlinedButton(
+                          WnButton(
                             text: context.l10n.discardChanges,
+                            type: WnButtonType.outline,
                             onPressed: () {
                               discardChanges();
                             },
                             disabled: state.loadingState == EditProfileLoadingState.saving,
                           ),
-                        WnFilledButton(
+                        WnButton(
                           text: context.l10n.save,
                           onPressed:
                               state.hasUnsavedChanges &&
