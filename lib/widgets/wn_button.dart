@@ -170,42 +170,47 @@ class WnButton extends StatelessWidget {
   }
 
   Widget _buildContent(Color contentColor, double iconSize, double fontSize, double iconPadding) {
-    return Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        if (leadingIcon != null) ...[
-          WnIcon(
-            leadingIcon!,
-            size: iconSize,
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final isBounded = constraints.maxWidth.isFinite;
+        final textWidget = Text(
+          text,
+          style: TextStyle(
+            fontWeight: FontWeight.w500,
+            fontSize: fontSize,
             color: contentColor,
-            key: const Key('leading_icon'),
+            letterSpacing: 0.4,
+            height: 20 / 14,
           ),
-          SizedBox(width: iconPadding),
-        ],
-        Flexible(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontWeight: FontWeight.w500,
-              fontSize: fontSize,
-              color: contentColor,
-              letterSpacing: 0.4,
-              height: 20 / 14,
-            ),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ),
-        if (trailingIcon != null) ...[
-          SizedBox(width: iconPadding),
-          WnIcon(
-            trailingIcon!,
-            size: iconSize,
-            color: contentColor,
-            key: const Key('trailing_icon'),
-          ),
-        ],
-      ],
+          overflow: TextOverflow.ellipsis,
+        );
+
+        return Row(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            if (leadingIcon != null) ...[
+              WnIcon(
+                leadingIcon!,
+                size: iconSize,
+                color: contentColor,
+                key: const Key('leading_icon'),
+              ),
+              SizedBox(width: iconPadding),
+            ],
+            if (isBounded) Flexible(child: textWidget) else textWidget,
+            if (trailingIcon != null) ...[
+              SizedBox(width: iconPadding),
+              WnIcon(
+                trailingIcon!,
+                size: iconSize,
+                color: contentColor,
+                key: const Key('trailing_icon'),
+              ),
+            ],
+          ],
+        );
+      },
     );
   }
 

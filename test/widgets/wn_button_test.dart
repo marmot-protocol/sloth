@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart' show Key;
+import 'package:flutter/material.dart'
+    show Key, Row, SizedBox, Text, TextOverflow, UnconstrainedBox;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
@@ -397,6 +398,144 @@ void main() {
 
       test('small size has height of 32', () {
         expect(WnButtonSize.small.height, 32);
+      });
+    });
+
+    group('text overflow', () {
+      testWidgets('handles long text with ellipsis', (WidgetTester tester) async {
+        final widget = SizedBox(
+          width: 100,
+          child: WnButton(
+            text: 'This is a very long button text that should overflow',
+            onPressed: () {},
+          ),
+        );
+        await mountWidget(widget, tester);
+        expect(find.text('This is a very long button text that should overflow'), findsOneWidget);
+      });
+
+      testWidgets('text uses ellipsis overflow', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'Test',
+          onPressed: () {},
+        );
+        await mountWidget(widget, tester);
+        final textWidget = tester.widget<Text>(find.text('Test'));
+        expect(textWidget.overflow, TextOverflow.ellipsis);
+      });
+
+      testWidgets('renders without crash in unbounded width parent', (WidgetTester tester) async {
+        final widget = UnconstrainedBox(
+          child: Row(
+            children: [
+              WnButton(
+                text: 'Unbounded',
+                onPressed: () {},
+              ),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+        expect(find.text('Unbounded'), findsOneWidget);
+      });
+
+      testWidgets('renders with icons in unbounded width parent', (WidgetTester tester) async {
+        final widget = UnconstrainedBox(
+          child: Row(
+            children: [
+              WnButton(
+                text: 'Unbounded',
+                onPressed: () {},
+                leadingIcon: WnIcons.addLarge,
+                trailingIcon: WnIcons.arrowRight,
+              ),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+        expect(find.text('Unbounded'), findsOneWidget);
+        expect(find.byKey(const Key('leading_icon')), findsOneWidget);
+        expect(find.byKey(const Key('trailing_icon')), findsOneWidget);
+      });
+    });
+
+    group('null onPressed', () {
+      testWidgets('renders correctly with null onPressed', (WidgetTester tester) async {
+        final widget = const WnButton(
+          text: 'Null Handler',
+          onPressed: null,
+        );
+        await mountWidget(widget, tester);
+        expect(find.text('Null Handler'), findsOneWidget);
+      });
+
+      testWidgets('does not crash when tapped with null onPressed', (WidgetTester tester) async {
+        final widget = const WnButton(
+          text: 'Null Handler',
+          onPressed: null,
+        );
+        await mountWidget(widget, tester);
+        await tester.tap(find.byType(WnButton));
+        expect(find.text('Null Handler'), findsOneWidget);
+      });
+    });
+
+    group('combined states', () {
+      testWidgets('loading takes precedence over disabled', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'Both States',
+          onPressed: () {},
+          loading: true,
+          disabled: true,
+        );
+        await mountWidget(widget, tester);
+        expect(find.byKey(const Key('loading_indicator')), findsOneWidget);
+        expect(find.text('Both States'), findsNothing);
+      });
+
+      testWidgets('does not call onPressed when both loading and disabled', (
+        WidgetTester tester,
+      ) async {
+        var onPressedCalled = false;
+        final widget = WnButton(
+          text: 'Both States',
+          onPressed: () {
+            onPressedCalled = true;
+          },
+          loading: true,
+          disabled: true,
+        );
+        await mountWidget(widget, tester);
+        await tester.tap(find.byType(WnButton));
+        expect(onPressedCalled, isFalse);
+      });
+    });
+
+    group('icons with different sizes', () {
+      testWidgets('renders icons correctly with small size', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'Small',
+          onPressed: () {},
+          size: WnButtonSize.small,
+          leadingIcon: WnIcons.addLarge,
+          trailingIcon: WnIcons.arrowRight,
+        );
+        await mountWidget(widget, tester);
+        expect(find.byKey(const Key('leading_icon')), findsOneWidget);
+        expect(find.byKey(const Key('trailing_icon')), findsOneWidget);
+      });
+
+      testWidgets('renders icons correctly with medium size', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'Medium',
+          onPressed: () {},
+          size: WnButtonSize.medium,
+          leadingIcon: WnIcons.addLarge,
+          trailingIcon: WnIcons.arrowRight,
+        );
+        await mountWidget(widget, tester);
+        expect(find.byKey(const Key('leading_icon')), findsOneWidget);
+        expect(find.byKey(const Key('trailing_icon')), findsOneWidget);
       });
     });
   });
