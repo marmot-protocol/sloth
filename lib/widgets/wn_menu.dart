@@ -15,12 +15,8 @@ class WnMenu extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        for (int i = 0; i < children.length; i++) ...[
-          children[i],
-          if (i < children.length - 1) SizedBox(height: 10.h),
-        ],
-      ],
+      spacing: 10.h,
+      children: children,
     );
   }
 }

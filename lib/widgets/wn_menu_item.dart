@@ -31,9 +31,8 @@ class WnMenuItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(8.r),
         hoverColor: colors.fillTertiaryHover,
         splashColor: colors.fillTertiaryActive,
-        child: Container(
+        child: SizedBox(
           height: 56.h,
-          padding: EdgeInsets.zero,
           child: Row(
             children: [
               if (icon != null)
@@ -55,7 +54,7 @@ class WnMenuItem extends StatelessWidget {
                       fontWeight: FontWeight.w500,
                       fontSize: 16.sp,
                       color: contentColor,
-                      letterSpacing: 0.2,
+                      letterSpacing: 0.2.sp,
                       height: 22 / 16,
                     ),
                     maxLines: 1,
