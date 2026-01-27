@@ -112,9 +112,9 @@ void main() {
       expect(find.byType(ProfileKeysScreen), findsOneWidget);
     });
 
-    testWidgets('tapping QR code icon navigates to ShareProfileScreen', (tester) async {
+    testWidgets('tapping Share & connect button navigates to ShareProfileScreen', (tester) async {
       await pumpSettingsScreen(tester);
-      await tester.tap(find.byKey(const Key('qr_code_button')));
+      await tester.tap(find.byKey(const Key('share_and_connect_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ShareProfileScreen), findsOneWidget);
     });
@@ -156,9 +156,9 @@ void main() {
       expect(find.byType(DeveloperSettingsScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Switch Profile navigates to SwitchProfileScreen', (tester) async {
+    testWidgets('tapping Switch profile navigates to SwitchProfileScreen', (tester) async {
       await pumpSettingsScreen(tester);
-      await tester.tap(find.text('Switch Profile'));
+      await tester.tap(find.text('Switch profile'));
       await tester.pumpAndSettle();
       expect(find.text('Profiles'), findsOneWidget);
     });

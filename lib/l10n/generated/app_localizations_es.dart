@@ -67,6 +67,12 @@ class AppLocalizationsEs extends AppLocalizations {
   String get settings => 'Configuración';
 
   @override
+  String get shareAndConnect => 'Compartir y conectar';
+
+  @override
+  String get switchProfile => 'Cambiar perfil';
+
+  @override
   String get editProfile => 'Editar perfil';
 
   @override

@@ -67,6 +67,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get settings => 'Настройки';
 
   @override
+  String get shareAndConnect => 'Поделиться и подключиться';
+
+  @override
+  String get switchProfile => 'Сменить профиль';
+
+  @override
   String get editProfile => 'Редактировать профиль';
 
   @override

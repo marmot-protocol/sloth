@@ -41,73 +41,72 @@ class SettingsScreen extends HookConsumerWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 WnScreenHeader(title: context.l10n.settings),
-                Center(
-                  child: Row(
-                    spacing: 8.w,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      WnAvatar(
-                        pictureUrl: metadata?.picture,
-                        displayName: displayName,
-                        size: 56.w,
-                      ),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (displayName != null)
-                              Text(
-                                displayName,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: colors.backgroundContentPrimary,
-                                ),
+                Row(
+                  spacing: 8.w,
+                  children: [
+                    WnAvatar(
+                      pictureUrl: metadata?.picture,
+                      displayName: displayName,
+                      size: 56.w,
+                    ),
+                    Flexible(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (displayName != null)
+                            Text(
+                              displayName,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentPrimary,
+                                height: 22 / 16,
+                                letterSpacing: 0.2.sp,
                               ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    formatPublicKey(
-                                      npubFromHex(pubkey) ?? pubkey,
-                                    ),
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.backgroundContentSecondary,
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(width: 8.w),
-                                IconButton(
-                                  key: const Key('qr_code_button'),
-                                  onPressed: () => Routes.pushToShareProfile(context),
-                                  icon: WnIcon(
-                                    WnIcons.qrCode,
-                                    color: colors.backgroundContentTertiary,
-                                  ),
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(
-                                    minWidth: 24.w,
-                                    minHeight: 24.w,
-                                  ),
-                                ),
-                              ],
                             ),
-                          ],
-                        ),
+                          SizedBox(height: 4.h),
+                          Text(
+                            formatPublicKey(
+                              npubFromHex(pubkey) ?? pubkey,
+                            ),
+                            maxLines: 2,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              fontWeight: FontWeight.w500,
+                              color: colors.backgroundContentSecondary,
+                              height: 16 / 12,
+                              letterSpacing: 0.6.sp,
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: double.infinity,
-                  child: WnButton(
-                    text: 'Switch Profile',
-                    type: WnButtonType.outline,
-                    onPressed: () => Routes.pushToSwitchProfile(context),
-                  ),
+                Column(
+                  spacing: 8.h,
+                  children: [
+                    SizedBox(
+                      width: double.infinity,
+                      child: WnButton(
+                        key: const Key('share_and_connect_button'),
+                        text: context.l10n.shareAndConnect,
+                        trailingIcon: WnIcons.qrCode,
+                        size: WnButtonSize.medium,
+                        onPressed: () => Routes.pushToShareProfile(context),
+                      ),
+                    ),
+                    SizedBox(
+                      width: double.infinity,
+                      child: WnButton(
+                        text: context.l10n.switchProfile,
+                        type: WnButtonType.outline,
+                        trailingIcon: WnIcons.change,
+                        size: WnButtonSize.medium,
+                        onPressed: () => Routes.pushToSwitchProfile(context),
+                      ),
+                    ),
+                  ],
                 ),
                 _SettingsTile(
                   icon: WnIcons.user,

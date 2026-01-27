@@ -67,6 +67,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get settings => 'Configurações';
 
   @override
+  String get shareAndConnect => 'Compartilhar e conectar';
+
+  @override
+  String get switchProfile => 'Trocar perfil';
+
+  @override
   String get editProfile => 'Editar perfil';
 
   @override
