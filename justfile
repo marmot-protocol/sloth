@@ -4,8 +4,21 @@
 default:
     @just --list
 
-# Pre-commit checks: run the same checks as CI locally
+# Pre-commit checks: run the same checks as CI locally (quiet mode - minimal output)
 precommit:
+    @just _run-quiet "deps-flutter"    "flutter deps"
+    @just _run-quiet "deps-rust"       "rust deps"
+    @just _run-quiet "l10n"            "l10n generation"
+    @just _run-quiet "validate-locales-keys" "l10n validation"
+    @just _run-quiet "fix"             "auto-fix"
+    @just _run-quiet "format"          "formatting"
+    @just _run-quiet "lint"            "linting"
+    @just _run-quiet "test-flutter"    "flutter tests"
+    @just _run-quiet "test-rust"       "rust tests"
+    @echo "✅ PRECOMMIT PASSED"
+
+# Pre-commit checks with verbose output (shows all command output)
+precommit-verbose:
     just deps-flutter
     just deps-rust
     just l10n
@@ -15,7 +28,10 @@ precommit:
     just lint
     just test-flutter
     just test-rust
-    @echo "✅ All pre-commit checks passed!"
+    @echo ""
+    @echo "════════════════════════════════════════"
+    @echo "✅ ALL PRECOMMIT CHECKS PASSED"
+    @echo "════════════════════════════════════════"
 
 # Pre-commit checks without auto-fixing (for releases)
 precommit-check:
@@ -74,7 +90,7 @@ deps-rust:
 # Install/update Flutter dependencies
 deps-flutter:
     @echo "📦 Installing Flutter dependencies..."
-    flutter pub get
+    @flutter pub get > /dev/null 2>&1 || flutter pub get
 
 # ==============================================================================
 # RUST OPERATIONS
@@ -89,6 +105,10 @@ build-rust-debug:
 test-rust:
     @echo "🧪 Testing Rust code..."
     cd rust && cargo test
+
+# Test Rust code with minimal output (for agents/CI)
+test-rust-quiet:
+    @cd rust && cargo test -q
 
 # Format Rust code
 format-rust:
@@ -132,7 +152,19 @@ check-dart-format:
 # Test Flutter code
 test-flutter:
     @echo "🧪 Testing Flutter code..."
-    @if [ -d "test" ]; then flutter test; else echo "No test directory found. Create tests in test/ directory."; fi
+    @if [ -d "test" ]; then \
+        flutter test --reporter=compact && echo "✅ Flutter tests passed!" || (echo "❌ Flutter tests failed!" && exit 1); \
+    else \
+        echo "No test directory found. Create tests in test/ directory."; \
+    fi
+
+# Test Flutter code with minimal output (for agents/CI)
+test-flutter-quiet:
+    @if [ -d "test" ]; then \
+        flutter test --no-pub --reporter=failures-only; \
+    else \
+        echo "No test directory found."; \
+    fi
 
 
 coverage min="80":
@@ -190,3 +222,20 @@ fix:
     @echo "🔧 Fixing common issues..."
     cd rust && cargo fix --allow-dirty
     dart fix --apply
+
+# ==============================================================================
+# HELPER RECIPES
+# ==============================================================================
+
+# Run a recipe quietly, showing only name and pass/fail status (internal use)
+[private]
+_run-quiet recipe label:
+    @printf "%-20s" "{{label}}..."
+    @if just {{recipe}} > /tmp/just-{{recipe}}-out.txt 2>&1; then \
+        echo "✓"; \
+    else \
+        echo "✗"; \
+        echo ""; \
+        cat /tmp/just-{{recipe}}-out.txt; \
+        exit 1; \
+    fi

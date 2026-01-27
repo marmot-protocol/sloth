@@ -11,6 +11,8 @@ import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_menu.dart';
+import 'package:sloth/widgets/wn_menu_item.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -109,85 +111,48 @@ class SettingsScreen extends HookConsumerWidget {
                     onPressed: () => Routes.pushToSwitchProfile(context),
                   ),
                 ),
-                _SettingsTile(
-                  icon: WnIcons.user,
-                  label: context.l10n.editProfile,
-                  onTap: () => Routes.pushToEditProfile(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.key,
-                  label: context.l10n.profileKeys,
-                  onTap: () => Routes.pushToProfileKeys(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.network,
-                  label: context.l10n.networkRelays,
-                  onTap: () => Routes.pushToNetwork(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.settings,
-                  label: context.l10n.appSettings,
-                  onTap: () => Routes.pushToAppSettings(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.heart,
-                  label: context.l10n.donateToWhiteNoise,
-                  onTap: () => Routes.pushToDonate(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.developerSettings,
-                  label: context.l10n.developerSettings,
-                  onTap: () => Routes.pushToDeveloperSettings(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.logout,
-                  label: context.l10n.signOut,
-                  onTap: () => Routes.pushToSignOut(context),
+                WnMenu(
+                  children: [
+                    WnMenuItem(
+                      icon: WnIcons.user,
+                      label: context.l10n.editProfile,
+                      onTap: () => Routes.pushToEditProfile(context),
+                    ),
+                    WnMenuItem(
+                      icon: WnIcons.key,
+                      label: context.l10n.profileKeys,
+                      onTap: () => Routes.pushToProfileKeys(context),
+                    ),
+                    WnMenuItem(
+                      icon: WnIcons.network,
+                      label: context.l10n.networkRelays,
+                      onTap: () => Routes.pushToNetwork(context),
+                    ),
+                    WnMenuItem(
+                      icon: WnIcons.settings,
+                      label: context.l10n.appSettings,
+                      onTap: () => Routes.pushToAppSettings(context),
+                    ),
+                    WnMenuItem(
+                      icon: WnIcons.heart,
+                      label: context.l10n.donateToWhiteNoise,
+                      onTap: () => Routes.pushToDonate(context),
+                    ),
+                    WnMenuItem(
+                      icon: WnIcons.developerSettings,
+                      label: context.l10n.developerSettings,
+                      onTap: () => Routes.pushToDeveloperSettings(context),
+                    ),
+                    WnMenuItem(
+                      icon: WnIcons.logout,
+                      label: context.l10n.signOut,
+                      onTap: () => Routes.pushToSignOut(context),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final WnIcons icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
-        child: Row(
-          children: [
-            WnIcon(icon, color: colors.backgroundContentPrimary),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: colors.backgroundContentPrimary,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-          ],
         ),
       ),
     );
