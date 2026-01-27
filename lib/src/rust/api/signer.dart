@@ -15,8 +15,11 @@ import 'error.dart';
 /// Login with an external signer (like Amber via NIP-55) and publish key package.
 ///
 /// This function creates an account for the given public key and uses the provided
-/// callbacks to sign the key package event, allowing the account to receive MLS
-/// messages.
+/// callbacks to sign events. The whitenoise crate handles all the orchestration:
+/// - Account creation/setup
+/// - Relay configuration (fetches existing or uses defaults)
+/// - Publishing relay lists when using defaults
+/// - Publishing the MLS key package
 ///
 /// # Arguments
 ///

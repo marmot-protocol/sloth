@@ -107,23 +107,6 @@ pub async fn login(nsec_or_hex_privkey: String) -> Result<Account, ApiError> {
     Ok(account.into())
 }
 
-/// Login with an external signer (like Amber via NIP-55).
-///
-/// This creates an account entry for the given public key without requiring
-/// the private key. The private key never touches this app - all signing
-/// operations must be performed by the external signer.
-///
-/// # Arguments
-///
-/// * `pubkey` - The user's public key (hex format) obtained from the external signer.
-#[frb]
-pub async fn login_with_external_signer(pubkey: String) -> Result<Account, ApiError> {
-    let whitenoise = Whitenoise::get_instance()?;
-    let pubkey = PublicKey::parse(&pubkey)?;
-    let account = whitenoise.login_with_external_signer(pubkey).await?;
-    Ok(account.into())
-}
-
 #[frb]
 pub async fn logout(pubkey: String) -> Result<(), ApiError> {
     let whitenoise = Whitenoise::get_instance()?;

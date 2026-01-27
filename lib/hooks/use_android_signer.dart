@@ -1,0 +1,87 @@
+import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logging/logging.dart';
+import 'package:sloth/services/android_signer_service.dart';
+
+final _logger = Logger('useAndroidSigner');
+
+/// Hook for managing Android signer (NIP-55) integration.
+///
+/// Provides ephemeral state for signer availability, connection status,
+/// and methods to connect/disconnect from the Android signer.
+({
+  bool isAvailable,
+  bool isConnecting,
+  String? error,
+  Future<String> Function() connect,
+  Future<void> Function() disconnect,
+})
+useAndroidSigner() {
+  final signerService = useMemoized(() => const AndroidSignerService());
+
+  final isAvailable = useState(false);
+  final isConnecting = useState(false);
+  final error = useState<String?>(null);
+
+  // Check signer availability on mount
+  useEffect(() {
+    void checkAvailability() async {
+      final available = await signerService.isAvailable();
+      isAvailable.value = available;
+    }
+
+    checkAvailability();
+    return null;
+  }, const []);
+
+  Future<String> connect() async {
+    _logger.info('Connecting to Android signer...');
+    isConnecting.value = true;
+    error.value = null;
+
+    try {
+      // Request public key from signer (this opens the signer app)
+      // Request all permissions Sloth needs upfront so signer doesn't prompt repeatedly
+      final pubkey = await signerService.getPublicKey(
+        permissions: [
+          // MLS event kinds (NIP-104)
+          const SignerPermission(type: 'sign_event', kind: 443), // MLS Key Package
+          const SignerPermission(type: 'sign_event', kind: 444), // MLS Welcome
+          const SignerPermission(type: 'sign_event', kind: 445), // MLS Group Message
+          // Gift wrap for MLS messages (NIP-59)
+          const SignerPermission(type: 'sign_event', kind: 1059), // Gift Wrap
+          // Relay lists
+          const SignerPermission(type: 'sign_event', kind: 10002), // Relay List (NIP-65)
+          const SignerPermission(type: 'sign_event', kind: 10050), // Inbox Relays (NIP-17)
+          const SignerPermission(type: 'sign_event', kind: 10051), // MLS Key Package Relays
+          // Encryption for gift wrap
+          const SignerPermission(type: 'nip44_encrypt'),
+          const SignerPermission(type: 'nip44_decrypt'),
+        ],
+      );
+
+      _logger.info('Connected to signer successfully: ${pubkey.substring(0, 8)}...');
+      return pubkey;
+    } catch (e) {
+      _logger.warning('Failed to connect to signer: $e');
+      error.value = e.toString();
+      rethrow;
+    } finally {
+      isConnecting.value = false;
+    }
+  }
+
+  Future<void> disconnect() async {
+    _logger.info('Disconnecting from Android signer...');
+    // No persistent state to clean up - the hook only manages ephemeral state.
+    // The signer package name is managed by AndroidSignerService.
+    _logger.info('Disconnected from Android signer');
+  }
+
+  return (
+    isAvailable: isAvailable.value,
+    isConnecting: isConnecting.value,
+    error: error.value,
+    connect: connect,
+    disconnect: disconnect,
+  );
+}
