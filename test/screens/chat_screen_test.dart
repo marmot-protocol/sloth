@@ -703,6 +703,78 @@ void main() {
           expect(find.byType(MessageActionsScreen), findsNothing);
         });
       });
+
+      group('reaction deletion from message actions', () {
+        ReactionSummary ownReaction(String emoji, String reactionId) => ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: emoji, count: BigInt.one, users: const [_testPubkey]),
+          ],
+          userReactions: [
+            UserReaction(
+              reactionId: reactionId,
+              emoji: emoji,
+              user: _testPubkey,
+              createdAt: DateTime(2024),
+            ),
+          ],
+        );
+
+        testWidgets('calls delete API when tapping selected emoji', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), reactions: ownReaction('❤', 'reaction_1')),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+          await tester.tap(find.byKey(const Key('reaction_❤')));
+          await tester.pumpAndSettle();
+
+          expect(_api.deletionCalls.length, 1);
+        });
+
+        testWidgets('sends correct reaction ID in deletion tags', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), reactions: ownReaction('❤', 'reaction_to_remove')),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+          await tester.tap(find.byKey(const Key('reaction_❤')));
+          await tester.pumpAndSettle();
+
+          final tags = _api.deletionCalls.first.tags!.cast<_MockTag>();
+          expect(tags[0].vec, ['e', 'reaction_to_remove']);
+        });
+
+        testWidgets('closes message actions after removing reaction', (tester) async {
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), reactions: ownReaction('❤', 'reaction_1')),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+          await tester.tap(find.byKey(const Key('reaction_❤')));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(MessageActionsScreen), findsNothing);
+        });
+
+        testWidgets('shows error snackbar when reaction removal fails', (tester) async {
+          _api.deleteError = Exception('Network error');
+          _api.initialMessages = [
+            _message('m1', DateTime(2024), reactions: ownReaction('❤', 'reaction_1')),
+          ];
+          await pumpChatScreen(tester);
+
+          await longPressMessage(tester, 'm1');
+          await tester.tap(find.byKey(const Key('reaction_❤')));
+          await tester.pumpAndSettle();
+
+          expect(_api.deletionCalls.length, 0);
+          expect(find.text('Failed to remove reaction. Please try again.'), findsOneWidget);
+          expect(find.byType(MessageActionsScreen), findsNothing);
+        });
+      });
     });
 
     group('reaction pills', () {
@@ -770,13 +842,18 @@ void main() {
       });
 
       group('when user has a reaction to the message', () {
-        testWidgets('does not call API when tapping own reaction', (tester) async {
+        testWidgets('calls delete API when tapping own reaction', (tester) async {
           final ownReaction = ReactionSummary(
             byEmoji: [
               EmojiReaction(emoji: '👍', count: BigInt.one, users: const [_testPubkey]),
             ],
             userReactions: [
-              UserReaction(emoji: '👍', user: _testPubkey, createdAt: DateTime(2024)),
+              UserReaction(
+                reactionId: 'reaction_to_delete',
+                emoji: '👍',
+                user: _testPubkey,
+                createdAt: DateTime(2024),
+              ),
             ],
           );
           _api.initialMessages = [_message('m1', DateTime(2024), reactions: ownReaction)];
@@ -785,7 +862,9 @@ void main() {
           await tester.tap(find.text('👍'));
           await tester.pumpAndSettle();
 
-          expect(_api.reactionCalls, isEmpty);
+          expect(_api.deletionCalls.length, 1);
+          final tags = _api.deletionCalls.first.tags!.cast<_MockTag>();
+          expect(tags[0].vec, ['e', 'reaction_to_delete']);
         });
       });
     });
