@@ -23,6 +23,9 @@
   "profileKeys": "Profilschlüssel",
   "networkRelays": "Netzwerk-Relays",
   "appSettings": "App-Einstellungen",
+  "privacyAndSecurity": "Datenschutz & Sicherheit",
+  "dataUsage": "Datennutzung",
+  "appearance": "Erscheinungsbild",
   "donateToWhiteNoise": "An White Noise spenden",
   "developerSettings": "Entwicklereinstellungen",
   "signOut": "Abmelden",
@@ -123,5 +126,11 @@
   "timeJustNow": "gerade eben",
   "timeMinutesAgo": "{count, plural, =1{vor 1 Minute} other{vor {count} Minuten}}",
   "timeHoursAgo": "{count, plural, =1{vor 1 Stunde} other{vor {count} Stunden}}",
-  "timeDaysAgo": "{count, plural, =1{gestern} other{vor {count} Tagen}}"
+  "timeDaysAgo": "{count, plural, =1{gestern} other{vor {count} Tagen}}",
+  "deleteAllAppData": "Alle App-Daten löschen",
+  "deleteAppData": "App-Daten löschen",
+  "deleteAllAppDataDescription": "Löscht alle Profile, Schlüssel, Chats und lokalen Dateien von diesem Gerät.",
+  "deleteAllAppDataConfirmation": "Alle App-Daten löschen?",
+  "deleteAllAppDataWarning": "Dies wird alle Profile, Schlüssel, Chats und lokalen Dateien von diesem Gerät löschen. Dies kann nicht rückgängig gemacht werden.",
+  "deleteAllAppDataFailed": "App-Daten konnten nicht gelöscht werden. Bitte erneut versuchen."
 }

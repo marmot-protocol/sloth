@@ -249,6 +249,24 @@ abstract class AppLocalizations {
   /// Settings menu item
   ///
   /// In en, this message translates to:
+  /// **'Privacy & Security'**
+  String get privacyAndSecurity;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Data Usage'**
+  String get dataUsage;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// Settings menu item
+  ///
+  /// In en, this message translates to:
   /// **'Donate to White Noise'**
   String get donateToWhiteNoise;
 
@@ -851,6 +869,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{yesterday} other{{count} days ago}}'**
   String timeDaysAgo(int count);
+
+  /// Section label for delete all app data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all app data'**
+  String get deleteAllAppData;
+
+  /// Button text for delete app data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete app data'**
+  String get deleteAppData;
+
+  /// Description for delete all app data action
+  ///
+  /// In en, this message translates to:
+  /// **'Erase every profile, key, chat, and local file from this device.'**
+  String get deleteAllAppDataDescription;
+
+  /// Delete all app data confirmation screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all app data?'**
+  String get deleteAllAppDataConfirmation;
+
+  /// Delete all app data warning message
+  ///
+  /// In en, this message translates to:
+  /// **'This will erase every profile, key, chat, and local file from this device. This cannot be undone.'**
+  String get deleteAllAppDataWarning;
+
+  /// Error message when deleting app data fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete app data. Please try again.'**
+  String get deleteAllAppDataFailed;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

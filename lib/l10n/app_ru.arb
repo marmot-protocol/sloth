@@ -23,6 +23,9 @@
   "profileKeys": "Ключи профиля",
   "networkRelays": "Сетевые реле",
   "appSettings": "Настройки приложения",
+  "privacyAndSecurity": "Конфиденциальность и безопасность",
+  "dataUsage": "Использование данных",
+  "appearance": "Оформление",
   "donateToWhiteNoise": "Пожертвовать White Noise",
   "developerSettings": "Настройки разработчика",
   "signOut": "Выйти",
@@ -123,5 +126,11 @@
   "timeJustNow": "только что",
   "timeMinutesAgo": "{count, plural, =1{1 минуту назад} few{{count} минуты назад} many{{count} минут назад} other{{count} минут назад}}",
   "timeHoursAgo": "{count, plural, =1{1 час назад} few{{count} часа назад} many{{count} часов назад} other{{count} часов назад}}",
-  "timeDaysAgo": "{count, plural, =1{вчера} few{{count} дня назад} many{{count} дней назад} other{{count} дней назад}}"
+  "timeDaysAgo": "{count, plural, =1{вчера} few{{count} дня назад} many{{count} дней назад} other{{count} дней назад}}",
+  "deleteAllAppData": "Удалить все данные приложения",
+  "deleteAppData": "Удалить данные приложения",
+  "deleteAllAppDataDescription": "Удалит все профили, ключи, чаты и локальные файлы с этого устройства.",
+  "deleteAllAppDataConfirmation": "Удалить все данные приложения?",
+  "deleteAllAppDataWarning": "Это удалит все профили, ключи, чаты и локальные файлы с этого устройства. Это нельзя отменить.",
+  "deleteAllAppDataFailed": "Не удалось удалить данные приложения. Попробуйте снова."
 }

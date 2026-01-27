@@ -36,6 +36,7 @@ class MockWnApi implements RustLibApi {
   String currentLanguage = 'en';
   bool shouldFailUpdateLanguage = false;
   bool shouldFailNpubConversion = false;
+  bool shouldFailDeleteAllData = false;
   List<Account> accounts = [];
   Completer<List<Account>>? getAccountsCompleter;
 
@@ -228,11 +229,19 @@ class MockWnApi implements RustLibApi {
     }
   }
 
+  @override
+  Future<void> crateApiDeleteAllData() async {
+    if (shouldFailDeleteAllData) {
+      throw Exception('Failed to delete all data');
+    }
+  }
+
   void reset() {
     currentThemeMode = 'system';
     currentLanguage = 'en';
     shouldFailUpdateLanguage = false;
     shouldFailNpubConversion = false;
+    shouldFailDeleteAllData = false;
     accounts = [];
     getAccountsCompleter = null;
   }

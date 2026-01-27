@@ -23,6 +23,9 @@
   "profileKeys": "Llaves del perfil",
   "networkRelays": "Relés de red",
   "appSettings": "Ajustes de la app",
+  "privacyAndSecurity": "Privacidad y seguridad",
+  "dataUsage": "Uso de datos",
+  "appearance": "Apariencia",
   "donateToWhiteNoise": "Donar a White Noise",
   "developerSettings": "Ajustes de desarrollador",
   "signOut": "Cerrar sesión",
@@ -123,5 +126,11 @@
   "timeJustNow": "ahora mismo",
   "timeMinutesAgo": "{count, plural, =1{hace 1 minuto} other{hace {count} minutos}}",
   "timeHoursAgo": "{count, plural, =1{hace 1 hora} other{hace {count} horas}}",
-  "timeDaysAgo": "{count, plural, =1{ayer} other{hace {count} días}}"
+  "timeDaysAgo": "{count, plural, =1{ayer} other{hace {count} días}}",
+  "deleteAllAppData": "Eliminar todos los datos de la app",
+  "deleteAppData": "Eliminar datos de la app",
+  "deleteAllAppDataDescription": "Borra todos los perfiles, claves, chats y archivos locales de este dispositivo.",
+  "deleteAllAppDataConfirmation": "¿Eliminar todos los datos de la app?",
+  "deleteAllAppDataWarning": "Esto borrará todos los perfiles, claves, chats y archivos locales de este dispositivo. No se puede deshacer.",
+  "deleteAllAppDataFailed": "Error al eliminar los datos de la app. Por favor, inténtalo de nuevo."
 }

@@ -23,6 +23,9 @@
   "profileKeys": "Clés du profil",
   "networkRelays": "Relais réseau",
   "appSettings": "Paramètres de l'app",
+  "privacyAndSecurity": "Confidentialité et sécurité",
+  "dataUsage": "Utilisation des données",
+  "appearance": "Apparence",
   "donateToWhiteNoise": "Faire un don à White Noise",
   "developerSettings": "Paramètres développeur",
   "signOut": "Déconnexion",
@@ -123,5 +126,11 @@
   "timeJustNow": "à l'instant",
   "timeMinutesAgo": "{count, plural, =1{il y a 1 minute} other{il y a {count} minutes}}",
   "timeHoursAgo": "{count, plural, =1{il y a 1 heure} other{il y a {count} heures}}",
-  "timeDaysAgo": "{count, plural, =1{hier} other{il y a {count} jours}}"
+  "timeDaysAgo": "{count, plural, =1{hier} other{il y a {count} jours}}",
+  "deleteAllAppData": "Supprimer toutes les données de l'app",
+  "deleteAppData": "Supprimer les données de l'app",
+  "deleteAllAppDataDescription": "Efface tous les profils, clés, conversations et fichiers locaux de cet appareil.",
+  "deleteAllAppDataConfirmation": "Supprimer toutes les données de l'app ?",
+  "deleteAllAppDataWarning": "Cela effacera tous les profils, clés, conversations et fichiers locaux de cet appareil. Cette action est irréversible.",
+  "deleteAllAppDataFailed": "Échec de la suppression des données de l'app. Veuillez réessayer."
 }

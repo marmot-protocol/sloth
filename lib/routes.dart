@@ -7,10 +7,12 @@ import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:sloth/screens/add_profile_screen.dart' show AddProfileScreen;
-import 'package:sloth/screens/app_settings_screen.dart' show AppSettingsScreen;
+import 'package:sloth/screens/appearance_screen.dart' show AppearanceScreen;
 import 'package:sloth/screens/chat_invite_screen.dart' show ChatInviteScreen;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
 import 'package:sloth/screens/chat_screen.dart' show ChatScreen;
+import 'package:sloth/screens/delete_all_data_confirmation_screen.dart'
+    show DeleteAllDataConfirmationScreen;
 import 'package:sloth/screens/developer_settings_screen.dart' show DeveloperSettingsScreen;
 import 'package:sloth/screens/donate_screen.dart' show DonateScreen;
 import 'package:sloth/screens/edit_profile_screen.dart' show EditProfileScreen;
@@ -18,6 +20,7 @@ import 'package:sloth/screens/home_screen.dart' show HomeScreen;
 import 'package:sloth/screens/login_screen.dart' show LoginScreen;
 import 'package:sloth/screens/network_screen.dart' show NetworkScreen;
 import 'package:sloth/screens/onboarding_screen.dart' show OnboardingScreen;
+import 'package:sloth/screens/privacy_security_screen.dart' show PrivacySecurityScreen;
 import 'package:sloth/screens/profile_keys_screen.dart' show ProfileKeysScreen;
 import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/share_profile_screen.dart' show ShareProfileScreen;
@@ -34,7 +37,9 @@ abstract final class Routes {
   static const _chatList = '/chats';
   static const _settings = '/settings';
   static const _donate = '/donate';
-  static const _appSettings = '/app-settings';
+  static const _appearance = '/appearance';
+  static const _privacySecurity = '/privacy-security';
+  static const _deleteAllDataConfirmation = '/delete-all-data-confirmation';
   static const _wip = '/wip';
   static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
@@ -108,10 +113,24 @@ abstract final class Routes {
           ),
         ),
         GoRoute(
-          path: _appSettings,
+          path: _appearance,
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
-            child: const AppSettingsScreen(),
+            child: const AppearanceScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _privacySecurity,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const PrivacySecurityScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _deleteAllDataConfirmation,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const DeleteAllDataConfirmationScreen(),
           ),
         ),
         GoRoute(
@@ -279,8 +298,16 @@ abstract final class Routes {
     GoRouter.of(context).push(_donate);
   }
 
-  static void pushToAppSettings(BuildContext context) {
-    GoRouter.of(context).push(_appSettings);
+  static void pushToAppearance(BuildContext context) {
+    GoRouter.of(context).push(_appearance);
+  }
+
+  static void pushToPrivacySecurity(BuildContext context) {
+    GoRouter.of(context).push(_privacySecurity);
+  }
+
+  static void pushToDeleteAllDataConfirmation(BuildContext context) {
+    GoRouter.of(context).push(_deleteAllDataConfirmation);
   }
 
   static void goToOnboarding(BuildContext context) {

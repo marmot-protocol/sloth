@@ -79,6 +79,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get appSettings => 'Impostazioni app';
 
   @override
+  String get privacyAndSecurity => 'Privacy e sicurezza';
+
+  @override
+  String get dataUsage => 'Utilizzo dati';
+
+  @override
+  String get appearance => 'Aspetto';
+
+  @override
   String get donateToWhiteNoise => 'Dona a White Noise';
 
   @override
@@ -430,4 +439,24 @@ class AppLocalizationsIt extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get deleteAllAppData => 'Elimina tutti i dati dell\'app';
+
+  @override
+  String get deleteAppData => 'Elimina dati dell\'app';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Cancella tutti i profili, le chiavi, le chat e i file locali da questo dispositivo.';
+
+  @override
+  String get deleteAllAppDataConfirmation => 'Eliminare tutti i dati dell\'app?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Questo cancellerà tutti i profili, le chiavi, le chat e i file locali da questo dispositivo. Non può essere annullato.';
+
+  @override
+  String get deleteAllAppDataFailed => 'Eliminazione dei dati dell\'app fallita. Riprova.';
 }

@@ -3,6 +3,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 class MockSecureStorage implements FlutterSecureStorage {
   final Map<String, String> _data = {};
   bool shouldThrowOnRead = false;
+  bool deleteAllCalled = false;
 
   @override
   Future<String?> read({
@@ -42,6 +43,19 @@ class MockSecureStorage implements FlutterSecureStorage {
     AppleOptions? mOptions,
     WindowsOptions? wOptions,
   }) async => _data.remove(key);
+
+  @override
+  Future<void> deleteAll({
+    AppleOptions? iOptions,
+    AndroidOptions? aOptions,
+    LinuxOptions? lOptions,
+    WebOptions? webOptions,
+    AppleOptions? mOptions,
+    WindowsOptions? wOptions,
+  }) async {
+    deleteAllCalled = true;
+    _data.clear();
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();

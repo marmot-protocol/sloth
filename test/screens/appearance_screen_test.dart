@@ -32,7 +32,7 @@ void main() {
     mockApi.reset();
   });
 
-  Future<void> pumpAppSettingsScreen(
+  Future<void> pumpAppearanceScreen(
     WidgetTester tester, {
     String? initialThemeMode,
   }) async {
@@ -47,35 +47,35 @@ void main() {
         secureStorageProvider.overrideWithValue(MockSecureStorage()),
       ],
     );
-    Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
+    Routes.pushToAppearance(tester.element(find.byType(Scaffold)));
     await tester.pumpAndSettle();
   }
 
-  group('AppSettingsScreen', () {
-    testWidgets('displays App Settings title', (tester) async {
-      await pumpAppSettingsScreen(tester);
-      expect(find.text('App Settings'), findsOneWidget);
+  group('AppearanceScreen', () {
+    testWidgets('displays Appearance title', (tester) async {
+      await pumpAppearanceScreen(tester);
+      expect(find.text('Appearance'), findsOneWidget);
     });
 
     testWidgets('displays Theme dropdown label', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
       expect(find.text('Theme'), findsOneWidget);
     });
 
     testWidgets('displays current theme and language values in dropdowns', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
       expect(find.text('System'), findsNWidgets(2));
     });
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
       await tester.tap(find.byKey(const Key('close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
     testWidgets('can select Light theme from dropdown', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
@@ -87,7 +87,7 @@ void main() {
     });
 
     testWidgets('can select Dark theme from dropdown', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
@@ -100,7 +100,7 @@ void main() {
 
     testWidgets('can select System theme from dropdown', (tester) async {
       mockApi.currentThemeMode = 'light';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
@@ -112,7 +112,7 @@ void main() {
     });
 
     testWidgets('dropdown shows all theme options', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
@@ -123,7 +123,7 @@ void main() {
     });
 
     testWidgets('theme selection persists across navigation', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
@@ -133,14 +133,14 @@ void main() {
       await tester.tap(find.byKey(const Key('close_button')));
       await tester.pumpAndSettle();
 
-      Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
+      Routes.pushToAppearance(tester.element(find.byType(Scaffold)));
       await tester.pumpAndSettle();
 
       expect(mockApi.currentThemeMode, 'dark');
     });
 
     testWidgets('can switch themes multiple times', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<ThemeMode>));
       await tester.pumpAndSettle();
@@ -163,20 +163,20 @@ void main() {
     });
 
     testWidgets('displays dropdown icons for theme and language', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
       expect(find.byKey(const Key('dropdown_icon')), findsNWidgets(2));
     });
   });
 
   group('Language Dropdown', () {
     testWidgets('displays Language dropdown label', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
       expect(find.text('Language'), findsOneWidget);
     });
 
     testWidgets('can select English from dropdown', (tester) async {
       mockApi.currentLanguage = 'de';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -189,7 +189,7 @@ void main() {
 
     testWidgets('can select Spanish from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -202,7 +202,7 @@ void main() {
 
     testWidgets('can select German from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -215,7 +215,7 @@ void main() {
 
     testWidgets('can select French from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -228,7 +228,7 @@ void main() {
 
     testWidgets('can select Italian from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -248,7 +248,7 @@ void main() {
 
     testWidgets('can select Portuguese from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -268,7 +268,7 @@ void main() {
 
     testWidgets('can select Russian from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -288,7 +288,7 @@ void main() {
 
     testWidgets('can select Turkish from dropdown', (tester) async {
       mockApi.currentLanguage = 'en';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -307,7 +307,7 @@ void main() {
     });
 
     testWidgets('dropdown contains all 8 languages plus System', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -333,7 +333,7 @@ void main() {
     });
 
     testWidgets('language selection persists across navigation', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -343,14 +343,14 @@ void main() {
       await tester.tap(find.byKey(const Key('close_button')));
       await tester.pumpAndSettle();
 
-      Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
+      Routes.pushToAppearance(tester.element(find.byType(Scaffold)));
       await tester.pumpAndSettle();
 
       expect(mockApi.currentLanguage, 'de');
     });
 
     testWidgets('can switch languages multiple times', (tester) async {
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -373,7 +373,7 @@ void main() {
 
     testWidgets('can select System language from dropdown', (tester) async {
       mockApi.currentLanguage = 'de';
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();
@@ -387,7 +387,7 @@ void main() {
 
     testWidgets('shows snackbar error when language update fails', (tester) async {
       mockApi.shouldFailUpdateLanguage = true;
-      await pumpAppSettingsScreen(tester);
+      await pumpAppearanceScreen(tester);
 
       await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
       await tester.pumpAndSettle();

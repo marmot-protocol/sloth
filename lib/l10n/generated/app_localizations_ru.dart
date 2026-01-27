@@ -79,6 +79,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appSettings => 'Настройки приложения';
 
   @override
+  String get privacyAndSecurity => 'Конфиденциальность и безопасность';
+
+  @override
+  String get dataUsage => 'Использование данных';
+
+  @override
+  String get appearance => 'Оформление';
+
+  @override
   String get donateToWhiteNoise => 'Пожертвовать White Noise';
 
   @override
@@ -435,4 +444,24 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get deleteAllAppData => 'Удалить все данные приложения';
+
+  @override
+  String get deleteAppData => 'Удалить данные приложения';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Удалит все профили, ключи, чаты и локальные файлы с этого устройства.';
+
+  @override
+  String get deleteAllAppDataConfirmation => 'Удалить все данные приложения?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Это удалит все профили, ключи, чаты и локальные файлы с этого устройства. Это нельзя отменить.';
+
+  @override
+  String get deleteAllAppDataFailed => 'Не удалось удалить данные приложения. Попробуйте снова.';
 }

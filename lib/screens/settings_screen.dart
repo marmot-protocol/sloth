@@ -9,8 +9,9 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
+import 'package:sloth/widgets/wn_menu_item.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -36,158 +37,130 @@ class SettingsScreen extends HookConsumerWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
           child: WnSlateContainer(
-            child: Column(
-              spacing: 16.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.settings),
-                Center(
-                  child: Row(
-                    spacing: 8.w,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      WnAvatar(
-                        pictureUrl: metadata?.picture,
-                        displayName: displayName,
-                        size: 56.w,
-                      ),
-                      Flexible(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            if (displayName != null)
-                              Text(
-                                displayName,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w600,
-                                  color: colors.backgroundContentPrimary,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WnScreenHeader(title: context.l10n.settings),
+                  SizedBox(height: 16.h),
+                  Center(
+                    child: Row(
+                      spacing: 8.w,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        WnAvatar(
+                          pictureUrl: metadata?.picture,
+                          displayName: displayName,
+                          size: 56.w,
+                        ),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              if (displayName != null)
+                                Text(
+                                  displayName,
+                                  style: TextStyle(
+                                    fontSize: 16.sp,
+                                    fontWeight: FontWeight.w600,
+                                    color: colors.backgroundContentPrimary,
+                                  ),
                                 ),
-                              ),
-                            Row(
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    formatPublicKey(npubFromHex(pubkey) ?? pubkey),
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      fontWeight: FontWeight.w500,
-                                      color: colors.backgroundContentSecondary,
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: Text(
+                                      formatPublicKey(npubFromHex(pubkey) ?? pubkey),
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.w500,
+                                        color: colors.backgroundContentSecondary,
+                                      ),
                                     ),
                                   ),
-                                ),
-                                SizedBox(width: 8.w),
-                                IconButton(
-                                  key: const Key('qr_code_button'),
-                                  onPressed: () => Routes.pushToShareProfile(context),
-                                  icon: WnIcon(
-                                    WnIcons.qrCode,
-                                    color: colors.backgroundContentTertiary,
+                                  SizedBox(width: 8.w),
+                                  IconButton(
+                                    key: const Key('qr_code_button'),
+                                    onPressed: () => Routes.pushToShareProfile(context),
+                                    icon: WnIcon(
+                                      WnIcons.qrCode,
+                                      color: colors.backgroundContentTertiary,
+                                    ),
+                                    padding: EdgeInsets.zero,
+                                    constraints: BoxConstraints(
+                                      minWidth: 24.w,
+                                      minHeight: 24.w,
+                                    ),
                                   ),
-                                  padding: EdgeInsets.zero,
-                                  constraints: BoxConstraints(
-                                    minWidth: 24.w,
-                                    minHeight: 24.w,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ],
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  width: double.infinity,
-                  child: WnOutlinedButton(
-                    text: 'Switch Profile',
-                    onPressed: () => Routes.pushToSwitchProfile(context),
+                  SizedBox(
+                    width: double.infinity,
+                    child: WnButton(
+                      text: 'Switch Profile',
+                      type: WnButtonType.outline,
+                      onPressed: () => Routes.pushToSwitchProfile(context),
+                    ),
                   ),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.user,
-                  label: context.l10n.editProfile,
-                  onTap: () => Routes.pushToEditProfile(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.key,
-                  label: context.l10n.profileKeys,
-                  onTap: () => Routes.pushToProfileKeys(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.network,
-                  label: context.l10n.networkRelays,
-                  onTap: () => Routes.pushToNetwork(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.settings,
-                  label: context.l10n.appSettings,
-                  onTap: () => Routes.pushToAppSettings(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.heart,
-                  label: context.l10n.donateToWhiteNoise,
-                  onTap: () => Routes.pushToDonate(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.developerSettings,
-                  label: context.l10n.developerSettings,
-                  onTap: () => Routes.pushToDeveloperSettings(context),
-                ),
-                _SettingsTile(
-                  icon: WnIcons.logout,
-                  label: context.l10n.signOut,
-                  onTap: () => Routes.pushToSignOut(context),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _SettingsTile extends StatelessWidget {
-  const _SettingsTile({
-    required this.icon,
-    required this.label,
-    required this.onTap,
-  });
-
-  final WnIcons icon;
-  final String label;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
-        child: Row(
-          children: [
-            WnIcon(
-              icon,
-              color: colors.backgroundContentPrimary,
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  color: colors.backgroundContentPrimary,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
+                  WnMenuItem(
+                    icon: WnIcons.user,
+                    label: context.l10n.editProfile,
+                    onTap: () => Routes.pushToEditProfile(context),
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.key,
+                    label: context.l10n.profileKeys,
+                    onTap: () => Routes.pushToProfileKeys(context),
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.network,
+                    label: context.l10n.networkRelays,
+                    onTap: () => Routes.pushToNetwork(context),
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.privacy,
+                    label: context.l10n.privacyAndSecurity,
+                    onTap: () => Routes.pushToPrivacySecurity(context),
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.dataUsage,
+                    label: context.l10n.dataUsage,
+                    onTap: () => Routes.pushToWip(context),
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.appearance,
+                    label: context.l10n.appearance,
+                    onTap: () => Routes.pushToAppearance(context),
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.logout,
+                    label: context.l10n.signOut,
+                    onTap: () => Routes.pushToSignOut(context),
+                  ),
+                  Divider(color: colors.borderTertiary, height: 1.h),
+                  WnMenuItem(
+                    icon: WnIcons.heart,
+                    label: context.l10n.donate,
+                    onTap: () => Routes.pushToDonate(context),
+                    type: WnMenuItemType.secondary,
+                  ),
+                  WnMenuItem(
+                    icon: WnIcons.developerSettings,
+                    label: context.l10n.developerSettings,
+                    onTap: () => Routes.pushToDeveloperSettings(context),
+                    type: WnMenuItemType.secondary,
+                  ),
+                ],
               ),
             ),
-          ],
+          ),
         ),
       ),
     );

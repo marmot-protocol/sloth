@@ -79,6 +79,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appSettings => 'Uygulama ayarları';
 
   @override
+  String get privacyAndSecurity => 'Gizlilik ve güvenlik';
+
+  @override
+  String get dataUsage => 'Veri kullanımı';
+
+  @override
+  String get appearance => 'Görünüm';
+
+  @override
   String get donateToWhiteNoise => 'White Noise\'a bağış yap';
 
   @override
@@ -429,4 +438,24 @@ class AppLocalizationsTr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get deleteAllAppData => 'Tüm uygulama verilerini sil';
+
+  @override
+  String get deleteAppData => 'Uygulama verilerini sil';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları siler.';
+
+  @override
+  String get deleteAllAppDataConfirmation => 'Tüm uygulama verileri silinsin mi?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Bu, bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları silecektir. Bu geri alınamaz.';
+
+  @override
+  String get deleteAllAppDataFailed => 'Uygulama verileri silinemedi. Lütfen tekrar deneyin.';
 }

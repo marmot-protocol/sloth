@@ -23,6 +23,9 @@
   "profileKeys": "Chiavi del profilo",
   "networkRelays": "Relay di rete",
   "appSettings": "Impostazioni app",
+  "privacyAndSecurity": "Privacy e sicurezza",
+  "dataUsage": "Utilizzo dati",
+  "appearance": "Aspetto",
   "donateToWhiteNoise": "Dona a White Noise",
   "developerSettings": "Impostazioni sviluppatore",
   "signOut": "Esci",
@@ -123,5 +126,11 @@
   "timeJustNow": "proprio ora",
   "timeMinutesAgo": "{count, plural, =1{1 minuto fa} other{{count} minuti fa}}",
   "timeHoursAgo": "{count, plural, =1{1 ora fa} other{{count} ore fa}}",
-  "timeDaysAgo": "{count, plural, =1{ieri} other{{count} giorni fa}}"
+  "timeDaysAgo": "{count, plural, =1{ieri} other{{count} giorni fa}}",
+  "deleteAllAppData": "Elimina tutti i dati dell'app",
+  "deleteAppData": "Elimina dati dell'app",
+  "deleteAllAppDataDescription": "Cancella tutti i profili, le chiavi, le chat e i file locali da questo dispositivo.",
+  "deleteAllAppDataConfirmation": "Eliminare tutti i dati dell'app?",
+  "deleteAllAppDataWarning": "Questo cancellerà tutti i profili, le chiavi, le chat e i file locali da questo dispositivo. Non può essere annullato.",
+  "deleteAllAppDataFailed": "Eliminazione dei dati dell'app fallita. Riprova."
 }

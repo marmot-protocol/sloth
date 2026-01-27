@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
-import 'package:sloth/screens/app_settings_screen.dart';
+import 'package:sloth/screens/appearance_screen.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/developer_settings_screen.dart';
 import 'package:sloth/screens/donate_screen.dart';
 import 'package:sloth/screens/edit_profile_screen.dart';
 import 'package:sloth/screens/network_screen.dart';
+import 'package:sloth/screens/privacy_security_screen.dart';
 import 'package:sloth/screens/profile_keys_screen.dart';
 import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
@@ -126,16 +127,23 @@ void main() {
       expect(find.byType(NetworkScreen), findsOneWidget);
     });
 
-    testWidgets('tapping App settings navigates to AppSettingsScreen', (tester) async {
+    testWidgets('tapping Appearance navigates to AppearanceScreen', (tester) async {
       await pumpSettingsScreen(tester);
-      await tester.tap(find.text('App settings'));
+      await tester.tap(find.text('Appearance'));
       await tester.pumpAndSettle();
-      expect(find.byType(AppSettingsScreen), findsOneWidget);
+      expect(find.byType(AppearanceScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping Privacy & Security navigates to PrivacySecurityScreen', (tester) async {
+      await pumpSettingsScreen(tester);
+      await tester.tap(find.text('Privacy & Security'));
+      await tester.pumpAndSettle();
+      expect(find.byType(PrivacySecurityScreen), findsOneWidget);
     });
 
     testWidgets('tapping Donate navigates to Donate screen', (tester) async {
       await pumpSettingsScreen(tester);
-      await tester.tap(find.text('Donate to White Noise'));
+      await tester.tap(find.text('Donate'));
       await tester.pumpAndSettle();
       expect(find.byType(DonateScreen), findsOneWidget);
     });

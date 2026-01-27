@@ -116,6 +116,21 @@
     "description": "Settings menu item"
   },
 
+  "privacyAndSecurity": "Privacy & Security",
+  "@privacyAndSecurity": {
+    "description": "Settings menu item"
+  },
+
+  "dataUsage": "Data Usage",
+  "@dataUsage": {
+    "description": "Settings menu item"
+  },
+
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Settings menu item"
+  },
+
   "donateToWhiteNoise": "Donate to White Noise",
   "@donateToWhiteNoise": {
     "description": "Settings menu item"
@@ -669,5 +684,35 @@
         "type": "int"
       }
     }
+  },
+
+  "deleteAllAppData": "Delete all app data",
+  "@deleteAllAppData": {
+    "description": "Section label for delete all app data"
+  },
+
+  "deleteAppData": "Delete app data",
+  "@deleteAppData": {
+    "description": "Button text for delete app data"
+  },
+
+  "deleteAllAppDataDescription": "Erase every profile, key, chat, and local file from this device.",
+  "@deleteAllAppDataDescription": {
+    "description": "Description for delete all app data action"
+  },
+
+  "deleteAllAppDataConfirmation": "Delete all app data?",
+  "@deleteAllAppDataConfirmation": {
+    "description": "Delete all app data confirmation screen title"
+  },
+
+  "deleteAllAppDataWarning": "This will erase every profile, key, chat, and local file from this device. This cannot be undone.",
+  "@deleteAllAppDataWarning": {
+    "description": "Delete all app data warning message"
+  },
+
+  "deleteAllAppDataFailed": "Failed to delete app data. Please try again.",
+  "@deleteAllAppDataFailed": {
+    "description": "Error message when deleting app data fails"
   }
 }

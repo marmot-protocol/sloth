@@ -23,6 +23,9 @@
   "profileKeys": "Profil anahtarları",
   "networkRelays": "Ağ röleleri",
   "appSettings": "Uygulama ayarları",
+  "privacyAndSecurity": "Gizlilik ve güvenlik",
+  "dataUsage": "Veri kullanımı",
+  "appearance": "Görünüm",
   "donateToWhiteNoise": "White Noise'a bağış yap",
   "developerSettings": "Geliştirici ayarları",
   "signOut": "Çıkış yap",
@@ -123,5 +126,11 @@
   "timeJustNow": "şimdi",
   "timeMinutesAgo": "{count, plural, =1{1 dakika önce} other{{count} dakika önce}}",
   "timeHoursAgo": "{count, plural, =1{1 saat önce} other{{count} saat önce}}",
-  "timeDaysAgo": "{count, plural, =1{dün} other{{count} gün önce}}"
+  "timeDaysAgo": "{count, plural, =1{dün} other{{count} gün önce}}",
+  "deleteAllAppData": "Tüm uygulama verilerini sil",
+  "deleteAppData": "Uygulama verilerini sil",
+  "deleteAllAppDataDescription": "Bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları siler.",
+  "deleteAllAppDataConfirmation": "Tüm uygulama verileri silinsin mi?",
+  "deleteAllAppDataWarning": "Bu, bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları silecektir. Bu geri alınamaz.",
+  "deleteAllAppDataFailed": "Uygulama verileri silinemedi. Lütfen tekrar deneyin."
 }
