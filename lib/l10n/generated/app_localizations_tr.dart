@@ -369,6 +369,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get failedToSendReaction => 'Tepki gönderilemedi. Lütfen tekrar deneyin.';
 
   @override
+  String get failedToRemoveReaction => 'Tepki kaldırılamadı. Lütfen tekrar deneyin.';
+
+  @override
   String get unknownUser => 'Bilinmeyen kullanıcı';
 
   @override

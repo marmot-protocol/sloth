@@ -780,6 +780,12 @@ abstract class AppLocalizations {
   /// **'Failed to send reaction. Please try again.'**
   String get failedToSendReaction;
 
+  /// Error when removing reaction fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to remove reaction. Please try again.'**
+  String get failedToRemoveReaction;
+
   /// Fallback name for unknown user
   ///
   /// In en, this message translates to:

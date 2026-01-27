@@ -370,6 +370,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String get failedToSendReaction => 'Invio della reazione fallito. Riprova.';
 
   @override
+  String get failedToRemoveReaction => 'Rimozione della reazione fallita. Riprova.';
+
+  @override
   String get unknownUser => 'Utente sconosciuto';
 
   @override

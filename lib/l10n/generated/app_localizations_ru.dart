@@ -369,6 +369,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get failedToSendReaction => 'Не удалось отправить реакцию. Попробуйте снова.';
 
   @override
+  String get failedToRemoveReaction => 'Не удалось удалить реакцию. Попробуйте снова.';
+
+  @override
   String get unknownUser => 'Неизвестный пользователь';
 
   @override
