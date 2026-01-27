@@ -10,10 +10,12 @@ final _logger = Logger('useChatAvatar');
 class ChatAvatarData {
   final String displayName;
   final String? pictureUrl;
+  final String? otherMemberPubkey;
 
   const ChatAvatarData({
     required this.displayName,
     this.pictureUrl,
+    this.otherMemberPubkey,
   });
 
   @override
@@ -22,10 +24,11 @@ class ChatAvatarData {
       other is ChatAvatarData &&
           runtimeType == other.runtimeType &&
           displayName == other.displayName &&
-          pictureUrl == other.pictureUrl;
+          pictureUrl == other.pictureUrl &&
+          otherMemberPubkey == other.otherMemberPubkey;
 
   @override
-  int get hashCode => Object.hash(displayName, pictureUrl);
+  int get hashCode => Object.hash(displayName, pictureUrl, otherMemberPubkey);
 }
 
 AsyncSnapshot<ChatAvatarData> useChatAvatar(String pubkey, String groupId) {
@@ -94,5 +97,6 @@ Future<ChatAvatarData> _fetchDmAvatarData(
   return ChatAvatarData(
     displayName: presentName(metadata) ?? 'Unknown User',
     pictureUrl: metadata.picture,
+    otherMemberPubkey: otherMemberPubkey,
   );
 }
