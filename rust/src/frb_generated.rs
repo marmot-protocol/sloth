@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -365210605;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = -1629431479;
 
 // Section: executor
 
@@ -1851,43 +1851,6 @@ fn wire__crate__api__accounts__login_impl(
                     (move || async move {
                         let output_ok =
                             crate::api::accounts::login(api_nsec_or_hex_privkey).await?;
-                        Ok(output_ok)
-                    })()
-                    .await,
-                )
-            }
-        },
-    )
-}
-fn wire__crate__api__accounts__login_with_external_signer_impl(
-    port_: flutter_rust_bridge::for_generated::MessagePort,
-    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
-    rust_vec_len_: i32,
-    data_len_: i32,
-) {
-    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
-        flutter_rust_bridge::for_generated::TaskInfo {
-            debug_name: "login_with_external_signer",
-            port: Some(port_),
-            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
-        },
-        move || {
-            let message = unsafe {
-                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
-                    ptr_,
-                    rust_vec_len_,
-                    data_len_,
-                )
-            };
-            let mut deserializer =
-                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
-            let api_pubkey = <String>::sse_decode(&mut deserializer);
-            deserializer.end();
-            move |context| async move {
-                transform_result_sse::<_, crate::api::error::ApiError>(
-                    (move || async move {
-                        let output_ok =
-                            crate::api::accounts::login_with_external_signer(api_pubkey).await?;
                         Ok(output_ok)
                     })()
                     .await,
@@ -4547,91 +4510,85 @@ fn pde_ffi_dispatcher_primary_impl(
         ),
         45 => wire__crate__api__initialize_whitenoise_impl(port, ptr, rust_vec_len, data_len),
         46 => wire__crate__api__accounts__login_impl(port, ptr, rust_vec_len, data_len),
-        47 => wire__crate__api__accounts__login_with_external_signer_impl(
+        47 => wire__crate__api__signer__login_with_external_signer_and_callbacks_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        48 => wire__crate__api__signer__login_with_external_signer_and_callbacks_impl(
+        48 => wire__crate__api__accounts__logout_impl(port, ptr, rust_vec_len, data_len),
+        49 => wire__crate__api__account_groups__mark_message_read_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        49 => wire__crate__api__accounts__logout_impl(port, ptr, rust_vec_len, data_len),
-        50 => wire__crate__api__account_groups__mark_message_read_impl(
+        51 => wire__crate__api__accounts__publish_account_key_package_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        52 => wire__crate__api__accounts__publish_account_key_package_impl(
-            port,
-            ptr,
-            rust_vec_len,
-            data_len,
-        ),
-        53 => wire__crate__api__relays__relay_type_inbox_impl(port, ptr, rust_vec_len, data_len),
-        54 => {
+        52 => wire__crate__api__relays__relay_type_inbox_impl(port, ptr, rust_vec_len, data_len),
+        53 => {
             wire__crate__api__relays__relay_type_key_package_impl(port, ptr, rust_vec_len, data_len)
         }
-        55 => wire__crate__api__relays__relay_type_nip65_impl(port, ptr, rust_vec_len, data_len),
-        56 => {
+        54 => wire__crate__api__relays__relay_type_nip65_impl(port, ptr, rust_vec_len, data_len),
+        55 => {
             wire__crate__api__utils__relay_url_from_string_impl(port, ptr, rust_vec_len, data_len)
         }
-        57 => {
+        56 => {
             wire__crate__api__accounts__remove_account_relay_impl(port, ptr, rust_vec_len, data_len)
         }
-        58 => wire__crate__api__groups__remove_members_from_group_impl(
+        57 => wire__crate__api__groups__remove_members_from_group_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        59 => wire__crate__api__messages__send_message_to_group_impl(
+        58 => wire__crate__api__messages__send_message_to_group_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        60 => {
+        59 => {
             wire__crate__api__utils__string_from_relay_url_impl(port, ptr, rust_vec_len, data_len)
         }
-        61 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
+        60 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        62 => wire__crate__api__messages__subscribe_to_group_messages_impl(
+        61 => wire__crate__api__messages__subscribe_to_group_messages_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        63 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
-        68 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
-        69 => wire__crate__api__accounts__update_account_metadata_impl(
+        62 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
+        67 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
+        68 => wire__crate__api__accounts__update_account_metadata_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        70 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
-        71 => wire__crate__api__accounts__upload_account_profile_picture_impl(
+        69 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
+        70 => wire__crate__api__accounts__upload_account_profile_picture_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        72 => {
+        71 => {
             wire__crate__api__media_files__upload_chat_media_impl(port, ptr, rust_vec_len, data_len)
         }
-        73 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
-        74 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
-        75 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
-        76 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
+        72 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
+        73 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
+        74 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
+        75 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -4645,11 +4602,11 @@ fn pde_ffi_dispatcher_sync_impl(
     // Codec=Pde (Serialization + dispatch), see doc to use other codecs
     match func_id {
         44 => wire__crate__api__utils__hex_pubkey_from_npub_impl(ptr, rust_vec_len, data_len),
-        51 => wire__crate__api__utils__npub_from_hex_pubkey_impl(ptr, rust_vec_len, data_len),
-        64 => wire__crate__api__utils__theme_mode_dark_impl(ptr, rust_vec_len, data_len),
-        65 => wire__crate__api__utils__theme_mode_light_impl(ptr, rust_vec_len, data_len),
-        66 => wire__crate__api__utils__theme_mode_system_impl(ptr, rust_vec_len, data_len),
-        67 => wire__crate__api__utils__theme_mode_to_string_impl(ptr, rust_vec_len, data_len),
+        50 => wire__crate__api__utils__npub_from_hex_pubkey_impl(ptr, rust_vec_len, data_len),
+        63 => wire__crate__api__utils__theme_mode_dark_impl(ptr, rust_vec_len, data_len),
+        64 => wire__crate__api__utils__theme_mode_light_impl(ptr, rust_vec_len, data_len),
+        65 => wire__crate__api__utils__theme_mode_system_impl(ptr, rust_vec_len, data_len),
+        66 => wire__crate__api__utils__theme_mode_to_string_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }

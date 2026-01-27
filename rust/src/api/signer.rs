@@ -142,8 +142,11 @@ impl NostrSigner for DartSigner {
 /// Login with an external signer (like Amber via NIP-55) and publish key package.
 ///
 /// This function creates an account for the given public key and uses the provided
-/// callbacks to sign the key package event, allowing the account to receive MLS
-/// messages.
+/// callbacks to sign events. The whitenoise crate handles all the orchestration:
+/// - Account creation/setup
+/// - Relay configuration (fetches existing or uses defaults)
+/// - Publishing relay lists when using defaults
+/// - Publishing the MLS key package
 ///
 /// # Arguments
 ///
@@ -153,12 +156,6 @@ impl NostrSigner for DartSigner {
 /// * `nip04_decrypt` - Callback for NIP-04 decryption. Takes (ciphertext, sender_pubkey), returns plaintext.
 /// * `nip44_encrypt` - Callback for NIP-44 encryption. Takes (plaintext, recipient_pubkey), returns ciphertext.
 /// * `nip44_decrypt` - Callback for NIP-44 decryption. Takes (ciphertext, sender_pubkey), returns plaintext.
-///
-/// # TODO
-///
-/// This orchestration (login → register → publish) should ideally be moved into the
-/// `whitenoise` crate as a single method to keep this API layer thin. The API layer
-/// should only handle translation between Dart and Rust types, not business logic.
 #[frb]
 pub async fn login_with_external_signer_and_callbacks(
     pubkey: String,
@@ -171,7 +168,6 @@ pub async fn login_with_external_signer_and_callbacks(
     let whitenoise = whitenoise::Whitenoise::get_instance()?;
     let pubkey = PublicKey::parse(&pubkey)?;
 
-    // Create the signer - DartSigner is Clone since it uses Arc internally
     let signer = DartSigner::new(
         pubkey,
         sign_event,
@@ -181,16 +177,10 @@ pub async fn login_with_external_signer_and_callbacks(
         nip44_decrypt,
     );
 
-    // Login with the external signer (this creates the account without publishing)
-    let account = whitenoise.login_with_external_signer(pubkey).await?;
-
-    // Register a clone of the signer for ongoing use (e.g., giftwrap decryption)
-    whitenoise.register_external_signer(pubkey, signer.clone());
-
-    // Now publish the key package using our Dart signer
-    // This requires the signer to sign the key package event
-    whitenoise
-        .publish_key_package_for_account_with_signer(&account, signer)
+    // Login handles: account setup, relay config, publishing relay lists
+    // (if defaults used), and publishing the key package
+    let account = whitenoise
+        .login_with_external_signer(pubkey, signer)
         .await?;
 
     Ok(account.into())
