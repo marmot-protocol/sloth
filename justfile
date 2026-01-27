@@ -9,6 +9,7 @@ precommit:
     just deps-flutter
     just deps-rust
     just l10n
+    just validate-locales-keys
     just fix
     just format
     just lint
@@ -21,6 +22,7 @@ precommit-check:
     just deps-flutter
     just deps-rust
     just l10n-check
+    just validate-locales-keys
     just check-rust-format
     just check-dart-format
     just lint
