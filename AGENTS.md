@@ -93,7 +93,7 @@ just format
 # Lint all code
 just lint
 
-# Run all tests
+# Run all tests (verbose output)
 just test-flutter
 just test-rust
 
@@ -103,11 +103,48 @@ just coverage
 # Generate coverage HTML report
 just coverage-report
 
-# Pre-commit checks (run before submitting PRs)
+# Pre-commit checks (REQUIRED before every commit)
 just precommit
+
+# Pre-commit with verbose output (for debugging failures)
+just precommit-verbose
 
 # Regenerate flutter_rust_bridge code
 just generate
+```
+
+## Quiet Commands for Agents
+
+**IMPORTANT:** When verifying that code works, agents should ALWAYS use the quiet variants. These produce minimal output that is easy to parse while still showing errors on failure.
+
+```bash
+# Quiet test commands - USE THESE for verification
+just test-flutter-quiet    # Output: "+1093: All tests passed!" or error details
+just test-rust-quiet       # Output: "....... test result: ok" or error details
+
+# Quiet pre-commit - USE THIS before committing
+just precommit             # Shows step names + ✓/✗, errors only on failure
+```
+
+**Why quiet variants?**
+- Minimal output reduces context window usage
+- Clear pass/fail indicators are easy to parse
+- Full error details are still shown when something fails
+- No noisy progress indicators or dependency resolution messages
+
+**Example quiet precommit output:**
+
+```text
+flutter deps...     ✓
+rust deps...        ✓
+l10n generation...  ✓
+l10n validation...  ✓
+auto-fix...         ✓
+formatting...       ✓
+linting...          ✓
+flutter tests...    ✓
+rust tests...       ✓
+✅ PRECOMMIT PASSED
 ```
 
 ## Code Style
@@ -195,8 +232,11 @@ Screen (watches providers)
 
 ## Commit Checklist
 
-1. Run `just precommit` before submitting - this will check formatting and linting. ENSURE this passes before you make a commit.
-2. Ensure all tests pass
-3. Coverage meets 80% minimum
-4. You MUST Update `CHANGELOG.md` for any user-facing changes
-5. Follow existing code patterns and naming conventions
+**CRITICAL: You MUST run `just precommit` before EVERY commit. No exceptions.**
+
+1. Run `just precommit` and ensure it passes completely
+2. Coverage meets 80% minimum
+3. Update `CHANGELOG.md` for any user-facing changes
+4. Follow existing code patterns and naming conventions
+
+The precommit command runs all checks: formatting, linting, and tests. If it passes, you're good to commit. If it fails, fix the issues before committing.
