@@ -444,4 +444,19 @@ class AppLocalizationsRu extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Профиль';
+
+  @override
+  String get follow => 'Подписаться';
+
+  @override
+  String get unfollow => 'Отписаться';
+
+  @override
+  String get failedToStartChat => 'Не удалось начать чат. Попробуйте снова.';
+
+  @override
+  String get userNotOnWhiteNoise => 'Этот пользователь ещё не в White Noise.';
 }

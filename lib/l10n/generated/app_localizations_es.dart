@@ -441,4 +441,19 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Perfil';
+
+  @override
+  String get follow => 'Seguir';
+
+  @override
+  String get unfollow => 'Dejar de seguir';
+
+  @override
+  String get failedToStartChat => 'Error al iniciar el chat. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get userNotOnWhiteNoise => 'Este usuario aún no está en White Noise.';
 }

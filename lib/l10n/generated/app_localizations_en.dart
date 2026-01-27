@@ -438,4 +438,19 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get follow => 'Follow';
+
+  @override
+  String get unfollow => 'Unfollow';
+
+  @override
+  String get failedToStartChat => 'Failed to start chat. Please try again.';
+
+  @override
+  String get userNotOnWhiteNoise => 'This user is not on White Noise yet.';
 }

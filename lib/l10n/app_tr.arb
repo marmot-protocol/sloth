@@ -126,5 +126,10 @@
   "timeJustNow": "şimdi",
   "timeMinutesAgo": "{count, plural, =1{1 dakika önce} other{{count} dakika önce}}",
   "timeHoursAgo": "{count, plural, =1{1 saat önce} other{{count} saat önce}}",
-  "timeDaysAgo": "{count, plural, =1{dün} other{{count} gün önce}}"
+  "timeDaysAgo": "{count, plural, =1{dün} other{{count} gün önce}}",
+  "profile": "Profil",
+  "follow": "Takip et",
+  "unfollow": "Takibi bırak",
+  "failedToStartChat": "Sohbet başlatılamadı. Lütfen tekrar deneyin.",
+  "userNotOnWhiteNoise": "Bu kullanıcı henüz White Noise'da değil."
 }

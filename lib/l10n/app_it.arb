@@ -126,5 +126,10 @@
   "timeJustNow": "proprio ora",
   "timeMinutesAgo": "{count, plural, =1{1 minuto fa} other{{count} minuti fa}}",
   "timeHoursAgo": "{count, plural, =1{1 ora fa} other{{count} ore fa}}",
-  "timeDaysAgo": "{count, plural, =1{ieri} other{{count} giorni fa}}"
+  "timeDaysAgo": "{count, plural, =1{ieri} other{{count} giorni fa}}",
+  "profile": "Profilo",
+  "follow": "Segui",
+  "unfollow": "Smetti di seguire",
+  "failedToStartChat": "Impossibile avviare la chat. Riprova.",
+  "userNotOnWhiteNoise": "Questo utente non è ancora su White Noise."
 }

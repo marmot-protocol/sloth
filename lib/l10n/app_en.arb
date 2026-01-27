@@ -684,5 +684,30 @@
         "type": "int"
       }
     }
+  },
+
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile screen title"
+  },
+
+  "follow": "Follow",
+  "@follow": {
+    "description": "Follow button text"
+  },
+
+  "unfollow": "Unfollow",
+  "@unfollow": {
+    "description": "Unfollow button text"
+  },
+
+  "failedToStartChat": "Failed to start chat. Please try again.",
+  "@failedToStartChat": {
+    "description": "Error when starting chat fails"
+  },
+
+  "userNotOnWhiteNoise": "This user is not on White Noise yet.",
+  "@userNotOnWhiteNoise": {
+    "description": "Message shown when user has no key packages"
   }
 }

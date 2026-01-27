@@ -869,6 +869,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{yesterday} other{{count} days ago}}'**
   String timeDaysAgo(int count);
+
+  /// Profile screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// Follow button text
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// Unfollow button text
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get unfollow;
+
+  /// Error when starting chat fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start chat. Please try again.'**
+  String get failedToStartChat;
+
+  /// Message shown when user has no key packages
+  ///
+  /// In en, this message translates to:
+  /// **'This user is not on White Noise yet.'**
+  String get userNotOnWhiteNoise;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
