@@ -89,7 +89,8 @@ enum WnIcons {
   viewOff('view_off'),
   warning('warning'),
   warningFilled('warning_filled'),
-  zap('zap');
+  zap('zap')
+  ;
 
   const WnIcons(this.filename);
   final String filename;
