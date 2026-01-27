@@ -17,20 +17,23 @@ class MessageActionsScreen extends HookWidget {
     super.key,
     required this.message,
     required this.pubkey,
-    required this.onReaction,
+    required this.onAddReaction,
+    required this.onRemoveReaction,
     this.onDelete,
   });
 
   final ChatMessage message;
   final String pubkey;
-  final Future<void> Function(String emoji) onReaction;
+  final Future<void> Function(String emoji) onAddReaction;
+  final Future<void> Function(String reactionId) onRemoveReaction;
   final Future<void> Function()? onDelete;
 
   static Future<void> show(
     BuildContext context, {
     required ChatMessage message,
     required String pubkey,
-    required Future<void> Function(String emoji) onReaction,
+    required Future<void> Function(String emoji) onAddReaction,
+    required Future<void> Function(String reactionId) onRemoveReaction,
     Future<void> Function()? onDelete,
   }) {
     final colors = context.colors;
@@ -44,7 +47,8 @@ class MessageActionsScreen extends HookWidget {
           return MessageActionsScreen(
             message: message,
             pubkey: pubkey,
-            onReaction: onReaction,
+            onAddReaction: onAddReaction,
+            onRemoveReaction: onRemoveReaction,
             onDelete: onDelete,
           );
         },
@@ -63,10 +67,12 @@ class MessageActionsScreen extends HookWidget {
     final showEmojiPicker = useState(false);
 
     final isOwnMessage = message.pubkey == pubkey;
-    final selectedEmojis = message.reactions.userReactions
-        .where((r) => r.user == pubkey)
-        .map((r) => r.emoji)
-        .toSet();
+    final userReactionIds = Map.fromEntries(
+      message.reactions.userReactions
+          .where((r) => r.user == pubkey)
+          .map((r) => MapEntry(r.emoji, r.reactionId)),
+    );
+    final selectedEmojis = userReactionIds.keys.toSet();
 
     Future<void> handleDelete() async {
       try {
@@ -84,13 +90,22 @@ class MessageActionsScreen extends HookWidget {
     }
 
     Future<void> handleReaction(String emoji) async {
+      final reactionId = userReactionIds[emoji];
       try {
-        await onReaction(emoji);
+        if (reactionId != null) {
+          await onRemoveReaction(reactionId);
+        } else {
+          await onAddReaction(emoji);
+        }
       } catch (_) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text(context.l10n.failedToSendReaction),
+              content: Text(
+                reactionId != null
+                    ? context.l10n.failedToRemoveReaction
+                    : context.l10n.failedToSendReaction,
+              ),
             ),
           );
         }

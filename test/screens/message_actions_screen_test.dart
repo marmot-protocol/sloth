@@ -354,7 +354,8 @@ void main() {
             context,
             message: _createTestMessage(),
             pubkey: 'user-pubkey',
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -376,7 +377,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: myPubkey),
             pubkey: myPubkey,
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
             onDelete: () async {},
           ),
           child: const Text('Show Menu'),
@@ -397,7 +399,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: 'other-user'),
             pubkey: 'my-pubkey',
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
             onDelete: () async {},
           ),
           child: const Text('Show Menu'),
@@ -419,7 +422,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: myPubkey),
             pubkey: myPubkey,
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -439,7 +443,8 @@ void main() {
             context,
             message: _createTestMessage(),
             pubkey: 'user-pubkey',
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -464,7 +469,8 @@ void main() {
             context,
             message: _createTestMessage(),
             pubkey: 'user-pubkey',
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -492,7 +498,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: myPubkey),
             pubkey: myPubkey,
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
             onDelete: () async {
               deleteCalled = true;
             },
@@ -522,7 +529,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: myPubkey),
             pubkey: myPubkey,
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -547,7 +555,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: 'other-user'),
             pubkey: 'my-pubkey',
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -574,7 +583,8 @@ void main() {
             context,
             message: _createTestMessage(pubkey: myPubkey),
             pubkey: myPubkey,
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
             onDelete: () async {
               throw Exception('Delete failed');
             },
@@ -595,7 +605,9 @@ void main() {
       expect(find.text('Message actions'), findsNothing);
     });
 
-    testWidgets('calls onReaction and closes menu when reaction button is tapped', (tester) async {
+    testWidgets('calls onAddReaction and closes menu when reaction button is tapped', (
+      tester,
+    ) async {
       String? receivedEmoji;
 
       await mountShowTest(
@@ -605,9 +617,10 @@ void main() {
             context,
             message: _createTestMessage(),
             pubkey: 'user-pubkey',
-            onReaction: (emoji) async {
+            onAddReaction: (emoji) async {
               receivedEmoji = emoji;
             },
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -625,7 +638,7 @@ void main() {
       expect(find.text('Message actions'), findsNothing);
     });
 
-    testWidgets('shows snackbar and closes menu when reaction fails', (tester) async {
+    testWidgets('shows snackbar and closes menu when add reaction fails', (tester) async {
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
@@ -633,9 +646,10 @@ void main() {
             context,
             message: _createTestMessage(),
             pubkey: 'user-pubkey',
-            onReaction: (emoji) async {
+            onAddReaction: (emoji) async {
               throw Exception('Reaction failed');
             },
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -662,7 +676,12 @@ void main() {
             EmojiReaction(emoji: '❤', count: BigInt.one, users: const [myPubkey]),
           ],
           userReactions: [
-            UserReaction(user: myPubkey, emoji: '❤', createdAt: DateTime.now()),
+            UserReaction(
+              reactionId: 'reaction-1',
+              user: myPubkey,
+              emoji: '❤',
+              createdAt: DateTime.now(),
+            ),
           ],
         ),
       );
@@ -674,7 +693,8 @@ void main() {
             context,
             message: message,
             pubkey: myPubkey,
-            onReaction: (_) async {},
+            onAddReaction: (_) async {},
+            onRemoveReaction: (_) async {},
           ),
           child: const Text('Show Menu'),
         ),
@@ -696,10 +716,101 @@ void main() {
       expect(thumbsUpContainer.decoration, isNull);
     });
 
+    testWidgets('calls onRemoveReaction when tapping already reacted emoji', (tester) async {
+      const myPubkey = 'my-pubkey';
+      String? removedReactionId;
+      final message = _createTestMessage(
+        pubkey: 'other-user',
+        reactions: ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '❤', count: BigInt.one, users: const [myPubkey]),
+          ],
+          userReactions: [
+            UserReaction(
+              reactionId: 'reaction-to-remove',
+              user: myPubkey,
+              emoji: '❤',
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
+      );
+
+      await mountShowTest(
+        tester,
+        builder: (context) => ElevatedButton(
+          onPressed: () => MessageActionsScreen.show(
+            context,
+            message: message,
+            pubkey: myPubkey,
+            onAddReaction: (_) async {},
+            onRemoveReaction: (reactionId) async {
+              removedReactionId = reactionId;
+            },
+          ),
+          child: const Text('Show Menu'),
+        ),
+      );
+
+      await tester.tap(find.text('Show Menu'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('reaction_❤')));
+      await tester.pumpAndSettle();
+
+      expect(removedReactionId, 'reaction-to-remove');
+      expect(find.text('Message actions'), findsNothing);
+    });
+
+    testWidgets('shows snackbar and closes menu when remove reaction fails', (tester) async {
+      const myPubkey = 'my-pubkey';
+      final message = _createTestMessage(
+        pubkey: 'other-user',
+        reactions: ReactionSummary(
+          byEmoji: [
+            EmojiReaction(emoji: '❤', count: BigInt.one, users: const [myPubkey]),
+          ],
+          userReactions: [
+            UserReaction(
+              reactionId: 'reaction-to-remove',
+              user: myPubkey,
+              emoji: '❤',
+              createdAt: DateTime.now(),
+            ),
+          ],
+        ),
+      );
+
+      await mountShowTest(
+        tester,
+        builder: (context) => ElevatedButton(
+          onPressed: () => MessageActionsScreen.show(
+            context,
+            message: message,
+            pubkey: myPubkey,
+            onAddReaction: (_) async {},
+            onRemoveReaction: (reactionId) async {
+              throw Exception('Remove reaction failed');
+            },
+          ),
+          child: const Text('Show Menu'),
+        ),
+      );
+
+      await tester.tap(find.text('Show Menu'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('reaction_❤')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Failed to remove reaction. Please try again.'), findsOneWidget);
+      expect(find.text('Message actions'), findsNothing);
+    });
+
     group('emoji picker', () {
       Future<void> openEmojiPicker(
         WidgetTester tester, {
-        Future<void> Function(String)? onReaction,
+        Future<void> Function(String)? onAddReaction,
       }) async {
         await mountShowTest(
           tester,
@@ -708,7 +819,8 @@ void main() {
               context,
               message: _createTestMessage(),
               pubkey: 'user-pubkey',
-              onReaction: onReaction ?? (_) async {},
+              onAddReaction: onAddReaction ?? (_) async {},
+              onRemoveReaction: (_) async {},
             ),
             child: const Text('Show Menu'),
           ),
@@ -727,7 +839,8 @@ void main() {
               context,
               message: _createTestMessage(),
               pubkey: 'user-pubkey',
-              onReaction: (_) async {},
+              onAddReaction: (_) async {},
+              onRemoveReaction: (_) async {},
             ),
             child: const Text('Show Menu'),
           ),
@@ -761,11 +874,11 @@ void main() {
         expect(find.text('Message actions'), findsOneWidget);
       });
 
-      testWidgets('selecting emoji invokes onReaction and closes screen', (tester) async {
+      testWidgets('selecting emoji invokes onAddReaction and closes screen', (tester) async {
         String? reactionCapturedEmoji;
         await openEmojiPicker(
           tester,
-          onReaction: (emoji) async {
+          onAddReaction: (emoji) async {
             reactionCapturedEmoji = emoji;
           },
         );
