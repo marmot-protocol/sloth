@@ -104,6 +104,7 @@ void main() {
             const ChatAvatarData(
               displayName: 'Alice',
               pictureUrl: 'https://example.com/alice.jpg',
+              otherMemberPubkey: _otherPubkey,
             ),
           );
         });
@@ -114,7 +115,7 @@ void main() {
 
           expect(
             getResult().data,
-            const ChatAvatarData(displayName: 'bob'),
+            const ChatAvatarData(displayName: 'bob', otherMemberPubkey: _otherPubkey),
           );
         });
       });
@@ -126,7 +127,10 @@ void main() {
 
           expect(
             getResult().data,
-            const ChatAvatarData(displayName: 'Unknown User'),
+            const ChatAvatarData(
+              displayName: 'Unknown User',
+              otherMemberPubkey: _otherPubkey,
+            ),
           );
         });
       });
@@ -193,10 +197,12 @@ void main() {
       const avatar1 = ChatAvatarData(
         displayName: 'Alice',
         pictureUrl: 'https://example.com/alice.jpg',
+        otherMemberPubkey: 'pubkey1',
       );
       const avatar2 = ChatAvatarData(
         displayName: 'Alice',
         pictureUrl: 'https://example.com/alice.jpg',
+        otherMemberPubkey: 'pubkey1',
       );
 
       expect(avatar1, avatar2);
@@ -227,6 +233,20 @@ void main() {
       const avatar2 = ChatAvatarData(
         displayName: 'Alice',
         pictureUrl: 'https://example.com/pic2.jpg',
+      );
+
+      expect(avatar1, isNot(avatar2));
+      expect(avatar1.hashCode, isNot(avatar2.hashCode));
+    });
+
+    test('different otherMemberPubkeys produce different hash codes', () {
+      const avatar1 = ChatAvatarData(
+        displayName: 'Alice',
+        otherMemberPubkey: 'pubkey1',
+      );
+      const avatar2 = ChatAvatarData(
+        displayName: 'Alice',
+        otherMemberPubkey: 'pubkey2',
       );
 
       expect(avatar1, isNot(avatar2));

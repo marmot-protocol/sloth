@@ -39,10 +39,33 @@ class MockWnApi implements RustLibApi {
   List<Account> accounts = [];
   Completer<List<Account>>? getAccountsCompleter;
 
+  List<User> follows = [];
+  bool userHasKeyPackage = true;
+
+  @override
+  Future<bool> crateApiUsersUserHasKeyPackage({
+    required String pubkey,
+    required bool blockingDataSync,
+  }) async {
+    return userHasKeyPackage;
+  }
+
   @override
   Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
-    return [];
+    return follows;
   }
+
+  @override
+  Future<void> crateApiAccountsFollowUser({
+    required String accountPubkey,
+    required String userToFollowPubkey,
+  }) async {}
+
+  @override
+  Future<void> crateApiAccountsUnfollowUser({
+    required String accountPubkey,
+    required String userToUnfollowPubkey,
+  }) async {}
 
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
@@ -234,7 +257,9 @@ class MockWnApi implements RustLibApi {
     shouldFailUpdateLanguage = false;
     shouldFailNpubConversion = false;
     accounts = [];
+    follows = [];
     getAccountsCompleter = null;
+    userHasKeyPackage = true;
   }
 
   @override
