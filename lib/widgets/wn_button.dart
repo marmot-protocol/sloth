@@ -5,14 +5,7 @@ import 'package:sloth/widgets/wn_icon.dart';
 
 enum WnButtonType { primary, outline, ghost, overlay, destructive }
 
-enum WnButtonSize {
-  large(56),
-  medium(44),
-  small(32);
-
-  const WnButtonSize(this.height);
-  final double height;
-}
+enum WnButtonSize { large, medium, small }
 
 class WnButton extends StatelessWidget {
   const WnButton({

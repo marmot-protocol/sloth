@@ -387,20 +387,6 @@ void main() {
       });
     });
 
-    group('WnButtonSize enum', () {
-      test('large size has height of 56', () {
-        expect(WnButtonSize.large.height, 56);
-      });
-
-      test('medium size has height of 44', () {
-        expect(WnButtonSize.medium.height, 44);
-      });
-
-      test('small size has height of 32', () {
-        expect(WnButtonSize.small.height, 32);
-      });
-    });
-
     group('text overflow', () {
       testWidgets('handles long text with ellipsis', (WidgetTester tester) async {
         final widget = SizedBox(

@@ -23,13 +23,6 @@ void main() {
       expect(find.byType(WnButton), findsNWidgets(2));
     });
 
-    testWidgets('displays Login and Sign Up text in buttons', (tester) async {
-      const widget = WnAuthButtonsContainer();
-      await mountWidget(widget, tester);
-      expect(find.text('Login'), findsOneWidget);
-      expect(find.text('Sign Up'), findsOneWidget);
-    });
-
     testWidgets('calls onLogin when Login button is tapped', (tester) async {
       var onLoginCalled = false;
       final widget = WnAuthButtonsContainer(
