@@ -183,14 +183,17 @@ class WnButton extends StatelessWidget {
           ),
           SizedBox(width: iconPadding),
         ],
-        Text(
-          text,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: fontSize,
-            color: contentColor,
-            letterSpacing: 0.4,
-            height: 20 / 14,
+        Flexible(
+          child: Text(
+            text,
+            style: TextStyle(
+              fontWeight: FontWeight.w500,
+              fontSize: fontSize,
+              color: contentColor,
+              letterSpacing: 0.4,
+              height: 20 / 14,
+            ),
+            overflow: TextOverflow.ellipsis,
           ),
         ),
         if (trailingIcon != null) ...[
