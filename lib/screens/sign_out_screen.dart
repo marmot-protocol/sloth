@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_amber.dart';
+import 'package:sloth/hooks/use_android_signer.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart';
@@ -25,7 +25,7 @@ class SignOutScreen extends HookConsumerWidget {
     final typography = context.typographyScaled;
     final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
-    final amber = useAmber();
+    final androidSigner = useAndroidSigner();
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
     final noticeMessage = useState<String?>(null);
@@ -56,7 +56,7 @@ class SignOutScreen extends HookConsumerWidget {
       final nextPubkey = await ref
           .read(authProvider.notifier)
           .logout(
-            onAmberDisconnect: amber.disconnect,
+            onAndroidSignerDisconnect: androidSigner.disconnect,
           );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) {

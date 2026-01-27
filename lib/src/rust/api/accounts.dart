@@ -23,18 +23,6 @@ Future<Account> createIdentity() => RustLib.instance.api.crateApiAccountsCreateI
 Future<Account> login({required String nsecOrHexPrivkey}) =>
     RustLib.instance.api.crateApiAccountsLogin(nsecOrHexPrivkey: nsecOrHexPrivkey);
 
-/// Login with an external signer (like Amber via NIP-55).
-///
-/// This creates an account entry for the given public key without requiring
-/// the private key. The private key never touches this app - all signing
-/// operations must be performed by the external signer.
-///
-/// # Arguments
-///
-/// * `pubkey` - The user's public key (hex format) obtained from the external signer.
-Future<Account> loginWithExternalSigner({required String pubkey}) =>
-    RustLib.instance.api.crateApiAccountsLoginWithExternalSigner(pubkey: pubkey);
-
 Future<void> logout({required String pubkey}) =>
     RustLib.instance.api.crateApiAccountsLogout(pubkey: pubkey);
 
