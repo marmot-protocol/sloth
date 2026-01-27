@@ -4182,11 +4182,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   UserReaction dco_decode_user_reaction(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 3) throw Exception('unexpected arr length: expect 3 but see ${arr.length}');
+    if (arr.length != 4) throw Exception('unexpected arr length: expect 4 but see ${arr.length}');
     return UserReaction(
-      user: dco_decode_String(arr[0]),
-      emoji: dco_decode_String(arr[1]),
-      createdAt: dco_decode_Chrono_Utc(arr[2]),
+      reactionId: dco_decode_String(arr[0]),
+      user: dco_decode_String(arr[1]),
+      emoji: dco_decode_String(arr[2]),
+      createdAt: dco_decode_Chrono_Utc(arr[3]),
     );
   }
 
@@ -5475,10 +5476,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   UserReaction sse_decode_user_reaction(SseDeserializer deserializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    final var_reactionId = sse_decode_String(deserializer);
     final var_user = sse_decode_String(deserializer);
     final var_emoji = sse_decode_String(deserializer);
     final var_createdAt = sse_decode_Chrono_Utc(deserializer);
     return UserReaction(
+      reactionId: var_reactionId,
       user: var_user,
       emoji: var_emoji,
       createdAt: var_createdAt,
@@ -6626,6 +6629,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   @protected
   void sse_encode_user_reaction(UserReaction self, SseSerializer serializer) {
     // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_String(self.reactionId, serializer);
     sse_encode_String(self.user, serializer);
     sse_encode_String(self.emoji, serializer);
     sse_encode_Chrono_Utc(self.createdAt, serializer);

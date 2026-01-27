@@ -320,24 +320,27 @@ enum UpdateTrigger {
 
 /// Flutter-compatible user reaction
 class UserReaction {
+  final String reactionId;
   final String user;
   final String emoji;
   final DateTime createdAt;
 
   const UserReaction({
+    required this.reactionId,
     required this.user,
     required this.emoji,
     required this.createdAt,
   });
 
   @override
-  int get hashCode => user.hashCode ^ emoji.hashCode ^ createdAt.hashCode;
+  int get hashCode => reactionId.hashCode ^ user.hashCode ^ emoji.hashCode ^ createdAt.hashCode;
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is UserReaction &&
           runtimeType == other.runtimeType &&
+          reactionId == other.reactionId &&
           user == other.user &&
           emoji == other.emoji &&
           createdAt == other.createdAt;
