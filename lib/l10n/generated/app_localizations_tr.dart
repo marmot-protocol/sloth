@@ -67,6 +67,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get settings => 'Ayarlar';
 
   @override
+  String get shareAndConnect => 'Paylaş ve bağlan';
+
+  @override
+  String get switchProfile => 'Profil değiştir';
+
+  @override
   String get editProfile => 'Profili düzenle';
 
   @override

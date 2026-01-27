@@ -96,6 +96,16 @@
     "description": "Settings screen title"
   },
 
+  "shareAndConnect": "Share & connect",
+  "@shareAndConnect": {
+    "description": "Button to share profile and connect with others"
+  },
+
+  "switchProfile": "Switch profile",
+  "@switchProfile": {
+    "description": "Button to switch between profiles"
+  },
+
   "editProfile": "Edit profile",
   "@editProfile": {
     "description": "Settings menu item"

@@ -222,6 +222,18 @@ abstract class AppLocalizations {
   /// **'Settings'**
   String get settings;
 
+  /// Button to share profile and connect with others
+  ///
+  /// In en, this message translates to:
+  /// **'Share & connect'**
+  String get shareAndConnect;
+
+  /// Button to switch between profiles
+  ///
+  /// In en, this message translates to:
+  /// **'Switch profile'**
+  String get switchProfile;
+
   /// Settings menu item
   ///
   /// In en, this message translates to:
