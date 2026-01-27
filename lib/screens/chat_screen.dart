@@ -7,6 +7,7 @@ import 'package:sloth/hooks/use_chat_avatar.dart';
 import 'package:sloth/hooks/use_chat_input.dart';
 import 'package:sloth/hooks/use_chat_messages.dart';
 import 'package:sloth/hooks/use_chat_scroll.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/message_actions_screen.dart';
@@ -109,7 +110,7 @@ class ChatScreen extends HookConsumerWidget {
                     : messageCount == 0
                     ? Center(
                         child: Text(
-                          'No messages yet',
+                          context.l10n.noMessagesYet,
                           style: TextStyle(
                             color: colors.backgroundContentTertiary,
                             fontSize: 14.sp,
@@ -175,7 +176,7 @@ class _ChatInput extends StatelessWidget {
         _logger.severe('Failed to send message', e, st);
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Failed to send message. Please try again.')),
+            SnackBar(content: Text(context.l10n.failedToSendMessage)),
           );
         }
       }
@@ -199,7 +200,7 @@ class _ChatInput extends StatelessWidget {
                 color: colors.backgroundContentPrimary,
               ),
               decoration: InputDecoration(
-                hintText: 'Message',
+                hintText: context.l10n.messagePlaceholder,
                 hintStyle: TextStyle(color: colors.backgroundContentTertiary),
                 filled: true,
                 fillColor: colors.backgroundTertiary,

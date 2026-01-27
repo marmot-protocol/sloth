@@ -156,5 +156,30 @@ void main() {
 
       expect(find.text('Failed to fetch key packages'), findsOneWidget);
     });
+
+    testWidgets('displays multiple key packages', (tester) async {
+      mockApi.keyPackages = [
+        FlutterEvent(
+          id: 'pkg1',
+          pubkey: 'test',
+          createdAt: DateTime.now(),
+          kind: 443,
+          tags: [],
+          content: '',
+        ),
+        FlutterEvent(
+          id: 'pkg2',
+          pubkey: 'test',
+          createdAt: DateTime.now(),
+          kind: 443,
+          tags: [],
+          content: '',
+        ),
+      ];
+
+      await pumpScreen(tester);
+      expect(find.text('Package 1'), findsOneWidget);
+      expect(find.text('Package 2'), findsOneWidget);
+    });
   });
 }

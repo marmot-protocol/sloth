@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
 import 'package:sloth/theme/semantic_colors.dart';
@@ -73,8 +74,8 @@ class MessageActionsScreen extends HookWidget {
       } catch (_) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to delete message. Please try again.'),
+            SnackBar(
+              content: Text(context.l10n.failedToDeleteMessage),
             ),
           );
         }
@@ -88,8 +89,8 @@ class MessageActionsScreen extends HookWidget {
       } catch (_) {
         if (context.mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('Failed to send reaction. Please try again.'),
+            SnackBar(
+              content: Text(context.l10n.failedToSendReaction),
             ),
           );
         }
@@ -178,7 +179,7 @@ class MessageActionsModal extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Message actions',
+                context.l10n.messageActions,
                 style: TextStyle(
                   color: colors.backgroundContentPrimary,
                   fontSize: 16.sp,
@@ -231,14 +232,14 @@ class MessageActionsModal extends StatelessWidget {
           SizedBox(height: 16.h),
           WnOutlinedButton(
             key: const Key('reply_button'),
-            text: 'Reply',
+            text: context.l10n.reply,
             onPressed: onClose,
           ),
           if (onDelete != null) ...[
             Gap(8.h),
             WnOutlinedButton(
               key: const Key('delete_button'),
-              text: 'Delete',
+              text: context.l10n.delete,
               onPressed: onDelete,
             ),
           ],

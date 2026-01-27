@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/relays.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_icon.dart';
@@ -39,7 +40,7 @@ class WnRelayTile extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'Remove Relay?',
+                    context.l10n.removeRelay,
                     style: TextStyle(
                       fontSize: 18.sp,
                       fontWeight: FontWeight.w600,
@@ -58,7 +59,7 @@ class WnRelayTile extends StatelessWidget {
               ),
               Gap(16.h),
               Text(
-                'Are you sure you want to remove this relay? This action cannot be undone.',
+                context.l10n.removeRelayConfirmation,
                 style: TextStyle(
                   fontSize: 14.sp,
                   color: colors.backgroundContentTertiary,
@@ -78,7 +79,7 @@ class WnRelayTile extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Cancel',
+                    context.l10n.cancel,
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,
@@ -101,7 +102,7 @@ class WnRelayTile extends StatelessWidget {
                     ),
                   ),
                   child: Text(
-                    'Remove',
+                    context.l10n.remove,
                     style: TextStyle(
                       fontSize: 14.sp,
                       fontWeight: FontWeight.w600,

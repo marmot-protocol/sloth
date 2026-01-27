@@ -1,7 +1,7 @@
 // Re-export everything from the whitenoise crate
 use flutter_rust_bridge::frb;
 use std::path::Path;
-pub use whitenoise::{AppSettings, RelayType, ThemeMode, Whitenoise};
+pub use whitenoise::{AppSettings, Language, RelayType, ThemeMode, Whitenoise};
 
 // Re-export types that flutter_rust_bridge needs
 pub use mdk_core::prelude::GroupId;
@@ -113,4 +113,18 @@ pub async fn update_theme_mode(theme_mode: ThemeMode) -> Result<(), ApiError> {
 #[frb]
 pub fn app_settings_theme_mode(app_settings: &AppSettings) -> ThemeMode {
     app_settings.theme_mode.clone()
+}
+
+#[frb]
+pub async fn update_language(language: Language) -> Result<(), ApiError> {
+    let whitenoise = Whitenoise::get_instance()?;
+    whitenoise
+        .update_language(language)
+        .await
+        .map_err(ApiError::from)
+}
+
+#[frb]
+pub fn app_settings_language(app_settings: &AppSettings) -> Language {
+    app_settings.language.clone()
 }

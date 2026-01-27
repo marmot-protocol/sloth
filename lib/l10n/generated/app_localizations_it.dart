@@ -1,0 +1,433 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Italian (`it`).
+class AppLocalizationsIt extends AppLocalizations {
+  AppLocalizationsIt([String locale = 'it']) : super(locale);
+
+  @override
+  String get appTitle => 'White Noise';
+
+  @override
+  String get tagline1 => 'Decentralizzato. Incensurabile.';
+
+  @override
+  String get tagline2 => 'Messaggistica Sicura.';
+
+  @override
+  String get login => 'Accedi';
+
+  @override
+  String get signUp => 'Registrati';
+
+  @override
+  String get loginTitle => 'Accedi a White Noise';
+
+  @override
+  String get enterPrivateKey => 'Inserisci la tua chiave privata';
+
+  @override
+  String get nsecPlaceholder => 'nsec...';
+
+  @override
+  String get setupProfile => 'Configura profilo';
+
+  @override
+  String get chooseName => 'Scegli un nome';
+
+  @override
+  String get enterYourName => 'Inserisci il tuo nome';
+
+  @override
+  String get introduceYourself => 'Presentati';
+
+  @override
+  String get writeSomethingAboutYourself => 'Scrivi qualcosa su di te';
+
+  @override
+  String get cancel => 'Annulla';
+
+  @override
+  String get profileReady => 'Il tuo profilo è pronto!';
+
+  @override
+  String get startConversationHint =>
+      'Inizia una conversazione aggiungendo amici o condividendo il tuo profilo.';
+
+  @override
+  String get shareYourProfile => 'Condividi il tuo profilo';
+
+  @override
+  String get startChat => 'Inizia una chat';
+
+  @override
+  String get settings => 'Impostazioni';
+
+  @override
+  String get editProfile => 'Modifica profilo';
+
+  @override
+  String get profileKeys => 'Chiavi del profilo';
+
+  @override
+  String get networkRelays => 'Relay di rete';
+
+  @override
+  String get appSettings => 'Impostazioni app';
+
+  @override
+  String get donateToWhiteNoise => 'Dona a White Noise';
+
+  @override
+  String get developerSettings => 'Impostazioni sviluppatore';
+
+  @override
+  String get signOut => 'Esci';
+
+  @override
+  String get appSettingsTitle => 'Impostazioni App';
+
+  @override
+  String get theme => 'Tema';
+
+  @override
+  String get themeSystem => 'Sistema';
+
+  @override
+  String get themeLight => 'Chiaro';
+
+  @override
+  String get themeDark => 'Scuro';
+
+  @override
+  String get profileKeysTitle => 'Chiavi del profilo';
+
+  @override
+  String get publicKey => 'Chiave pubblica';
+
+  @override
+  String get publicKeyCopied => 'Chiave pubblica copiata negli appunti';
+
+  @override
+  String get publicKeyDescription =>
+      'La tua chiave pubblica (npub) può essere condivisa con altri. Viene usata per identificarti sulla rete.';
+
+  @override
+  String get privateKey => 'Chiave privata';
+
+  @override
+  String get privateKeyCopied => 'Chiave privata copiata negli appunti';
+
+  @override
+  String get privateKeyDescription =>
+      'La tua chiave privata (nsec) deve rimanere segreta. Chiunque vi abbia accesso può controllare il tuo account.';
+
+  @override
+  String get keepPrivateKeySecure => 'Mantieni la tua chiave privata al sicuro';
+
+  @override
+  String get privateKeyWarning =>
+      'Non condividere la tua chiave privata pubblicamente e usala solo per accedere ad altre app Nostr.';
+
+  @override
+  String get editProfileTitle => 'Modifica profilo';
+
+  @override
+  String get profileName => 'Nome profilo';
+
+  @override
+  String get nostrAddress => 'Indirizzo Nostr';
+
+  @override
+  String get nostrAddressPlaceholder => 'esempio@whitenoise.chat';
+
+  @override
+  String get aboutYou => 'Su di te';
+
+  @override
+  String get profileIsPublic => 'Il profilo è pubblico';
+
+  @override
+  String get profilePublicDescription =>
+      'Le informazioni del tuo profilo saranno visibili a tutti sulla rete.';
+
+  @override
+  String get discardChanges => 'Annulla modifiche';
+
+  @override
+  String get save => 'Salva';
+
+  @override
+  String get profileUpdatedSuccessfully => 'Profilo aggiornato con successo';
+
+  @override
+  String errorLoadingProfile(String error) {
+    return 'Errore nel caricamento del profilo: $error';
+  }
+
+  @override
+  String error(String error) {
+    return 'Errore: $error';
+  }
+
+  @override
+  String get profileLoadError => 'Impossibile caricare il profilo. Riprova.';
+
+  @override
+  String get profileSaveError => 'Impossibile salvare il profilo. Riprova.';
+
+  @override
+  String get networkRelaysTitle => 'Relay di Rete';
+
+  @override
+  String get myRelays => 'I Miei Relay';
+
+  @override
+  String get myRelaysHelp =>
+      'Relay che hai definito per l\'uso in tutte le tue applicazioni Nostr.';
+
+  @override
+  String get inboxRelays => 'Relay Posta in Arrivo';
+
+  @override
+  String get inboxRelaysHelp =>
+      'Relay usati per ricevere inviti e avviare conversazioni sicure con nuovi utenti.';
+
+  @override
+  String get keyPackageRelays => 'Relay Pacchetti Chiavi';
+
+  @override
+  String get keyPackageRelaysHelp =>
+      'Relay che memorizzano la tua chiave sicura affinché altri possano invitarti a conversazioni crittografate.';
+
+  @override
+  String get errorLoadingRelays => 'Errore nel caricamento dei relay';
+
+  @override
+  String get noRelaysConfigured => 'Nessun relay configurato';
+
+  @override
+  String get donateTitle => 'Dona a White Noise';
+
+  @override
+  String get donateDescription =>
+      'Come organizzazione senza scopo di lucro, White Noise esiste unicamente per la tua privacy e libertà, non per profitto. Il tuo supporto ci mantiene indipendenti e senza compromessi.';
+
+  @override
+  String get lightningAddress => 'Indirizzo Lightning';
+
+  @override
+  String get bitcoinSilentPayment => 'Pagamento Silenzioso Bitcoin';
+
+  @override
+  String get copiedToClipboardThankYou => 'Copiato negli appunti. Grazie! 🦥';
+
+  @override
+  String get shareProfileTitle => 'Condividi profilo';
+
+  @override
+  String get scanToConnect => 'Scansiona per connetterti';
+
+  @override
+  String get signOutTitle => 'Esci';
+
+  @override
+  String get signOutConfirmation => 'Sei sicuro di voler uscire?';
+
+  @override
+  String get signOutWarning =>
+      'Quando esci da White Noise, le tue chat verranno eliminate da questo dispositivo e non potranno essere ripristinate su un altro dispositivo.\n\nSe non hai fatto il backup della tua chiave privata, non potrai usare questo profilo su nessun altro servizio Nostr.';
+
+  @override
+  String get backUpPrivateKey => 'Fai il backup della tua chiave privata';
+
+  @override
+  String get copyPrivateKeyHint =>
+      'Copia la tua chiave privata per ripristinare il tuo account su un altro dispositivo.';
+
+  @override
+  String get noChatsYet => 'Ancora nessuna chat';
+
+  @override
+  String get startConversation => 'Inizia una conversazione';
+
+  @override
+  String get noMessagesYet => 'Ancora nessun messaggio';
+
+  @override
+  String get messagePlaceholder => 'Messaggio';
+
+  @override
+  String get failedToSendMessage => 'Invio del messaggio fallito. Riprova.';
+
+  @override
+  String get invitedToSecureChat => 'Sei stato invitato a una chat sicura';
+
+  @override
+  String get decline => 'Rifiuta';
+
+  @override
+  String get accept => 'Accetta';
+
+  @override
+  String failedToAcceptInvitation(String error) {
+    return 'Impossibile accettare l\'invito: $error';
+  }
+
+  @override
+  String failedToDeclineInvitation(String error) {
+    return 'Impossibile rifiutare l\'invito: $error';
+  }
+
+  @override
+  String get startNewChat => 'Nuova chat';
+
+  @override
+  String get noResults => 'Nessun risultato';
+
+  @override
+  String get noFollowsYet => 'Ancora nessun seguito';
+
+  @override
+  String get developerSettingsTitle => 'Impostazioni Sviluppatore';
+
+  @override
+  String get publishNewKeyPackage => 'Pubblica Nuovo Pacchetto Chiavi';
+
+  @override
+  String get refreshKeyPackages => 'Aggiorna Pacchetti Chiavi';
+
+  @override
+  String get deleteAllKeyPackages => 'Elimina Tutti i Pacchetti Chiavi';
+
+  @override
+  String keyPackagesCount(int count) {
+    return 'Pacchetti Chiavi ($count)';
+  }
+
+  @override
+  String get noKeyPackagesFound => 'Nessun pacchetto chiavi trovato';
+
+  @override
+  String packageNumber(int number) {
+    return 'Pacchetto $number';
+  }
+
+  @override
+  String get ohNo => 'Oh no!';
+
+  @override
+  String get goBack => 'Torna indietro';
+
+  @override
+  String get reportError => 'Segnala errore';
+
+  @override
+  String get slothsWorking => 'Bradipi al lavoro';
+
+  @override
+  String get wipMessage =>
+      'I bradipi stanno lavorando su questa funzionalità. Se vuoi che i bradipi vadano più veloci, dona a White Noise';
+
+  @override
+  String get donate => 'Dona';
+
+  @override
+  String get addRelay => 'Aggiungi Relay';
+
+  @override
+  String get enterRelayAddress => 'Inserisci l\'indirizzo del relay';
+
+  @override
+  String get relayAddressPlaceholder => 'wss://relay.example.com';
+
+  @override
+  String get removeRelay => 'Rimuovere il Relay?';
+
+  @override
+  String get removeRelayConfirmation =>
+      'Sei sicuro di voler rimuovere questo relay? Questa azione non può essere annullata.';
+
+  @override
+  String get remove => 'Rimuovi';
+
+  @override
+  String get messageActions => 'Azioni messaggio';
+
+  @override
+  String get reply => 'Rispondi';
+
+  @override
+  String get delete => 'Elimina';
+
+  @override
+  String get failedToDeleteMessage => 'Eliminazione del messaggio fallita. Riprova.';
+
+  @override
+  String get failedToSendReaction => 'Invio della reazione fallito. Riprova.';
+
+  @override
+  String get unknownUser => 'Utente sconosciuto';
+
+  @override
+  String get unknownGroup => 'Gruppo sconosciuto';
+
+  @override
+  String get hasInvitedYouToSecureChat => 'Ti ha invitato a una chat sicura';
+
+  @override
+  String userInvitedYouToSecureChat(String name) {
+    return '$name ti ha invitato a una chat sicura';
+  }
+
+  @override
+  String get youHaveBeenInvitedToSecureChat => 'Sei stato invitato a una chat sicura';
+
+  @override
+  String get language => 'Lingua';
+
+  @override
+  String get languageSystem => 'Sistema';
+
+  @override
+  String get languageUpdateFailed => 'Salvataggio della preferenza della lingua fallito. Riprova.';
+
+  @override
+  String get timeJustNow => 'proprio ora';
+
+  @override
+  String timeMinutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minuti fa',
+      one: '1 minuto fa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeHoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ore fa',
+      one: '1 ora fa',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String timeDaysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count giorni fa',
+      one: 'ieri',
+    );
+    return '$_temp0';
+  }
+}

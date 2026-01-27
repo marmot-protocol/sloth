@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
@@ -42,7 +43,7 @@ class OnboardingScreen extends ConsumerWidget {
                       children: [
                         Expanded(
                           child: Text(
-                            'Your profile is ready!',
+                            context.l10n.profileReady,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -63,7 +64,7 @@ class OnboardingScreen extends ConsumerWidget {
                     ),
                     Gap(8.h),
                     Text(
-                      'Start a conversation by adding friends or sharing your profile.',
+                      context.l10n.startConversationHint,
                       style: TextStyle(
                         fontSize: 14.sp,
                         fontWeight: FontWeight.w400,
@@ -72,13 +73,13 @@ class OnboardingScreen extends ConsumerWidget {
                     ),
                     Gap(8.h),
                     WnOutlinedButton(
-                      text: 'Share your profile',
+                      text: context.l10n.shareYourProfile,
                       onPressed: () {
                         Routes.pushToWip(context);
                       },
                     ),
                     WnFilledButton(
-                      text: 'Start a chat',
+                      text: context.l10n.startChat,
                       onPressed: () {
                         Routes.pushToWip(context);
                       },

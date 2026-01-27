@@ -7,6 +7,7 @@
 #
 # Excludes auto-generated files:
 # - lib/src/rust/ (flutter_rust_bridge)
+# - lib/l10n/generated/ (flutter_localizations)
 # - *.freezed.dart (freezed)
 # - *.g.dart (json_serializable, etc.)
 
@@ -60,7 +61,8 @@ is_generated_file() {
     local file="$1"
     if [[ "$file" == *".freezed.dart" ]] || \
        [[ "$file" == *".g.dart" ]] || \
-       [[ "$file" == lib/src/rust/* ]]; then
+       [[ "$file" == lib/src/rust/* ]] || \
+       [[ "$file" == lib/l10n/generated/* ]]; then
         return 0
     fi
     return 1
@@ -140,6 +142,7 @@ filter_generated_files() {
         file = substr($0, 4)
         skip = 0
         if (match(file, /lib\/src\/rust\//) ||
+            match(file, /lib\/l10n\/generated\//) ||
             match(file, /\.freezed\.dart$/) ||
             match(file, /\.g\.dart$/)) {
             skip = 1
@@ -166,6 +169,7 @@ calculate_coverage() {
         file = substr($0, 4)
         skip = 0
         if (match(file, /lib\/src\/rust\//) ||
+            match(file, /lib\/l10n\/generated\//) ||
             match(file, /\.freezed\.dart$/) ||
             match(file, /\.g\.dart$/)) {
             skip = 1

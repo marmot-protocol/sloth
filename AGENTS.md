@@ -137,7 +137,7 @@ just generate
 
 ### Comments
 
-- Other than doc comments; only leave comments on code that is really complex or potentially hard to understand.
+- DO NOT add comments except for code that is really complex or hard to understand.
 
 ### Avoid StatefulWidget
 

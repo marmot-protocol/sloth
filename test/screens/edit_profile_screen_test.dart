@@ -199,7 +199,7 @@ void main() {
       );
       Routes.pushToEditProfile(tester.element(find.byType(Scaffold)));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Error loading profile'), findsOneWidget);
+      expect(find.textContaining('Unable to load profile'), findsOneWidget);
     });
 
     testWidgets('Save button saves changes successfully', (tester) async {
@@ -221,8 +221,7 @@ void main() {
       await tester.pump();
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
-      expect(find.textContaining('Error:'), findsOneWidget);
-      expect(find.textContaining('Failed to update profile'), findsOneWidget);
+      expect(find.textContaining('Unable to save profile'), findsOneWidget);
     });
 
     testWidgets('calls onChanged when profile name field is changed', (tester) async {

@@ -2,6 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class MockSecureStorage implements FlutterSecureStorage {
   final Map<String, String> _data = {};
+  bool shouldThrowOnRead = false;
 
   @override
   Future<String?> read({
@@ -12,7 +13,12 @@ class MockSecureStorage implements FlutterSecureStorage {
     WebOptions? webOptions,
     AppleOptions? mOptions,
     WindowsOptions? wOptions,
-  }) async => _data[key];
+  }) async {
+    if (shouldThrowOnRead) {
+      throw Exception('Secure storage read error');
+    }
+    return _data[key];
+  }
 
   @override
   Future<void> write({

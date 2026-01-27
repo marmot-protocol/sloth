@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_user_search.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/users.dart' show User;
@@ -42,7 +43,7 @@ class UserSearchScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Start new chat'),
+                WnScreenHeader(title: context.l10n.startNewChat),
                 Gap(16.h),
                 WnSearchField(
                   placeholder: 'npub1...',
@@ -60,7 +61,9 @@ class UserSearchScreen extends HookConsumerWidget {
                       : state.users.isEmpty
                       ? Center(
                           child: Text(
-                            state.hasSearchQuery ? 'No results' : 'No follows yet',
+                            state.hasSearchQuery
+                                ? context.l10n.noResults
+                                : context.l10n.noFollowsYet,
                             style: TextStyle(color: colors.backgroundContentTertiary),
                           ),
                         )

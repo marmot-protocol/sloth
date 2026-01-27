@@ -75,6 +75,21 @@ void main() {
     ];
   });
 
+  group('NsecState', () {
+    test('copyWith preserves isLoading when not explicitly set', () {
+      const state = NsecState(isLoading: true);
+      final copied = state.copyWith(nsec: 'test_nsec');
+      expect(copied.isLoading, isTrue);
+      expect(copied.nsec, 'test_nsec');
+    });
+
+    test('copyWith can override isLoading', () {
+      const state = NsecState(isLoading: true);
+      final copied = state.copyWith(isLoading: false);
+      expect(copied.isLoading, isFalse);
+    });
+  });
+
   group('useNsec', () {
     testWidgets('initial state has no nsec', (tester) async {
       await _pump(tester, overrides);
@@ -164,7 +179,6 @@ void main() {
       await result.loadNsec();
       await tester.pumpAndSettle();
 
-      // State should remain unchanged - no loading, no error, no nsec
       expect(result.state.nsec, isNull);
       expect(result.state.isLoading, isFalse);
       expect(result.state.error, isNull);
@@ -175,13 +189,11 @@ void main() {
       await _pump(tester, overrides);
       await tester.pump();
 
-      // Verify initial state has no nsec
       expect(result.state.nsec, isNull);
 
       await result.loadNsec();
       await tester.pumpAndSettle();
 
-      // After error, nsec should still be null (copyWith preserves null when nsec not provided)
       expect(result.state.nsec, isNull);
       expect(result.state.error, isNotNull);
     });

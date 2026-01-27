@@ -425,7 +425,6 @@ void main() {
       test('interpolates all color properties', () {
         final result = SemanticColors.light.lerp(SemanticColors.dark, 0.5);
 
-        // Background colors
         expect(
           result.backgroundSecondary,
           Color.lerp(
@@ -483,7 +482,6 @@ void main() {
           ),
         );
 
-        // Fill colors
         expect(
           result.fillPrimaryHover,
           Color.lerp(
@@ -573,7 +571,6 @@ void main() {
           ),
         );
 
-        // Fill content colors
         expect(
           result.fillContentPrimary,
           Color.lerp(
@@ -599,7 +596,6 @@ void main() {
           ),
         );
 
-        // Border colors
         expect(
           result.borderPrimary,
           Color.lerp(
@@ -705,7 +701,6 @@ void main() {
           ),
         );
 
-        // Shadow
         expect(
           result.shadow,
           Color.lerp(

@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:sloth/hooks/use_add_relay.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
@@ -69,7 +70,7 @@ class WnAddRelayBottomSheet extends HookWidget {
             ),
             Gap(16.h),
             Text(
-              'Add Relay',
+              context.l10n.addRelay,
               style: TextStyle(
                 fontSize: 18.sp,
                 fontWeight: FontWeight.w600,
@@ -78,7 +79,7 @@ class WnAddRelayBottomSheet extends HookWidget {
             ),
             Gap(16.h),
             WnTextFormField(
-              label: 'Enter relay address',
+              label: context.l10n.enterRelayAddress,
               placeholder: 'wss://relay.example.com',
               controller: controller,
               errorText: validationError,
@@ -90,7 +91,7 @@ class WnAddRelayBottomSheet extends HookWidget {
               child: WnFilledButton(
                 key: const Key('add_relay_submit_button'),
                 onPressed: isValid ? addRelay : null,
-                text: 'Add Relay',
+                text: context.l10n.addRelay,
                 disabled: !isValid,
               ),
             ),

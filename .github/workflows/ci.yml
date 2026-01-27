@@ -196,3 +196,39 @@ jobs:
         name: coverage-baseline
         path: coverage-baseline/coverage-baseline.txt
         retention-days: 90
+
+  l10n-validation:
+    name: L10n Validation
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.38.4'
+        channel: 'stable'
+        cache: true
+
+    - name: Cache Flutter dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.pub-cache
+          ${{ github.workspace }}/.pub-cache
+        key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pub-cache-
+
+    - name: Install dependencies
+      run: flutter pub get
+
+    - name: Generate localizations
+      run: flutter gen-l10n
+
+    - name: Validate all locales have required keys
+      run: |
+        chmod +x scripts/validate-locales-keys.sh
+        ./scripts/validate-locales-keys.sh

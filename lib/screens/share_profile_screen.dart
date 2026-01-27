@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
@@ -27,9 +28,9 @@ class ShareProfileScreen extends HookConsumerWidget {
     void copyToClipboard(String text) {
       Clipboard.setData(ClipboardData(text: text));
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Public key copied to clipboard'),
-          duration: Duration(seconds: 2),
+        SnackBar(
+          content: Text(context.l10n.publicKeyCopied),
+          duration: const Duration(seconds: 2),
         ),
       );
     }
@@ -58,7 +59,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                   spacing: 16.h,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const WnScreenHeader(title: 'Share profile'),
+                    WnScreenHeader(title: context.l10n.shareProfileTitle),
                     Flexible(
                       child: SingleChildScrollView(
                         child: Center(
@@ -130,7 +131,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                                 ),
                               Gap(10.h),
                               Text(
-                                'Scan to connect',
+                                context.l10n.scanToConnect,
                                 textAlign: TextAlign.center,
                                 style: TextStyle(
                                   fontSize: 14.sp,

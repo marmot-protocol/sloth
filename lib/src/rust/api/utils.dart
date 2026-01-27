@@ -43,6 +43,25 @@ ThemeMode themeModeSystem() => RustLib.instance.api.crateApiUtilsThemeModeSystem
 String themeModeToString({required ThemeMode themeMode}) =>
     RustLib.instance.api.crateApiUtilsThemeModeToString(themeMode: themeMode);
 
+Language languageEnglish() => RustLib.instance.api.crateApiUtilsLanguageEnglish();
+
+Language languageSpanish() => RustLib.instance.api.crateApiUtilsLanguageSpanish();
+
+Language languageFrench() => RustLib.instance.api.crateApiUtilsLanguageFrench();
+
+Language languageGerman() => RustLib.instance.api.crateApiUtilsLanguageGerman();
+
+Language languageItalian() => RustLib.instance.api.crateApiUtilsLanguageItalian();
+
+Language languagePortuguese() => RustLib.instance.api.crateApiUtilsLanguagePortuguese();
+
+Language languageRussian() => RustLib.instance.api.crateApiUtilsLanguageRussian();
+
+Language languageTurkish() => RustLib.instance.api.crateApiUtilsLanguageTurkish();
+
+String languageToString({required Language language}) =>
+    RustLib.instance.api.crateApiUtilsLanguageToString(language: language);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<GroupId>>
 abstract class GroupId implements RustOpaqueInterface {}
 

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
@@ -44,7 +45,7 @@ class ErrorScreen extends StatelessWidget {
                           textAlign: TextAlign.center,
                         ),
                         Text(
-                          'Oh no!',
+                          context.l10n.ohNo,
                           style: TextStyle(
                             color: colors.backgroundContentPrimary,
                             fontSize: 16.sp,
@@ -63,13 +64,13 @@ class ErrorScreen extends StatelessWidget {
                         ),
                         Gap(4.h),
                         WnFilledButton(
-                          text: 'Go back',
+                          text: context.l10n.goBack,
                           onPressed: () {
                             Routes.goBack(context);
                           },
                         ),
                         WnOutlinedButton(
-                          text: 'Report error',
+                          text: context.l10n.reportError,
                           onPressed: () {
                             Routes.pushToWip(context);
                           },

@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/src/rust/api/messages.dart';
@@ -292,9 +295,20 @@ void main() {
       group('when pending', () {
         testWidgets('navigates to invite when pending', (tester) async {
           await tester.pumpWidget(
-            ScreenUtilInit(
-              designSize: testDesignSize,
-              builder: (_, _) => MaterialApp.router(routerConfig: buildRouter('/pending')),
+            ProviderScope(
+              child: ScreenUtilInit(
+                designSize: testDesignSize,
+                builder: (_, _) => MaterialApp.router(
+                  routerConfig: buildRouter('/pending'),
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: AppLocalizations.supportedLocales,
+                ),
+              ),
             ),
           );
           await tester.pumpAndSettle();
@@ -308,9 +322,20 @@ void main() {
       group('when not pending', () {
         testWidgets('navigates to chat when not pending', (tester) async {
           await tester.pumpWidget(
-            ScreenUtilInit(
-              designSize: testDesignSize,
-              builder: (_, _) => MaterialApp.router(routerConfig: buildRouter('/not-pending')),
+            ProviderScope(
+              child: ScreenUtilInit(
+                designSize: testDesignSize,
+                builder: (_, _) => MaterialApp.router(
+                  routerConfig: buildRouter('/not-pending'),
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: AppLocalizations.supportedLocales,
+                ),
+              ),
             ),
           );
           await tester.pumpAndSettle();

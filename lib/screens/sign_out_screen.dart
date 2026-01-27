@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
@@ -60,7 +61,7 @@ class SignOutScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Sign out'),
+                WnScreenHeader(title: context.l10n.signOut),
                 Expanded(
                   child: SingleChildScrollView(
                     child: Padding(
@@ -69,14 +70,13 @@ class SignOutScreen extends HookConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Gap(24.h),
-                          const WnWarningBox(
-                            title: 'Are you sure you want to sign out?',
-                            description:
-                                'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.',
+                          WnWarningBox(
+                            title: context.l10n.signOutConfirmation,
+                            description: context.l10n.signOutWarning,
                           ),
                           Gap(24.h),
                           Text(
-                            'Back up your private key',
+                            context.l10n.backUpPrivateKey,
                             style: TextStyle(
                               fontSize: 16.sp,
                               fontWeight: FontWeight.w600,
@@ -85,7 +85,7 @@ class SignOutScreen extends HookConsumerWidget {
                           ),
                           Gap(8.h),
                           Text(
-                            'Copy your private key to restore your account on another device.',
+                            context.l10n.copyPrivateKeyHint,
                             style: TextStyle(
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
@@ -94,18 +94,18 @@ class SignOutScreen extends HookConsumerWidget {
                           ),
                           Gap(16.h),
                           WnCopyableField(
-                            label: 'Private key',
+                            label: context.l10n.privateKey,
                             value: state.nsec ?? '',
                             obscurable: true,
                             obscured: obscurePrivateKey.value,
                             onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: 'Private key copied to clipboard',
+                            copiedMessage: context.l10n.privateKeyCopied,
                           ),
                           Gap(32.h),
                           SizedBox(
                             width: double.infinity,
                             child: WnFilledButton(
-                              text: 'Sign out',
+                              text: context.l10n.signOut,
                               onPressed: signOut,
                               loading: isLoggingOut.value,
                             ),

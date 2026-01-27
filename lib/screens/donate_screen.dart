@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -11,7 +12,6 @@ class DonateScreen extends StatelessWidget {
   static const _lightningAddress = 'whitenoise@npub.cash';
   static const _bitcoinAddress =
       'sp1qqvp56mxcj9pz9xudvlch5g4ah5hrc8rj6neu25p34rc9gxhp38cwqqlmld28u57w2srgckr34dkyg3q02phu8tm05cyj483q026xedp0s5f5j40p';
-  static const _copiedMessage = 'Copied to clipboard. Thank you! 🦥';
 
   @override
   Widget build(BuildContext context) {
@@ -27,24 +27,24 @@ class DonateScreen extends StatelessWidget {
               spacing: 24.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Donate to White Noise'),
+                WnScreenHeader(title: context.l10n.donateToWhiteNoise),
                 Text(
-                  'As a not-for-profit, White Noise exists solely for your privacy and freedom, not for profit. Your support keeps us independent and uncompromised.',
+                  context.l10n.donateDescription,
                   style: TextStyle(
                     color: colors.backgroundContentTertiary,
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
-                const WnCopyableField(
-                  label: 'Lightning Address',
+                WnCopyableField(
+                  label: context.l10n.lightningAddress,
                   value: _lightningAddress,
-                  copiedMessage: _copiedMessage,
+                  copiedMessage: context.l10n.copiedToClipboardThankYou,
                 ),
-                const WnCopyableField(
-                  label: 'Bitcoin Silent Payment',
+                WnCopyableField(
+                  label: context.l10n.bitcoinSilentPayment,
                   value: _bitcoinAddress,
-                  copiedMessage: _copiedMessage,
+                  copiedMessage: context.l10n.copiedToClipboardThankYou,
                 ),
               ],
             ),

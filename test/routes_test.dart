@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_invite_screen.dart';
@@ -133,7 +135,16 @@ void main() {
           builder: (_, _) => Consumer(
             builder: (context, ref, _) {
               router = Routes.build(ref);
-              return MaterialApp.router(routerConfig: router);
+              return MaterialApp.router(
+                routerConfig: router,
+                localizationsDelegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                supportedLocales: AppLocalizations.supportedLocales,
+              );
             },
           ),
         ),

@@ -106,8 +106,6 @@ void main() {
       test('with t=0.5 interpolates colors', () {
         final halfway = SemanticColors.light.lerp(SemanticColors.dark, 0.5);
 
-        // Light background is white (0xFFFFFFFF), dark is black (0xFF000000)
-        // Halfway should be gray
         expect(
           halfway.backgroundPrimary.toARGB32(),
           lessThan(SemanticColors.light.backgroundPrimary.toARGB32()),
@@ -210,7 +208,6 @@ void main() {
         0.5,
       );
 
-      // Blue fill should be interpolated
       expect(
         midway.blue.fill.toARGB32(),
         lessThan(SemanticColors.light.accent.blue.fill.toARGB32()),
@@ -268,7 +265,7 @@ void main() {
 
       await tester.pumpWidget(
         MaterialApp(
-          theme: ThemeData(), // No SemanticColors extension
+          theme: ThemeData(),
           home: Scaffold(
             body: Builder(
               builder: (context) {
@@ -280,7 +277,6 @@ void main() {
         ),
       );
 
-      // Should fall back to SemanticColors.light
       expect(colors.backgroundPrimary, SemanticColors.light.backgroundPrimary);
     });
   });

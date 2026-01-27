@@ -3,7 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState, useEditProfile;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_filled_button.dart';
@@ -14,6 +16,8 @@ import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
+
+final _logger = Logger('EditProfileScreen');
 
 class EditProfileScreen extends HookConsumerWidget {
   const EditProfileScreen({super.key});
@@ -50,17 +54,23 @@ class EditProfileScreen extends HookConsumerWidget {
               spacing: 16.h,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Edit profile'),
-                if (state.error != null)
-                  Center(
-                    child: Text(
-                      state.currentMetadata == null
-                          ? 'Error loading profile: ${state.error}'
-                          : 'Error: ${state.error}',
-                      style: TextStyle(color: colors.fillDestructive),
-                    ),
-                  )
-                else
+                WnScreenHeader(title: context.l10n.editProfile),
+                if (state.error != null) ...[
+                  Builder(
+                    builder: (context) {
+                      _logger.warning('Profile error: ${state.error}');
+                      final message = state.currentMetadata == null
+                          ? context.l10n.profileLoadError
+                          : context.l10n.profileSaveError;
+                      return Center(
+                        child: Text(
+                          message,
+                          style: TextStyle(color: colors.fillDestructive),
+                        ),
+                      );
+                    },
+                  ),
+                ] else
                   Expanded(
                     child: SingleChildScrollView(
                       child: Padding(
@@ -80,29 +90,28 @@ class EditProfileScreen extends HookConsumerWidget {
                             ),
                             Gap(36.h),
                             WnTextFormField(
-                              label: 'Profile name',
-                              placeholder: 'Enter your name',
+                              label: context.l10n.profileName,
+                              placeholder: context.l10n.enterYourName,
                               controller: displayNameController,
                             ),
                             Gap(36.h),
                             WnTextFormField(
-                              label: 'Nostr address',
+                              label: context.l10n.nostrAddress,
                               placeholder: 'example@whitenoise.chat',
                               controller: nip05Controller,
                             ),
                             Gap(36.h),
                             WnTextFormField(
-                              label: 'About you',
-                              placeholder: 'Write something about yourself',
+                              label: context.l10n.aboutYou,
+                              placeholder: context.l10n.writeSomethingAboutYourself,
                               controller: aboutController,
                               maxLines: 3,
                               minLines: 3,
                             ),
                             Gap(36.h),
                             WnWarningBox(
-                              title: 'Profile is public',
-                              description:
-                                  'Your profile information will be visible to everyone on the network.',
+                              title: context.l10n.profileIsPublic,
+                              description: context.l10n.profilePublicDescription,
                               backgroundColor: colors.backgroundTertiary,
                               borderColor: colors.borderPrimary,
                               iconColor: colors.backgroundContentPrimary,
@@ -125,14 +134,14 @@ class EditProfileScreen extends HookConsumerWidget {
                       children: [
                         if (state.hasUnsavedChanges)
                           WnOutlinedButton(
-                            text: 'Discard changes',
+                            text: context.l10n.discardChanges,
                             onPressed: () {
                               discardChanges();
                             },
                             disabled: state.loadingState == EditProfileLoadingState.saving,
                           ),
                         WnFilledButton(
-                          text: 'Save',
+                          text: context.l10n.save,
                           onPressed:
                               state.hasUnsavedChanges &&
                                   state.loadingState != EditProfileLoadingState.saving
@@ -140,9 +149,9 @@ class EditProfileScreen extends HookConsumerWidget {
                                   final success = await updateProfileData();
                                   if (context.mounted && success) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text('Profile updated successfully'),
-                                        duration: Duration(seconds: 2),
+                                      SnackBar(
+                                        content: Text(context.l10n.profileUpdatedSuccessfully),
+                                        duration: const Duration(seconds: 2),
                                       ),
                                     );
                                   }

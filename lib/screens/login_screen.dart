@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
 import 'package:sloth/hooks/use_login.dart' show useLogin;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
@@ -66,7 +67,7 @@ class LoginScreen extends HookConsumerWidget {
                           ),
                           Expanded(
                             child: Text(
-                              'Login to White Noise',
+                              context.l10n.loginTitle,
                               style: TextStyle(
                                 fontSize: 16.sp,
                                 fontWeight: FontWeight.w600,
@@ -78,8 +79,8 @@ class LoginScreen extends HookConsumerWidget {
                       ),
                       Gap(8.h),
                       WnTextFormField(
-                        label: 'Enter your private key',
-                        placeholder: 'nsec...',
+                        label: context.l10n.enterPrivateKey,
+                        placeholder: context.l10n.nsecPlaceholder,
                         controller: controller,
                         autofocus: true,
                         obscureText: true,
@@ -88,7 +89,7 @@ class LoginScreen extends HookConsumerWidget {
                         onPaste: paste,
                       ),
                       WnFilledButton(
-                        text: 'Login',
+                        text: context.l10n.login,
                         onPressed: onSubmit,
                         loading: state.isLoading,
                       ),

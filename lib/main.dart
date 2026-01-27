@@ -1,12 +1,15 @@
 import 'dart:io' show Directory;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show ConsumerStatefulWidget, ConsumerState, ProviderContainer, UncontrolledProviderScope;
 import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
+import 'package:sloth/providers/locale_provider.dart';
 import 'package:sloth/providers/theme_provider.dart' show themeProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/src/rust/api.dart' as rust_api;
@@ -53,6 +56,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   @override
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider).value ?? ThemeMode.system;
+    ref.watch(localeProvider);
+    final locale = ref.read(localeProvider.notifier).resolveLocale();
 
     return ScreenUtilInit(
       designSize: const Size(390, 844),
@@ -62,7 +67,15 @@ class _MyAppState extends ConsumerState<MyApp> {
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeMode,
+          locale: locale,
           routerConfig: _router,
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
         );
       },
     );

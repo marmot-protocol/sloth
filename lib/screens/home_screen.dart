@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
@@ -37,7 +38,7 @@ class HomeScreen extends StatelessWidget {
                         ),
                         Gap(16.h),
                         Text(
-                          'White Noise',
+                          context.l10n.appTitle,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w700,
@@ -47,7 +48,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Decentralized. Uncensorable.',
+                          context.l10n.tagline1,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,
@@ -57,7 +58,7 @@ class HomeScreen extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          'Secure Messaging.',
+                          context.l10n.tagline2,
                           textAlign: TextAlign.center,
                           style: TextStyle(
                             fontWeight: FontWeight.w600,

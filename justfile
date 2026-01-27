@@ -8,6 +8,8 @@ default:
 precommit:
     just deps-flutter
     just deps-rust
+    just l10n
+    just validate-locales-keys
     just fix
     just format
     just lint
@@ -19,6 +21,8 @@ precommit:
 precommit-check:
     just deps-flutter
     just deps-rust
+    just l10n-check
+    just validate-locales-keys
     just check-rust-format
     just check-dart-format
     just lint
@@ -37,6 +41,23 @@ generate:
 
 # Clean and regenerate Rust bridge code
 regenerate: clean-bridge generate
+
+# Generate localizations from ARB files
+l10n:
+    @echo "🌍 Generating localizations..."
+    flutter gen-l10n
+
+# Validate l10n files are in sync (fails if regeneration would change anything)
+l10n-check:
+    @echo "🔍 Checking l10n files are up-to-date..."
+    flutter gen-l10n
+    @if ! git diff --quiet lib/l10n/generated/; then \
+        echo "❌ Generated l10n files are out of sync. Run 'just l10n' and commit."; \
+        git diff --name-only lib/l10n/generated/; \
+        exit 1; \
+    fi
+    @echo "✅ L10n files are up-to-date"
+
 
 # ==============================================================================
 # DEPENDENCIES
@@ -125,6 +146,10 @@ coverage-report:
   ./scripts/check-coverage.sh && \
   genhtml coverage/lcov.info -o coverage/html
   @echo "📊 Coverage report generated at coverage/html/index.html"
+
+validate-locales-keys:
+    @echo "🔍 Validating l10n keys..."
+    ./scripts/validate-locales-keys.sh
 
 # ==============================================================================
 # CLEANING

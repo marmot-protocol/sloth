@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart' show useEffect;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/theme.dart';
@@ -34,7 +35,7 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const WnScreenHeader(title: 'Developer Settings'),
+                WnScreenHeader(title: context.l10n.developerSettingsTitle),
                 SizedBox(height: 16.h),
                 _ActionButtons(
                   isLoading: state.isLoading,
@@ -51,7 +52,7 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
                 ],
                 SizedBox(height: 16.h),
                 Text(
-                  'Key Packages (${state.packages.length})',
+                  context.l10n.keyPackagesCount(state.packages.length),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,
@@ -102,17 +103,17 @@ class _ActionButtons extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         WnFilledButton(
-          text: 'Publish New Key Package',
+          text: context.l10n.publishNewKeyPackage,
           onPressed: onPublish,
           disabled: isLoading,
         ),
         WnFilledButton(
-          text: 'Refresh Key Packages',
+          text: context.l10n.refreshKeyPackages,
           onPressed: onFetch,
           disabled: isLoading,
         ),
         WnFilledButton(
-          text: 'Delete All Key Packages',
+          text: context.l10n.deleteAllKeyPackages,
           onPressed: onDeleteAll,
           disabled: isLoading,
         ),
@@ -139,7 +140,7 @@ class _KeyPackagesList extends StatelessWidget {
     if (packages.isEmpty) {
       return Center(
         child: Text(
-          'No key packages found',
+          context.l10n.noKeyPackagesFound,
           style: TextStyle(
             fontSize: 14.sp,
             color: colors.backgroundContentTertiary,
@@ -195,7 +196,7 @@ class _KeyPackageTile extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Package ${index + 1}',
+                  context.l10n.packageNumber(index + 1),
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w600,

@@ -18,6 +18,14 @@ class MockThemeMode implements rust_api.ThemeMode {
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
+class MockLanguage implements rust_api.Language {
+  final String code;
+  const MockLanguage(this.code);
+
+  @override
+  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+}
+
 class MockAppSettings implements rust_api.AppSettings {
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
@@ -25,6 +33,9 @@ class MockAppSettings implements rust_api.AppSettings {
 
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
+  String currentLanguage = 'en';
+  bool shouldFailUpdateLanguage = false;
+  bool shouldFailNpubConversion = false;
   List<Account> accounts = [];
   Completer<List<Account>>? getAccountsCompleter;
 
@@ -35,6 +46,9 @@ class MockWnApi implements RustLibApi {
 
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    if (shouldFailNpubConversion) {
+      throw Exception('Invalid hex pubkey');
+    }
     return 'npub1test${hexPubkey.substring(0, 10)}';
   }
 
@@ -125,7 +139,6 @@ class MockWnApi implements RustLibApi {
     required FlutterMetadata metadata,
   }) async {}
 
-  // Theme methods
   @override
   rust_api.ThemeMode crateApiUtilsThemeModeLight() => const MockThemeMode('light');
 
@@ -164,8 +177,62 @@ class MockWnApi implements RustLibApi {
     }
   }
 
+  @override
+  rust_api.Language crateApiUtilsLanguageEnglish() => const MockLanguage('en');
+
+  @override
+  rust_api.Language crateApiUtilsLanguageSpanish() => const MockLanguage('es');
+
+  @override
+  rust_api.Language crateApiUtilsLanguageFrench() => const MockLanguage('fr');
+
+  @override
+  rust_api.Language crateApiUtilsLanguageGerman() => const MockLanguage('de');
+
+  @override
+  rust_api.Language crateApiUtilsLanguageItalian() => const MockLanguage('it');
+
+  @override
+  rust_api.Language crateApiUtilsLanguagePortuguese() => const MockLanguage('pt');
+
+  @override
+  rust_api.Language crateApiUtilsLanguageRussian() => const MockLanguage('ru');
+
+  @override
+  rust_api.Language crateApiUtilsLanguageTurkish() => const MockLanguage('tr');
+
+  @override
+  String crateApiUtilsLanguageToString({required rust_api.Language language}) {
+    if (language is MockLanguage) {
+      return language.code;
+    }
+    return 'en';
+  }
+
+  @override
+  Future<rust_api.Language> crateApiAppSettingsLanguage({
+    required rust_api.AppSettings appSettings,
+  }) async {
+    return MockLanguage(currentLanguage);
+  }
+
+  @override
+  Future<void> crateApiUpdateLanguage({
+    required rust_api.Language language,
+  }) async {
+    if (shouldFailUpdateLanguage) {
+      throw Exception('Failed to update language');
+    }
+    if (language is MockLanguage) {
+      currentLanguage = language.code;
+    }
+  }
+
   void reset() {
     currentThemeMode = 'system';
+    currentLanguage = 'en';
+    shouldFailUpdateLanguage = false;
+    shouldFailNpubConversion = false;
     accounts = [];
     getAccountsCompleter = null;
   }

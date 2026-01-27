@@ -1,6 +1,17 @@
 import 'package:flutter/material.dart'
-    show FilledButton, Key, MaterialApp, Scaffold, Builder, ElevatedButton, Text, TextFormField;
+    show
+        FilledButton,
+        Key,
+        Locale,
+        MaterialApp,
+        Scaffold,
+        Builder,
+        ElevatedButton,
+        Text,
+        TextFormField;
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
 import '../test_helpers.dart';
 
@@ -119,6 +130,14 @@ void main() {
       String? addedUrl;
       await tester.pumpWidget(
         MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: Builder(
               builder: (context) => ElevatedButton(
@@ -148,6 +167,14 @@ void main() {
     testWidgets('closes bottom sheet after adding relay', (tester) async {
       await tester.pumpWidget(
         MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: const [
+            AppLocalizations.delegate,
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+            GlobalCupertinoLocalizations.delegate,
+          ],
+          supportedLocales: AppLocalizations.supportedLocales,
           home: Scaffold(
             body: Builder(
               builder: (context) => ElevatedButton(
@@ -180,6 +207,14 @@ void main() {
       testWidgets('opens modal bottom sheet', (tester) async {
         await tester.pumpWidget(
           MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: AppLocalizations.supportedLocales,
             home: Scaffold(
               body: Builder(
                 builder: (context) => ElevatedButton(
