@@ -230,12 +230,15 @@ fix:
 # Run a recipe quietly, showing only name and pass/fail status (internal use)
 [private]
 _run-quiet recipe label:
-    @printf "%-20s" "{{label}}..."
-    @if just {{recipe}} > /tmp/just-{{recipe}}-out.txt 2>&1; then \
-        echo "✓"; \
-    else \
-        echo "✗"; \
-        echo ""; \
-        cat /tmp/just-{{recipe}}-out.txt; \
-        exit 1; \
+    #!/usr/bin/env bash
+    TMPFILE=$(mktemp)
+    trap 'rm -f "$TMPFILE"' EXIT
+    printf "%-20s" "{{label}}..."
+    if just {{recipe}} > "$TMPFILE" 2>&1; then
+        echo "✓"
+    else
+        echo "✗"
+        echo ""
+        cat "$TMPFILE"
+        exit 1
     fi

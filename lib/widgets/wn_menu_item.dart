@@ -58,6 +58,7 @@ class WnMenuItem extends StatelessWidget {
                       letterSpacing: 0.2,
                       height: 22 / 16,
                     ),
+                    maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),
                 ),

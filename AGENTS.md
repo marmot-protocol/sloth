@@ -133,7 +133,8 @@ just precommit             # Shows step names + ✓/✗, errors only on failure
 - No noisy progress indicators or dependency resolution messages
 
 **Example quiet precommit output:**
-```
+
+```text
 flutter deps...     ✓
 rust deps...        ✓
 l10n generation...  ✓
