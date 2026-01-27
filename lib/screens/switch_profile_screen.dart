@@ -6,12 +6,11 @@ import 'package:sloth/hooks/use_accounts.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
-
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
@@ -106,7 +105,7 @@ class SwitchProfileScreen extends HookConsumerWidget {
                 Gap(16.h),
                 SizedBox(
                   width: double.infinity,
-                  child: WnFilledButton(
+                  child: WnButton(
                     text: 'Connect Another Profile',
                     onPressed: () => Routes.pushToAddProfile(context),
                   ),

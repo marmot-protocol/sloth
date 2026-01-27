@@ -5,7 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:sloth/hooks/use_add_relay.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
 
 class WnAddRelayBottomSheet extends HookWidget {
@@ -88,7 +88,7 @@ class WnAddRelayBottomSheet extends HookWidget {
             Gap(16.h),
             SizedBox(
               width: double.infinity,
-              child: WnFilledButton(
+              child: WnButton(
                 key: const Key('add_relay_submit_button'),
                 onPressed: isValid ? addRelay : null,
                 text: context.l10n.addRelay,

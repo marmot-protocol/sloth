@@ -7,7 +7,7 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_filled_button.dart' show WnFilledButton;
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
@@ -88,7 +88,7 @@ class LoginScreen extends HookConsumerWidget {
                         onChanged: (_) => clearError(),
                         onPaste: paste,
                       ),
-                      WnFilledButton(
+                      WnButton(
                         text: context.l10n.login,
                         onPressed: onSubmit,
                         loading: state.isLoading,

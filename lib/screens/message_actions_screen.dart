@@ -6,10 +6,10 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
 import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_emoji_picker.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
 class MessageActionsScreen extends HookWidget {
@@ -230,16 +230,18 @@ class MessageActionsModal extends StatelessWidget {
             ],
           ),
           SizedBox(height: 16.h),
-          WnOutlinedButton(
+          WnButton(
             key: const Key('reply_button'),
             text: context.l10n.reply,
+            type: WnButtonType.outline,
             onPressed: onClose,
           ),
           if (onDelete != null) ...[
             Gap(8.h),
-            WnOutlinedButton(
+            WnButton(
               key: const Key('delete_button'),
               text: context.l10n.delete,
+              type: WnButtonType.outline,
               onPressed: onDelete,
             ),
           ],

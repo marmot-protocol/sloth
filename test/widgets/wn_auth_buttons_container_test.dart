@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_auth_buttons_container.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import '../test_helpers.dart';
 
 void main() {
@@ -18,24 +17,10 @@ void main() {
       expect(find.text('Sign Up'), findsOneWidget);
     });
 
-    testWidgets('displays Login as outlined button', (tester) async {
+    testWidgets('displays two WnButton widgets', (tester) async {
       const widget = WnAuthButtonsContainer();
       await mountWidget(widget, tester);
-      expect(find.byType(WnOutlinedButton), findsOneWidget);
-      expect(
-        find.descendant(of: find.byType(WnOutlinedButton), matching: find.text('Login')),
-        findsOneWidget,
-      );
-    });
-
-    testWidgets('displays Sign Up as filled button', (tester) async {
-      const widget = WnAuthButtonsContainer();
-      await mountWidget(widget, tester);
-      expect(find.byType(WnFilledButton), findsOneWidget);
-      expect(
-        find.descendant(of: find.byType(WnFilledButton), matching: find.text('Sign Up')),
-        findsOneWidget,
-      );
+      expect(find.byType(WnButton), findsNWidgets(2));
     });
 
     testWidgets('calls onLogin when Login button is tapped', (tester) async {

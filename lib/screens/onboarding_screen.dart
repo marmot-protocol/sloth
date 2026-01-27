@@ -6,9 +6,8 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
-import 'package:sloth/widgets/wn_filled_button.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_outlined_button.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 
 class OnboardingScreen extends ConsumerWidget {
@@ -72,13 +71,14 @@ class OnboardingScreen extends ConsumerWidget {
                       ),
                     ),
                     Gap(8.h),
-                    WnOutlinedButton(
+                    WnButton(
                       text: context.l10n.shareYourProfile,
+                      type: WnButtonType.outline,
                       onPressed: () {
                         Routes.pushToWip(context);
                       },
                     ),
-                    WnFilledButton(
+                    WnButton(
                       text: context.l10n.startChat,
                       onPressed: () {
                         Routes.pushToWip(context);
