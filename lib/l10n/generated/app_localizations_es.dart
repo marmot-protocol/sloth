@@ -27,7 +27,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get loginTitle => 'Iniciar sesión en White Noise';
 
   @override
-  String get enterPrivateKey => 'Introduce tu clave privada';
+  String get enterPrivateKey => 'Introduce tu llave privada';
 
   @override
   String get nsecPlaceholder => 'nsec...';
@@ -70,7 +70,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get editProfile => 'Editar perfil';
 
   @override
-  String get profileKeys => 'Claves del perfil';
+  String get profileKeys => 'Llaves del perfil';
 
   @override
   String get networkRelays => 'Relés de red';
@@ -103,34 +103,34 @@ class AppLocalizationsEs extends AppLocalizations {
   String get themeDark => 'Oscuro';
 
   @override
-  String get profileKeysTitle => 'Claves del perfil';
+  String get profileKeysTitle => 'Llaves del perfil';
 
   @override
-  String get publicKey => 'Clave pública';
+  String get publicKey => 'Llave pública';
 
   @override
-  String get publicKeyCopied => 'Clave pública copiada al portapapeles';
+  String get publicKeyCopied => 'Llave pública copiada al portapapeles';
 
   @override
   String get publicKeyDescription =>
-      'Tu clave pública (npub) puede compartirse con otros. Se usa para identificarte en la red.';
+      'Tu llave pública (npub) puede compartirse con otros. Se usa para identificarte en la red.';
 
   @override
-  String get privateKey => 'Clave privada';
+  String get privateKey => 'Llave privada';
 
   @override
-  String get privateKeyCopied => 'Clave privada copiada al portapapeles';
+  String get privateKeyCopied => 'Llave privada copiada al portapapeles';
 
   @override
   String get privateKeyDescription =>
-      'Tu clave privada (nsec) debe mantenerse en secreto. Cualquiera con acceso a ella puede controlar tu cuenta.';
+      'Tu llave privada (nsec) debe mantenerse en secreto. Cualquiera con acceso a ella puede controlar tu cuenta.';
 
   @override
-  String get keepPrivateKeySecure => 'Mantén tu clave privada segura';
+  String get keepPrivateKeySecure => 'Mantén tu llave privada segura';
 
   @override
   String get privateKeyWarning =>
-      'No compartas tu clave privada públicamente y úsala solo para iniciar sesión en otras apps de Nostr.';
+      'No compartas tu llave privada públicamente y úsala solo para iniciar sesión en otros servicios de Nostr.';
 
   @override
   String get editProfileTitle => 'Editar perfil';
@@ -196,11 +196,11 @@ class AppLocalizationsEs extends AppLocalizations {
       'Relés usados para recibir invitaciones e iniciar conversaciones seguras con nuevos usuarios.';
 
   @override
-  String get keyPackageRelays => 'Relés de Paquete de Claves';
+  String get keyPackageRelays => 'Relés de Paquete de Llaves';
 
   @override
   String get keyPackageRelaysHelp =>
-      'Relés que almacenan tu clave segura para que otros puedan invitarte a conversaciones cifradas.';
+      'Relés que almacenan tu llave segura para que otros puedan invitarte a conversaciones cifradas.';
 
   @override
   String get errorLoadingRelays => 'Error al cargar los relés';
@@ -238,14 +238,14 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'Cuando cierres sesión en White Noise, tus chats se eliminarán de este dispositivo y no podrán restaurarse en otro dispositivo.\n\nSi no has respaldado tu clave privada, no podrás usar este perfil en ningún otro servicio Nostr.';
+      'Cuando cierres sesión en White Noise, tus chats se eliminarán de este dispositivo y no podrán restaurarse en otro dispositivo.\n\nSi no has respaldado tu llave privada, no podrás usar este perfil en ningún otro servicio Nostr.';
 
   @override
-  String get backUpPrivateKey => 'Respalda tu clave privada';
+  String get backUpPrivateKey => 'Respalda tu llave privada';
 
   @override
   String get copyPrivateKeyHint =>
-      'Copia tu clave privada para restaurar tu cuenta en otro dispositivo.';
+      'Copia tu llave privada para restaurar tu cuenta en otro dispositivo.';
 
   @override
   String get noChatsYet => 'Aún no hay chats';
@@ -294,21 +294,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get developerSettingsTitle => 'Ajustes de Desarrollador';
 
   @override
-  String get publishNewKeyPackage => 'Publicar Nuevo Paquete de Claves';
+  String get publishNewKeyPackage => 'Publicar Nuevo Paquete de Llaves';
 
   @override
-  String get refreshKeyPackages => 'Actualizar Paquetes de Claves';
+  String get refreshKeyPackages => 'Actualizar Paquetes de Llaves';
 
   @override
-  String get deleteAllKeyPackages => 'Eliminar Todos los Paquetes de Claves';
+  String get deleteAllKeyPackages => 'Eliminar Todos los Paquetes de Llaves';
 
   @override
   String keyPackagesCount(int count) {
-    return 'Paquetes de Claves ($count)';
+    return 'Paquetes de Llaves ($count)';
   }
 
   @override
-  String get noKeyPackagesFound => 'No se encontraron paquetes de claves';
+  String get noKeyPackagesFound => 'No se encontraron paquetes de llaves';
 
   @override
   String packageNumber(int number) {
@@ -341,7 +341,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get enterRelayAddress => 'Introduce la dirección del relé';
 
   @override
-  String get relayAddressPlaceholder => 'wss://relay.example.com';
+  String get relayAddressPlaceholder => 'wss://rele.ejemplo.com';
 
   @override
   String get removeRelay => '¿Eliminar Relé?';
