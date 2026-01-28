@@ -101,6 +101,12 @@ build-rust-debug:
     @echo "🔨 Building Rust library (debug)..."
     cd rust && cargo build
 
+build-android:
+    ./scripts/build_android.sh
+
+build-android-quiet:
+    @./scripts/build_android.sh > /dev/null 2>&1 && echo "✅ Android build complete" || { echo "❌ Android build failed"; false; }
+
 # Test Rust code
 test-rust:
     @echo "🧪 Testing Rust code..."
