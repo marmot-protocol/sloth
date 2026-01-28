@@ -899,6 +899,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'This user is not on White Noise yet.'**
   String get userNotOnWhiteNoise;
+
+  /// Error when follow or unfollow action fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update follow status. Please try again.'**
+  String get failedToUpdateFollow;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

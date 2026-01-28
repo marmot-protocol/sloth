@@ -453,4 +453,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get userNotOnWhiteNoise => 'Bu kullanıcı henüz White Noise\'da değil.';
+
+  @override
+  String get failedToUpdateFollow => 'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
 }

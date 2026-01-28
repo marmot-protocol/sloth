@@ -73,10 +73,18 @@ class StartChatScreen extends HookConsumerWidget {
     }
 
     Future<void> handleFollowAction() async {
-      if (isFollowing) {
-        await followsState.unfollow(userPubkey);
-      } else {
-        await followsState.follow(userPubkey);
+      try {
+        if (isFollowing) {
+          await followsState.unfollow(userPubkey);
+        } else {
+          await followsState.follow(userPubkey);
+        }
+      } catch (_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.failedToUpdateFollow)),
+          );
+        }
       }
     }
 

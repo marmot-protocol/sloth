@@ -206,12 +206,43 @@ void main() {
         await tester.pump();
 
         expect(getState().isActionLoading, isFalse);
+        expect(getState().error, isNull);
 
-        await getState().follow('target_user');
+        await expectLater(getState().follow('target_user'), throwsException);
         await tester.pump();
 
         expect(getState().isActionLoading, isFalse);
+        expect(getState().error, equals('Failed to follow user'));
         expect(_api.followCalls.length, 1);
+      });
+
+      testWidgets('clears error on next follow attempt', (tester) async {
+        _api.followError = Exception('Network error');
+        await pump(tester, 'account1');
+        await tester.pump();
+
+        await expectLater(getState().follow('target_user'), throwsException);
+        await tester.pump();
+        expect(getState().error, isNotNull);
+
+        _api.followError = null;
+        await getState().follow('target_user');
+        await tester.pump();
+        expect(getState().error, isNull);
+      });
+
+      testWidgets('clearError clears the error state', (tester) async {
+        _api.followError = Exception('Network error');
+        await pump(tester, 'account1');
+        await tester.pump();
+
+        await expectLater(getState().follow('target_user'), throwsException);
+        await tester.pump();
+        expect(getState().error, isNotNull);
+
+        getState().clearError();
+        await tester.pump();
+        expect(getState().error, isNull);
       });
     });
 
@@ -265,11 +296,13 @@ void main() {
         await tester.pump();
 
         expect(getState().isActionLoading, isFalse);
+        expect(getState().error, isNull);
 
-        await getState().unfollow('target_user');
+        await expectLater(getState().unfollow('target_user'), throwsException);
         await tester.pump();
 
         expect(getState().isActionLoading, isFalse);
+        expect(getState().error, equals('Failed to unfollow user'));
         expect(_api.unfollowCalls.length, 1);
       });
     });

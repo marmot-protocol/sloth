@@ -131,5 +131,6 @@
   "follow": "Segui",
   "unfollow": "Smetti di seguire",
   "failedToStartChat": "Impossibile avviare la chat. Riprova.",
-  "userNotOnWhiteNoise": "Questo utente non è ancora su White Noise."
+  "userNotOnWhiteNoise": "Questo utente non è ancora su White Noise.",
+  "failedToUpdateFollow": "Impossibile aggiornare lo stato di follow. Riprova."
 }

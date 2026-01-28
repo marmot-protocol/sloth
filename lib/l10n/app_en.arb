@@ -709,5 +709,10 @@
   "userNotOnWhiteNoise": "This user is not on White Noise yet.",
   "@userNotOnWhiteNoise": {
     "description": "Message shown when user has no key packages"
+  },
+
+  "failedToUpdateFollow": "Failed to update follow status. Please try again.",
+  "@failedToUpdateFollow": {
+    "description": "Error when follow or unfollow action fails"
   }
 }

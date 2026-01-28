@@ -456,4 +456,8 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get userNotOnWhiteNoise => 'Cet utilisateur n\'est pas encore sur White Noise.';
+
+  @override
+  String get failedToUpdateFollow =>
+      'Échec de la mise à jour du statut de suivi. Veuillez réessayer.';
 }

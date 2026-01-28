@@ -131,5 +131,6 @@
   "follow": "Takip et",
   "unfollow": "Takibi bırak",
   "failedToStartChat": "Sohbet başlatılamadı. Lütfen tekrar deneyin.",
-  "userNotOnWhiteNoise": "Bu kullanıcı henüz White Noise'da değil."
+  "userNotOnWhiteNoise": "Bu kullanıcı henüz White Noise'da değil.",
+  "failedToUpdateFollow": "Takip durumu güncellenemedi. Lütfen tekrar deneyin."
 }

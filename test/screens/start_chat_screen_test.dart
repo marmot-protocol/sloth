@@ -42,6 +42,7 @@ class _MockApi extends MockWnApi {
   final followCalls = <({String account, String target})>[];
   final unfollowCalls = <({String account, String target})>[];
   Completer<void>? followCompleter;
+  Exception? followError;
   final Map<String, String> pubkeyToNpub = {};
 
   @override
@@ -89,6 +90,7 @@ class _MockApi extends MockWnApi {
   }) async {
     followCalls.add((account: accountPubkey, target: userToFollowPubkey));
     if (followCompleter != null) await followCompleter!.future;
+    if (followError != null) throw followError!;
   }
 
   @override
@@ -117,6 +119,7 @@ class _MockApi extends MockWnApi {
     followCalls.clear();
     unfollowCalls.clear();
     followCompleter = null;
+    followError = null;
     pubkeyToNpub.clear();
   }
 }
@@ -258,6 +261,18 @@ void main() {
         final buttons = tester.widgetList<WnButton>(find.byType(WnButton)).toList();
         final followButton = buttons.firstWhere((b) => b.key == const Key('follow_button'));
         expect(followButton.loading, isTrue);
+      });
+
+      testWidgets('shows snackbar on follow error', (tester) async {
+        _api.followError = Exception('Network error');
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('Failed to update follow status. Please try again.'), findsOneWidget);
       });
     });
 

@@ -459,4 +459,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get userNotOnWhiteNoise => 'Этот пользователь ещё не в White Noise.';
+
+  @override
+  String get failedToUpdateFollow => 'Не удалось обновить статус подписки. Попробуйте снова.';
 }
