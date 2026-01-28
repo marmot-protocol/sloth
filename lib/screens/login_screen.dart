@@ -37,6 +37,7 @@ class LoginScreen extends HookConsumerWidget {
 
     Future<void> onAndroidSignerLogin() async {
       signerError.value = null;
+      error.value = null;
       try {
         final pubkey = await androidSigner.connect();
         await ref
@@ -137,7 +138,7 @@ class LoginScreen extends HookConsumerWidget {
                             textAlign: TextAlign.center,
                             style: TextStyle(
                               fontSize: 12.sp,
-                              color: colors.backgroundContentTertiary,
+                              color: colors.backgroundContentDestructive,
                             ),
                           ),
                         ],

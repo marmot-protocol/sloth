@@ -11,18 +11,6 @@ import 'package:sloth/src/rust/api/users.dart' as users_api;
 const _storageKey = 'active_account_pubkey';
 final _logger = Logger('AuthNotifier');
 
-/// Returns the storage key for the login method of a specific account.
-String _loginMethodKeyFor(String pubkey) => 'login_method_$pubkey';
-
-/// How the user authenticated with the app.
-enum LoginMethod {
-  /// User provided their nsec directly.
-  nsec,
-
-  /// User authenticated via external signer (NIP-55).
-  androidSigner,
-}
-
 final secureStorageProvider = Provider<FlutterSecureStorage>(
   (_) => const FlutterSecureStorage(),
 );
@@ -51,7 +39,6 @@ class AuthNotifier extends AsyncNotifier<String?> {
     final account = await accounts_api.login(nsecOrHexPrivkey: nsec);
     users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
     await storage.write(key: _storageKey, value: account.pubkey);
-    await storage.write(key: _loginMethodKeyFor(account.pubkey), value: LoginMethod.nsec.name);
     state = AsyncData(account.pubkey);
     ref.read(isAddingAccountProvider.notifier).set(false);
     _logger.info('Login successful');
@@ -76,6 +63,14 @@ class AuthNotifier extends AsyncNotifier<String?> {
     _logger.info('Android signer login attempt started');
     final storage = ref.read(secureStorageProvider);
     const signerService = AndroidSignerService();
+
+    Future<void> safeDisconnect() async {
+      try {
+        await onDisconnect();
+      } catch (e) {
+        _logger.warning('Android signer disconnect failed: $e');
+      }
+    }
 
     try {
       // Login with external signer using callbacks
@@ -131,52 +126,30 @@ class AuthNotifier extends AsyncNotifier<String?> {
 
       users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
       await storage.write(key: _storageKey, value: account.pubkey);
-      await storage.write(
-        key: _loginMethodKeyFor(account.pubkey),
-        value: LoginMethod.androidSigner.name,
-      );
       state = AsyncData(account.pubkey);
       _logger.info('Android signer login successful with key package published');
     } on ApiError catch (e) {
-      // If login fails, disconnect from signer and rethrow
-      await onDisconnect();
+      await safeDisconnect();
       _logger.warning('Android signer login failed: ${e.message}');
       rethrow;
     } on AndroidSignerException catch (e) {
-      // If signing fails, disconnect from signer and rethrow
-      await onDisconnect();
+      await safeDisconnect();
       _logger.warning('Android signer signing failed: ${e.message}');
       rethrow;
     } catch (e) {
-      // Catch any other unexpected errors and cleanup
-      await onDisconnect();
+      await safeDisconnect();
       _logger.warning('Android signer login failed with unexpected error: $e');
       rethrow;
     }
   }
 
-  /// Gets the current login method for the active account.
-  Future<LoginMethod?> getLoginMethod() async {
-    final pubkey = state.value;
-    if (pubkey == null) return null;
-
-    final storage = ref.read(secureStorageProvider);
-    final method = await storage.read(key: _loginMethodKeyFor(pubkey));
-    if (method == null) return null;
-
-    return LoginMethod.values.firstWhere(
-      (e) => e.name == method,
-      orElse: () {
-        _logger.warning('Unknown login method in storage: $method, defaulting to nsec');
-        return LoginMethod.nsec;
-      },
-    );
-  }
-
   /// Whether the current session is using an Android signer for signing.
   Future<bool> isUsingAndroidSigner() async {
-    final method = await getLoginMethod();
-    return method == LoginMethod.androidSigner;
+    final pubkey = state.value;
+    if (pubkey == null) return false;
+
+    final account = await accounts_api.getAccount(pubkey: pubkey);
+    return account.accountType == accounts_api.AccountType.external_;
   }
 
   Future<String> signup() async {
@@ -204,7 +177,6 @@ class AuthNotifier extends AsyncNotifier<String?> {
 
     await accounts_api.logout(pubkey: pubkey);
     await storage.delete(key: _storageKey);
-    await storage.delete(key: _loginMethodKeyFor(pubkey));
 
     try {
       final remainingAccounts = await accounts_api.getAccounts();
