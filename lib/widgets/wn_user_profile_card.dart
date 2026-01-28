@@ -78,13 +78,14 @@ class WnUserProfileCard extends StatelessWidget {
             textAlign: TextAlign.center,
           ),
         ],
-        Gap(24.h),
-        if (npub != null)
+        if (npub != null) ...[
+          Gap(24.h),
           WnCopyableField(
             label: context.l10n.publicKey,
             value: npub,
             copiedMessage: context.l10n.publicKeyCopied,
           ),
+        ],
         if (showFollowButton || additionalButtons.isNotEmpty) Gap(24.h),
         if (showFollowButton)
           SizedBox(
