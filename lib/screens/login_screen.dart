@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
+import 'package:flutter_hooks/flutter_hooks.dart' show useState;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
+import 'package:sloth/hooks/use_android_signer.dart' show useAndroidSigner;
 import 'package:sloth/hooks/use_login.dart' show useLogin;
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
+import 'package:sloth/services/android_signer_service.dart' show AndroidSignerException;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
@@ -22,6 +25,8 @@ class LoginScreen extends HookConsumerWidget {
     final (:controller, :state, :paste, :submit, :clearError) = useLogin(
       (nsec) => ref.read(authProvider.notifier).login(nsec),
     );
+    final androidSigner = useAndroidSigner();
+    final signerError = useState<String?>(null);
 
     Future<void> onSubmit() async {
       final success = await submit();
@@ -30,12 +35,34 @@ class LoginScreen extends HookConsumerWidget {
       }
     }
 
+    Future<void> onAndroidSignerLogin() async {
+      signerError.value = null;
+      try {
+        final pubkey = await androidSigner.connect();
+        await ref
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: pubkey,
+              onDisconnect: androidSigner.disconnect,
+            );
+        if (context.mounted) {
+          Routes.goToChatList(context);
+        }
+      } on AndroidSignerException catch (e) {
+        signerError.value = e.userFriendlyMessage;
+      } catch (e) {
+        signerError.value = 'Unable to connect to signer. Please try again.';
+      }
+    }
+
+    final anyLoading = state.isLoading || androidSigner.isConnecting;
+
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          WnPixelsLayer(isAnimating: state.isLoading),
+          WnPixelsLayer(isAnimating: anyLoading),
           Positioned.fill(
             child: GestureDetector(
               key: const Key('login_background'),
@@ -92,7 +119,29 @@ class LoginScreen extends HookConsumerWidget {
                         text: context.l10n.login,
                         onPressed: onSubmit,
                         loading: state.isLoading,
+                        disabled: androidSigner.isConnecting,
                       ),
+                      if (androidSigner.isAvailable) ...[
+                        WnButton(
+                          key: const Key('android_signer_login_button'),
+                          text: 'Login with Signer',
+                          type: WnButtonType.outline,
+                          onPressed: onAndroidSignerLogin,
+                          loading: androidSigner.isConnecting,
+                          disabled: state.isLoading,
+                        ),
+                        if (signerError.value != null) ...[
+                          Gap(4.h),
+                          Text(
+                            signerError.value!,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontSize: 12.sp,
+                              color: colors.backgroundContentTertiary,
+                            ),
+                          ),
+                        ],
+                      ],
                     ],
                   ),
                 ),
