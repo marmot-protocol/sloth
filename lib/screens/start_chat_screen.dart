@@ -65,7 +65,10 @@ class StartChatScreen extends HookConsumerWidget {
             SnackBar(content: Text(context.l10n.failedToStartChat)),
           );
         }
-        isStartingChat.value = false;
+      } finally {
+        if (context.mounted) {
+          isStartingChat.value = false;
+        }
       }
     }
 
