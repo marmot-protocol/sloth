@@ -45,6 +45,7 @@ class LoginScreen extends HookConsumerWidget {
 
     Future<void> onAndroidSignerLogin() async {
       signerError.value = null;
+      error.value = null;
       try {
         final pubkey = await androidSigner.connect();
         await ref

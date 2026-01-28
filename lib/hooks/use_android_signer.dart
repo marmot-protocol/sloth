@@ -69,7 +69,7 @@ useAndroidSigner() {
       return pubkey;
     } catch (e) {
       _logger.warning('Failed to connect to signer: $e');
-      error.value = e.toString();
+      error.value = 'Unable to connect to signer. Please try again.';
       rethrow;
     } finally {
       isConnecting.value = false;
