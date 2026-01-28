@@ -96,7 +96,6 @@ class WnDropdownSelector<T> extends HookWidget {
       onChanged(optionValue);
     }
 
-    // Border color logic per Figma spec
     final borderColor = isDisabled
         ? colors.borderTertiary
         : isError
@@ -107,7 +106,6 @@ class WnDropdownSelector<T> extends HookWidget {
         ? colors.borderPrimary
         : colors.borderTertiary;
 
-    // Text color: primary if selected, secondary if placeholder
     final textColor = isDisabled
         ? colors.backgroundContentTertiary
         : hasSelection
@@ -118,7 +116,6 @@ class WnDropdownSelector<T> extends HookWidget {
         ? colors.backgroundContentTertiary
         : colors.backgroundContentPrimary;
 
-    // Label text color
     final labelColor = isDisabled
         ? colors.backgroundContentTertiary
         : colors.backgroundContentPrimary;
@@ -135,7 +132,7 @@ class WnDropdownSelector<T> extends HookWidget {
               color: labelColor,
               fontWeight: FontWeight.w500,
               fontFamily: 'Manrope',
-              letterSpacing: 0.4,
+              letterSpacing: 0.4.sp,
               height: 20 / 14,
             ),
           ),
@@ -153,7 +150,7 @@ class WnDropdownSelector<T> extends HookWidget {
             final currentHeight = dropdownHeight + animatedOptionsHeight;
 
             return Container(
-              height: currentHeight + 2, // +2 for border (1px top + 1px bottom)
+              height: currentHeight + 2,
               decoration: BoxDecoration(
                 borderRadius: isOpen.value
                     ? BorderRadius.only(
@@ -192,7 +189,7 @@ class WnDropdownSelector<T> extends HookWidget {
                                   fontWeight: FontWeight.w500,
                                   color: textColor,
                                   fontFamily: 'Manrope',
-                                  letterSpacing: 0.4,
+                                  letterSpacing: 0.4.sp,
                                   height: 20 / 14,
                                 ),
                               ),
@@ -232,7 +229,7 @@ class WnDropdownSelector<T> extends HookWidget {
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
                 fontFamily: 'Manrope',
-                letterSpacing: 0.4,
+                letterSpacing: 0.4.sp,
                 height: 20 / 14,
                 color: isError
                     ? colors.backgroundContentDestructive
@@ -259,7 +256,6 @@ class _DropdownIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Icon wrapper size: 48px for large (56px dropdown), 36px for small (44px dropdown)
     final wrapperSize = size == WnDropdownSize.large ? 48.w : 36.w;
 
     return SizedBox(
@@ -307,7 +303,6 @@ class _ScrollableDropdownList<T> extends HookWidget {
       }
 
       scrollController.addListener(onScroll);
-      // Check initial state after first frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (scrollController.hasClients) {
           onScroll();
@@ -339,7 +334,6 @@ class _ScrollableDropdownList<T> extends HookWidget {
               );
             },
           ),
-          // Top fade indicator
           if (showScrollIndicators)
             Positioned(
               top: 0,
@@ -365,7 +359,6 @@ class _ScrollableDropdownList<T> extends HookWidget {
                 ),
               ),
             ),
-          // Bottom fade indicator
           if (showScrollIndicators)
             Positioned(
               bottom: 0,
@@ -417,19 +410,11 @@ class _DropdownItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-
-    // Selected item uses backgroundTertiary per Figma spec
     final backgroundColor = isSelected ? colors.backgroundTertiary : colors.backgroundPrimary;
-
-    // Text color: primary when selected, secondary when not
     final textColor = isSelected
         ? colors.backgroundContentPrimary
         : colors.backgroundContentSecondary;
-
-    // Checkmark color is secondary per Figma spec
     final checkmarkColor = colors.backgroundContentSecondary;
-
-    // Icon wrapper matches header: 36px for 44px items, we use same sizing
     final iconWrapperSize = 36.w;
 
     return GestureDetector(
@@ -452,7 +437,7 @@ class _DropdownItem extends StatelessWidget {
                     fontWeight: FontWeight.w500,
                     color: textColor,
                     fontFamily: 'Manrope',
-                    letterSpacing: 0.4,
+                    letterSpacing: 0.4.sp,
                     height: 20 / 14,
                   ),
                   overflow: TextOverflow.ellipsis,
