@@ -184,18 +184,6 @@ rust tests...       ✓
 - Use `.sp` for font sizes: `14.sp`, `16.sp`
 - Use `.r` for radius values: `8.r`, `12.r`
 - Apply to: padding, margins, gaps, icon sizes, font sizes, border radius, container dimensions
-- Example:
-  ```dart
-  Padding(
-    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
-    child: Text(
-      'Hello',
-      style: TextStyle(fontSize: 14.sp),
-    ),
-  )
-  Gap(8.h)
-  WnIcon(WnIcons.close, size: 20.w)
-  ```
 
 ### Avoid StatefulWidget
 

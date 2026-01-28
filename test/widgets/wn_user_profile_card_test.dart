@@ -21,6 +21,7 @@ final _api = _MockApi();
 
 void main() {
   setUpAll(() => RustLib.initMock(api: _api));
+  setUp(() => _api.reset());
 
   Future<void> pumpCard(
     WidgetTester tester, {
