@@ -142,6 +142,7 @@ void main() {
     WidgetTester tester, {
     required String userPubkey,
   }) async {
+    setUpTestView(tester);
     _api.pubkeyToNpub[userPubkey] = 'npub1$userPubkey';
     await mountTestApp(
       tester,
