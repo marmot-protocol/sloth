@@ -111,6 +111,9 @@ just precommit-verbose
 
 # Regenerate flutter_rust_bridge code
 just generate
+
+# Rebuild Android native libraries (after Rust code/dependency changes)
+just build-android-quiet
 ```
 
 ## Quiet Commands for Agents
@@ -121,6 +124,7 @@ just generate
 # Quiet test commands - USE THESE for verification
 just test-flutter-quiet    # Output: "+1093: All tests passed!" or error details
 just test-rust-quiet       # Output: "....... test result: ok" or error details
+just build-android-quiet   # Output: "✅ Android build complete" or error details
 
 # Quiet pre-commit - USE THIS before committing
 just precommit             # Shows step names + ✓/✗, errors only on failure
