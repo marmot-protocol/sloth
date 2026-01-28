@@ -176,6 +176,27 @@ rust tests...       ✓
 
 - DO NOT add comments except for code that is really complex or hard to understand.
 
+### Responsive Sizing with flutter_screenutil
+
+- Use `flutter_screenutil` for all size values to ensure responsive layouts across devices
+- Use `.w` for width-based values: `20.w`, `100.w`
+- Use `.h` for height-based values: `16.h`, `40.h`
+- Use `.sp` for font sizes: `14.sp`, `16.sp`
+- Use `.r` for radius values: `8.r`, `12.r`
+- Apply to: padding, margins, gaps, icon sizes, font sizes, border radius, container dimensions
+- Example:
+  ```dart
+  Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 12.h),
+    child: Text(
+      'Hello',
+      style: TextStyle(fontSize: 14.sp),
+    ),
+  )
+  Gap(8.h)
+  WnIcon(WnIcons.close, size: 20.w)
+  ```
+
 ### Avoid StatefulWidget
 
 - In line with rules number 6 & 7 below in the [Sloth Mode Philosphy](#sloth-mode-philosophy), we should avoid the use of StatefulWidgets. Prefer to use providers (shared app-wide state) or hooks (widget-local state) instead.
