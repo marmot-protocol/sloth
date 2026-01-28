@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart' show useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:flutter_hooks/flutter_hooks.dart' show useState;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
 import 'package:sloth/hooks/use_android_signer.dart' show useAndroidSigner;
 import 'package:sloth/hooks/use_login.dart' show useLogin;
@@ -37,7 +37,7 @@ class LoginScreen extends HookConsumerWidget {
 
     Future<void> onAndroidSignerLogin() async {
       signerError.value = null;
-      error.value = null;
+      clearError();
       try {
         final pubkey = await androidSigner.connect();
         await ref

@@ -234,7 +234,12 @@ void main() {
         await container.read(authProvider.notifier).login('nsec123');
         mockApi.existingAccounts.add('other_pubkey');
         mockApi.allAccounts = [
-          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'other_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
         expect(nextPubkey, 'other_pubkey');
@@ -246,8 +251,18 @@ void main() {
         await container.read(authProvider.notifier).login('nsec123');
         mockApi.existingAccounts.add('other_pubkey');
         mockApi.allAccounts = [
-          Account(pubkey: 'logged_in_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
-          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'logged_in_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'other_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
         expect(nextPubkey, 'other_pubkey');
