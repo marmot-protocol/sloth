@@ -24,13 +24,19 @@ useAndroidSigner() {
 
   // Check signer availability on mount
   useEffect(() {
-    void checkAvailability() async {
+    var disposed = false;
+
+    Future<void> checkAvailability() async {
       final available = await signerService.isAvailable();
-      isAvailable.value = available;
+      if (!disposed) {
+        isAvailable.value = available;
+      }
     }
 
     checkAvailability();
-    return null;
+    return () {
+      disposed = true;
+    };
   }, const []);
 
   Future<String> connect() async {
