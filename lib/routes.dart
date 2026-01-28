@@ -8,6 +8,7 @@ import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:sloth/screens/add_profile_screen.dart' show AddProfileScreen;
 import 'package:sloth/screens/app_settings_screen.dart' show AppSettingsScreen;
+import 'package:sloth/screens/chat_info_screen.dart' show ChatInfoScreen;
 import 'package:sloth/screens/chat_invite_screen.dart' show ChatInviteScreen;
 import 'package:sloth/screens/chat_list_screen.dart' show ChatListScreen;
 import 'package:sloth/screens/chat_screen.dart' show ChatScreen;
@@ -23,6 +24,7 @@ import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/share_profile_screen.dart' show ShareProfileScreen;
 import 'package:sloth/screens/sign_out_screen.dart' show SignOutScreen;
 import 'package:sloth/screens/signup_screen.dart' show SignupScreen;
+import 'package:sloth/screens/start_chat_screen.dart' show StartChatScreen;
 import 'package:sloth/screens/switch_profile_screen.dart' show SwitchProfileScreen;
 import 'package:sloth/screens/user_search_screen.dart' show UserSearchScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
@@ -46,6 +48,8 @@ abstract final class Routes {
   static const _addProfile = '/add-profile';
   static const _network = '/network';
   static const _userSearch = '/user-search';
+  static const _startChat = '/start-chat/:userPubkey';
+  static const _chatInfo = '/chat-info/:userPubkey';
   static const _invite = '/invites/:mlsGroupId';
   static const _chat = '/chats/:groupId';
   static const _publicRoutes = {_home, _login, _signup};
@@ -192,6 +196,22 @@ abstract final class Routes {
           ),
         ),
         GoRoute(
+          name: 'startChat',
+          path: _startChat,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: StartChatScreen(userPubkey: state.pathParameters['userPubkey']!),
+          ),
+        ),
+        GoRoute(
+          name: 'chatInfo',
+          path: _chatInfo,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: ChatInfoScreen(userPubkey: state.pathParameters['userPubkey']!),
+          ),
+        ),
+        GoRoute(
           name: 'invite',
           path: _invite,
           pageBuilder: (context, state) => _navigationTransition(
@@ -329,5 +349,13 @@ abstract final class Routes {
 
   static void pushToNetwork(BuildContext context) {
     GoRouter.of(context).push(_network);
+  }
+
+  static void pushToChatInfo(BuildContext context, String userPubkey) {
+    GoRouter.of(context).pushNamed('chatInfo', pathParameters: {'userPubkey': userPubkey});
+  }
+
+  static void pushToStartChat(BuildContext context, String userPubkey) {
+    GoRouter.of(context).pushNamed('startChat', pathParameters: {'userPubkey': userPubkey});
   }
 }

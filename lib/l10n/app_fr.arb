@@ -126,5 +126,11 @@
   "timeJustNow": "à l'instant",
   "timeMinutesAgo": "{count, plural, =1{il y a 1 minute} other{il y a {count} minutes}}",
   "timeHoursAgo": "{count, plural, =1{il y a 1 heure} other{il y a {count} heures}}",
-  "timeDaysAgo": "{count, plural, =1{hier} other{il y a {count} jours}}"
+  "timeDaysAgo": "{count, plural, =1{hier} other{il y a {count} jours}}",
+  "profile": "Profil",
+  "follow": "Suivre",
+  "unfollow": "Ne plus suivre",
+  "failedToStartChat": "Échec du démarrage de la discussion. Veuillez réessayer.",
+  "userNotOnWhiteNoise": "Cet utilisateur n'est pas encore sur White Noise.",
+  "failedToUpdateFollow": "Échec de la mise à jour du statut de suivi. Veuillez réessayer."
 }

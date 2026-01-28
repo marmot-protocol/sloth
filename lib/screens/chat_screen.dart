@@ -100,7 +100,14 @@ class ChatScreen extends HookConsumerWidget {
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   onBack: () => Routes.goToChatList(context),
-                  onMenuTap: () => Routes.pushToWip(context),
+                  onMenuTap: () {
+                    final otherPubkey = groupAvatarSnapshot.data?.otherMemberPubkey;
+                    if (otherPubkey != null) {
+                      Routes.pushToChatInfo(context, otherPubkey);
+                    } else {
+                      Routes.pushToWip(context);
+                    }
+                  },
                 ),
               ),
               Expanded(

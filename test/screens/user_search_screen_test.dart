@@ -21,7 +21,6 @@ User _userFactory(String pubkey, {String? displayName}) => User(
 );
 
 class _MockApi extends MockWnApi {
-  List<User> follows = [];
   final Map<String, User> userByPubkey = {};
   final Map<String, String> npubToPubkey = {};
   final Map<String, String> pubkeyToNpub = {};
@@ -289,23 +288,32 @@ void main() {
       });
     });
 
-    group('user tap navigation', () {
+    group('user tap navigates to start chat screen', () {
       setUp(() {
         _api.follows = [_userFactory('pubkey1', displayName: 'Alice')];
         _api.pubkeyToNpub['pubkey1'] =
             'npub1pubkey11111111111111111111111111111111111111111111111111';
       });
 
-      testWidgets('navigates to wip when tapping follow', (tester) async {
+      testWidgets('navigates to start chat screen when tapping user', (tester) async {
         await pumpUserSearchScreen(tester);
         await tester.tap(find.text('Alice'));
         await tester.pumpAndSettle();
 
-        expect(find.text('Sloths working'), findsOneWidget);
+        expect(find.text('Start new chat'), findsOneWidget);
+        expect(find.byKey(const Key('start_chat_button')), findsOneWidget);
+      });
+
+      testWidgets('shows follow button on start chat screen', (tester) async {
+        await pumpUserSearchScreen(tester);
+        await tester.tap(find.text('Alice'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('follow_button')), findsOneWidget);
       });
     });
 
-    group('search result tap navigation', () {
+    group('search result tap navigates to start chat screen', () {
       const validNpub = 'npub1searched';
       const hexPubkey = 'searchedpubkey12345678901234567890';
 
@@ -315,14 +323,15 @@ void main() {
         _api.userByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Found User');
       });
 
-      testWidgets('navigates to wip when tapping search result', (tester) async {
+      testWidgets('navigates to start chat screen when tapping search result', (tester) async {
         await pumpUserSearchScreen(tester);
         await tester.enterText(find.byType(TextField), validNpub);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Found User'));
         await tester.pumpAndSettle();
 
-        expect(find.text('Sloths working'), findsOneWidget);
+        expect(find.text('Start new chat'), findsOneWidget);
+        expect(find.byKey(const Key('start_chat_button')), findsOneWidget);
       });
     });
   });

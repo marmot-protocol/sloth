@@ -1,0 +1,358 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/providers/auth_provider.dart';
+import 'package:sloth/routes.dart';
+import 'package:sloth/src/rust/api/groups.dart';
+import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/src/rust/api/users.dart';
+import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_button.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_slate_container.dart';
+import '../mocks/mock_wn_api.dart';
+import '../test_helpers.dart';
+
+const _testPubkey = 'test_account_pubkey';
+const _otherPubkey = 'other_user_pubkey';
+
+User _userFactory(String pubkey, {String? displayName}) => User(
+  pubkey: pubkey,
+  metadata: FlutterMetadata(displayName: displayName, custom: const {}),
+  createdAt: DateTime(2024),
+  updatedAt: DateTime(2024),
+);
+
+class _MockApi extends MockWnApi {
+  FlutterMetadata metadata = const FlutterMetadata(custom: {});
+  Completer<Group>? createGroupCompleter;
+  Group? createdGroup;
+  Exception? createGroupError;
+  final createGroupCalls =
+      <
+        ({
+          String creatorPubkey,
+          List<String> memberPubkeys,
+          GroupType groupType,
+        })
+      >[];
+  final followCalls = <({String account, String target})>[];
+  final unfollowCalls = <({String account, String target})>[];
+  Completer<void>? followCompleter;
+  Exception? followError;
+  final Map<String, String> pubkeyToNpub = {};
+
+  @override
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required String pubkey,
+    required bool blockingDataSync,
+  }) async {
+    return metadata;
+  }
+
+  @override
+  Future<Group> crateApiGroupsCreateGroup({
+    required String creatorPubkey,
+    required List<String> memberPubkeys,
+    required List<String> adminPubkeys,
+    required String groupName,
+    required String groupDescription,
+    required GroupType groupType,
+  }) async {
+    createGroupCalls.add((
+      creatorPubkey: creatorPubkey,
+      memberPubkeys: memberPubkeys,
+      groupType: groupType,
+    ));
+
+    if (createGroupCompleter != null) return createGroupCompleter!.future;
+    if (createGroupError != null) throw createGroupError!;
+
+    return createdGroup ??
+        Group(
+          mlsGroupId: 'test_group_id',
+          nostrGroupId: 'test_nostr_group_id',
+          name: '',
+          description: '',
+          adminPubkeys: const [],
+          epoch: BigInt.zero,
+          state: GroupState.active,
+        );
+  }
+
+  @override
+  Future<void> crateApiAccountsFollowUser({
+    required String accountPubkey,
+    required String userToFollowPubkey,
+  }) async {
+    followCalls.add((account: accountPubkey, target: userToFollowPubkey));
+    if (followCompleter != null) await followCompleter!.future;
+    if (followError != null) throw followError!;
+  }
+
+  @override
+  Future<void> crateApiAccountsUnfollowUser({
+    required String accountPubkey,
+    required String userToUnfollowPubkey,
+  }) async {
+    unfollowCalls.add((account: accountPubkey, target: userToUnfollowPubkey));
+  }
+
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    final npub = pubkeyToNpub[hexPubkey];
+    if (npub == null) throw Exception('Unknown pubkey');
+    return npub;
+  }
+
+  @override
+  void reset() {
+    super.reset();
+    metadata = const FlutterMetadata(custom: {});
+    createGroupCompleter = null;
+    createdGroup = null;
+    createGroupError = null;
+    createGroupCalls.clear();
+    followCalls.clear();
+    unfollowCalls.clear();
+    followCompleter = null;
+    followError = null;
+    pubkeyToNpub.clear();
+  }
+}
+
+class _MockAuthNotifier extends AuthNotifier {
+  @override
+  Future<String?> build() async {
+    state = const AsyncData(_testPubkey);
+    return _testPubkey;
+  }
+}
+
+final _api = _MockApi();
+
+void main() {
+  setUpAll(() => RustLib.initMock(api: _api));
+  setUp(() => _api.reset());
+
+  Future<void> pumpStartChatScreen(
+    WidgetTester tester, {
+    required String userPubkey,
+  }) async {
+    setUpTestView(tester);
+    _api.pubkeyToNpub[userPubkey] = 'npub1$userPubkey';
+    await mountTestApp(
+      tester,
+      overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
+    );
+    await tester.pumpAndSettle();
+    Routes.pushToStartChat(tester.element(find.byType(Scaffold)), userPubkey);
+    await tester.pumpAndSettle();
+  }
+
+  group('StartChatScreen', () {
+    testWidgets('displays slate container', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.byType(WnSlateContainer), findsOneWidget);
+    });
+
+    testWidgets('displays title', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.text('Start new chat'), findsOneWidget);
+    });
+
+    testWidgets('displays close button', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.byKey(const Key('close_button')), findsOneWidget);
+    });
+
+    testWidgets('displays avatar', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.byType(WnAvatar), findsOneWidget);
+    });
+
+    testWidgets('displays public key field', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.byType(WnCopyableField), findsOneWidget);
+      expect(find.text('Public key'), findsOneWidget);
+    });
+
+    testWidgets('displays follow button', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.byKey(const Key('follow_button')), findsOneWidget);
+    });
+
+    testWidgets('displays start chat button', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+      expect(find.byKey(const Key('start_chat_button')), findsOneWidget);
+      expect(find.text('Start a chat'), findsOneWidget);
+    });
+
+    group('with metadata', () {
+      setUp(() {
+        _api.metadata = const FlutterMetadata(
+          displayName: 'Alice',
+          nip05: 'alice@example.com',
+          about: 'I love Nostr!',
+          custom: {},
+        );
+      });
+
+      testWidgets('displays user name', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.text('Alice'), findsOneWidget);
+      });
+
+      testWidgets('displays nip05', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.text('alice@example.com'), findsOneWidget);
+      });
+
+      testWidgets('displays about', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.text('I love Nostr!'), findsOneWidget);
+      });
+    });
+
+    group('follow button', () {
+      testWidgets('shows Follow for non-followed user', (tester) async {
+        _api.follows = [];
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.text('Follow'), findsOneWidget);
+      });
+
+      testWidgets('shows Unfollow for followed user', (tester) async {
+        _api.follows = [_userFactory(_otherPubkey)];
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.text('Unfollow'), findsOneWidget);
+      });
+
+      testWidgets('calls follow API when tapped', (tester) async {
+        _api.follows = [];
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pumpAndSettle();
+
+        expect(_api.followCalls.length, 1);
+        expect(_api.followCalls[0].account, _testPubkey);
+        expect(_api.followCalls[0].target, _otherPubkey);
+      });
+
+      testWidgets('calls unfollow API when tapped', (tester) async {
+        _api.follows = [_userFactory(_otherPubkey)];
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pumpAndSettle();
+
+        expect(_api.unfollowCalls.length, 1);
+        expect(_api.unfollowCalls[0].account, _testPubkey);
+        expect(_api.unfollowCalls[0].target, _otherPubkey);
+      });
+
+      testWidgets('shows loading state during follow', (tester) async {
+        _api.follows = [];
+        _api.followCompleter = Completer();
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pump();
+
+        final buttons = tester.widgetList<WnButton>(find.byType(WnButton)).toList();
+        final followButton = buttons.firstWhere((b) => b.key == const Key('follow_button'));
+        expect(followButton.loading, isTrue);
+      });
+
+      testWidgets('shows snackbar on follow error', (tester) async {
+        _api.followError = Exception('Network error');
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pump();
+        await tester.pump();
+
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('Failed to update follow status. Please try again.'), findsOneWidget);
+      });
+    });
+
+    group('start chat action', () {
+      testWidgets('calls createGroup API with correct params', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        await tester.tap(find.byKey(const Key('start_chat_button')));
+        await tester.pumpAndSettle();
+
+        expect(_api.createGroupCalls.length, 1);
+        expect(_api.createGroupCalls[0].creatorPubkey, _testPubkey);
+        expect(_api.createGroupCalls[0].memberPubkeys, [_otherPubkey]);
+        expect(_api.createGroupCalls[0].groupType, GroupType.directMessage);
+      });
+
+      testWidgets('shows loading state during creation', (tester) async {
+        _api.createGroupCompleter = Completer();
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('start_chat_button')));
+        await tester.pump();
+
+        final buttons = tester.widgetList<WnButton>(find.byType(WnButton)).toList();
+        final startButton = buttons.firstWhere((b) => b.key == const Key('start_chat_button'));
+        expect(startButton.loading, isTrue);
+      });
+
+      testWidgets('shows snackbar on failure', (tester) async {
+        _api.createGroupError = Exception('Network error');
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('start_chat_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.text('Failed to start chat. Please try again.'), findsOneWidget);
+      });
+    });
+
+    group('close button', () {
+      testWidgets('navigates back when tapped', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Start new chat'), findsNothing);
+      });
+    });
+
+    group('background tap', () {
+      testWidgets('navigates back when background tapped', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Start new chat'), findsNothing);
+      });
+    });
+
+    group('user without key packages', () {
+      setUp(() {
+        _api.userHasKeyPackage = false;
+      });
+
+      testWidgets('shows user not on whitenoise message', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.byKey(const Key('user_not_on_whitenoise')), findsOneWidget);
+        expect(find.text('This user is not on White Noise yet.'), findsOneWidget);
+      });
+
+      testWidgets('does not show follow button', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.byKey(const Key('follow_button')), findsNothing);
+      });
+
+      testWidgets('does not show start chat button', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+        expect(find.byKey(const Key('start_chat_button')), findsNothing);
+      });
+    });
+  });
+}

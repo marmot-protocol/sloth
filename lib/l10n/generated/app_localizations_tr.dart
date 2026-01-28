@@ -438,4 +438,22 @@ class AppLocalizationsTr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get follow => 'Takip et';
+
+  @override
+  String get unfollow => 'Takibi bırak';
+
+  @override
+  String get failedToStartChat => 'Sohbet başlatılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get userNotOnWhiteNoise => 'Bu kullanıcı henüz White Noise\'da değil.';
+
+  @override
+  String get failedToUpdateFollow => 'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
 }
