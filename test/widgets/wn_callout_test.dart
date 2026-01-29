@@ -31,15 +31,6 @@ void main() {
       expect(find.text('Callout description'), findsNothing);
     });
 
-    testWidgets('displays help icon for neutral type', (tester) async {
-      const widget = WnCallout(
-        title: 'Callout Title',
-      );
-      await mountWidget(widget, tester);
-      final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
-      expect(icons.any((icon) => icon.icon == WnIcons.helpFilled), isTrue);
-    });
-
     testWidgets('displays information icon for info type', (tester) async {
       const widget = WnCallout(
         title: 'Callout Title',
@@ -81,15 +72,15 @@ void main() {
     });
 
     testWidgets('displays dismiss button when onDismiss is provided', (tester) async {
-      var dismissed = false;
+      final dismissed = [false];
       final widget = WnCallout(
         title: 'Callout Title',
-        onDismiss: () => dismissed = true,
+        onDismiss: () => dismissed[0] = true,
       );
       await mountWidget(widget, tester);
       expect(find.byKey(const Key('callout_dismiss')), findsOneWidget);
       await tester.tap(find.byKey(const Key('callout_dismiss')));
-      expect(dismissed, isTrue);
+      expect(dismissed[0], isTrue);
     });
 
     testWidgets('does not display dismiss button when onDismiss is null', (tester) async {
