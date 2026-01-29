@@ -153,8 +153,10 @@ class WnInput extends HookWidget {
     final borderColor = _getBorderColor(colors, isFocused.value, isHovered.value);
 
     return MouseRegion(
-      onEnter: enabled ? (_) => isHovered.value = true : null,
-      onExit: enabled ? (_) => isHovered.value = false : null,
+      onEnter: (_) {
+        if (enabled) isHovered.value = true;
+      },
+      onExit: (_) => isHovered.value = false,
       child: Container(
         height: fieldHeight,
         decoration: BoxDecoration(
