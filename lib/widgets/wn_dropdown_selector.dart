@@ -204,6 +204,7 @@ class WnDropdownSelector<T> extends HookWidget {
                         itemHeight: itemHeight,
                         onSelect: selectOption,
                         showScrollIndicators: options.length > maxVisibleItems,
+                        size: size,
                       ),
                     ),
                 ],
@@ -271,6 +272,7 @@ class _ScrollableDropdownList<T> extends HookWidget {
     required this.itemHeight,
     required this.onSelect,
     required this.showScrollIndicators,
+    required this.size,
   });
 
   final List<WnDropdownOption<T>> options;
@@ -278,6 +280,7 @@ class _ScrollableDropdownList<T> extends HookWidget {
   final double itemHeight;
   final ValueChanged<T> onSelect;
   final bool showScrollIndicators;
+  final WnDropdownSize size;
 
   @override
   Widget build(BuildContext context) {
@@ -322,6 +325,7 @@ class _ScrollableDropdownList<T> extends HookWidget {
                 isSelected: isSelected,
                 height: itemHeight,
                 onTap: () => onSelect(option.value),
+                size: size,
               );
             },
           ),
@@ -391,12 +395,14 @@ class _DropdownItem extends StatelessWidget {
     required this.isSelected,
     required this.height,
     required this.onTap,
+    required this.size,
   });
 
   final String label;
   final bool isSelected;
   final double height;
   final VoidCallback onTap;
+  final WnDropdownSize size;
 
   @override
   Widget build(BuildContext context) {
@@ -406,7 +412,7 @@ class _DropdownItem extends StatelessWidget {
         ? colors.backgroundContentPrimary
         : colors.backgroundContentSecondary;
     final checkmarkColor = colors.backgroundContentSecondary;
-    final iconWrapperSize = 36.w;
+    final iconWrapperSize = size == WnDropdownSize.large ? 48.w : 36.w;
 
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
