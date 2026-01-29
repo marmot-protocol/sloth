@@ -62,8 +62,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
-    return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -120,13 +120,11 @@ void main() {
     group('with follows', () {
       setUp(() {
         _api.follows = [
-          _userFactory('a1111111111111111111111111111111', displayName: 'Alice'),
-          _userFactory('b2222222222222222222222222222222', displayName: 'Bob'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
         ];
-        _api.pubkeyToNpub['a1111111111111111111111111111111'] =
-            'npub1pubkey11111111111111111111111111111111111111111111111111';
-        _api.pubkeyToNpub['b2222222222222222222222222222222'] =
-            'npub1pubkey22222222222222222222222222222222222222222222222222';
+        _api.pubkeyToNpub[testPubkeyA] = testNpubA;
+        _api.pubkeyToNpub[testPubkeyB] = testNpubB;
       });
 
       testWidgets('shows follows list', (tester) async {
@@ -142,8 +140,8 @@ void main() {
 
       testWidgets('shows formatted npub as subtitle', (tester) async {
         await pumpUserSearchScreen(tester);
-        expect(find.textContaining('npub1 pubke y1111'), findsOneWidget);
-        expect(find.textContaining('npub1 pubke y2222'), findsOneWidget);
+        expect(find.textContaining('npub1 a1b2c 31111'), findsOneWidget);
+        expect(find.textContaining('npub1 b2c3d 42222'), findsOneWidget);
       });
 
       testWidgets('passes color derived from pubkey to each avatar', (tester) async {
@@ -158,15 +156,14 @@ void main() {
 
     group('npub search', () {
       const validNpub = 'npub1abc123';
-      const hexPubkey = 'c3333333333333333333333333333333';
+      const hexPubkey = testPubkeyC;
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
         _api.pubkeyToNpub[hexPubkey] = validNpub;
         _api.userByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Searched User');
-        _api.follows = [_userFactory('f1111111111111111111111111111111', displayName: 'Follow')];
-        _api.pubkeyToNpub['f1111111111111111111111111111111'] =
-            'npub1follow1111111111111111111111111111111111111111111111111';
+        _api.follows = [_userFactory(testPubkeyC, displayName: 'Follow')];
+        _api.pubkeyToNpub[testPubkeyC] = testNpubC;
       });
 
       testWidgets('shows search result when valid npub entered', (tester) async {
@@ -180,7 +177,7 @@ void main() {
 
       testWidgets('shows filtered follows for invalid npub format', (tester) async {
         await pumpUserSearchScreen(tester);
-        await tester.enterText(find.byType(TextField), 'npub1fol');
+        await tester.enterText(find.byType(TextField), testNpubC.substring(0, 10));
         await tester.pumpAndSettle();
 
         expect(find.text('Follow'), findsOneWidget);
@@ -202,14 +199,13 @@ void main() {
       setUp(() {
         _api.follows = [
           User(
-            pubkey: 'd4444444444444444444444444444444',
+            pubkey: testPubkeyC,
             metadata: _emptyMetadata,
             createdAt: DateTime(2024),
             updatedAt: DateTime(2024),
           ),
         ];
-        _api.pubkeyToNpub['d4444444444444444444444444444444'] =
-            'npub1longp12345678901234567890123456789012345678901234567890';
+        _api.pubkeyToNpub[testPubkeyC] = testNpubC;
       });
 
       testWidgets('shows formatted npub as title with no subtitle', (tester) async {
@@ -217,7 +213,7 @@ void main() {
 
         final listTile = tester.widget<ListTile>(find.byType(ListTile));
         expect(listTile.subtitle, isNull);
-        expect(find.textContaining('npub1 longp'), findsOneWidget);
+        expect(find.textContaining('npub1 c3d4e'), findsOneWidget);
       });
     });
 
@@ -225,39 +221,36 @@ void main() {
       setUp(() {
         _api.follows = [
           User(
-            pubkey: 'e5555555555555555555555555555555',
+            pubkey: testPubkeyC,
             metadata: const FlutterMetadata(displayName: '', name: 'ValidName', custom: {}),
             createdAt: DateTime(2024),
             updatedAt: DateTime(2024),
           ),
         ];
-        _api.pubkeyToNpub['e5555555555555555555555555555555'] =
-            'npub1empty12345678901234567890123456789012345678901234567890';
+        _api.pubkeyToNpub[testPubkeyC] = testNpubC;
       });
 
       testWidgets('falls back to name when displayName is empty', (tester) async {
         await pumpUserSearchScreen(tester);
 
         expect(find.text('ValidName'), findsOneWidget);
-        expect(find.textContaining('npub1 empty'), findsOneWidget);
+        expect(find.textContaining('npub1 c3d4e'), findsOneWidget);
       });
     });
 
     group('partial npub search', () {
       setUp(() {
         _api.follows = [
-          _userFactory('a1111111111111111111111111111111', displayName: 'Alice'),
-          _userFactory('b2222222222222222222222222222222', displayName: 'Bob'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
         ];
-        _api.pubkeyToNpub['a1111111111111111111111111111111'] =
-            'npub1alice111111111111111111111111111111111111111111111111111';
-        _api.pubkeyToNpub['b2222222222222222222222222222222'] =
-            'npub1bob22222222222222222222222222222222222222222222222222222';
+        _api.pubkeyToNpub[testPubkeyA] = testNpubA;
+        _api.pubkeyToNpub[testPubkeyB] = testNpubB;
       });
 
       testWidgets('shows filtered follows for partial npub', (tester) async {
         await pumpUserSearchScreen(tester);
-        await tester.enterText(find.byType(TextField), 'npub1ali');
+        await tester.enterText(find.byType(TextField), 'npub1a1b');
         await tester.pumpAndSettle();
 
         expect(find.text('Alice'), findsOneWidget);
@@ -285,7 +278,7 @@ void main() {
 
     group('user not found', () {
       const validNpub = 'npub1notfound';
-      const hexPubkey = 'a6666666666666666666666666666666';
+      const hexPubkey = testPubkeyD;
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
@@ -303,9 +296,8 @@ void main() {
 
     group('user tap navigates to start chat screen', () {
       setUp(() {
-        _api.follows = [_userFactory('a1111111111111111111111111111111', displayName: 'Alice')];
-        _api.pubkeyToNpub['a1111111111111111111111111111111'] =
-            'npub1pubkey11111111111111111111111111111111111111111111111111';
+        _api.follows = [_userFactory(testPubkeyA, displayName: 'Alice')];
+        _api.pubkeyToNpub[testPubkeyA] = testNpubA;
       });
 
       testWidgets('navigates to start chat screen when tapping user', (tester) async {
@@ -328,7 +320,7 @@ void main() {
 
     group('search result tap navigates to start chat screen', () {
       const validNpub = 'npub1searched';
-      const hexPubkey = 'c7777777777777777777777777777777';
+      const hexPubkey = testGroupId;
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;

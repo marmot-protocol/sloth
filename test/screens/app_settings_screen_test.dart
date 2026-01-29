@@ -14,8 +14,8 @@ import '../test_helpers.dart';
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 

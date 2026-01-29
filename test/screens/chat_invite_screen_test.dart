@@ -17,12 +17,12 @@ import 'package:sloth/widgets/wn_message_bubble.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0';
-const _testGroupId = 'abcd1234abcd1234';
+const _testPubkey = testPubkeyA;
+const _testGroupId = testGroupId;
 
 ChatMessage _message(String id, {bool isDeleted = false}) => ChatMessage(
   id: id,
-  pubkey: 'other',
+  pubkey: testPubkeyB,
   content: 'Message $id',
   createdAt: DateTime(2024),
   tags: const [],

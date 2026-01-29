@@ -9,7 +9,7 @@ import 'package:sloth/widgets/wn_user_profile_card.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _userPubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
+const _userPubkey = testPubkeyA;
 
 class _MockApi extends MockWnApi {
   @override
@@ -62,14 +62,14 @@ void main() {
       await mountWidget(
         const SingleChildScrollView(
           child: WnUserProfileCard(
-            userPubkey: '0123456789abcdef0123456789abcdef',
+            userPubkey: testPubkeyD,
           ),
         ),
         tester,
       );
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.blue);
+      expect(avatar.color, AccentColor.cyan);
     });
 
     group('with metadata', () {

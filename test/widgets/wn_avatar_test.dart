@@ -195,7 +195,7 @@ void main() {
         await mountWidget(
           const WnAvatar(
             displayName: 'alice',
-            color: AccentColor.blue,
+            color: AccentColor.cyan,
           ),
           tester,
         );

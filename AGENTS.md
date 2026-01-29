@@ -207,6 +207,7 @@ rust tests...       ✓
   - `mountStackedWidget(child, tester)` - Mount widget in Stack
 - Mock Rust API using `RustLib.initMock(api: mockApi)`
 - Prefer `find.byKey()` over `find.byIcon()` - add keys to icons in widgets and use `find.byKey(const Key('icon_name'))` in tests
+- Use valid 64-char hex strings for pubkeys in tests (see `test_helpers.dart` for examples), not dummy values like `'abc'` or `'test-pubkey'`
 
 ## Sloth Mode Philosophy
 

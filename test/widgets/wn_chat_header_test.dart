@@ -18,7 +18,7 @@ void main() {
 
     Future<void> pumpHeader(
       WidgetTester tester, {
-      String mlsGroupId = 'a1b2c3d4',
+      String mlsGroupId = testGroupId,
       String displayName = 'Test User',
       String? pictureUrl,
     }) async {
@@ -73,19 +73,18 @@ void main() {
     });
 
     testWidgets('passes color derived from mlsGroupId to avatar', (tester) async {
-      const groupId = 'abc123';
-      await pumpHeader(tester, mlsGroupId: groupId);
+      await pumpHeader(tester);
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, avatarColorFromPubkey(groupId));
+      expect(avatar.color, avatarColorFromPubkey(testGroupId));
     });
 
     testWidgets('different mlsGroupId produces different color', (tester) async {
-      await pumpHeader(tester, mlsGroupId: '0abc');
+      await pumpHeader(tester);
       final avatar1 = tester.widget<WnAvatar>(find.byType(WnAvatar));
       final color1 = avatar1.color;
 
-      await pumpHeader(tester, mlsGroupId: 'fabc');
+      await pumpHeader(tester, mlsGroupId: testNostrGroupId);
       final avatar2 = tester.widget<WnAvatar>(find.byType(WnAvatar));
       final color2 = avatar2.color;
 

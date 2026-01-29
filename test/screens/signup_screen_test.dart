@@ -20,7 +20,7 @@ class _MockApi extends MockWnApi {
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
     return Account(
-      pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
+      pubkey: testPubkeyA,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -44,8 +44,8 @@ class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String> signup() async {
     if (errorToThrow != null) throw errorToThrow!;
-    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
-    return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 

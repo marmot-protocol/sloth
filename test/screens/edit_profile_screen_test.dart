@@ -68,7 +68,7 @@ class _MockApi extends MockWnApi {
 }
 
 class _MockAuthNotifier extends AuthNotifier {
-  _MockAuthNotifier([this._pubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4']);
+  _MockAuthNotifier([this._pubkey = testPubkeyA]);
 
   final String _pubkey;
 
@@ -308,7 +308,7 @@ void main() {
       await mountTestApp(
         tester,
         overrides: [
-          authProvider.overrideWith(() => _MockAuthNotifier('0xyz1234e5f6a1b2c3d4e5f6a1b2c3d4')),
+          authProvider.overrideWith(() => _MockAuthNotifier(testPubkeyD)),
           secureStorageProvider.overrideWithValue(MockSecureStorage()),
         ],
       );
@@ -316,7 +316,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.blue);
+      expect(avatar.color, AccentColor.cyan);
     });
 
     testWidgets('shows error snackbar when image picker fails', (tester) async {

@@ -7,6 +7,8 @@ import 'package:sloth/hooks/use_key_packages.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../test_helpers.dart';
+
 class MockApi implements RustLibApi {
   List<FlutterEvent> keyPackages = [];
   bool shouldThrow = false;
@@ -78,7 +80,7 @@ Future<void> _pump(WidgetTester tester) async {
     MaterialApp(
       home: HookBuilder(
         builder: (context) {
-          hook = useKeyPackages('test_pubkey');
+          hook = useKeyPackages(testPubkeyA);
           return const SizedBox();
         },
       ),
@@ -105,7 +107,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -156,7 +158,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -180,7 +182,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -212,7 +214,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -246,7 +248,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -254,7 +256,7 @@ void main() {
         ),
         FlutterEvent(
           id: 'pkg2',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],

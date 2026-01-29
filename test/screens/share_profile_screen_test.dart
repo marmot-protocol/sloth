@@ -31,7 +31,7 @@ class _MockApi extends MockWnApi {
 late _MockApi _mockApi;
 
 class _MockAuthNotifier extends AuthNotifier {
-  _MockAuthNotifier([this._pubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4']);
+  _MockAuthNotifier([this._pubkey = testPubkeyA]);
 
   final String _pubkey;
 
@@ -136,7 +136,7 @@ void main() {
       await mountTestApp(
         tester,
         overrides: [
-          authProvider.overrideWith(() => _MockAuthNotifier('0123456789abcdef0123456789abcdef')),
+          authProvider.overrideWith(() => _MockAuthNotifier(testPubkeyD)),
           secureStorageProvider.overrideWithValue(MockSecureStorage()),
         ],
       );
@@ -144,7 +144,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.blue);
+      expect(avatar.color, AccentColor.cyan);
     });
   });
 }

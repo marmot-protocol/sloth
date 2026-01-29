@@ -26,7 +26,7 @@ class _MockApi extends MockWnApi {
 
 class _MockAuthNotifier extends AuthNotifier {
   final String _pubkey;
-  _MockAuthNotifier([this._pubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4']);
+  _MockAuthNotifier([this._pubkey = testPubkeyA]);
 
   @override
   Future<String?> build() async {
@@ -106,11 +106,11 @@ void main() {
     testWidgets('different pubkey passes different avatar color', (tester) async {
       await pumpChatListScreen(
         tester,
-        authNotifier: _MockAuthNotifier('0xyz1234e5f6a1b2c3d4e5f6a1b2c3d4'),
+        authNotifier: _MockAuthNotifier(testPubkeyD),
       );
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.blue);
+      expect(avatar.color, AccentColor.cyan);
     });
   });
 }

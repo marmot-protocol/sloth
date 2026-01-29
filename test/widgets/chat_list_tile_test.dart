@@ -26,7 +26,7 @@ ChatSummary _chatSummary({
   String? groupImageUrl,
   String? welcomerPubkey,
 }) => ChatSummary(
-  mlsGroupId: 'a1b2c3d4',
+  mlsGroupId: testGroupId,
   name: name,
   groupType: groupType,
   createdAt: DateTime(2024),
@@ -37,7 +37,7 @@ ChatSummary _chatSummary({
   welcomerPubkey: welcomerPubkey,
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
-          mlsGroupId: 'a1b2c3d4',
+          mlsGroupId: testGroupId,
           author: 'author',
           content: lastMessageContent,
           createdAt: DateTime(2024),
@@ -265,7 +265,7 @@ void main() {
         await pumpTile(tester, _chatSummary(name: 'Test'));
 
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-        expect(avatar.color, avatarColorFromPubkey('a1b2c3d4'));
+        expect(avatar.color, avatarColorFromPubkey(testGroupId));
       });
     });
 
