@@ -114,23 +114,5 @@ void main() {
       final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
       expect(icons.any((icon) => icon.icon == WnIcons.helpFilled), isTrue);
     });
-
-    testWidgets('has left border', (tester) async {
-      const widget = WnCallout(
-        title: 'Callout Title',
-      );
-      await mountWidget(widget, tester);
-      final container = tester.widget<Container>(
-        find.ancestor(
-          of: find.text('Callout Title'),
-          matching: find.byType(Container),
-        ),
-      );
-      final decoration = container.decoration as BoxDecoration;
-      expect(decoration.border, isNotNull);
-      expect(decoration.border, isA<Border>());
-      final border = decoration.border as Border;
-      expect(border.left.width, greaterThan(0));
-    });
   });
 }

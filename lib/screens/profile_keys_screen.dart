@@ -87,7 +87,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                           WnCallout(
                             title: context.l10n.keepPrivateKeySecure,
                             description: context.l10n.privateKeyWarning,
-                            type: CalloutType.error,
+                            type: CalloutType.warning,
                           ),
                           Gap(24.h),
                         ],

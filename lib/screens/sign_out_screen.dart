@@ -73,7 +73,7 @@ class SignOutScreen extends HookConsumerWidget {
                           WnCallout(
                             title: context.l10n.signOutConfirmation,
                             description: context.l10n.signOutWarning,
-                            type: CalloutType.error,
+                            type: CalloutType.warning,
                           ),
                           Gap(24.h),
                           Text(
