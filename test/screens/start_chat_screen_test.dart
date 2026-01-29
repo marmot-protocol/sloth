@@ -7,7 +7,6 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
@@ -18,13 +17,6 @@ import '../test_helpers.dart';
 
 const _testPubkey = 'test_account_pubkey';
 const _otherPubkey = 'other_user_pubkey';
-
-User _userFactory(String pubkey, {String? displayName}) => User(
-  pubkey: pubkey,
-  metadata: FlutterMetadata(displayName: displayName, custom: const {}),
-  createdAt: DateTime(2024),
-  updatedAt: DateTime(2024),
-);
 
 class _MockApi extends MockWnApi {
   FlutterMetadata metadata = const FlutterMetadata(custom: {});
@@ -44,6 +36,7 @@ class _MockApi extends MockWnApi {
   Completer<void>? followCompleter;
   Exception? followError;
   final Map<String, String> pubkeyToNpub = {};
+  final Set<String> followingPubkeys = {};
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -102,6 +95,14 @@ class _MockApi extends MockWnApi {
   }
 
   @override
+  Future<bool> crateApiAccountsIsFollowingUser({
+    required String accountPubkey,
+    required String userPubkey,
+  }) async {
+    return followingPubkeys.contains(userPubkey);
+  }
+
+  @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
     final npub = pubkeyToNpub[hexPubkey];
     if (npub == null) throw Exception('Unknown pubkey');
@@ -121,6 +122,7 @@ class _MockApi extends MockWnApi {
     followCompleter = null;
     followError = null;
     pubkeyToNpub.clear();
+    followingPubkeys.clear();
   }
 }
 
@@ -219,19 +221,17 @@ void main() {
 
     group('follow button', () {
       testWidgets('shows Follow for non-followed user', (tester) async {
-        _api.follows = [];
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.text('Follow'), findsOneWidget);
       });
 
       testWidgets('shows Unfollow for followed user', (tester) async {
-        _api.follows = [_userFactory(_otherPubkey)];
+        _api.followingPubkeys.add(_otherPubkey);
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.text('Unfollow'), findsOneWidget);
       });
 
       testWidgets('calls follow API when tapped', (tester) async {
-        _api.follows = [];
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         await tester.tap(find.byKey(const Key('follow_button')));
         await tester.pumpAndSettle();
@@ -242,7 +242,7 @@ void main() {
       });
 
       testWidgets('calls unfollow API when tapped', (tester) async {
-        _api.follows = [_userFactory(_otherPubkey)];
+        _api.followingPubkeys.add(_otherPubkey);
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         await tester.tap(find.byKey(const Key('follow_button')));
         await tester.pumpAndSettle();
@@ -253,7 +253,6 @@ void main() {
       });
 
       testWidgets('shows loading state during follow', (tester) async {
-        _api.follows = [];
         _api.followCompleter = Completer();
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         await tester.tap(find.byKey(const Key('follow_button')));

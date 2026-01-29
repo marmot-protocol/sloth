@@ -206,6 +206,7 @@ rust tests...       ✓
   - `mountWidget(child, tester)` - Mount single widget
   - `mountStackedWidget(child, tester)` - Mount widget in Stack
 - Mock Rust API using `RustLib.initMock(api: mockApi)`
+- Always extend `MockWnApi` from `test/mocks/mock_wn_api.dart` instead of implementing `RustLibApi` directly - this ensures consistent mock behavior and reuses common mock implementations
 - Prefer `find.byKey()` over `find.byIcon()` - add keys to icons in widgets and use `find.byKey(const Key('icon_name'))` in tests
 
 ## Sloth Mode Philosophy
