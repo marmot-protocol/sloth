@@ -28,13 +28,23 @@ class _MockRustLibApi implements RustLibApi {
     if (!existingAccounts.contains(pubkey)) {
       throw const ApiError.whitenoise(message: 'Account not found');
     }
-    return Account(pubkey: pubkey, createdAt: DateTime.now(), updatedAt: DateTime.now());
+    return Account(
+      pubkey: pubkey,
+      accountType: AccountType.local,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
   }
 
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
     existingAccounts.add('created_pubkey');
-    return Account(pubkey: 'created_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now());
+    return Account(
+      pubkey: 'created_pubkey',
+      accountType: AccountType.local,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
   }
 
   @override
@@ -42,6 +52,7 @@ class _MockRustLibApi implements RustLibApi {
     existingAccounts.add('logged_in_pubkey');
     return Account(
       pubkey: 'logged_in_pubkey',
+      accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -223,7 +234,12 @@ void main() {
         await container.read(authProvider.notifier).login('nsec123');
         mockApi.existingAccounts.add('other_pubkey');
         mockApi.allAccounts = [
-          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'other_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
         expect(nextPubkey, 'other_pubkey');
@@ -235,8 +251,18 @@ void main() {
         await container.read(authProvider.notifier).login('nsec123');
         mockApi.existingAccounts.add('other_pubkey');
         mockApi.allAccounts = [
-          Account(pubkey: 'logged_in_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
-          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'logged_in_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'other_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
         expect(nextPubkey, 'other_pubkey');

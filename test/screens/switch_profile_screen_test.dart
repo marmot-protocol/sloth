@@ -53,11 +53,13 @@ void main() {
     mockApi.getAccountsCompleter = null;
     mockApi.accounts = [
       Account(
+        accountType: AccountType.local,
         pubkey: 'pubkey1',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),
       ),
       Account(
+        accountType: AccountType.local,
         pubkey: 'pubkey2',
         createdAt: DateTime.now(),
         updatedAt: DateTime.now(),

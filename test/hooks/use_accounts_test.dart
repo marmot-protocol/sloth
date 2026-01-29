@@ -163,11 +163,13 @@ void main() {
       late AsyncSnapshot<List<Account>> capturedAccounts;
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey1',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey2',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -232,11 +234,13 @@ void main() {
       mockAuthNotifier.switchProfileCompleter = Completer<void>();
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey1',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey2',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -274,11 +278,13 @@ void main() {
       mockAuthNotifier.shouldThrowOnSwitch = true;
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey1',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey2',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -322,11 +328,13 @@ void main() {
       mockAuthNotifier.shouldThrowOnSwitch = true;
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey1',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: 'pubkey2',
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),

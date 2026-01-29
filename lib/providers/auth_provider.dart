@@ -2,8 +2,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/providers/is_adding_account_provider.dart';
+import 'package:sloth/services/android_signer_service.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 import 'package:sloth/src/rust/api/error.dart';
+import 'package:sloth/src/rust/api/signer.dart' as signer_api;
 import 'package:sloth/src/rust/api/users.dart' as users_api;
 
 const _storageKey = 'active_account_pubkey';
@@ -42,6 +44,114 @@ class AuthNotifier extends AsyncNotifier<String?> {
     _logger.info('Login successful');
   }
 
+  /// Login using an external signer via NIP-55.
+  ///
+  /// This will open the signer app for the user to authorize this app.
+  /// The pubkey is retrieved from the signer and used to find/create an account.
+  /// The key package is signed and published using the signer.
+  ///
+  /// If the account has no key package relays configured, default relays
+  /// will be automatically added.
+  ///
+  /// Parameters:
+  /// - [pubkey]: The public key obtained from the signer
+  /// - [onDisconnect]: Callback to disconnect from the signer on error
+  Future<void> loginWithAndroidSigner({
+    required String pubkey,
+    required Future<void> Function() onDisconnect,
+  }) async {
+    _logger.info('Android signer login attempt started');
+    final storage = ref.read(secureStorageProvider);
+    const signerService = AndroidSignerService();
+
+    Future<void> safeDisconnect() async {
+      try {
+        await onDisconnect();
+      } catch (e) {
+        _logger.warning('Android signer disconnect failed: $e');
+      }
+    }
+
+    try {
+      // Login with external signer using callbacks
+      final account = await signer_api.loginWithExternalSignerAndCallbacks(
+        pubkey: pubkey,
+        signEvent: (unsignedEventJson) async {
+          _logger.fine('Signing event via Android signer...');
+          final response = await signerService.signEvent(
+            eventJson: unsignedEventJson,
+            currentUser: pubkey,
+          );
+          if (response.event == null) {
+            throw const AndroidSignerException(
+              'NO_EVENT',
+              'Signer did not return signed event',
+            );
+          }
+          return response.event!;
+        },
+        nip04Encrypt: (plaintext, recipientPubkey) async {
+          _logger.fine('NIP-04 encrypting via Android signer...');
+          return signerService.nip04Encrypt(
+            plaintext: plaintext,
+            pubkey: recipientPubkey,
+            currentUser: pubkey,
+          );
+        },
+        nip04Decrypt: (ciphertext, senderPubkey) async {
+          _logger.fine('NIP-04 decrypting via Android signer...');
+          return signerService.nip04Decrypt(
+            encryptedText: ciphertext,
+            pubkey: senderPubkey,
+            currentUser: pubkey,
+          );
+        },
+        nip44Encrypt: (plaintext, recipientPubkey) async {
+          _logger.fine('NIP-44 encrypting via Android signer...');
+          return signerService.nip44Encrypt(
+            plaintext: plaintext,
+            pubkey: recipientPubkey,
+            currentUser: pubkey,
+          );
+        },
+        nip44Decrypt: (ciphertext, senderPubkey) async {
+          _logger.fine('NIP-44 decrypting via Android signer...');
+          return signerService.nip44Decrypt(
+            encryptedText: ciphertext,
+            pubkey: senderPubkey,
+            currentUser: pubkey,
+          );
+        },
+      );
+
+      users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
+      await storage.write(key: _storageKey, value: account.pubkey);
+      state = AsyncData(account.pubkey);
+      _logger.info('Android signer login successful with key package published');
+    } on ApiError catch (e) {
+      await safeDisconnect();
+      _logger.warning('Android signer login failed: ${e.message}');
+      rethrow;
+    } on AndroidSignerException catch (e) {
+      await safeDisconnect();
+      _logger.warning('Android signer signing failed: ${e.message}');
+      rethrow;
+    } catch (e) {
+      await safeDisconnect();
+      _logger.warning('Android signer login failed with unexpected error: $e');
+      rethrow;
+    }
+  }
+
+  /// Whether the current session is using an Android signer for signing.
+  Future<bool> isUsingAndroidSigner() async {
+    final pubkey = state.value;
+    if (pubkey == null) return false;
+
+    final account = await accounts_api.getAccount(pubkey: pubkey);
+    return account.accountType == accounts_api.AccountType.external_;
+  }
+
   Future<String> signup() async {
     _logger.info('Signup started');
     final storage = ref.read(secureStorageProvider);
@@ -53,12 +163,18 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return account.pubkey;
   }
 
-  Future<String?> logout() async {
+  Future<String?> logout({Future<void> Function()? onAndroidSignerDisconnect}) async {
     final pubkey = state.value;
     if (pubkey == null) return null;
 
     _logger.info('Logout started');
     final storage = ref.read(secureStorageProvider);
+
+    // Disconnect from Android signer if logged in via signer
+    if (await isUsingAndroidSigner() && onAndroidSignerDisconnect != null) {
+      await onAndroidSignerDisconnect();
+    }
+
     await accounts_api.logout(pubkey: pubkey);
     await storage.delete(key: _storageKey);
 
