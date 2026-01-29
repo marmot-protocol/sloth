@@ -51,6 +51,7 @@ class WnDropdownSelector<T> extends HookWidget {
     const maxVisibleItems = 5;
 
     final isOpen = useState(false);
+    final isPressed = useState(false);
 
     final animationController = useAnimationController(
       duration: const Duration(milliseconds: 120),
@@ -69,10 +70,13 @@ class WnDropdownSelector<T> extends HookWidget {
       return null;
     }, [isDisabled]);
 
-    final selectedLabel = useMemoized(() {
+    final selectedOption = useMemoized(() {
       final selected = options.where((o) => o.value == value);
-      return selected.isNotEmpty ? selected.first.label : '';
+      return selected.isNotEmpty ? selected.first : null;
     }, [options, value]);
+
+    final hasSelection = selectedOption != null;
+    final displayLabel = selectedOption?.label ?? 'Select';
 
     void toggleDropdown() {
       if (isDisabled) return;
@@ -94,30 +98,43 @@ class WnDropdownSelector<T> extends HookWidget {
     }
 
     final borderColor = isDisabled
-        ? colors.borderSecondary
+        ? colors.borderTertiary
         : isError
         ? colors.borderDestructivePrimary
+        : isPressed.value
+        ? colors.borderSecondary
         : isOpen.value
         ? colors.borderPrimary
-        : colors.borderSecondary;
+        : colors.borderTertiary;
 
     final textColor = isDisabled
         ? colors.backgroundContentTertiary
-        : colors.backgroundContentPrimary;
+        : hasSelection
+        ? colors.backgroundContentPrimary
+        : colors.backgroundContentSecondary;
 
     final iconColor = isDisabled
+        ? colors.backgroundContentTertiary
+        : colors.backgroundContentPrimary;
+
+    final labelColor = isDisabled
         ? colors.backgroundContentTertiary
         : colors.backgroundContentPrimary;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: TextStyle(
-            fontSize: 14.sp,
-            color: isDisabled ? colors.backgroundContentTertiary : colors.backgroundContentPrimary,
-            fontWeight: FontWeight.w600,
+        Padding(
+          padding: EdgeInsets.only(left: 2.w),
+          child: Text(
+            label,
+            style: TextStyle(
+              fontSize: 14.sp,
+              color: labelColor,
+              fontWeight: FontWeight.w500,
+              letterSpacing: 0.4.sp,
+              height: 20 / 14,
+            ),
           ),
         ),
         Gap(4.h),
@@ -133,7 +150,7 @@ class WnDropdownSelector<T> extends HookWidget {
             final currentHeight = dropdownHeight + animatedOptionsHeight;
 
             return Container(
-              height: currentHeight + 2, // +2 for border (1px top + 1px bottom)
+              height: currentHeight + 2,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: borderColor),
@@ -143,32 +160,37 @@ class WnDropdownSelector<T> extends HookWidget {
               child: Column(
                 children: [
                   GestureDetector(
+                    behavior: HitTestBehavior.opaque,
                     onTap: toggleDropdown,
+                    onTapDown: (_) {
+                      if (!isDisabled) isPressed.value = true;
+                    },
+                    onTapUp: (_) => isPressed.value = false,
+                    onTapCancel: () => isPressed.value = false,
                     child: Container(
                       height: dropdownHeight,
-                      padding: EdgeInsets.symmetric(horizontal: 14.w),
-                      color: Colors.transparent,
+                      padding: EdgeInsets.symmetric(horizontal: 4.w),
                       child: Row(
                         children: [
                           Expanded(
-                            child: Text(
-                              selectedLabel,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w600,
-                                color: textColor,
-                                fontFamily: 'Manrope',
+                            child: Padding(
+                              padding: EdgeInsets.all(8.w),
+                              child: Text(
+                                displayLabel,
+                                style: TextStyle(
+                                  fontSize: 14.sp,
+                                  fontWeight: FontWeight.w500,
+                                  color: textColor,
+                                  letterSpacing: 0.4.sp,
+                                  height: 20 / 14,
+                                ),
                               ),
                             ),
                           ),
-                          SizedBox(
-                            width: 24.sp,
-                            child: WnIcon(
-                              isOpen.value ? WnIcons.closeLarge : WnIcons.chevronDown,
-                              key: const Key('dropdown_icon'),
-                              color: iconColor,
-                              size: 24.sp,
-                            ),
+                          _DropdownIconButton(
+                            isOpen: isOpen.value,
+                            iconColor: iconColor,
+                            size: size,
                           ),
                         ],
                       ),
@@ -182,6 +204,7 @@ class WnDropdownSelector<T> extends HookWidget {
                         itemHeight: itemHeight,
                         onSelect: selectOption,
                         showScrollIndicators: options.length > maxVisibleItems,
+                        size: size,
                       ),
                     ),
                 ],
@@ -191,17 +214,53 @@ class WnDropdownSelector<T> extends HookWidget {
         ),
         if (helperText != null) ...[
           Gap(4.h),
-          Text(
-            helperText!,
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: isError
-                  ? colors.backgroundContentDestructive
-                  : colors.backgroundContentSecondary,
+          Padding(
+            padding: EdgeInsets.only(left: 2.w),
+            child: Text(
+              helperText!,
+              style: TextStyle(
+                fontSize: 14.sp,
+                fontWeight: FontWeight.w500,
+                letterSpacing: 0.4.sp,
+                height: 20 / 14,
+                color: isError
+                    ? colors.backgroundContentDestructive
+                    : colors.backgroundContentSecondary,
+              ),
             ),
           ),
         ],
       ],
+    );
+  }
+}
+
+class _DropdownIconButton extends StatelessWidget {
+  const _DropdownIconButton({
+    required this.isOpen,
+    required this.iconColor,
+    required this.size,
+  });
+
+  final bool isOpen;
+  final Color iconColor;
+  final WnDropdownSize size;
+
+  @override
+  Widget build(BuildContext context) {
+    final wrapperSize = size == WnDropdownSize.large ? 48.w : 36.w;
+
+    return SizedBox(
+      width: wrapperSize,
+      height: wrapperSize,
+      child: Center(
+        child: WnIcon(
+          isOpen ? WnIcons.closeLarge : WnIcons.chevronDown,
+          key: const Key('dropdown_icon'),
+          color: iconColor,
+          size: 16.sp,
+        ),
+      ),
     );
   }
 }
@@ -213,6 +272,7 @@ class _ScrollableDropdownList<T> extends HookWidget {
     required this.itemHeight,
     required this.onSelect,
     required this.showScrollIndicators,
+    required this.size,
   });
 
   final List<WnDropdownOption<T>> options;
@@ -220,6 +280,7 @@ class _ScrollableDropdownList<T> extends HookWidget {
   final double itemHeight;
   final ValueChanged<T> onSelect;
   final bool showScrollIndicators;
+  final WnDropdownSize size;
 
   @override
   Widget build(BuildContext context) {
@@ -236,7 +297,6 @@ class _ScrollableDropdownList<T> extends HookWidget {
       }
 
       scrollController.addListener(onScroll);
-      // Check initial state after first frame
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (scrollController.hasClients) {
           onScroll();
@@ -265,10 +325,10 @@ class _ScrollableDropdownList<T> extends HookWidget {
                 isSelected: isSelected,
                 height: itemHeight,
                 onTap: () => onSelect(option.value),
+                size: size,
               );
             },
           ),
-          // Top fade indicator
           if (showScrollIndicators)
             Positioned(
               top: 0,
@@ -294,7 +354,6 @@ class _ScrollableDropdownList<T> extends HookWidget {
                 ),
               ),
             ),
-          // Bottom fade indicator
           if (showScrollIndicators)
             Positioned(
               bottom: 0,
@@ -336,47 +395,62 @@ class _DropdownItem extends StatelessWidget {
     required this.isSelected,
     required this.height,
     required this.onTap,
+    required this.size,
   });
 
   final String label;
   final bool isSelected;
   final double height;
   final VoidCallback onTap;
+  final WnDropdownSize size;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-
-    final backgroundColor = isSelected ? colors.fillSecondary : colors.backgroundPrimary;
+    final backgroundColor = isSelected ? colors.backgroundTertiary : colors.backgroundPrimary;
+    final textColor = isSelected
+        ? colors.backgroundContentPrimary
+        : colors.backgroundContentSecondary;
+    final checkmarkColor = colors.backgroundContentSecondary;
+    final iconWrapperSize = size == WnDropdownSize.large ? 48.w : 36.w;
 
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: onTap,
       child: Container(
         height: height,
         width: double.infinity,
-        padding: EdgeInsets.symmetric(horizontal: 14.w),
+        padding: EdgeInsets.only(left: 12.w, right: 4.w),
         color: backgroundColor,
         child: Row(
           children: [
             Expanded(
-              child: Text(
-                label,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
-                  color: colors.backgroundContentPrimary,
-                  fontFamily: 'Manrope',
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 8.h),
+                child: Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    fontWeight: FontWeight.w500,
+                    color: textColor,
+                    letterSpacing: 0.4.sp,
+                    height: 20 / 14,
+                  ),
+                  overflow: TextOverflow.ellipsis,
                 ),
               ),
             ),
             SizedBox(
-              width: 24.sp,
+              width: iconWrapperSize,
+              height: iconWrapperSize,
               child: isSelected
-                  ? WnIcon(
-                      WnIcons.checkmark,
-                      key: const Key('checkmark_icon'),
-                      color: colors.backgroundContentPrimary,
-                      size: 24.sp,
+                  ? Center(
+                      child: WnIcon(
+                        WnIcons.checkmark,
+                        key: const Key('checkmark_icon'),
+                        color: checkmarkColor,
+                        size: 16.sp,
+                      ),
                     )
                   : null,
             ),
