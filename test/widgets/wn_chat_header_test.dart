@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 
@@ -17,11 +18,13 @@ void main() {
 
     Future<void> pumpHeader(
       WidgetTester tester, {
+      String mlsGroupId = 'a1b2c3d4',
       String displayName = 'Test User',
       String? pictureUrl,
     }) async {
       await mountWidget(
         WnChatHeader(
+          mlsGroupId: mlsGroupId,
           displayName: displayName,
           pictureUrl: pictureUrl,
           onBack: () => backPressed = true,
@@ -67,6 +70,26 @@ void main() {
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
       expect(avatar.displayName, 'Bob');
+    });
+
+    testWidgets('passes color derived from mlsGroupId to avatar', (tester) async {
+      const groupId = 'abc123';
+      await pumpHeader(tester, mlsGroupId: groupId);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, avatarColorFromPubkey(groupId));
+    });
+
+    testWidgets('different mlsGroupId produces different color', (tester) async {
+      await pumpHeader(tester, mlsGroupId: '0abc');
+      final avatar1 = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      final color1 = avatar1.color;
+
+      await pumpHeader(tester, mlsGroupId: 'fabc');
+      final avatar2 = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      final color2 = avatar2.color;
+
+      expect(color1, isNot(equals(color2)));
     });
 
     group('back button', () {

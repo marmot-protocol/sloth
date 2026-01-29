@@ -36,12 +36,14 @@ void main() {
       test('returns pubkey', () {
         final container = ProviderContainer(
           overrides: [
-            authProvider.overrideWith(() => _MockAuthNotifier(const AsyncData('test_pubkey'))),
+            authProvider.overrideWith(
+              () => _MockAuthNotifier(const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4')),
+            ),
           ],
         );
         addTearDown(container.dispose);
 
-        expect(container.read(accountPubkeyProvider), 'test_pubkey');
+        expect(container.read(accountPubkeyProvider), 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
       });
     });
   });

@@ -59,7 +59,7 @@ void main() {
     mockApi.nonBlockingUserResult = null;
     mockApi.blockingUserResult = null;
     mockApi.getUserShouldThrow = false;
-    service = const UserService('test_pubkey');
+    service = const UserService('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
   });
 
   group('fetchMetadata', () {
@@ -140,7 +140,7 @@ void main() {
     group('when user has complete metadata', () {
       setUp(() {
         mockApi.nonBlockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(name: 'Test User', custom: {}),
           createdAt: now,
           updatedAt: now,
@@ -158,7 +158,7 @@ void main() {
     group('when user has displayName', () {
       setUp(() {
         mockApi.nonBlockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(displayName: 'Display Name', custom: {}),
           createdAt: now,
           updatedAt: now,
@@ -176,7 +176,7 @@ void main() {
     group('when user has picture', () {
       setUp(() {
         mockApi.nonBlockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(
             picture: 'https://example.com/pic.jpg',
             custom: {},
@@ -197,13 +197,13 @@ void main() {
     group('when user has empty metadata', () {
       setUp(() {
         mockApi.nonBlockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(custom: {}),
           createdAt: now,
           updatedAt: now,
         );
         mockApi.blockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(name: 'Blocking Sync User', custom: {}),
           createdAt: now,
           updatedAt: now,
@@ -221,7 +221,7 @@ void main() {
     group('when user has empty strings for metadata fields', () {
       setUp(() {
         mockApi.nonBlockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(
             name: '',
             displayName: '',
@@ -232,7 +232,7 @@ void main() {
           updatedAt: now,
         );
         mockApi.blockingUserResult = User(
-          pubkey: 'test_pubkey',
+          pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
           metadata: const FlutterMetadata(name: 'Blocking Sync User', custom: {}),
           createdAt: now,
           updatedAt: now,

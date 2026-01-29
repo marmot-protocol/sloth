@@ -26,7 +26,7 @@ class _MockApi extends MockWnApi {
 
 class _AuthenticatedAuthNotifier extends AuthNotifier {
   @override
-  Future<String?> build() async => 'test_pubkey';
+  Future<String?> build() async => 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
 }
 
 void main() {
