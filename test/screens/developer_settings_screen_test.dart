@@ -54,8 +54,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
+    return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
   }
 }
 

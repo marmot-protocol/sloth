@@ -343,7 +343,7 @@ void main() {
 
       expect(result.state.loadingState, EditProfileLoadingState.idle);
       expect(result.state.error, isNull);
-      expect(mockApi.updatedPubkey, 'test_pubkey');
+      expect(mockApi.updatedPubkey, 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
       expect(mockApi.updatedMetadata?.displayName, 'New Name');
       expect(mockApi.updatedMetadata?.about, 'New About');
       expect(result.state.displayName, 'New Name');

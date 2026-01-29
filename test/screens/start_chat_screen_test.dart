@@ -16,8 +16,8 @@ import 'package:sloth/widgets/wn_slate_container.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_account_pubkey';
-const _otherPubkey = 'other_user_pubkey';
+const _testPubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
+const _otherPubkey = 'b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5';
 
 User _userFactory(String pubkey, {String? displayName}) => User(
   pubkey: pubkey,
@@ -73,8 +73,8 @@ class _MockApi extends MockWnApi {
 
     return createdGroup ??
         Group(
-          mlsGroupId: 'test_group_id',
-          nostrGroupId: 'test_nostr_group_id',
+          mlsGroupId: 'abcd1234abcd1234',
+          nostrGroupId: 'abcd5678abcd5678',
           name: '',
           description: '',
           adminPubkeys: const [],

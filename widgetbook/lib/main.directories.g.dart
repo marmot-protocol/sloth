@@ -10,6 +10,8 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
+import 'package:sloth_widgetbook/components/wn_avatar.dart'
+    as _sloth_widgetbook_components_wn_avatar;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
     as _sloth_widgetbook_foundations_semantic_colors;
 import 'package:sloth_widgetbook/introduction.dart'
@@ -27,10 +29,24 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'components',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'WnAvatarStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'All Variants',
+            builder: _sloth_widgetbook_components_wn_avatar.allVariants,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'foundations',
     children: [
       _widgetbook.WidgetbookComponent(
-        name: 'Semantic Colors',
+        name: 'SemanticColorsStory',
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Semantic Colors',

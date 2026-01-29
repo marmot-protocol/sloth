@@ -121,7 +121,7 @@ Future<void> pump(WidgetTester tester) async {
     MaterialApp(
       home: HookBuilder(
         builder: (context) {
-          hook = useNetworkRelays('test_pubkey');
+          hook = useNetworkRelays('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
           return const SizedBox();
         },
       ),

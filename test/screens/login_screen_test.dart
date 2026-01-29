@@ -39,7 +39,7 @@ class _MockAuthNotifier extends AuthNotifier {
     loginCalled = true;
     lastNsec = nsec;
     if (errorToThrow != null) throw errorToThrow!;
-    state = const AsyncData('test_pubkey');
+    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
   }
 }
 

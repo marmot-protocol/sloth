@@ -8,8 +8,9 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_image_picker.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -66,10 +67,14 @@ class _MockApi extends MockWnApi {
 }
 
 class _MockAuthNotifier extends AuthNotifier {
+  _MockAuthNotifier([this._pubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4']);
+
+  final String _pubkey;
+
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = AsyncData(_pubkey);
+    return _pubkey;
   }
 }
 
@@ -277,33 +282,40 @@ void main() {
       expect(find.text('Save'), findsOneWidget);
     });
 
-    testWidgets('passes loading state to image picker when saving', (tester) async {
+    testWidgets('hides avatar edit button during save', (tester) async {
       mockApi.updateCompleter = Completer<void>();
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
+      expect(find.byKey(const Key('avatar_edit_button')), findsOneWidget);
       await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
       await tester.pump();
       await tester.tap(find.text('Save'));
       await tester.pump();
-      final imagePicker = tester.widget<WnImagePicker>(find.byType(WnImagePicker));
-      expect(imagePicker.loading, isTrue);
+      expect(find.byKey(const Key('avatar_edit_button')), findsNothing);
       mockApi.updateCompleter!.complete();
       await tester.pumpAndSettle();
     });
 
-    testWidgets('disables image picker during save', (tester) async {
-      mockApi.updateCompleter = Completer<void>();
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
       await pumpEditProfileScreen(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey produces different avatar color', (tester) async {
+      await mountTestApp(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _MockAuthNotifier('0xyz1234e5f6a1b2c3d4e5f6a1b2c3d4')),
+          secureStorageProvider.overrideWithValue(MockSecureStorage()),
+        ],
+      );
+      Routes.pushToEditProfile(tester.element(find.byType(Scaffold)));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
-      await tester.pump();
-      await tester.tap(find.text('Save'));
-      await tester.pump();
-      final imagePicker = tester.widget<WnImagePicker>(find.byType(WnImagePicker));
-      expect(imagePicker.disabled, isTrue);
-      expect(find.byKey(const Key('edit_icon')), findsNothing);
-      mockApi.updateCompleter!.complete();
-      await tester.pumpAndSettle();
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.blue);
     });
   });
 }

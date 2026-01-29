@@ -78,7 +78,7 @@ Future<void> _pump(WidgetTester tester) async {
     MaterialApp(
       home: HookBuilder(
         builder: (context) {
-          hook = useKeyPackages('test_pubkey');
+          hook = useKeyPackages('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
           return const SizedBox();
         },
       ),

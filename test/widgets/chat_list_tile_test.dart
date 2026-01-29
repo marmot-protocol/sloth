@@ -10,6 +10,7 @@ import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
@@ -25,7 +26,7 @@ ChatSummary _chatSummary({
   String? groupImageUrl,
   String? welcomerPubkey,
 }) => ChatSummary(
-  mlsGroupId: 'test-group-id',
+  mlsGroupId: 'a1b2c3d4',
   name: name,
   groupType: groupType,
   createdAt: DateTime(2024),
@@ -36,7 +37,7 @@ ChatSummary _chatSummary({
   welcomerPubkey: welcomerPubkey,
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
-          mlsGroupId: 'test-group-id',
+          mlsGroupId: 'a1b2c3d4',
           author: 'author',
           content: lastMessageContent,
           createdAt: DateTime(2024),
@@ -258,6 +259,13 @@ void main() {
 
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.pictureUrl, 'https://example.com/avatar.png');
+      });
+
+      testWidgets('receives color derived from mlsGroupId', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test'));
+
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+        expect(avatar.color, avatarColorFromPubkey('a1b2c3d4'));
       });
     });
 

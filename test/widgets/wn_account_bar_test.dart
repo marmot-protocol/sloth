@@ -10,6 +10,8 @@ import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -25,8 +27,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
+    return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
   }
 }
 
@@ -86,5 +88,52 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(UserSearchScreen), findsOneWidget);
     });
+
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
+      await pumpChatListScreen(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey produces different avatar color', (tester) async {
+      setUpTestView(tester);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [authProvider.overrideWith(() => _MockAuthNotifierBlue())],
+          child: ScreenUtilInit(
+            designSize: testDesignSize,
+            builder: (_, _) => Consumer(
+              builder: (context, ref, _) {
+                return MaterialApp.router(
+                  routerConfig: Routes.build(ref),
+                  localizationsDelegates: const [
+                    AppLocalizations.delegate,
+                    GlobalMaterialLocalizations.delegate,
+                    GlobalWidgetsLocalizations.delegate,
+                    GlobalCupertinoLocalizations.delegate,
+                  ],
+                  supportedLocales: AppLocalizations.supportedLocales,
+                );
+              },
+            ),
+          ),
+        ),
+      );
+      Routes.goToChatList(tester.element(find.byType(Scaffold)));
+      await tester.pumpAndSettle();
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.blue);
+    });
   });
+}
+
+class _MockAuthNotifierBlue extends AuthNotifier {
+  @override
+  Future<String?> build() async {
+    state = const AsyncData('0xyz1234e5f6a1b2c3d4e5f6a1b2c3d4');
+    return '0xyz1234e5f6a1b2c3d4e5f6a1b2c3d4';
+  }
 }

@@ -5,12 +5,14 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState, useEditProfile;
+import 'package:sloth/hooks/use_image_picker.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
+import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_image_picker.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
@@ -37,6 +39,7 @@ class EditProfileScreen extends HookConsumerWidget {
     ) = useEditProfile(
       pubkey,
     );
+    final pickImage = useImagePicker(onImageSelected: onImageSelected);
 
     useEffect(() {
       loadProfile();
@@ -79,12 +82,14 @@ class EditProfileScreen extends HookConsumerWidget {
                           children: [
                             Gap(16.h),
                             Center(
-                              child: WnImagePicker(
-                                imagePath: state.pictureUrl,
+                              child: WnAvatar(
+                                pictureUrl: state.pictureUrl,
                                 displayName: state.displayName ?? '',
-                                onImageSelected: onImageSelected,
-                                loading: state.loadingState == EditProfileLoadingState.saving,
-                                disabled: state.loadingState == EditProfileLoadingState.saving,
+                                size: WnAvatarSize.large,
+                                color: avatarColorFromPubkey(pubkey),
+                                onEditTap: state.loadingState == EditProfileLoadingState.saving
+                                    ? null
+                                    : pickImage,
                               ),
                             ),
                             Gap(36.h),

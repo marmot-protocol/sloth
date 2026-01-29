@@ -1,18 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 
 class WnChatHeader extends StatelessWidget {
   const WnChatHeader({
     super.key,
+    required this.mlsGroupId,
     required this.displayName,
     this.pictureUrl,
     required this.onBack,
     required this.onMenuTap,
   });
 
+  final String mlsGroupId;
   final String displayName;
   final String? pictureUrl;
   final VoidCallback onBack;
@@ -38,7 +41,7 @@ class WnChatHeader extends StatelessWidget {
         WnAvatar(
           pictureUrl: pictureUrl,
           displayName: displayName,
-          size: 40.w,
+          color: avatarColorFromPubkey(mlsGroupId),
         ),
         SizedBox(width: 12.w),
         Expanded(

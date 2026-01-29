@@ -58,14 +58,14 @@ void main() {
     mockApi.updatedMetadata = null;
     mockApi.updatedPubkey = null;
     mockApi.uploadedPubkey = null;
-    service = const ProfileService('test_pubkey');
+    service = const ProfileService('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
   });
 
   group('setProfile', () {
     test('calls API with pubkey', () async {
       await service.setProfile(displayName: 'Test');
 
-      expect(mockApi.updatedPubkey, 'test_pubkey');
+      expect(mockApi.updatedPubkey, 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
     });
 
     test('passes displayName to metadata', () async {
@@ -114,7 +114,7 @@ void main() {
       test('uploads image with expected pubkey', () async {
         await service.uploadProfilePicture(filePath: testFile.path);
 
-        expect(mockApi.uploadedPubkey, 'test_pubkey');
+        expect(mockApi.uploadedPubkey, 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
       });
 
       test('uploads to expected blossom server url', () async {

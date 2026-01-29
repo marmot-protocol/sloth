@@ -70,7 +70,7 @@ Future<String> mockSignup() async {
     throw Exception('Network error');
   }
   signupCalled = true;
-  return 'test_pubkey';
+  return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
 }
 
 Future<void> _pump(WidgetTester tester) async {
