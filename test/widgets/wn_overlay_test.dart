@@ -32,7 +32,7 @@ void main() {
     });
 
     group('backdrop filter', () {
-      testWidgets('uses default sigma values', (tester) async {
+      testWidgets('creates a blur filter', (tester) async {
         await mountStackedWidget(const WnOverlay(), tester);
 
         final backdropFilter = tester.widget<BackdropFilter>(find.byType(BackdropFilter));
@@ -79,6 +79,22 @@ void main() {
           find.descendant(of: find.byType(WnOverlay), matching: find.byType(ColoredBox)),
         );
         expect(coloredBox.color, SemanticColors.light.overlayPrimary);
+      });
+
+      testWidgets('uses overlayPrimary color from dark theme', (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData.dark().copyWith(extensions: [SemanticColors.dark]),
+            home: const Scaffold(
+              body: Stack(children: [WnOverlay()]),
+            ),
+          ),
+        );
+
+        final coloredBox = tester.widget<ColoredBox>(
+          find.descendant(of: find.byType(WnOverlay), matching: find.byType(ColoredBox)),
+        );
+        expect(coloredBox.color, SemanticColors.dark.overlayPrimary);
       });
     });
 
