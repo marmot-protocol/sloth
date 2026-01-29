@@ -12,10 +12,10 @@ enum WnIconWrapperSize {
   size24(24),
   size32(32);
 
-  const WnIconWrapperSize(this._iconSize);
-  final int _iconSize;
+  const WnIconWrapperSize(this.pixels);
+  final int pixels;
 
-  double get scaled => _iconSize.w;
+  double get scaled => pixels.w;
 }
 
 class WnIconWrapper extends StatelessWidget {

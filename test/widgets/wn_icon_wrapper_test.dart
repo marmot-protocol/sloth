@@ -14,14 +14,17 @@ void main() {
     });
 
     test('sizes are ordered from smallest to largest', () {
-      final sizes = WnIconWrapperSize.values;
-      for (int i = 0; i < sizes.length - 1; i++) {
-        expect(
-          sizes[i].index < sizes[i + 1].index,
-          isTrue,
-          reason: '${sizes[i].name} should come before ${sizes[i + 1].name}',
-        );
-      }
+      final pixelValues = WnIconWrapperSize.values.map((s) => s.pixels).toList();
+      expect(pixelValues, [14, 16, 18, 20, 24, 32]);
+    });
+
+    test('each size has correct pixel value', () {
+      expect(WnIconWrapperSize.size14.pixels, 14);
+      expect(WnIconWrapperSize.size16.pixels, 16);
+      expect(WnIconWrapperSize.size18.pixels, 18);
+      expect(WnIconWrapperSize.size20.pixels, 20);
+      expect(WnIconWrapperSize.size24.pixels, 24);
+      expect(WnIconWrapperSize.size32.pixels, 32);
     });
   });
 
@@ -166,19 +169,21 @@ void main() {
           tester,
         );
 
-        final container = tester.widget<Container>(find.byType(Container));
-        final width = container.constraints?.maxWidth;
-        final height = container.constraints?.maxHeight;
+        final containerSize = tester.getSize(find.byKey(Key('wrapper_${size.name}')));
 
-        expect(width, isNotNull);
-        expect(height, isNotNull);
-        expect(width, height, reason: 'Container should be square for ${size.name}');
+        expect(containerSize.width, isNotNull);
+        expect(containerSize.height, isNotNull);
+        expect(
+          containerSize.width,
+          containerSize.height,
+          reason: 'Container should be square for ${size.name}',
+        );
 
         if (referenceWidth == null) {
-          referenceWidth = width;
+          referenceWidth = containerSize.width;
         } else {
           expect(
-            width,
+            containerSize.width,
             referenceWidth,
             reason: 'Container width should be consistent across all sizes',
           );
