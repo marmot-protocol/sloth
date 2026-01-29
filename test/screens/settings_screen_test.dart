@@ -14,6 +14,8 @@ import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -37,12 +39,15 @@ class _MockApi extends MockWnApi {
 }
 
 class _MockAuthNotifier extends AuthNotifier {
+  _MockAuthNotifier([this._pubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4']);
+
+  final String _pubkey;
   bool logoutCalled = false;
 
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = AsyncData(_pubkey);
+    return _pubkey;
   }
 
   @override
@@ -172,6 +177,28 @@ void main() {
       await tester.pump();
 
       expect(find.text('Edit profile'), findsNothing);
+    });
+
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
+      await pumpSettingsScreen(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey passes different avatar color', (tester) async {
+      await mountTestApp(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _MockAuthNotifier('0xyz1234e5f6a1b2c3d4e5f6a1b2c3d4')),
+          secureStorageProvider.overrideWithValue(MockSecureStorage()),
+        ],
+      );
+      Routes.pushToSettings(tester.element(find.byType(Scaffold)));
+      await tester.pumpAndSettle();
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.blue);
     });
   });
 }

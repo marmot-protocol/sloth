@@ -10,13 +10,15 @@ import 'package:sloth/src/rust/api/account_groups.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/utils/avatar_color.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_pubkey';
-const _testGroupId = 'test_group_id';
+const _testPubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0';
+const _testGroupId = 'abcd1234abcd1234';
 
 ChatMessage _message(String id, {bool isDeleted = false}) => ChatMessage(
   id: id,
@@ -151,6 +153,16 @@ void main() {
       await pumpInviteScreen(tester);
 
       expect(find.text('Decline'), findsOneWidget);
+    });
+
+    testWidgets('displays avatars with color derived from mlsGroupId', (tester) async {
+      await pumpInviteScreen(tester);
+
+      final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+      expect(avatars.length, 2);
+      for (final avatar in avatars) {
+        expect(avatar.color, avatarColorFromPubkey(_testGroupId));
+      }
     });
 
     group('with no messages', () {

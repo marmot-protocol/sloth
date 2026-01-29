@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_user_profile_card.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _userPubkey = 'user_pubkey_123';
+const _userPubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
 
 class _MockApi extends MockWnApi {
   @override
@@ -48,6 +49,27 @@ void main() {
       await pumpCard(tester);
       expect(find.byType(WnCopyableField), findsOneWidget);
       expect(find.text('Public key'), findsOneWidget);
+    });
+
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
+      await pumpCard(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey passes different avatar color', (tester) async {
+      await mountWidget(
+        const SingleChildScrollView(
+          child: WnUserProfileCard(
+            userPubkey: '0123456789abcdef0123456789abcdef',
+          ),
+        ),
+        tester,
+      );
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.blue);
     });
 
     group('with metadata', () {

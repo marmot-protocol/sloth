@@ -16,8 +16,8 @@ import 'package:sloth/widgets/wn_message_bubble.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_pubkey';
-const _testGroupId = 'test_group_id';
+const _testPubkey = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0';
+const _testGroupId = 'abcd1234abcd1234';
 
 class _MockTag implements Tag {
   final List<String> vec;
@@ -302,9 +302,10 @@ void main() {
       });
 
       testWidgets('menu button navigates to chat info screen for DM', (tester) async {
+        const otherMemberPubkey = 'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6';
         _api.isDm = true;
-        _api.groupMembers = [_testPubkey, 'other_member_pubkey'];
-        _api.pubkeyToNpub['other_member_pubkey'] = 'npub1othermember';
+        _api.groupMembers = [_testPubkey, otherMemberPubkey];
+        _api.pubkeyToNpub[otherMemberPubkey] = 'npub1othermember';
         await pumpChatScreen(tester);
         await tester.tap(find.byKey(const Key('menu_button')));
         await tester.pumpAndSettle();

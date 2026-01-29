@@ -6,6 +6,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import '../mocks/mock_wn_api.dart';
@@ -60,8 +62,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
+    return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
   }
 }
 
@@ -118,12 +120,12 @@ void main() {
     group('with follows', () {
       setUp(() {
         _api.follows = [
-          _userFactory('pubkey1', displayName: 'Alice'),
-          _userFactory('pubkey2', displayName: 'Bob'),
+          _userFactory('a1111111111111111111111111111111', displayName: 'Alice'),
+          _userFactory('b2222222222222222222222222222222', displayName: 'Bob'),
         ];
-        _api.pubkeyToNpub['pubkey1'] =
+        _api.pubkeyToNpub['a1111111111111111111111111111111'] =
             'npub1pubkey11111111111111111111111111111111111111111111111111';
-        _api.pubkeyToNpub['pubkey2'] =
+        _api.pubkeyToNpub['b2222222222222222222222222222222'] =
             'npub1pubkey22222222222222222222222222222222222222222222222222';
       });
 
@@ -143,18 +145,27 @@ void main() {
         expect(find.textContaining('npub1 pubke y1111'), findsOneWidget);
         expect(find.textContaining('npub1 pubke y2222'), findsOneWidget);
       });
+
+      testWidgets('passes color derived from pubkey to each avatar', (tester) async {
+        await pumpUserSearchScreen(tester);
+
+        final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+        expect(avatars.length, 2);
+        expect(avatars[0].color, AccentColor.violet);
+        expect(avatars[1].color, AccentColor.amber);
+      });
     });
 
     group('npub search', () {
       const validNpub = 'npub1abc123';
-      const hexPubkey = 'searchedpubkey12345678901234567890';
+      const hexPubkey = 'c3333333333333333333333333333333';
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
         _api.pubkeyToNpub[hexPubkey] = validNpub;
         _api.userByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Searched User');
-        _api.follows = [_userFactory('follow1', displayName: 'Follow')];
-        _api.pubkeyToNpub['follow1'] =
+        _api.follows = [_userFactory('f1111111111111111111111111111111', displayName: 'Follow')];
+        _api.pubkeyToNpub['f1111111111111111111111111111111'] =
             'npub1follow1111111111111111111111111111111111111111111111111';
       });
 
@@ -191,13 +202,13 @@ void main() {
       setUp(() {
         _api.follows = [
           User(
-            pubkey: 'longpubkey12345678901234567890',
+            pubkey: 'd4444444444444444444444444444444',
             metadata: _emptyMetadata,
             createdAt: DateTime(2024),
             updatedAt: DateTime(2024),
           ),
         ];
-        _api.pubkeyToNpub['longpubkey12345678901234567890'] =
+        _api.pubkeyToNpub['d4444444444444444444444444444444'] =
             'npub1longp12345678901234567890123456789012345678901234567890';
       });
 
@@ -214,13 +225,13 @@ void main() {
       setUp(() {
         _api.follows = [
           User(
-            pubkey: 'emptydisplaypubkey12345678901234',
+            pubkey: 'e5555555555555555555555555555555',
             metadata: const FlutterMetadata(displayName: '', name: 'ValidName', custom: {}),
             createdAt: DateTime(2024),
             updatedAt: DateTime(2024),
           ),
         ];
-        _api.pubkeyToNpub['emptydisplaypubkey12345678901234'] =
+        _api.pubkeyToNpub['e5555555555555555555555555555555'] =
             'npub1empty12345678901234567890123456789012345678901234567890';
       });
 
@@ -235,11 +246,13 @@ void main() {
     group('partial npub search', () {
       setUp(() {
         _api.follows = [
-          _userFactory('pub1', displayName: 'Alice'),
-          _userFactory('pub2', displayName: 'Bob'),
+          _userFactory('a1111111111111111111111111111111', displayName: 'Alice'),
+          _userFactory('b2222222222222222222222222222222', displayName: 'Bob'),
         ];
-        _api.pubkeyToNpub['pub1'] = 'npub1alice111111111111111111111111111111111111111111111111111';
-        _api.pubkeyToNpub['pub2'] = 'npub1bob22222222222222222222222222222222222222222222222222222';
+        _api.pubkeyToNpub['a1111111111111111111111111111111'] =
+            'npub1alice111111111111111111111111111111111111111111111111111';
+        _api.pubkeyToNpub['b2222222222222222222222222222222'] =
+            'npub1bob22222222222222222222222222222222222222222222222222222';
       });
 
       testWidgets('shows filtered follows for partial npub', (tester) async {
@@ -272,7 +285,7 @@ void main() {
 
     group('user not found', () {
       const validNpub = 'npub1notfound';
-      const hexPubkey = 'notfoundpubkey123456789012345678901';
+      const hexPubkey = 'a6666666666666666666666666666666';
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
@@ -290,8 +303,8 @@ void main() {
 
     group('user tap navigates to start chat screen', () {
       setUp(() {
-        _api.follows = [_userFactory('pubkey1', displayName: 'Alice')];
-        _api.pubkeyToNpub['pubkey1'] =
+        _api.follows = [_userFactory('a1111111111111111111111111111111', displayName: 'Alice')];
+        _api.pubkeyToNpub['a1111111111111111111111111111111'] =
             'npub1pubkey11111111111111111111111111111111111111111111111111';
       });
 
@@ -315,7 +328,7 @@ void main() {
 
     group('search result tap navigates to start chat screen', () {
       const validNpub = 'npub1searched';
-      const hexPubkey = 'searchedpubkey12345678901234567890';
+      const hexPubkey = 'c7777777777777777777777777777777';
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
