@@ -7,44 +7,15 @@ import '../test_helpers.dart';
 
 void main() {
   group('WnSlate', () {
-    group('defaultType', () {
-      testWidgets('renders header with defaultType', (tester) async {
+    group('header', () {
+      testWidgets('renders header widget when provided', (tester) async {
         await mountWidget(
-          const WnSlate(),
-          tester,
-        );
-
-        final headerFinder = find.byType(WnSlateHeader);
-        expect(headerFinder, findsOneWidget);
-        final header = tester.widget<WnSlateHeader>(headerFinder);
-        expect(header.type, WnSlateHeaderType.defaultType);
-      });
-
-      testWidgets('passes callbacks to header', (tester) async {
-        var avatarTapped = false;
-        var newChatTapped = false;
-
-        await mountWidget(
-          WnSlate(
-            onAvatarTap: () => avatarTapped = true,
-            onNewChatTap: () => newChatTapped = true,
+          const WnSlate(
+            header: WnSlateHeader(
+              type: WnSlateHeaderType.close,
+              title: 'Test Title',
+            ),
           ),
-          tester,
-        );
-
-        final header = tester.widget<WnSlateHeader>(find.byType(WnSlateHeader));
-        header.onAvatarTap?.call();
-        header.onNewChatTap?.call();
-
-        expect(avatarTapped, isTrue);
-        expect(newChatTapped, isTrue);
-      });
-    });
-
-    group('close type', () {
-      testWidgets('renders header with close type', (tester) async {
-        await mountWidget(
-          const WnSlate(type: WnSlateType.close, title: 'Test Title'),
           tester,
         );
 
@@ -55,66 +26,24 @@ void main() {
         expect(header.title, 'Test Title');
       });
 
-      testWidgets('passes onCloseTap callback to header', (tester) async {
-        var closeTapped = false;
-
+      testWidgets('renders without header when not provided', (tester) async {
         await mountWidget(
-          WnSlate(
-            type: WnSlateType.close,
-            title: 'Test',
-            onCloseTap: () => closeTapped = true,
-          ),
-          tester,
-        );
-
-        final header = tester.widget<WnSlateHeader>(find.byType(WnSlateHeader));
-        header.onCloseTap?.call();
-
-        expect(closeTapped, isTrue);
-      });
-    });
-
-    group('back type', () {
-      testWidgets('renders header with back type', (tester) async {
-        await mountWidget(
-          const WnSlate(type: WnSlateType.back, title: 'Back Title'),
-          tester,
-        );
-
-        final headerFinder = find.byType(WnSlateHeader);
-        expect(headerFinder, findsOneWidget);
-        final header = tester.widget<WnSlateHeader>(headerFinder);
-        expect(header.type, WnSlateHeaderType.back);
-        expect(header.title, 'Back Title');
-      });
-
-      testWidgets('passes onBackTap callback to header', (tester) async {
-        var backTapped = false;
-
-        await mountWidget(
-          WnSlate(
-            type: WnSlateType.back,
-            title: 'Test',
-            onBackTap: () => backTapped = true,
-          ),
-          tester,
-        );
-
-        final header = tester.widget<WnSlateHeader>(find.byType(WnSlateHeader));
-        header.onBackTap?.call();
-
-        expect(backTapped, isTrue);
-      });
-    });
-
-    group('noHeader type', () {
-      testWidgets('does not render header', (tester) async {
-        await mountWidget(
-          const WnSlate(type: WnSlateType.noHeader),
+          const WnSlate(),
           tester,
         );
 
         expect(find.byType(WnSlateHeader), findsNothing);
+      });
+
+      testWidgets('accepts any widget as header', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            header: Text('Custom Header'),
+          ),
+          tester,
+        );
+
+        expect(find.text('Custom Header'), findsOneWidget);
       });
     });
 
@@ -130,17 +59,17 @@ void main() {
         expect(find.text('Child Content'), findsOneWidget);
       });
 
-      testWidgets('renders child without header when noHeader type', (tester) async {
+      testWidgets('renders both header and child', (tester) async {
         await mountWidget(
           const WnSlate(
-            type: WnSlateType.noHeader,
-            child: Text('Only Child'),
+            header: WnSlateHeader(),
+            child: Text('Child Content'),
           ),
           tester,
         );
 
-        expect(find.text('Only Child'), findsOneWidget);
-        expect(find.byType(WnSlateHeader), findsNothing);
+        expect(find.byType(WnSlateHeader), findsOneWidget);
+        expect(find.text('Child Content'), findsOneWidget);
       });
     });
 
