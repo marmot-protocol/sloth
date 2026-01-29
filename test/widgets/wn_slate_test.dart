@@ -231,6 +231,34 @@ void main() {
         final hero = tester.widget<Hero>(find.byType(Hero));
         expect(hero.flightShuttleBuilder, isNotNull);
       });
+
+      testWidgets('flightShuttleBuilder returns Material with Container', (tester) async {
+        await mountWidget(
+          const WnSlate(padding: EdgeInsets.all(10)),
+          tester,
+        );
+
+        final hero = tester.widget<Hero>(find.byType(Hero));
+        final flightShuttleBuilder = hero.flightShuttleBuilder!;
+
+        final shuttle = flightShuttleBuilder(
+          tester.element(find.byType(Hero)),
+          const AlwaysStoppedAnimation(0.5),
+          HeroFlightDirection.push,
+          tester.element(find.byType(Hero)),
+          tester.element(find.byType(Hero)),
+        );
+
+        expect(shuttle, isA<Material>());
+        final material = shuttle as Material;
+        expect(material.type, MaterialType.transparency);
+        expect(material.child, isA<Container>());
+
+        final container = material.child! as Container;
+        expect(container.margin, isNotNull);
+        expect(container.padding, const EdgeInsets.all(10));
+        expect(container.decoration, isA<BoxDecoration>());
+      });
     });
   });
 }
