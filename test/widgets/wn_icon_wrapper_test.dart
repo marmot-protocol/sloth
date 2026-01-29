@@ -91,7 +91,7 @@ void main() {
       );
 
       final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, isNotNull);
+      expect(svgPicture.width, WnIconWrapperSize.size20.scaled);
       expect(svgPicture.width, svgPicture.height);
     });
 
@@ -141,7 +141,7 @@ void main() {
 
       await mountWidget(
         const WnIconWrapper(
-          key: Key('size28_approx'),
+          key: Key('size32'),
           icon: WnIcons.warning,
           accentColor: testAccentColor,
           size: WnIconWrapperSize.size32,
@@ -171,8 +171,6 @@ void main() {
 
         final containerSize = tester.getSize(find.byKey(Key('wrapper_${size.name}')));
 
-        expect(containerSize.width, isNotNull);
-        expect(containerSize.height, isNotNull);
         expect(
           containerSize.width,
           containerSize.height,
