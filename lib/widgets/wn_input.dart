@@ -90,6 +90,7 @@ class WnInput extends StatelessWidget {
           if (labelHelpIcon != null)
             GestureDetector(
               key: const Key('label_help_icon'),
+              behavior: HitTestBehavior.opaque,
               onTap: labelHelpIcon,
               child: SizedBox(
                 width: 18.w,
@@ -185,18 +186,19 @@ class WnInput extends StatelessWidget {
     );
   }
 
+  TextStyle get _baseInfoTextStyle => TextStyle(
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w500,
+    height: 20 / 14,
+    letterSpacing: 0.4.sp,
+  );
+
   Widget _buildHelperText(SemanticColors colors) {
     return Padding(
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         helperText!,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.backgroundContentSecondary,
-          height: 20 / 14,
-          letterSpacing: 0.4.sp,
-        ),
+        style: _baseInfoTextStyle.copyWith(color: colors.backgroundContentSecondary),
       ),
     );
   }
@@ -206,13 +208,7 @@ class WnInput extends StatelessWidget {
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         errorText!,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.fillDestructive,
-          height: 20 / 14,
-          letterSpacing: 0.4.sp,
-        ),
+        style: _baseInfoTextStyle.copyWith(color: colors.fillDestructive),
       ),
     );
   }
