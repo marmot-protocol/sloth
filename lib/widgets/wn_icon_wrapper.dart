@@ -12,8 +12,10 @@ enum WnIconWrapperSize {
   size24(24),
   size32(32);
 
-  const WnIconWrapperSize(this.iconSize);
-  final double iconSize;
+  const WnIconWrapperSize(this._iconSize);
+  final int _iconSize;
+
+  double get scaled => _iconSize.w;
 }
 
 class WnIconWrapper extends StatelessWidget {
@@ -42,7 +44,7 @@ class WnIconWrapper extends StatelessWidget {
       child: Center(
         child: WnIcon(
           icon,
-          size: size.iconSize,
+          size: size.scaled,
           color: accentColor.contentSecondary,
         ),
       ),

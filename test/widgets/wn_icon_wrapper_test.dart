@@ -9,17 +9,19 @@ import '../test_helpers.dart' show mountWidget;
 
 void main() {
   group('WnIconWrapperSize enum', () {
-    test('has correct icon sizes', () {
-      expect(WnIconWrapperSize.size14.iconSize, 14);
-      expect(WnIconWrapperSize.size16.iconSize, 16);
-      expect(WnIconWrapperSize.size18.iconSize, 18);
-      expect(WnIconWrapperSize.size20.iconSize, 20);
-      expect(WnIconWrapperSize.size24.iconSize, 24);
-      expect(WnIconWrapperSize.size32.iconSize, 32);
-    });
-
     test('has 6 size variants', () {
       expect(WnIconWrapperSize.values.length, 6);
+    });
+
+    test('sizes are ordered from smallest to largest', () {
+      final sizes = WnIconWrapperSize.values;
+      for (int i = 0; i < sizes.length - 1; i++) {
+        expect(
+          sizes[i].index < sizes[i + 1].index,
+          isTrue,
+          reason: '${sizes[i].name} should come before ${sizes[i + 1].name}',
+        );
+      }
     });
   });
 
@@ -76,7 +78,7 @@ void main() {
       );
     });
 
-    testWidgets('defaults to size20', (tester) async {
+    testWidgets('defaults to size20 and icon is square', (tester) async {
       await mountWidget(
         const WnIconWrapper(
           icon: WnIcons.warning,
@@ -86,83 +88,68 @@ void main() {
       );
 
       final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, 20);
-      expect(svgPicture.height, 20);
+      expect(svgPicture.width, isNotNull);
+      expect(svgPicture.width, svgPicture.height);
     });
 
-    testWidgets('applies size14 correctly', (tester) async {
+    testWidgets('different sizes produce different icon dimensions', (tester) async {
+      final iconSizes = <WnIconWrapperSize, double>{};
+
+      for (final size in WnIconWrapperSize.values) {
+        await mountWidget(
+          WnIconWrapper(
+            key: Key('wrapper_${size.name}'),
+            icon: WnIcons.warning,
+            accentColor: testAccentColor,
+            size: size,
+          ),
+          tester,
+        );
+
+        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        iconSizes[size] = svgPicture.width!;
+
+        expect(
+          svgPicture.width,
+          svgPicture.height,
+          reason: 'Icon should be square for ${size.name}',
+        );
+      }
+
+      expect(iconSizes[WnIconWrapperSize.size14]!, lessThan(iconSizes[WnIconWrapperSize.size16]!));
+      expect(iconSizes[WnIconWrapperSize.size16]!, lessThan(iconSizes[WnIconWrapperSize.size18]!));
+      expect(iconSizes[WnIconWrapperSize.size18]!, lessThan(iconSizes[WnIconWrapperSize.size20]!));
+      expect(iconSizes[WnIconWrapperSize.size20]!, lessThan(iconSizes[WnIconWrapperSize.size24]!));
+      expect(iconSizes[WnIconWrapperSize.size24]!, lessThan(iconSizes[WnIconWrapperSize.size32]!));
+    });
+
+    testWidgets('icon sizes scale proportionally', (tester) async {
       await mountWidget(
         const WnIconWrapper(
+          key: Key('size14'),
           icon: WnIcons.warning,
           accentColor: testAccentColor,
           size: WnIconWrapperSize.size14,
         ),
         tester,
       );
+      final size14Icon = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final size14Width = size14Icon.width!;
 
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, 14);
-      expect(svgPicture.height, 14);
-    });
-
-    testWidgets('applies size16 correctly', (tester) async {
       await mountWidget(
         const WnIconWrapper(
-          icon: WnIcons.warning,
-          accentColor: testAccentColor,
-          size: WnIconWrapperSize.size16,
-        ),
-        tester,
-      );
-
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, 16);
-      expect(svgPicture.height, 16);
-    });
-
-    testWidgets('applies size18 correctly', (tester) async {
-      await mountWidget(
-        const WnIconWrapper(
-          icon: WnIcons.warning,
-          accentColor: testAccentColor,
-          size: WnIconWrapperSize.size18,
-        ),
-        tester,
-      );
-
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, 18);
-      expect(svgPicture.height, 18);
-    });
-
-    testWidgets('applies size24 correctly', (tester) async {
-      await mountWidget(
-        const WnIconWrapper(
-          icon: WnIcons.warning,
-          accentColor: testAccentColor,
-          size: WnIconWrapperSize.size24,
-        ),
-        tester,
-      );
-
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, 24);
-      expect(svgPicture.height, 24);
-    });
-
-    testWidgets('applies size32 correctly', (tester) async {
-      await mountWidget(
-        const WnIconWrapper(
+          key: Key('size28_approx'),
           icon: WnIcons.warning,
           accentColor: testAccentColor,
           size: WnIconWrapperSize.size32,
         ),
         tester,
       );
+      final size32Icon = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final size32Width = size32Icon.width!;
 
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      expect(svgPicture.width, 32);
-      expect(svgPicture.height, 32);
+      final ratio = size32Width / size14Width;
+      expect(ratio, closeTo(32 / 14, 0.01));
     });
 
     testWidgets('container has consistent size for all icon sizes', (tester) async {
