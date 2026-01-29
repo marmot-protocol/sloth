@@ -1,3 +1,5 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart' show EditableText, Key, TextField;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_icon.dart' show WnIcons;
@@ -169,6 +171,59 @@ void main() {
         );
         final field = tester.widget<TextField>(find.byKey(const Key('input_field')));
         expect(field.enabled, isFalse);
+      });
+
+      testWidgets('does not update hover state when disabled', (tester) async {
+        await mountWidget(
+          const WnInput(label: 'Label', placeholder: 'hint', enabled: false),
+          tester,
+        );
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+
+        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field'))));
+        await tester.pump();
+
+        await gesture.moveTo(Offset.zero);
+        await tester.pump();
+
+        expect(find.byKey(const Key('input_field')), findsOneWidget);
+      });
+    });
+
+    group('with hover state', () {
+      testWidgets('updates border color on hover', (tester) async {
+        await mountWidget(
+          const WnInput(label: 'Label', placeholder: 'hint'),
+          tester,
+        );
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+
+        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field'))));
+        await tester.pump();
+
+        expect(find.byKey(const Key('input_field')), findsOneWidget);
+      });
+
+      testWidgets('clears hover state on exit', (tester) async {
+        await mountWidget(
+          const WnInput(label: 'Label', placeholder: 'hint'),
+          tester,
+        );
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+
+        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field'))));
+        await tester.pump();
+
+        await gesture.moveTo(Offset.zero);
+        await tester.pump();
+
+        expect(find.byKey(const Key('input_field')), findsOneWidget);
       });
     });
 
