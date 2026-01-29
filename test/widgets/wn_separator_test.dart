@@ -29,16 +29,6 @@ void main() {
         expect(container.constraints!.maxHeight, greaterThan(0));
       });
 
-      testWidgets('applies custom thickness for horizontal', (tester) async {
-        await mountWidget(
-          const WnSeparator(thickness: 2.0),
-          tester,
-        );
-
-        final separator = tester.widget<WnSeparator>(find.byType(WnSeparator));
-        expect(separator.thickness, 2.0);
-      });
-
       testWidgets('applies indent for horizontal', (tester) async {
         await mountWidget(
           const WnSeparator(indent: 16.0),
@@ -119,19 +109,6 @@ void main() {
 
         expect(container.constraints?.maxWidth, isNotNull);
         expect(container.constraints!.maxWidth, greaterThan(0));
-      });
-
-      testWidgets('applies custom thickness for vertical', (tester) async {
-        await mountWidget(
-          const WnSeparator(
-            orientation: WnSeparatorOrientation.vertical,
-            thickness: 3.0,
-          ),
-          tester,
-        );
-
-        final separator = tester.widget<WnSeparator>(find.byType(WnSeparator));
-        expect(separator.thickness, 3.0);
       });
 
       testWidgets('applies indent for vertical', (tester) async {
@@ -266,35 +243,6 @@ void main() {
     });
 
     group('edge cases', () {
-      testWidgets('handles zero thickness', (tester) async {
-        await mountWidget(
-          const WnSeparator(thickness: 0.0),
-          tester,
-        );
-
-        expect(find.byType(WnSeparator), findsOneWidget);
-      });
-
-      testWidgets('handles fractional thickness', (tester) async {
-        await mountWidget(
-          const WnSeparator(thickness: 0.5),
-          tester,
-        );
-
-        final separator = tester.widget<WnSeparator>(find.byType(WnSeparator));
-        expect(separator.thickness, 0.5);
-      });
-
-      testWidgets('handles large thickness', (tester) async {
-        await mountWidget(
-          const WnSeparator(thickness: 10.0),
-          tester,
-        );
-
-        final separator = tester.widget<WnSeparator>(find.byType(WnSeparator));
-        expect(separator.thickness, 10.0);
-      });
-
       testWidgets('handles zero indent', (tester) async {
         await mountWidget(
           const WnSeparator(),
@@ -339,16 +287,6 @@ void main() {
 
         final separator = tester.widget<WnSeparator>(find.byType(WnSeparator));
         expect(separator.orientation, WnSeparatorOrientation.vertical);
-      });
-
-      testWidgets('exposes thickness property', (tester) async {
-        await mountWidget(
-          const WnSeparator(thickness: 5.0),
-          tester,
-        );
-
-        final separator = tester.widget<WnSeparator>(find.byType(WnSeparator));
-        expect(separator.thickness, 5.0);
       });
 
       testWidgets('exposes indent property', (tester) async {

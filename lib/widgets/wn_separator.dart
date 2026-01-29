@@ -8,14 +8,12 @@ class WnSeparator extends StatelessWidget {
   const WnSeparator({
     super.key,
     this.orientation = WnSeparatorOrientation.horizontal,
-    this.thickness = 1.0,
     this.indent = 0.0,
     this.endIndent = 0.0,
     this.color,
   });
 
   final WnSeparatorOrientation orientation;
-  final double thickness;
   final double indent;
   final double endIndent;
   final Color? color;
@@ -33,7 +31,7 @@ class WnSeparator extends StatelessWidget {
 
   Widget _buildHorizontal(Color separatorColor) {
     return Container(
-      height: thickness.r,
+      height: 1.r,
       margin: EdgeInsets.only(left: indent.w, right: endIndent.w),
       color: separatorColor,
     );
@@ -41,7 +39,7 @@ class WnSeparator extends StatelessWidget {
 
   Widget _buildVertical(Color separatorColor) {
     return Container(
-      width: thickness.r,
+      width: 1.r,
       margin: EdgeInsets.only(top: indent.w, bottom: endIndent.w),
       color: separatorColor,
     );
