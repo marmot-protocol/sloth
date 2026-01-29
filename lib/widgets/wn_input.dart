@@ -132,7 +132,7 @@ class WnInput extends StatelessWidget {
     return Container(
       height: fieldHeight,
       decoration: BoxDecoration(
-        color: enabled ? colors.backgroundPrimary : colors.backgroundPrimary,
+        color: colors.backgroundPrimary,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: borderColor),
       ),

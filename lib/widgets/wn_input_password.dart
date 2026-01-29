@@ -140,7 +140,7 @@ class WnInputPassword extends HookWidget {
       key: const Key('password_field_container'),
       height: fieldHeight,
       decoration: BoxDecoration(
-        color: enabled ? colors.backgroundPrimary : colors.backgroundSecondary,
+        color: colors.backgroundPrimary,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: borderColor),
       ),
