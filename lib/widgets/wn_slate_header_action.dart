@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 
-enum WnSlateHeaderActionType { newChat, close, back }
+enum WnSlateHeaderActionType { close, back }
 
 class WnSlateHeaderAction extends StatelessWidget {
   const WnSlateHeaderAction({
@@ -16,7 +16,6 @@ class WnSlateHeaderAction extends StatelessWidget {
   final VoidCallback onPressed;
 
   WnIcons get _icon => switch (type) {
-    WnSlateHeaderActionType.newChat => WnIcons.newChat,
     WnSlateHeaderActionType.close => WnIcons.closeLarge,
     WnSlateHeaderActionType.back => WnIcons.chevronLeft,
   };

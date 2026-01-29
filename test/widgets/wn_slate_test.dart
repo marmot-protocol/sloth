@@ -3,7 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
 import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_header.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import '../test_helpers.dart';
 
 void main() {
@@ -11,19 +11,19 @@ void main() {
     group('header', () {
       testWidgets('renders header widget when provided', (tester) async {
         await mountWidget(
-          const WnSlate(
-            header: WnSlateHeader(
-              type: WnSlateHeaderType.close,
+          WnSlate(
+            header: WnSlateNavigationHeader(
               title: 'Test Title',
+              onNavigate: () {},
             ),
           ),
           tester,
         );
 
-        final headerFinder = find.byType(WnSlateHeader);
+        final headerFinder = find.byType(WnSlateNavigationHeader);
         expect(headerFinder, findsOneWidget);
-        final header = tester.widget<WnSlateHeader>(headerFinder);
-        expect(header.type, WnSlateHeaderType.close);
+        final header = tester.widget<WnSlateNavigationHeader>(headerFinder);
+        expect(header.type, WnSlateNavigationType.close);
         expect(header.title, 'Test Title');
       });
 
@@ -33,7 +33,7 @@ void main() {
           tester,
         );
 
-        expect(find.byType(WnSlateHeader), findsNothing);
+        expect(find.byType(WnSlateNavigationHeader), findsNothing);
       });
 
       testWidgets('accepts any widget as header', (tester) async {
@@ -62,14 +62,17 @@ void main() {
 
       testWidgets('renders both header and child', (tester) async {
         await mountWidget(
-          const WnSlate(
-            header: WnSlateHeader(),
-            child: Text('Child Content'),
+          WnSlate(
+            header: WnSlateNavigationHeader(
+              title: 'Header',
+              onNavigate: () {},
+            ),
+            child: const Text('Child Content'),
           ),
           tester,
         );
 
-        expect(find.byType(WnSlateHeader), findsOneWidget);
+        expect(find.byType(WnSlateNavigationHeader), findsOneWidget);
         expect(find.text('Child Content'), findsOneWidget);
       });
     });
