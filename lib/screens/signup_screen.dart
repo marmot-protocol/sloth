@@ -13,9 +13,10 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_image_picker.dart' show WnImagePicker;
+import 'package:sloth/widgets/wn_input.dart' show WnInput;
+import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
-import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
 
 class SignupScreen extends HookConsumerWidget {
   const SignupScreen({super.key});
@@ -123,19 +124,17 @@ class SignupScreen extends HookConsumerWidget {
                               },
                             ),
                           ),
-                          WnTextFormField(
+                          WnInput(
                             label: context.l10n.chooseName,
                             placeholder: context.l10n.enterYourName,
                             controller: displayNameController,
                             errorText: state.displayNameError,
                             onChanged: (_) => clearErrors(),
                           ),
-                          WnTextFormField(
+                          WnInputTextArea(
                             label: context.l10n.introduceYourself,
                             placeholder: context.l10n.writeSomethingAboutYourself,
                             controller: bioController,
-                            maxLines: 3,
-                            minLines: 3,
                             textInputAction: TextInputAction.done,
                           ),
                           Column(

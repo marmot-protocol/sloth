@@ -246,7 +246,7 @@ void main() {
         await tester.tap(find.byKey(const Key('add_icon_my_relays')));
         await tester.pumpAndSettle();
 
-        await tester.enterText(find.byType(TextFormField), 'wss://test.relay.com');
+        await tester.enterText(find.byType(TextField), 'wss://test.relay.com');
         await tester.pump(const Duration(milliseconds: 600));
         await tester.pumpAndSettle();
 

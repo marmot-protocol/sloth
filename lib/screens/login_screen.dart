@@ -9,9 +9,9 @@ import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_input_password.dart' show WnInputPassword;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
-import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
 
 class LoginScreen extends HookConsumerWidget {
   const LoginScreen({super.key});
@@ -78,12 +78,11 @@ class LoginScreen extends HookConsumerWidget {
                         ],
                       ),
                       Gap(8.h),
-                      WnTextFormField(
+                      WnInputPassword(
                         label: context.l10n.enterPrivateKey,
                         placeholder: context.l10n.nsecPlaceholder,
                         controller: controller,
                         autofocus: true,
-                        obscureText: true,
                         errorText: state.error,
                         onChanged: (_) => clearError(),
                         onPaste: paste,

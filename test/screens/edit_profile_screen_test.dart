@@ -160,7 +160,7 @@ void main() {
       await tester.pumpAndSettle();
       final displayNameField = find.text('Profile name');
       expect(displayNameField, findsOneWidget);
-      await tester.enterText(find.byType(TextFormField).first, 'New Name');
+      await tester.enterText(find.byType(TextField).first, 'New Name');
       await tester.pump();
       final saveButton = find.widgetWithText(WnButton, 'Save');
       final button = tester.widget<WnButton>(saveButton);
@@ -171,7 +171,7 @@ void main() {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
       expect(find.text('Discard changes'), findsNothing);
-      await tester.enterText(find.byType(TextFormField).first, 'New Name');
+      await tester.enterText(find.byType(TextField).first, 'New Name');
       await tester.pump();
       expect(find.text('Discard changes'), findsOneWidget);
     });
@@ -179,12 +179,12 @@ void main() {
     testWidgets('Discard changes button resets form fields', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final displayNameField = find.byType(TextFormField).first;
+      final displayNameField = find.byType(TextField).first;
       await tester.enterText(displayNameField, 'New Name');
       await tester.pump();
       await tester.tap(find.text('Discard changes'));
       await tester.pumpAndSettle();
-      final fieldText = tester.widget<TextFormField>(displayNameField).controller?.text ?? '';
+      final fieldText = tester.widget<TextField>(displayNameField).controller?.text ?? '';
       expect(fieldText, 'Test Display Name');
     });
 
@@ -205,7 +205,7 @@ void main() {
     testWidgets('Save button saves changes successfully', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
@@ -217,7 +217,7 @@ void main() {
       mockApi.shouldThrowOnUpdate = true;
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
@@ -227,7 +227,7 @@ void main() {
     testWidgets('calls onChanged when profile name field is changed', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final textFields = find.byType(TextFormField);
+      final textFields = find.byType(TextField);
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(0), 'New Profile Name');
       await tester.pump();
@@ -239,7 +239,7 @@ void main() {
     testWidgets('calls onChanged when Nostr address field is changed', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final textFields = find.byType(TextFormField);
+      final textFields = find.byType(TextField);
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(1), 'new@example.com');
       await tester.pump();
@@ -251,7 +251,7 @@ void main() {
     testWidgets('calls onChanged when About you field is changed', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final textFields = find.byType(TextFormField);
+      final textFields = find.byType(TextField);
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(2), 'New about text');
       await tester.pump();
@@ -281,7 +281,7 @@ void main() {
       mockApi.updateCompleter = Completer<void>();
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
       await tester.tap(find.text('Save'));
       await tester.pump();
@@ -295,7 +295,7 @@ void main() {
       mockApi.updateCompleter = Completer<void>();
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
       await tester.tap(find.text('Save'));
       await tester.pump();

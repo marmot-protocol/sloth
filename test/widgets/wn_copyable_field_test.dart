@@ -18,11 +18,37 @@ void main() {
       expect(find.text('My Label'), findsOneWidget);
     });
 
-    testWidgets('displays value in text field', (tester) async {
+    testWidgets('displays value in text field when not obscurable', (tester) async {
       await mountWidget(
         const WnCopyableField(
           label: 'Label',
           value: 'my-value',
+        ),
+        tester,
+      );
+      expect(find.text('my-value'), findsOneWidget);
+    });
+
+    testWidgets('displays obscured value when obscurable and obscured', (tester) async {
+      await mountWidget(
+        const WnCopyableField(
+          label: 'Label',
+          value: 'my-value',
+          obscurable: true,
+        ),
+        tester,
+      );
+      expect(find.text('my-value'), findsNothing);
+      expect(find.textContaining('●'), findsOneWidget);
+    });
+
+    testWidgets('displays actual value when obscurable but not obscured', (tester) async {
+      await mountWidget(
+        const WnCopyableField(
+          label: 'Label',
+          value: 'my-value',
+          obscurable: true,
+          obscured: false,
         ),
         tester,
       );
