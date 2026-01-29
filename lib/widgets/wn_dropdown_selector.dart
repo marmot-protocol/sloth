@@ -131,7 +131,6 @@ class WnDropdownSelector<T> extends HookWidget {
               fontSize: 14.sp,
               color: labelColor,
               fontWeight: FontWeight.w500,
-              fontFamily: 'Manrope',
               letterSpacing: 0.4.sp,
               height: 20 / 14,
             ),
@@ -152,14 +151,7 @@ class WnDropdownSelector<T> extends HookWidget {
             return Container(
               height: currentHeight + 2,
               decoration: BoxDecoration(
-                borderRadius: isOpen.value
-                    ? BorderRadius.only(
-                        topLeft: Radius.circular(8.r),
-                        topRight: Radius.circular(8.r),
-                        bottomLeft: Radius.circular(8.r),
-                        bottomRight: Radius.circular(8.r),
-                      )
-                    : BorderRadius.circular(8.r),
+                borderRadius: BorderRadius.circular(8.r),
                 border: Border.all(color: borderColor),
                 color: isDisabled ? colors.backgroundSecondary : colors.backgroundPrimary,
               ),
@@ -188,7 +180,6 @@ class WnDropdownSelector<T> extends HookWidget {
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
                                   color: textColor,
-                                  fontFamily: 'Manrope',
                                   letterSpacing: 0.4.sp,
                                   height: 20 / 14,
                                 ),
@@ -228,7 +219,6 @@ class WnDropdownSelector<T> extends HookWidget {
               style: TextStyle(
                 fontSize: 14.sp,
                 fontWeight: FontWeight.w500,
-                fontFamily: 'Manrope',
                 letterSpacing: 0.4.sp,
                 height: 20 / 14,
                 color: isError
@@ -436,7 +426,6 @@ class _DropdownItem extends StatelessWidget {
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
                     color: textColor,
-                    fontFamily: 'Manrope',
                     letterSpacing: 0.4.sp,
                     height: 20 / 14,
                   ),
