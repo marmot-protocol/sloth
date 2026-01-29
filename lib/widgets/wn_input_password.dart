@@ -92,7 +92,7 @@ class WnInputPassword extends HookWidget {
               onTap: labelHelpIcon,
               child: SizedBox(
                 width: 18.w,
-                height: 18.w,
+                height: 18.h,
                 child: Center(
                   child: WnIcon(
                     WnIcons.help,
@@ -131,7 +131,8 @@ class WnInputPassword extends HookWidget {
     TextEditingController effectiveController,
   ) {
     final fieldHeight = size.height.h;
-    final inlineActionSize = size == WnInputSize.size44 ? 36.w : 48.w;
+    final inlineActionWidth = size == WnInputSize.size44 ? 36.w : 48.w;
+    final inlineActionHeight = size == WnInputSize.size44 ? 36.h : 48.h;
 
     final borderColor = _hasError ? colors.borderDestructivePrimary : colors.borderTertiary;
 
@@ -139,7 +140,7 @@ class WnInputPassword extends HookWidget {
       key: const Key('password_field_container'),
       height: fieldHeight,
       decoration: BoxDecoration(
-        color: enabled ? colors.backgroundPrimary : colors.backgroundPrimary,
+        color: enabled ? colors.backgroundPrimary : colors.backgroundSecondary,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: borderColor),
       ),
@@ -184,8 +185,8 @@ class WnInputPassword extends HookWidget {
             ),
           ),
           SizedBox(
-            width: inlineActionSize,
-            height: inlineActionSize,
+            width: inlineActionWidth,
+            height: inlineActionHeight,
             child: _buildInlineAction(colors, isVisible, isEmpty),
           ),
           Gap(4.w),
@@ -199,8 +200,10 @@ class WnInputPassword extends HookWidget {
     ValueNotifier<bool> isVisible,
     bool isEmpty,
   ) {
-    final buttonSize = size == WnInputSize.size44 ? 36.w : 48.w;
-    final iconWrapperSize = 36.w;
+    final buttonWidth = size == WnInputSize.size44 ? 36.w : 48.w;
+    final buttonHeight = size == WnInputSize.size44 ? 36.h : 48.h;
+    final iconWrapperWidth = 36.w;
+    final iconWrapperHeight = 36.h;
     final iconSize = 16.w;
 
     if (isEmpty && onScan != null) {
@@ -208,13 +211,13 @@ class WnInputPassword extends HookWidget {
         key: const Key('scan_button'),
         onTap: onScan,
         child: Container(
-          width: buttonSize,
-          height: buttonSize,
+          width: buttonWidth,
+          height: buttonHeight,
           color: Colors.transparent,
           child: Center(
             child: SizedBox(
-              width: iconWrapperSize,
-              height: iconWrapperSize,
+              width: iconWrapperWidth,
+              height: iconWrapperHeight,
               child: Center(
                 child: WnIcon(
                   WnIcons.scan,
@@ -232,13 +235,13 @@ class WnInputPassword extends HookWidget {
       key: const Key('visibility_toggle'),
       onTap: () => isVisible.value = !isVisible.value,
       child: Container(
-        width: buttonSize,
-        height: buttonSize,
+        width: buttonWidth,
+        height: buttonHeight,
         color: Colors.transparent,
         child: Center(
           child: SizedBox(
-            width: iconWrapperSize,
-            height: iconWrapperSize,
+            width: iconWrapperWidth,
+            height: iconWrapperHeight,
             child: Center(
               child: WnIcon(
                 isVisible.value ? WnIcons.viewOff : WnIcons.view,
@@ -257,7 +260,8 @@ class WnInputPassword extends HookWidget {
     bool isEmpty,
     TextEditingController effectiveController,
   ) {
-    final buttonSize = size.height.h;
+    final buttonWidth = size.height.w;
+    final buttonHeight = size.height.h;
     final iconSize = 18.w;
 
     if (isEmpty && onPaste != null) {
@@ -265,8 +269,8 @@ class WnInputPassword extends HookWidget {
         key: const Key('paste_button'),
         onTap: onPaste,
         child: Container(
-          width: buttonSize,
-          height: buttonSize,
+          width: buttonWidth,
+          height: buttonHeight,
           decoration: BoxDecoration(
             color: colors.fillSecondary,
             borderRadius: BorderRadius.circular(8.r),
@@ -290,8 +294,8 @@ class WnInputPassword extends HookWidget {
         onChanged?.call('');
       },
       child: Container(
-        width: buttonSize,
-        height: buttonSize,
+        width: buttonWidth,
+        height: buttonHeight,
         decoration: BoxDecoration(
           color: colors.fillSecondary,
           borderRadius: BorderRadius.circular(8.r),
