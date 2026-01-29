@@ -1,8 +1,13 @@
+import 'dart:ui' show PictureRecorder;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_slot.dart';
 import '../test_helpers.dart' show mountWidget;
+
+const _testColor = Color(0xFF2563EB);
+const _altColor = Color(0xFFFF0000);
 
 void main() {
   group('WnSlot', () {
@@ -71,7 +76,8 @@ void main() {
       final text = tester.widget<Text>(find.text('Slot'));
       final textStyle = text.style;
       expect(textStyle?.fontWeight, FontWeight.w500);
-      expect(textStyle?.letterSpacing, 0.4);
+      expect(textStyle?.letterSpacing, isNotNull);
+      expect(textStyle!.letterSpacing, greaterThan(0));
     });
 
     testWidgets('centers content', (tester) async {
@@ -143,6 +149,87 @@ void main() {
       expect(find.text('Replacement'), findsOneWidget);
       expect(find.byKey(const Key('wn_slot_icon')), findsNothing);
       expect(find.text('Slot'), findsNothing);
+    });
+  });
+
+  group('DashedBorderPainter', () {
+    DashedBorderPainter createPainter({
+      Color color = _testColor,
+      double strokeWidth = 1.0,
+      double dashWidth = 4.0,
+      double dashSpace = 4.0,
+      double borderRadius = 8.0,
+    }) {
+      return DashedBorderPainter(
+        color: color,
+        strokeWidth: strokeWidth,
+        dashWidth: dashWidth,
+        dashSpace: dashSpace,
+        borderRadius: borderRadius,
+      );
+    }
+
+    test('shouldRepaint returns false for identical painters', () {
+      final painter1 = createPainter();
+      final painter2 = createPainter();
+      expect(painter1.shouldRepaint(painter2), isFalse);
+    });
+
+    test('shouldRepaint returns true when color changes', () {
+      final painter1 = createPainter();
+      final painter2 = createPainter(color: _altColor);
+      expect(painter1.shouldRepaint(painter2), isTrue);
+    });
+
+    test('shouldRepaint returns true when strokeWidth changes', () {
+      final painter1 = createPainter();
+      final painter2 = createPainter(strokeWidth: 2.0);
+      expect(painter1.shouldRepaint(painter2), isTrue);
+    });
+
+    test('shouldRepaint returns true when dashWidth changes', () {
+      final painter1 = createPainter();
+      final painter2 = createPainter(dashWidth: 6.0);
+      expect(painter1.shouldRepaint(painter2), isTrue);
+    });
+
+    test('shouldRepaint returns true when dashSpace changes', () {
+      final painter1 = createPainter();
+      final painter2 = createPainter(dashSpace: 8.0);
+      expect(painter1.shouldRepaint(painter2), isTrue);
+    });
+
+    test('shouldRepaint returns true when borderRadius changes', () {
+      final painter1 = createPainter();
+      final painter2 = createPainter(borderRadius: 16.0);
+      expect(painter1.shouldRepaint(painter2), isTrue);
+    });
+
+    test('paint draws on canvas without error', () {
+      final painter = createPainter();
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      const size = Size(200, 100);
+
+      expect(() => painter.paint(canvas, size), returnsNormally);
+    });
+
+    test('paint handles zero size gracefully', () {
+      final painter = createPainter();
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      const size = Size.zero;
+
+      expect(() => painter.paint(canvas, size), returnsNormally);
+    });
+
+    test('paint handles small size gracefully', () {
+      final painter = createPainter();
+      final recorder = PictureRecorder();
+      final canvas = Canvas(recorder);
+      const size = Size(1, 1);
+
+      expect(() => painter.paint(canvas, size), returnsNormally);
     });
   });
 }

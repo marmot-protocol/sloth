@@ -30,7 +30,7 @@ class WnSlot extends StatelessWidget {
     }
 
     return CustomPaint(
-      painter: _DashedBorderPainter(
+      painter: DashedBorderPainter(
         color: borderColor,
         strokeWidth: 1.w,
         dashWidth: 4.w,
@@ -63,7 +63,7 @@ class WnSlot extends StatelessWidget {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: borderColor,
-                  letterSpacing: 0.4,
+                  letterSpacing: 0.4.sp,
                   height: 20 / 14,
                 ),
               ),
@@ -75,8 +75,9 @@ class WnSlot extends StatelessWidget {
   }
 }
 
-class _DashedBorderPainter extends CustomPainter {
-  _DashedBorderPainter({
+@visibleForTesting
+class DashedBorderPainter extends CustomPainter {
+  DashedBorderPainter({
     required this.color,
     required this.strokeWidth,
     required this.dashWidth,
@@ -137,7 +138,7 @@ class _DashedBorderPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_DashedBorderPainter oldDelegate) {
+  bool shouldRepaint(DashedBorderPainter oldDelegate) {
     return color != oldDelegate.color ||
         strokeWidth != oldDelegate.strokeWidth ||
         dashWidth != oldDelegate.dashWidth ||
