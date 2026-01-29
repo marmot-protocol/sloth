@@ -108,7 +108,7 @@ class WnInputTextArea extends StatelessWidget {
     return Container(
       constraints: BoxConstraints(minHeight: _minHeight),
       decoration: BoxDecoration(
-        color: enabled ? colors.backgroundPrimary : colors.backgroundPrimary,
+        color: enabled ? colors.backgroundPrimary : colors.backgroundSecondary,
         borderRadius: BorderRadius.circular(8.r),
         border: Border.all(color: borderColor),
       ),
