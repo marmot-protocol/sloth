@@ -37,28 +37,44 @@ void main() {
     );
 
     testWidgets('renders a Container with WnIcon', (tester) async {
+      const wrapperKey = Key('wrapper_renders_test');
       await mountWidget(
         const WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.settings,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      expect(find.byType(Container), findsOneWidget);
-      expect(find.byType(WnIcon), findsOneWidget);
+      final wrapperFinder = find.byKey(wrapperKey);
+      expect(
+        find.descendant(of: wrapperFinder, matching: find.byType(Container)),
+        findsOneWidget,
+      );
+      expect(
+        find.descendant(of: wrapperFinder, matching: find.byType(WnIcon)),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders circular container with accent fill color', (tester) async {
+      const wrapperKey = Key('wrapper_circular_test');
       await mountWidget(
         const WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.settings,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      final container = tester.widget<Container>(find.byType(Container));
+      final wrapperFinder = find.byKey(wrapperKey);
+      final containerFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(Container),
+      );
+      final container = tester.widget<Container>(containerFinder);
       final decoration = container.decoration as BoxDecoration;
 
       expect(decoration.shape, BoxShape.circle);
@@ -66,15 +82,22 @@ void main() {
     });
 
     testWidgets('applies contentSecondary color to icon', (tester) async {
+      const wrapperKey = Key('wrapper_icon_color_test');
       await mountWidget(
         const WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.settings,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final wrapperFinder = find.byKey(wrapperKey);
+      final svgFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(SvgPicture),
+      );
+      final svgPicture = tester.widget<SvgPicture>(svgFinder);
       expect(
         svgPicture.colorFilter,
         ColorFilter.mode(testAccentColor.contentSecondary, BlendMode.srcIn),
@@ -82,15 +105,22 @@ void main() {
     });
 
     testWidgets('defaults to size20 and icon is square', (tester) async {
+      const wrapperKey = Key('wrapper_default_size_test');
       await mountWidget(
         const WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.warning,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final wrapperFinder = find.byKey(wrapperKey);
+      final svgFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(SvgPicture),
+      );
+      final svgPicture = tester.widget<SvgPicture>(svgFinder);
       expect(svgPicture.width, WnIconWrapperSize.size20.scaled);
       expect(svgPicture.width, svgPicture.height);
     });
@@ -99,9 +129,10 @@ void main() {
       final iconSizes = <WnIconWrapperSize, double>{};
 
       for (final size in WnIconWrapperSize.values) {
+        final wrapperKey = Key('wrapper_size_${size.name}');
         await mountWidget(
           WnIconWrapper(
-            key: Key('wrapper_${size.name}'),
+            key: wrapperKey,
             icon: WnIcons.warning,
             accentColor: testAccentColor,
             size: size,
@@ -109,7 +140,12 @@ void main() {
           tester,
         );
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final wrapperFinder = find.byKey(wrapperKey);
+        final svgFinder = find.descendant(
+          of: wrapperFinder,
+          matching: find.byType(SvgPicture),
+        );
+        final svgPicture = tester.widget<SvgPicture>(svgFinder);
         iconSizes[size] = svgPicture.width!;
 
         expect(
@@ -127,29 +163,37 @@ void main() {
     });
 
     testWidgets('icon sizes scale proportionally', (tester) async {
+      const wrapper14Key = Key('wrapper_scale_14');
       await mountWidget(
         const WnIconWrapper(
-          key: Key('size14'),
+          key: wrapper14Key,
           icon: WnIcons.warning,
           accentColor: testAccentColor,
           size: WnIconWrapperSize.size14,
         ),
         tester,
       );
-      final size14Icon = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      final size14Width = size14Icon.width!;
+      final svg14Finder = find.descendant(
+        of: find.byKey(wrapper14Key),
+        matching: find.byType(SvgPicture),
+      );
+      final size14Width = tester.widget<SvgPicture>(svg14Finder).width!;
 
+      const wrapper32Key = Key('wrapper_scale_32');
       await mountWidget(
         const WnIconWrapper(
-          key: Key('size32'),
+          key: wrapper32Key,
           icon: WnIcons.warning,
           accentColor: testAccentColor,
           size: WnIconWrapperSize.size32,
         ),
         tester,
       );
-      final size32Icon = tester.widget<SvgPicture>(find.byType(SvgPicture));
-      final size32Width = size32Icon.width!;
+      final svg32Finder = find.descendant(
+        of: find.byKey(wrapper32Key),
+        matching: find.byType(SvgPicture),
+      );
+      final size32Width = tester.widget<SvgPicture>(svg32Finder).width!;
 
       final ratio = size32Width / size14Width;
       expect(ratio, closeTo(32 / 14, 0.01));
@@ -159,9 +203,10 @@ void main() {
       double? referenceWidth;
 
       for (final size in WnIconWrapperSize.values) {
+        final wrapperKey = Key('wrapper_container_${size.name}');
         await mountWidget(
           WnIconWrapper(
-            key: Key('wrapper_${size.name}'),
+            key: wrapperKey,
             icon: WnIcons.settings,
             accentColor: testAccentColor,
             size: size,
@@ -169,7 +214,7 @@ void main() {
           tester,
         );
 
-        final containerSize = tester.getSize(find.byKey(Key('wrapper_${size.name}')));
+        final containerSize = tester.getSize(find.byKey(wrapperKey));
 
         expect(
           containerSize.width,
@@ -190,61 +235,86 @@ void main() {
     });
 
     testWidgets('renders correct icon', (tester) async {
+      const wrapperKey = Key('wrapper_correct_icon_test');
       await mountWidget(
         const WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.heart,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      final wnIcon = tester.widget<WnIcon>(find.byType(WnIcon));
+      final wrapperFinder = find.byKey(wrapperKey);
+      final wnIconFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(WnIcon),
+      );
+      final wnIcon = tester.widget<WnIcon>(wnIconFinder);
       expect(wnIcon.icon, WnIcons.heart);
     });
 
     testWidgets('centers the icon in container', (tester) async {
+      const wrapperKey = Key('wrapper_centers_icon_test');
       await mountWidget(
         const WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.settings,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      expect(find.byType(Center), findsOneWidget);
+      final wrapperFinder = find.byKey(wrapperKey);
+      expect(
+        find.descendant(of: wrapperFinder, matching: find.byType(Center)),
+        findsOneWidget,
+      );
     });
 
     testWidgets('can be found by key', (tester) async {
+      const wrapperKey = Key('wrapper_find_by_key_test');
       await mountWidget(
         const WnIconWrapper(
-          key: Key('test_icon_wrapper'),
+          key: wrapperKey,
           icon: WnIcons.settings,
           accentColor: testAccentColor,
         ),
         tester,
       );
 
-      expect(find.byKey(const Key('test_icon_wrapper')), findsOneWidget);
+      expect(find.byKey(wrapperKey), findsOneWidget);
     });
   });
 
   group('WnIconWrapper with semantic colors', () {
     testWidgets('works with blue accent from SemanticColors.light', (tester) async {
+      const wrapperKey = Key('wrapper_blue_accent_test');
       final blueAccent = SemanticColors.light.accent.blue;
       await mountWidget(
         WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.information,
           accentColor: blueAccent,
         ),
         tester,
       );
 
-      final container = tester.widget<Container>(find.byType(Container));
+      final wrapperFinder = find.byKey(wrapperKey);
+      final containerFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(Container),
+      );
+      final container = tester.widget<Container>(containerFinder);
       final decoration = container.decoration as BoxDecoration;
 
       expect(decoration.color, blueAccent.fill);
 
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final svgFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(SvgPicture),
+      );
+      final svgPicture = tester.widget<SvgPicture>(svgFinder);
       expect(
         svgPicture.colorFilter,
         ColorFilter.mode(blueAccent.contentSecondary, BlendMode.srcIn),
@@ -252,21 +322,32 @@ void main() {
     });
 
     testWidgets('works with emerald accent from SemanticColors.dark', (tester) async {
+      const wrapperKey = Key('wrapper_emerald_accent_test');
       final emeraldAccent = SemanticColors.dark.accent.emerald;
       await mountWidget(
         WnIconWrapper(
+          key: wrapperKey,
           icon: WnIcons.checkmark,
           accentColor: emeraldAccent,
         ),
         tester,
       );
 
-      final container = tester.widget<Container>(find.byType(Container));
+      final wrapperFinder = find.byKey(wrapperKey);
+      final containerFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(Container),
+      );
+      final container = tester.widget<Container>(containerFinder);
       final decoration = container.decoration as BoxDecoration;
 
       expect(decoration.color, emeraldAccent.fill);
 
-      final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+      final svgFinder = find.descendant(
+        of: wrapperFinder,
+        matching: find.byType(SvgPicture),
+      );
+      final svgPicture = tester.widget<SvgPicture>(svgFinder);
       expect(
         svgPicture.colorFilter,
         ColorFilter.mode(emeraldAccent.contentSecondary, BlendMode.srcIn),
@@ -275,34 +356,45 @@ void main() {
 
     testWidgets('works with all accent colors', (tester) async {
       final accentColors = [
-        SemanticColors.light.accent.blue,
-        SemanticColors.light.accent.cyan,
-        SemanticColors.light.accent.emerald,
-        SemanticColors.light.accent.fuchsia,
-        SemanticColors.light.accent.indigo,
-        SemanticColors.light.accent.lime,
-        SemanticColors.light.accent.orange,
-        SemanticColors.light.accent.rose,
-        SemanticColors.light.accent.sky,
-        SemanticColors.light.accent.teal,
-        SemanticColors.light.accent.violet,
-        SemanticColors.light.accent.amber,
+        ('blue', SemanticColors.light.accent.blue),
+        ('cyan', SemanticColors.light.accent.cyan),
+        ('emerald', SemanticColors.light.accent.emerald),
+        ('fuchsia', SemanticColors.light.accent.fuchsia),
+        ('indigo', SemanticColors.light.accent.indigo),
+        ('lime', SemanticColors.light.accent.lime),
+        ('orange', SemanticColors.light.accent.orange),
+        ('rose', SemanticColors.light.accent.rose),
+        ('sky', SemanticColors.light.accent.sky),
+        ('teal', SemanticColors.light.accent.teal),
+        ('violet', SemanticColors.light.accent.violet),
+        ('amber', SemanticColors.light.accent.amber),
       ];
 
-      for (final accent in accentColors) {
+      for (final (name, accent) in accentColors) {
+        final wrapperKey = Key('wrapper_accent_$name');
         await mountWidget(
           WnIconWrapper(
+            key: wrapperKey,
             icon: WnIcons.placeholder,
             accentColor: accent,
           ),
           tester,
         );
 
-        final container = tester.widget<Container>(find.byType(Container));
+        final wrapperFinder = find.byKey(wrapperKey);
+        final containerFinder = find.descendant(
+          of: wrapperFinder,
+          matching: find.byType(Container),
+        );
+        final container = tester.widget<Container>(containerFinder);
         final decoration = container.decoration as BoxDecoration;
         expect(decoration.color, accent.fill);
 
-        final svgPicture = tester.widget<SvgPicture>(find.byType(SvgPicture));
+        final svgFinder = find.descendant(
+          of: wrapperFinder,
+          matching: find.byType(SvgPicture),
+        );
+        final svgPicture = tester.widget<SvgPicture>(svgFinder);
         expect(
           svgPicture.colorFilter,
           ColorFilter.mode(accent.contentSecondary, BlendMode.srcIn),
@@ -315,10 +407,12 @@ void main() {
     final testAccentColor = SemanticColors.light.accent.blue;
 
     testWidgets('can be wrapped with Semantics', (tester) async {
+      const wrapperKey = Key('wrapper_semantics_test');
       await mountWidget(
         Semantics(
           label: 'Settings icon',
           child: WnIconWrapper(
+            key: wrapperKey,
             icon: WnIcons.settings,
             accentColor: testAccentColor,
           ),
@@ -330,11 +424,13 @@ void main() {
     });
 
     testWidgets('can be excluded from semantics', (tester) async {
+      const wrapperKey = Key('wrapper_exclude_semantics_test');
       await mountWidget(
         ExcludeSemantics(
           child: Semantics(
             label: 'Hidden icon',
             child: WnIconWrapper(
+              key: wrapperKey,
               icon: WnIcons.settings,
               accentColor: testAccentColor,
             ),
