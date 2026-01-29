@@ -48,6 +48,7 @@ class WnCallout extends StatelessWidget {
                 child: Center(
                   child: WnIcon(
                     colorScheme.icon,
+                    key: const Key('callout_icon'),
                     size: 20.w,
                     color: colorScheme.iconColor,
                   ),

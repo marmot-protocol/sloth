@@ -37,8 +37,9 @@ void main() {
         type: CalloutType.info,
       );
       await mountWidget(widget, tester);
-      final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
-      expect(icons.any((icon) => icon.icon == WnIcons.informationFilled), isTrue);
+      expect(find.byKey(const Key('callout_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('callout_icon')));
+      expect(icon.icon, WnIcons.informationFilled);
     });
 
     testWidgets('displays warning icon for warning type', (tester) async {
@@ -47,8 +48,9 @@ void main() {
         type: CalloutType.warning,
       );
       await mountWidget(widget, tester);
-      final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
-      expect(icons.any((icon) => icon.icon == WnIcons.warningFilled), isTrue);
+      expect(find.byKey(const Key('callout_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('callout_icon')));
+      expect(icon.icon, WnIcons.warningFilled);
     });
 
     testWidgets('displays checkmark icon for success type', (tester) async {
@@ -57,8 +59,9 @@ void main() {
         type: CalloutType.success,
       );
       await mountWidget(widget, tester);
-      final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
-      expect(icons.any((icon) => icon.icon == WnIcons.checkmarkFilled), isTrue);
+      expect(find.byKey(const Key('callout_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('callout_icon')));
+      expect(icon.icon, WnIcons.checkmarkFilled);
     });
 
     testWidgets('displays error icon for error type', (tester) async {
@@ -67,8 +70,9 @@ void main() {
         type: CalloutType.error,
       );
       await mountWidget(widget, tester);
-      final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
-      expect(icons.any((icon) => icon.icon == WnIcons.errorFilled), isTrue);
+      expect(find.byKey(const Key('callout_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('callout_icon')));
+      expect(icon.icon, WnIcons.errorFilled);
     });
 
     testWidgets('displays dismiss button when onDismiss is provided', (tester) async {
@@ -111,8 +115,9 @@ void main() {
         title: 'Callout Title',
       );
       await mountWidget(widget, tester);
-      final icons = tester.widgetList<WnIcon>(find.byType(WnIcon)).toList();
-      expect(icons.any((icon) => icon.icon == WnIcons.helpFilled), isTrue);
+      expect(find.byKey(const Key('callout_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('callout_icon')));
+      expect(icon.icon, WnIcons.helpFilled);
     });
   });
 }
