@@ -276,3 +276,18 @@ pub async fn unfollow_user(
         .await
         .map_err(ApiError::from)
 }
+
+#[frb]
+pub async fn is_following_user(
+    account_pubkey: String,
+    user_pubkey: String,
+) -> Result<bool, ApiError> {
+    let whitenoise = Whitenoise::get_instance()?;
+    let pubkey = PublicKey::parse(&account_pubkey)?;
+    let account = whitenoise.find_account_by_pubkey(&pubkey).await?;
+    let user_pubkey = PublicKey::parse(&user_pubkey)?;
+    whitenoise
+        .is_following_user(&account, &user_pubkey)
+        .await
+        .map_err(ApiError::from)
+}
