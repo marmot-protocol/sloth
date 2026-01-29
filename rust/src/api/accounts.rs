@@ -31,7 +31,7 @@ pub struct FlutterEvent {
     pub pubkey: String,
     pub created_at: DateTime<Utc>,
     pub kind: u16,
-    pub tags: Vec<String>,
+    pub tags: Vec<Vec<String>>,
     pub content: String,
 }
 
@@ -47,7 +47,11 @@ impl From<Event> for FlutterEvent {
                     .unwrap_or_else(|| Utc.timestamp_opt(0, 0).single().unwrap())
             },
             kind: event.kind.as_u16(),
-            tags: event.tags.iter().map(|tag| format!("{:?}", tag)).collect(),
+            tags: event
+                .tags
+                .iter()
+                .map(|tag| tag.as_slice().to_vec())
+                .collect(),
             content: event.content,
         }
     }
