@@ -20,6 +20,8 @@ PODS:
   - sqflite_darwin (0.0.4):
     - Flutter
     - FlutterMacOS
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - emoji_picker_flutter (from `.symlinks/plugins/emoji_picker_flutter/ios`)
@@ -31,6 +33,7 @@ DEPENDENCIES:
   - rust_lib_whitenoise (from `.symlinks/plugins/rust_lib_whitenoise/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
   - sqflite_darwin (from `.symlinks/plugins/sqflite_darwin/darwin`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 EXTERNAL SOURCES:
   emoji_picker_flutter:
@@ -51,6 +54,8 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
   sqflite_darwin:
     :path: ".symlinks/plugins/sqflite_darwin/darwin"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   emoji_picker_flutter: ece213fc274bdddefb77d502d33080dc54e616cc
@@ -62,6 +67,7 @@ SPEC CHECKSUMS:
   rust_lib_whitenoise: 22de658398f8e36a1a396d35b6b6547a0732e6bb
   shared_preferences_foundation: 7036424c3d8ec98dfe75ff1667cb0cd531ec82bb
   sqflite_darwin: 20b2a3a3b70e43edae938624ce550a3cbf66a3d0
+  url_launcher_ios: 7a95fa5b60cc718a708b8f2966718e93db0cef1b
 
 PODFILE CHECKSUM: 3c63482e143d1b91d2d2560aee9fb04ecc74ac7e
 
