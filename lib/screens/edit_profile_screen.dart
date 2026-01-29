@@ -9,12 +9,11 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart';
-import 'package:sloth/widgets/wn_warning_box.dart';
 
 final _logger = Logger('EditProfileScreen');
 
@@ -108,15 +107,10 @@ class EditProfileScreen extends HookConsumerWidget {
                               minLines: 3,
                             ),
                             Gap(36.h),
-                            WnWarningBox(
+                            WnCallout(
                               title: context.l10n.profileIsPublic,
                               description: context.l10n.profilePublicDescription,
-                              backgroundColor: colors.backgroundTertiary,
-                              borderColor: colors.borderPrimary,
-                              iconColor: colors.backgroundContentPrimary,
-                              titleColor: colors.backgroundContentPrimary,
-                              descriptionColor: colors.backgroundContentTertiary,
-                              icon: WnIcons.information,
+                              type: CalloutType.info,
                             ),
                             Gap(16.h),
                           ],
