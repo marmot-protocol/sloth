@@ -159,7 +159,7 @@ class FlutterEvent {
   final String pubkey;
   final DateTime createdAt;
   final int kind;
-  final List<String> tags;
+  final List<List<String>> tags;
   final String content;
 
   const FlutterEvent({

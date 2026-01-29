@@ -3645,7 +3645,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       pubkey: dco_decode_String(arr[1]),
       content: dco_decode_String(arr[2]),
       createdAt: dco_decode_Chrono_Utc(arr[3]),
-      tags: dco_decode_list_String(arr[4]),
+      tags: dco_decode_list_list_String(arr[4]),
       isReply: dco_decode_bool(arr[5]),
       replyToId: dco_decode_opt_String(arr[6]),
       isDeleted: dco_decode_bool(arr[7]),
@@ -3725,7 +3725,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       pubkey: dco_decode_String(arr[1]),
       createdAt: dco_decode_Chrono_Utc(arr[2]),
       kind: dco_decode_u_16(arr[3]),
-      tags: dco_decode_list_String(arr[4]),
+      tags: dco_decode_list_list_String(arr[4]),
       content: dco_decode_String(arr[5]),
     );
   }
@@ -3881,6 +3881,12 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   List<GroupInformation> dco_decode_list_group_information(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     return (raw as List<dynamic>).map(dco_decode_group_information).toList();
+  }
+
+  @protected
+  List<List<String>> dco_decode_list_list_String(dynamic raw) {
+    // Codec=Dco (DartCObject based), see doc to use other codecs
+    return (raw as List<dynamic>).map(dco_decode_list_String).toList();
   }
 
   @protected
@@ -4695,7 +4701,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     final var_pubkey = sse_decode_String(deserializer);
     final var_content = sse_decode_String(deserializer);
     final var_createdAt = sse_decode_Chrono_Utc(deserializer);
-    final var_tags = sse_decode_list_String(deserializer);
+    final var_tags = sse_decode_list_list_String(deserializer);
     final var_isReply = sse_decode_bool(deserializer);
     final var_replyToId = sse_decode_opt_String(deserializer);
     final var_isDeleted = sse_decode_bool(deserializer);
@@ -4800,7 +4806,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     final var_pubkey = sse_decode_String(deserializer);
     final var_createdAt = sse_decode_Chrono_Utc(deserializer);
     final var_kind = sse_decode_u_16(deserializer);
-    final var_tags = sse_decode_list_String(deserializer);
+    final var_tags = sse_decode_list_list_String(deserializer);
     final var_content = sse_decode_String(deserializer);
     return FlutterEvent(
       id: var_id,
@@ -5051,6 +5057,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     final ans_ = <GroupInformation>[];
     for (var idx_ = 0; idx_ < len_; ++idx_) {
       ans_.add(sse_decode_group_information(deserializer));
+    }
+    return ans_;
+  }
+
+  @protected
+  List<List<String>> sse_decode_list_list_String(SseDeserializer deserializer) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+
+    final len_ = sse_decode_i_32(deserializer);
+    final ans_ = <List<String>>[];
+    for (var idx_ = 0; idx_ < len_; ++idx_) {
+      ans_.add(sse_decode_list_String(deserializer));
     }
     return ans_;
   }
@@ -6005,7 +6023,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.pubkey, serializer);
     sse_encode_String(self.content, serializer);
     sse_encode_Chrono_Utc(self.createdAt, serializer);
-    sse_encode_list_String(self.tags, serializer);
+    sse_encode_list_list_String(self.tags, serializer);
     sse_encode_bool(self.isReply, serializer);
     sse_encode_opt_String(self.replyToId, serializer);
     sse_encode_bool(self.isDeleted, serializer);
@@ -6071,7 +6089,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_String(self.pubkey, serializer);
     sse_encode_Chrono_Utc(self.createdAt, serializer);
     sse_encode_u_16(self.kind, serializer);
-    sse_encode_list_String(self.tags, serializer);
+    sse_encode_list_list_String(self.tags, serializer);
     sse_encode_String(self.content, serializer);
   }
 
@@ -6259,6 +6277,18 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_i_32(self.length, serializer);
     for (final item in self) {
       sse_encode_group_information(item, serializer);
+    }
+  }
+
+  @protected
+  void sse_encode_list_list_String(
+    List<List<String>> self,
+    SseSerializer serializer,
+  ) {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    sse_encode_i_32(self.length, serializer);
+    for (final item in self) {
+      sse_encode_list_String(item, serializer);
     }
   }
 

@@ -57,7 +57,7 @@ class ChatMessage {
   final String pubkey;
   final String content;
   final DateTime createdAt;
-  final List<String> tags;
+  final List<List<String>> tags;
   final bool isReply;
   final String? replyToId;
   final bool isDeleted;

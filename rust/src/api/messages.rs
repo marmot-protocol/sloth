@@ -36,7 +36,7 @@ pub struct ChatMessage {
     pub pubkey: String,
     pub content: String,
     pub created_at: DateTime<Utc>,
-    pub tags: Vec<String>, // Simplified tags representation for Flutter
+    pub tags: Vec<Vec<String>>,
     pub is_reply: bool,
     pub reply_to_id: Option<String>,
     pub is_deleted: bool,
@@ -257,11 +257,10 @@ impl From<WhitenoiseReactionSummary> for ReactionSummary {
 
 impl From<&WhitenoiseChatMessage> for ChatMessage {
     fn from(chat_message: &WhitenoiseChatMessage) -> Self {
-        // Convert tags to simplified string representation
         let tags = chat_message
             .tags
             .iter()
-            .map(|tag| format!("{tag:?}"))
+            .map(|tag| tag.as_slice().to_vec())
             .collect();
 
         // Convert content tokens to proper Flutter-compatible structs

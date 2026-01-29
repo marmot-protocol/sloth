@@ -3702,7 +3702,7 @@ impl SseDecode for crate::api::messages::ChatMessage {
         let mut var_pubkey = <String>::sse_decode(deserializer);
         let mut var_content = <String>::sse_decode(deserializer);
         let mut var_createdAt = <chrono::DateTime<chrono::Utc>>::sse_decode(deserializer);
-        let mut var_tags = <Vec<String>>::sse_decode(deserializer);
+        let mut var_tags = <Vec<Vec<String>>>::sse_decode(deserializer);
         let mut var_isReply = <bool>::sse_decode(deserializer);
         let mut var_replyToId = <Option<String>>::sse_decode(deserializer);
         let mut var_isDeleted = <bool>::sse_decode(deserializer);
@@ -3815,7 +3815,7 @@ impl SseDecode for crate::api::accounts::FlutterEvent {
         let mut var_pubkey = <String>::sse_decode(deserializer);
         let mut var_createdAt = <chrono::DateTime<chrono::Utc>>::sse_decode(deserializer);
         let mut var_kind = <u16>::sse_decode(deserializer);
-        let mut var_tags = <Vec<String>>::sse_decode(deserializer);
+        let mut var_tags = <Vec<Vec<String>>>::sse_decode(deserializer);
         let mut var_content = <String>::sse_decode(deserializer);
         return crate::api::accounts::FlutterEvent {
             id: var_id,
@@ -4077,6 +4077,18 @@ impl SseDecode for Vec<crate::api::groups::GroupInformation> {
             ans_.push(<crate::api::groups::GroupInformation>::sse_decode(
                 deserializer,
             ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for Vec<Vec<String>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<Vec<String>>::sse_decode(deserializer));
         }
         return ans_;
     }
@@ -5928,7 +5940,7 @@ impl SseEncode for crate::api::messages::ChatMessage {
         <String>::sse_encode(self.pubkey, serializer);
         <String>::sse_encode(self.content, serializer);
         <chrono::DateTime<chrono::Utc>>::sse_encode(self.created_at, serializer);
-        <Vec<String>>::sse_encode(self.tags, serializer);
+        <Vec<Vec<String>>>::sse_encode(self.tags, serializer);
         <bool>::sse_encode(self.is_reply, serializer);
         <Option<String>>::sse_encode(self.reply_to_id, serializer);
         <bool>::sse_encode(self.is_deleted, serializer);
@@ -5996,7 +6008,7 @@ impl SseEncode for crate::api::accounts::FlutterEvent {
         <String>::sse_encode(self.pubkey, serializer);
         <chrono::DateTime<chrono::Utc>>::sse_encode(self.created_at, serializer);
         <u16>::sse_encode(self.kind, serializer);
-        <Vec<String>>::sse_encode(self.tags, serializer);
+        <Vec<Vec<String>>>::sse_encode(self.tags, serializer);
         <String>::sse_encode(self.content, serializer);
     }
 }
@@ -6190,6 +6202,16 @@ impl SseEncode for Vec<crate::api::groups::GroupInformation> {
         <i32>::sse_encode(self.len() as _, serializer);
         for item in self {
             <crate::api::groups::GroupInformation>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for Vec<Vec<String>> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <Vec<String>>::sse_encode(item, serializer);
         }
     }
 }
