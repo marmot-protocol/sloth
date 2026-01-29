@@ -1,6 +1,6 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_slate_header_action.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import '../test_helpers.dart';
 
@@ -25,7 +25,7 @@ void main() {
         tester,
       );
 
-      expect(find.byType(WnSlateHeaderAction), findsNothing);
+      expect(find.byType(GestureDetector), findsNothing);
     });
 
     group('close type', () {
@@ -38,9 +38,9 @@ void main() {
           tester,
         );
 
-        final actionFinder = find.byType(WnSlateHeaderAction);
-        expect(actionFinder, findsOneWidget);
-        final icon = tester.widget<WnIcon>(find.byType(WnIcon));
+        final iconFinder = find.byType(WnIcon);
+        expect(iconFinder, findsOneWidget);
+        final icon = tester.widget<WnIcon>(iconFinder);
         expect(icon.icon, WnIcons.closeLarge);
       });
 
@@ -54,7 +54,7 @@ void main() {
           tester,
         );
 
-        await tester.tap(find.byType(WnSlateHeaderAction));
+        await tester.tap(find.byType(GestureDetector));
         expect(tapped, isTrue);
       });
     });
@@ -70,9 +70,9 @@ void main() {
           tester,
         );
 
-        final actionFinder = find.byType(WnSlateHeaderAction);
-        expect(actionFinder, findsOneWidget);
-        final icon = tester.widget<WnIcon>(find.byType(WnIcon));
+        final iconFinder = find.byType(WnIcon);
+        expect(iconFinder, findsOneWidget);
+        final icon = tester.widget<WnIcon>(iconFinder);
         expect(icon.icon, WnIcons.chevronLeft);
       });
 
@@ -87,7 +87,7 @@ void main() {
           tester,
         );
 
-        await tester.tap(find.byType(WnSlateHeaderAction));
+        await tester.tap(find.byType(GestureDetector));
         expect(tapped, isTrue);
       });
     });

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_slate_header_action.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 enum WnSlateNavigationType { close, back }
 
@@ -30,8 +30,8 @@ class WnSlateNavigationHeader extends StatelessWidget {
       child: Row(
         children: [
           if (hasLeadingAction)
-            WnSlateHeaderAction(
-              type: WnSlateHeaderActionType.back,
+            _SlateHeaderAction(
+              isBack: true,
               onPressed: onNavigate!,
             ),
           Expanded(
@@ -56,11 +56,46 @@ class WnSlateNavigationHeader extends StatelessWidget {
             ),
           ),
           if (hasTrailingAction)
-            WnSlateHeaderAction(
-              type: WnSlateHeaderActionType.close,
+            _SlateHeaderAction(
+              isBack: false,
               onPressed: onNavigate!,
             ),
         ],
+      ),
+    );
+  }
+}
+
+class _SlateHeaderAction extends StatelessWidget {
+  const _SlateHeaderAction({
+    required this.isBack,
+    required this.onPressed,
+  });
+
+  final bool isBack;
+  final VoidCallback onPressed;
+
+  WnIcons get _icon => isBack ? WnIcons.chevronLeft : WnIcons.closeLarge;
+
+  EdgeInsetsGeometry get _padding =>
+      isBack ? EdgeInsets.only(left: 24.w, right: 32.w) : EdgeInsets.only(left: 32.w, right: 24.w);
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+
+    return GestureDetector(
+      onTap: onPressed,
+      behavior: HitTestBehavior.opaque,
+      child: Container(
+        height: 80.h,
+        padding: _padding,
+        alignment: isBack ? Alignment.centerLeft : Alignment.centerRight,
+        child: WnIcon(
+          _icon,
+          size: 24.w,
+          color: colors.backgroundContentPrimary,
+        ),
       ),
     );
   }
