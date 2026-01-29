@@ -41,7 +41,8 @@ class WnCopyableField extends HookWidget {
     if (!obscurable || !obscured) {
       return value;
     }
-    return '●' * value.length.clamp(8, 24);
+    final maskedLength = value.length.clamp(8, 24).toInt();
+    return '●' * maskedLength;
   }
 
   @override
