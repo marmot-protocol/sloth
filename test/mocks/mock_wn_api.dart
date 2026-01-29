@@ -33,7 +33,7 @@ class MockAppSettings implements rust_api.AppSettings {
 
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
-  String currentLanguage = 'en';
+  String currentLanguage = 'system';
   bool shouldFailUpdateLanguage = false;
   bool shouldFailNpubConversion = false;
   List<Account> accounts = [];
@@ -256,7 +256,7 @@ class MockWnApi implements RustLibApi {
 
   void reset() {
     currentThemeMode = 'system';
-    currentLanguage = 'en';
+    currentLanguage = 'system';
     shouldFailUpdateLanguage = false;
     shouldFailNpubConversion = false;
     accounts = [];

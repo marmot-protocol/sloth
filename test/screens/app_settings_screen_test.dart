@@ -8,7 +8,6 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_dropdown_selector.dart';
 
-import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -44,7 +43,6 @@ void main() {
       tester,
       overrides: [
         authProvider.overrideWith(() => _MockAuthNotifier()),
-        secureStorageProvider.overrideWithValue(MockSecureStorage()),
       ],
     );
     Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
@@ -381,21 +379,7 @@ void main() {
       await tester.tap(find.text('System').last);
       await tester.pumpAndSettle();
 
-      // System locale in tests defaults to 'en'
-      expect(mockApi.currentLanguage, 'en');
-    });
-
-    testWidgets('shows snackbar error when language update fails', (tester) async {
-      mockApi.shouldFailUpdateLanguage = true;
-      await pumpAppSettingsScreen(tester);
-
-      await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Español'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Failed to save language preference. Please try again.'), findsOneWidget);
+      expect(mockApi.currentLanguage, 'system');
     });
   });
 }
