@@ -145,7 +145,7 @@ class _TitleHeader extends StatelessWidget {
                   fontWeight: FontWeight.w600,
                   fontSize: 16.sp,
                   height: 22 / 16,
-                  letterSpacing: 0.2,
+                  letterSpacing: 0.2.sp,
                   color: colors.backgroundContentPrimary,
                 ),
                 overflow: TextOverflow.ellipsis,
