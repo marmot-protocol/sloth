@@ -91,17 +91,14 @@ class WnInput extends StatelessWidget {
             GestureDetector(
               key: const Key('label_help_icon'),
               onTap: labelHelpIcon,
-              child: Padding(
-                padding: EdgeInsets.all(0.w),
-                child: SizedBox(
-                  width: 18.w,
-                  height: 18.w,
-                  child: Center(
-                    child: WnIcon(
-                      WnIcons.help,
-                      size: 14.w,
-                      color: colors.backgroundContentPrimary,
-                    ),
+              child: SizedBox(
+                width: 18.w,
+                height: 18.w,
+                child: Center(
+                  child: WnIcon(
+                    WnIcons.help,
+                    size: 14.w,
+                    color: colors.backgroundContentPrimary,
                   ),
                 ),
               ),
@@ -175,13 +172,14 @@ class WnInput extends StatelessWidget {
               ),
             ),
           ),
-          if (inlineAction != null)
+          if (inlineAction != null) ...[
             SizedBox(
               width: inlineActionSize,
               height: inlineActionSize,
               child: inlineAction,
             ),
-          if (inlineAction != null) Gap(4.w),
+            Gap(4.w),
+          ],
         ],
       ),
     );
