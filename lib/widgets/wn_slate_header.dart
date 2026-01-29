@@ -123,10 +123,13 @@ class _TitleHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final isBack = actionType == WnSlateHeaderActionType.back;
+    final hasAction = onActionTap != null;
+    final hasLeadingAction = isBack && hasAction;
+    final hasTrailingAction = !isBack && hasAction;
 
     return Row(
       children: [
-        if (isBack && onActionTap != null)
+        if (hasLeadingAction)
           WnSlateHeaderAction(
             type: actionType,
             onPressed: onActionTap!,
@@ -134,8 +137,8 @@ class _TitleHeader extends StatelessWidget {
         Expanded(
           child: Padding(
             padding: EdgeInsets.only(
-              left: isBack ? 0 : 80.w,
-              right: isBack ? 80.w : 0,
+              left: hasTrailingAction ? 80.w : 0,
+              right: hasLeadingAction ? 80.w : 0,
             ),
             child: Center(
               child: Text(
@@ -152,7 +155,7 @@ class _TitleHeader extends StatelessWidget {
             ),
           ),
         ),
-        if (!isBack && onActionTap != null)
+        if (hasTrailingAction)
           WnSlateHeaderAction(
             type: actionType,
             onPressed: onActionTap!,
