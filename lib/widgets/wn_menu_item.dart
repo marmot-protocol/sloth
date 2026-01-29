@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 
 enum WnMenuItemType { primary, secondary, destructive }
 
-class WnMenuItem extends StatelessWidget {
+class WnMenuItem extends HookWidget {
   const WnMenuItem({
     super.key,
     required this.label,
@@ -22,15 +23,20 @@ class WnMenuItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final contentColor = _getContentColor(colors);
+    final isHovered = useState(false);
+    final isPressed = useState(false);
+    final isActive = isHovered.value || isPressed.value;
+    final contentColor = _getContentColor(colors, isActive);
 
-    return Material(
-      color: Colors.transparent,
-      child: InkWell(
+    return MouseRegion(
+      onEnter: (_) => isHovered.value = true,
+      onExit: (_) => isHovered.value = false,
+      child: GestureDetector(
         onTap: onTap,
-        borderRadius: BorderRadius.circular(8.r),
-        hoverColor: colors.fillTertiaryHover,
-        splashColor: colors.fillTertiaryActive,
+        onTapDown: (_) => isPressed.value = true,
+        onTapUp: (_) => isPressed.value = false,
+        onTapCancel: () => isPressed.value = false,
+        behavior: HitTestBehavior.opaque,
         child: SizedBox(
           height: 56.h,
           child: Row(
@@ -69,11 +75,16 @@ class WnMenuItem extends StatelessWidget {
     );
   }
 
-  Color _getContentColor(SemanticColors colors) {
+  Color _getContentColor(SemanticColors colors, bool isActive) {
     return switch (type) {
-      WnMenuItemType.primary => colors.backgroundContentPrimary,
-      WnMenuItemType.secondary => colors.backgroundContentSecondary,
-      WnMenuItemType.destructive => colors.backgroundContentDestructive,
+      WnMenuItemType.primary =>
+        isActive ? colors.backgroundContentSecondary : colors.backgroundContentPrimary,
+      WnMenuItemType.secondary =>
+        isActive ? colors.backgroundContentTertiary : colors.backgroundContentSecondary,
+      WnMenuItemType.destructive =>
+        isActive
+            ? colors.backgroundContentDestructiveSecondary
+            : colors.backgroundContentDestructive,
     };
   }
 }

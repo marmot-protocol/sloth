@@ -1,5 +1,7 @@
-import 'package:flutter/material.dart' show Key;
+import 'package:flutter/gestures.dart' show PointerDeviceKind;
+import 'package:flutter/material.dart' show Key, Text;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_menu_item.dart';
 
@@ -135,6 +137,210 @@ void main() {
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('menu_item_icon')), findsOneWidget);
+      });
+    });
+
+    group('hover behavior', () {
+      testWidgets('primary type changes color on hover', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Primary',
+          onTap: () {},
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Primary');
+        final textWidget = tester.widget<Text>(textFinder);
+        expect(textWidget.style?.color, SemanticColors.light.backgroundContentPrimary);
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final hoveredTextWidget = tester.widget<Text>(textFinder);
+        expect(hoveredTextWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        await gesture.removePointer();
+      });
+
+      testWidgets('secondary type changes color on hover', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Secondary',
+          onTap: () {},
+          type: WnMenuItemType.secondary,
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Secondary');
+        final textWidget = tester.widget<Text>(textFinder);
+        expect(textWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final hoveredTextWidget = tester.widget<Text>(textFinder);
+        expect(hoveredTextWidget.style?.color, SemanticColors.light.backgroundContentTertiary);
+
+        await gesture.removePointer();
+      });
+
+      testWidgets('destructive type changes color on hover', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Delete',
+          onTap: () {},
+          type: WnMenuItemType.destructive,
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Delete');
+        final textWidget = tester.widget<Text>(textFinder);
+        expect(textWidget.style?.color, SemanticColors.light.backgroundContentDestructive);
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final hoveredTextWidget = tester.widget<Text>(textFinder);
+        expect(
+          hoveredTextWidget.style?.color,
+          SemanticColors.light.backgroundContentDestructiveSecondary,
+        );
+
+        await gesture.removePointer();
+      });
+
+      testWidgets('reverts to default color when hover ends', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Primary',
+          onTap: () {},
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Primary');
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final hoveredTextWidget = tester.widget<Text>(textFinder);
+        expect(hoveredTextWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        await gesture.removePointer();
+        await tester.pump();
+
+        final unhoveredTextWidget = tester.widget<Text>(textFinder);
+        expect(unhoveredTextWidget.style?.color, SemanticColors.light.backgroundContentPrimary);
+      });
+    });
+
+    group('pressed behavior (touch)', () {
+      testWidgets('primary type changes color when pressed', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Primary',
+          onTap: () {},
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Primary');
+        final textWidget = tester.widget<Text>(textFinder);
+        expect(textWidget.style?.color, SemanticColors.light.backgroundContentPrimary);
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final pressedTextWidget = tester.widget<Text>(textFinder);
+        expect(pressedTextWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        await gesture.up();
+      });
+
+      testWidgets('secondary type changes color when pressed', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Secondary',
+          onTap: () {},
+          type: WnMenuItemType.secondary,
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Secondary');
+        final textWidget = tester.widget<Text>(textFinder);
+        expect(textWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final pressedTextWidget = tester.widget<Text>(textFinder);
+        expect(pressedTextWidget.style?.color, SemanticColors.light.backgroundContentTertiary);
+
+        await gesture.up();
+      });
+
+      testWidgets('destructive type changes color when pressed', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Delete',
+          onTap: () {},
+          type: WnMenuItemType.destructive,
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Delete');
+        final textWidget = tester.widget<Text>(textFinder);
+        expect(textWidget.style?.color, SemanticColors.light.backgroundContentDestructive);
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final pressedTextWidget = tester.widget<Text>(textFinder);
+        expect(
+          pressedTextWidget.style?.color,
+          SemanticColors.light.backgroundContentDestructiveSecondary,
+        );
+
+        await gesture.up();
+      });
+
+      testWidgets('reverts to default color when press ends', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Primary',
+          onTap: () {},
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Primary');
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final pressedTextWidget = tester.widget<Text>(textFinder);
+        expect(pressedTextWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        await gesture.up();
+        await tester.pump();
+
+        final unpressedTextWidget = tester.widget<Text>(textFinder);
+        expect(unpressedTextWidget.style?.color, SemanticColors.light.backgroundContentPrimary);
+      });
+
+      testWidgets('reverts to default color when press is cancelled', (WidgetTester tester) async {
+        final widget = WnMenuItem(
+          label: 'Primary',
+          onTap: () {},
+        );
+        await mountWidget(widget, tester);
+
+        final textFinder = find.text('Primary');
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnMenuItem)));
+        await tester.pump();
+
+        final pressedTextWidget = tester.widget<Text>(textFinder);
+        expect(pressedTextWidget.style?.color, SemanticColors.light.backgroundContentSecondary);
+
+        await gesture.cancel();
+        await tester.pump();
+
+        final unpressedTextWidget = tester.widget<Text>(textFinder);
+        expect(unpressedTextWidget.style?.color, SemanticColors.light.backgroundContentPrimary);
       });
     });
   });

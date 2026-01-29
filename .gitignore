@@ -63,3 +63,6 @@ target/
 opencode.json
 .opencode/
 .cursor/
+
+# Flutter DevTools
+devtools_options.yaml
