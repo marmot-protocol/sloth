@@ -40,7 +40,7 @@ class WnSeparator extends StatelessWidget {
   Widget _buildVertical(Color separatorColor) {
     return Container(
       width: 1.r,
-      margin: EdgeInsets.only(top: indent.w, bottom: endIndent.w),
+      margin: EdgeInsets.only(top: indent.h, bottom: endIndent.h),
       color: separatorColor,
     );
   }
