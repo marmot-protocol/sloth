@@ -5,22 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/l10n/generated/app_localizations.dart';
-import 'package:sloth/providers/auth_provider.dart' show secureStorageProvider;
 import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/api/utils.dart' as rust_utils;
 
 final _logger = Logger('LocaleNotifier');
-const _localePreferenceKey = 'locale_preference';
-const _systemLocaleValue = 'system';
-
-class LocalePersistenceException implements Exception {
-  final String message;
-  final Object? cause;
-  LocalePersistenceException(this.message, [this.cause]);
-
-  @override
-  String toString() => 'LocalePersistenceException: $message';
-}
 
 sealed class LocaleSetting {
   const LocaleSetting();
@@ -52,22 +40,9 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
   @override
   Future<LocaleSetting> build() async {
     try {
-      final storage = ref.read(secureStorageProvider);
-      final storedPreference = await storage.read(key: _localePreferenceKey);
-
-      if (storedPreference == null || storedPreference == _systemLocaleValue) {
-        return const SystemLocale();
-      }
-
-      final isSupported = AppLocalizations.supportedLocales.any(
-        (l) => l.languageCode == storedPreference,
-      );
-      if (isSupported) {
-        return SpecificLocale(Locale(storedPreference));
-      }
-
-      _logger.warning('Stored locale "$storedPreference" not supported, using system default');
-      return const SystemLocale();
+      final appSettings = await rust_api.getAppSettings();
+      final rustLanguage = await rust_api.appSettingsLanguage(appSettings: appSettings);
+      return _rustLanguageToSetting(rustLanguage);
     } catch (e) {
       _logger.warning('Failed to load locale settings, using system default: $e');
       return const SystemLocale();
@@ -75,45 +50,13 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
   }
 
   Future<void> setLocale(LocaleSetting setting) async {
-    final previousState = state.value;
-    final storage = ref.read(secureStorageProvider);
-
-    String? previousPreference;
+    state = AsyncData(setting);
     try {
-      previousPreference = await storage.read(key: _localePreferenceKey);
-    } catch (e) {
-      _logger.warning('Failed to read previous locale preference: $e');
-    }
-
-    try {
-      final preferenceValue = switch (setting) {
-        SystemLocale() => _systemLocaleValue,
-        SpecificLocale(locale: final locale) => locale.languageCode,
-      };
-      await storage.write(key: _localePreferenceKey, value: preferenceValue);
-
       final rustLanguage = _settingToRustLanguage(setting);
       await rust_api.updateLanguage(language: rustLanguage);
-
-      state = AsyncData(setting);
-      _logger.info('Locale setting updated to: $setting');
+      _logger.info('Locale updated to: $setting');
     } catch (e) {
       _logger.warning('Failed to persist locale settings: $e');
-
-      try {
-        if (previousPreference != null) {
-          await storage.write(key: _localePreferenceKey, value: previousPreference);
-        } else {
-          await storage.delete(key: _localePreferenceKey);
-        }
-      } catch (restoreError) {
-        _logger.warning('Failed to restore previous locale preference: $restoreError');
-      }
-
-      if (previousState != null) {
-        state = AsyncData(previousState);
-      }
-      throw LocalePersistenceException('Failed to save language preference', e);
     }
   }
 
@@ -125,23 +68,25 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
     };
   }
 
-  Locale _resolveSystemLocale() {
-    final deviceLocale = PlatformDispatcher.instance.locale;
+  LocaleSetting _rustLanguageToSetting(rust_api.Language language) {
+    final code = rust_utils.languageToString(language: language);
+    if (code == 'system') {
+      return const SystemLocale();
+    }
     final isSupported = AppLocalizations.supportedLocales.any(
-      (l) => l.languageCode == deviceLocale.languageCode,
+      (l) => l.languageCode == code,
     );
     if (isSupported) {
-      return Locale(deviceLocale.languageCode);
+      return SpecificLocale(Locale(code));
     }
-    return const Locale('en');
+    return const SystemLocale();
   }
 
   rust_api.Language _settingToRustLanguage(LocaleSetting setting) {
-    final languageCode = switch (setting) {
-      SystemLocale() => _resolveSystemLanguageCode(),
-      SpecificLocale(locale: final locale) => locale.languageCode,
+    return switch (setting) {
+      SystemLocale() => rust_utils.languageSystem(),
+      SpecificLocale(locale: final locale) => _languageCodeToRust(locale.languageCode),
     };
-    return _languageCodeToRust(languageCode);
   }
 
   rust_api.Language _languageCodeToRust(String code) {
@@ -156,6 +101,14 @@ class LocaleNotifier extends AsyncNotifier<LocaleSetting> {
       'tr' => rust_utils.languageTurkish(),
       _ => rust_utils.languageEnglish(),
     };
+  }
+
+  Locale _resolveSystemLocale() {
+    final deviceLocale = PlatformDispatcher.instance.locale;
+    final isSupported = AppLocalizations.supportedLocales.any(
+      (l) => l.languageCode == deviceLocale.languageCode,
+    );
+    return isSupported ? Locale(deviceLocale.languageCode) : const Locale('en');
   }
 }
 

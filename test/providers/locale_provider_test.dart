@@ -3,12 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:sloth/l10n/generated/app_localizations_en.dart';
-import 'package:sloth/providers/auth_provider.dart' show secureStorageProvider;
 import 'package:sloth/providers/locale_provider.dart';
 import 'package:sloth/src/rust/api.dart' as rust_api;
 import 'package:sloth/src/rust/frb_generated.dart';
 
-import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 
 class _MockApi extends MockWnApi {
@@ -31,11 +29,16 @@ class _MockApi extends MockWnApi {
     }
     await super.crateApiUpdateLanguage(language: language);
   }
+
+  @override
+  void reset() {
+    super.reset();
+    shouldFailGetAppSettings = false;
+  }
 }
 
 void main() {
   late _MockApi mockApi;
-  late MockSecureStorage mockStorage;
   late ProviderContainer container;
 
   setUpAll(() {
@@ -45,14 +48,7 @@ void main() {
 
   setUp(() {
     mockApi.reset();
-    mockApi.shouldFailGetAppSettings = false;
-    mockApi.shouldFailUpdateLanguage = false;
-    mockStorage = MockSecureStorage();
-    container = ProviderContainer(
-      overrides: [
-        secureStorageProvider.overrideWithValue(mockStorage),
-      ],
-    );
+    container = ProviderContainer();
   });
 
   tearDown(() {
@@ -60,224 +56,186 @@ void main() {
   });
 
   group('LocaleNotifier', () {
-    test('initializes with language from secure storage', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'de');
+    group('build', () {
+      test('initializes with language from Rust app settings', () async {
+        mockApi.currentLanguage = 'de';
 
-      final localeSetting = await container.read(localeProvider.future);
+        final localeSetting = await container.read(localeProvider.future);
 
-      expect(localeSetting, isA<SpecificLocale>());
-      expect((localeSetting as SpecificLocale).locale.languageCode, 'de');
+        expect(localeSetting, isA<SpecificLocale>());
+        expect((localeSetting as SpecificLocale).locale.languageCode, 'de');
+      });
+
+      test('initializes with SystemLocale when Rust returns system', () async {
+        mockApi.currentLanguage = 'system';
+
+        final localeSetting = await container.read(localeProvider.future);
+
+        expect(localeSetting, isA<SystemLocale>());
+      });
+
+      test('returns SystemLocale when getAppSettings fails', () async {
+        mockApi.shouldFailGetAppSettings = true;
+
+        final localeSetting = await container.read(localeProvider.future);
+
+        expect(localeSetting, isA<SystemLocale>());
+      });
+
+      test('returns SystemLocale when Rust returns unsupported language', () async {
+        mockApi.currentLanguage = 'xx';
+
+        final localeSetting = await container.read(localeProvider.future);
+
+        expect(localeSetting, isA<SystemLocale>());
+      });
     });
 
-    test('returns SystemLocale by default when no preference stored', () async {
-      final localeSetting = await container.read(localeProvider.future);
-
-      expect(localeSetting, isA<SystemLocale>());
-    });
-
-    test('setLocale updates to Spanish', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('es')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'es');
-      expect(mockApi.currentLanguage, 'es');
-    });
-
-    test('setLocale updates to German', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('de')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'de');
-      expect(mockApi.currentLanguage, 'de');
-    });
-
-    test('setLocale updates to French', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'fr');
-      expect(mockApi.currentLanguage, 'fr');
-    });
-
-    test('setLocale updates to Italian', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('it')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'it');
-      expect(mockApi.currentLanguage, 'it');
-    });
-
-    test('setLocale updates to Portuguese', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('pt')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'pt');
-      expect(mockApi.currentLanguage, 'pt');
-    });
-
-    test('setLocale updates to Russian', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('ru')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'ru');
-      expect(mockApi.currentLanguage, 'ru');
-    });
-
-    test('setLocale updates to Turkish', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('tr')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'tr');
-      expect(mockApi.currentLanguage, 'tr');
-    });
-
-    test('setLocale can switch back to English', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'de');
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('en')));
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'en');
-      expect(mockApi.currentLanguage, 'en');
-    });
-
-    test('returns SystemLocale when stored value is "system"', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'system');
-
-      final localeSetting = await container.read(localeProvider.future);
-
-      expect(localeSetting, isA<SystemLocale>());
-    });
-
-    test('returns SystemLocale when stored locale is not supported', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'xx');
-
-      final localeSetting = await container.read(localeProvider.future);
-
-      expect(localeSetting, isA<SystemLocale>());
-    });
-
-    test('returns SystemLocale when storage read fails', () async {
-      mockStorage.shouldThrowOnRead = true;
-
-      final localeSetting = await container.read(localeProvider.future);
-
-      expect(localeSetting, isA<SystemLocale>());
-    });
-
-    test('setLocale throws LocalePersistenceException when persist fails', () async {
-      await container.read(localeProvider.future);
-      mockApi.shouldFailUpdateLanguage = true;
-
-      await expectLater(
-        container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr'))),
-        throwsA(isA<LocalePersistenceException>()),
-      );
-    });
-
-    test('setLocale reverts state when persist fails', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'en');
-      await container.read(localeProvider.future);
-      final initialState = container.read(localeProvider).value;
-      expect((initialState as SpecificLocale).locale.languageCode, 'en');
-
-      mockApi.shouldFailUpdateLanguage = true;
-
-      try {
-        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
-      } on LocalePersistenceException catch (_) {}
-
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SpecificLocale>());
-      expect((current as SpecificLocale).locale.languageCode, 'en');
-    });
-
-    test('setLocale reverts storage when rust API fails', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'en');
-      await container.read(localeProvider.future);
-
-      mockApi.shouldFailUpdateLanguage = true;
-
-      try {
-        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
-      } on LocalePersistenceException catch (_) {}
-
-      final storedValue = await mockStorage.read(key: 'locale_preference');
-      expect(storedValue, 'en');
-    });
-
-    test('setLocale deletes storage when rust API fails and no previous preference', () async {
-      await container.read(localeProvider.future);
-      expect(await mockStorage.read(key: 'locale_preference'), isNull);
-
-      mockApi.shouldFailUpdateLanguage = true;
-
-      try {
-        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
-      } on LocalePersistenceException catch (_) {}
-
-      final storedValue = await mockStorage.read(key: 'locale_preference');
-      expect(storedValue, isNull);
-    });
-
-    test('setLocale reverts both state and storage atomically on failure', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'de');
-      await container.read(localeProvider.future);
-
-      mockApi.shouldFailUpdateLanguage = true;
-
-      try {
+    group('setLocale', () {
+      test('setLocale updates to Spanish', () async {
+        await container.read(localeProvider.future);
         await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('es')));
-      } on LocalePersistenceException catch (_) {}
 
-      final current = container.read(localeProvider).value;
-      expect((current as SpecificLocale).locale.languageCode, 'de');
-      final storedValue = await mockStorage.read(key: 'locale_preference');
-      expect(storedValue, 'de');
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'es');
+        expect(mockApi.currentLanguage, 'es');
+      });
+
+      test('setLocale updates to German', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('de')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'de');
+        expect(mockApi.currentLanguage, 'de');
+      });
+
+      test('setLocale updates to French', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'fr');
+        expect(mockApi.currentLanguage, 'fr');
+      });
+
+      test('setLocale updates to Italian', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('it')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'it');
+        expect(mockApi.currentLanguage, 'it');
+      });
+
+      test('setLocale updates to Portuguese', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('pt')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'pt');
+        expect(mockApi.currentLanguage, 'pt');
+      });
+
+      test('setLocale updates to Russian', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('ru')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'ru');
+        expect(mockApi.currentLanguage, 'ru');
+      });
+
+      test('setLocale updates to Turkish', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('tr')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'tr');
+        expect(mockApi.currentLanguage, 'tr');
+      });
+
+      test('setLocale can switch back to English', () async {
+        mockApi.currentLanguage = 'de';
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('en')));
+
+        final current = container.read(localeProvider).value;
+        expect(current, isA<SpecificLocale>());
+        expect((current as SpecificLocale).locale.languageCode, 'en');
+        expect(mockApi.currentLanguage, 'en');
+      });
+
+      test('sends Language::System to Rust for SystemLocale', () async {
+        mockApi.currentLanguage = 'de';
+        await container.read(localeProvider.future);
+
+        await container.read(localeProvider.notifier).setLocale(const SystemLocale());
+
+        expect(mockApi.currentLanguage, 'system');
+      });
+
+      test('updates state even when Rust fails (optimistic update)', () async {
+        mockApi.currentLanguage = 'en';
+        await container.read(localeProvider.future);
+        mockApi.shouldFailUpdateLanguage = true;
+
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
+
+        final current = container.read(localeProvider).value;
+        expect((current as SpecificLocale).locale.languageCode, 'fr');
+      });
+
+      test('does not throw when Rust fails', () async {
+        await container.read(localeProvider.future);
+        mockApi.shouldFailUpdateLanguage = true;
+
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('fr')));
+      });
+
+      test('maps unknown language code to English', () async {
+        await container.read(localeProvider.future);
+
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('xx')));
+
+        expect(mockApi.currentLanguage, 'en');
+      });
     });
 
-    test('setLocale to SystemLocale works', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'de');
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SystemLocale());
+    group('resolveLocale', () {
+      test('resolveLocale returns English for SpecificLocale(en)', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('en')));
 
-      final current = container.read(localeProvider).value;
-      expect(current, isA<SystemLocale>());
-      final storedValue = await mockStorage.read(key: 'locale_preference');
-      expect(storedValue, 'system');
-    });
+        final resolved = container.read(localeProvider.notifier).resolveLocale();
 
-    test('resolveLocale returns English for SpecificLocale(en)', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('en')));
+        expect(resolved.languageCode, 'en');
+      });
 
-      final resolved = container.read(localeProvider.notifier).resolveLocale();
+      test('resolveLocale returns German for SpecificLocale(de)', () async {
+        await container.read(localeProvider.future);
+        await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('de')));
 
-      expect(resolved.languageCode, 'en');
-    });
+        final resolved = container.read(localeProvider.notifier).resolveLocale();
 
-    test('resolveLocale returns German for SpecificLocale(de)', () async {
-      await container.read(localeProvider.future);
-      await container.read(localeProvider.notifier).setLocale(const SpecificLocale(Locale('de')));
+        expect(resolved.languageCode, 'de');
+      });
 
-      final resolved = container.read(localeProvider.notifier).resolveLocale();
+      test('resolves SystemLocale to device locale or English fallback', () async {
+        mockApi.currentLanguage = 'system';
+        await container.read(localeProvider.future);
 
-      expect(resolved.languageCode, 'de');
+        final resolved = container.read(localeProvider.notifier).resolveLocale();
+
+        expect(resolved.languageCode, isNotEmpty);
+      });
     });
 
     test('can switch languages multiple times', () async {
@@ -495,27 +453,22 @@ void main() {
     });
   });
 
-  group('LocalePersistenceException', () {
-    test('toString returns formatted message', () {
-      final exception = LocalePersistenceException('test error');
-      expect(exception.toString(), 'LocalePersistenceException: test error');
-    });
-
-    test('toString includes cause when provided', () {
-      final cause = Exception('root cause');
-      final exception = LocalePersistenceException('test error', cause);
-      expect(exception.toString(), 'LocalePersistenceException: test error');
-      expect(exception.cause, cause);
-    });
-  });
-
   group('localeFormattersProvider', () {
     test('uses specific locale when set', () async {
-      await mockStorage.write(key: 'locale_preference', value: 'de');
+      mockApi.currentLanguage = 'de';
       await container.read(localeProvider.future);
 
       final formatters = container.read(localeFormattersProvider);
       expect(formatters.formatNumber(1234567), '1.234.567');
+    });
+
+    test('uses resolved system locale when SystemLocale is set', () async {
+      mockApi.currentLanguage = 'system';
+      await container.read(localeProvider.future);
+
+      final formatters = container.read(localeFormattersProvider);
+
+      expect(formatters.formatNumber(1234), isNotEmpty);
     });
   });
 }
