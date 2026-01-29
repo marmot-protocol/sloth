@@ -89,6 +89,7 @@ class WnInputPassword extends HookWidget {
           if (labelHelpIcon != null)
             GestureDetector(
               key: const Key('label_help_icon'),
+              behavior: HitTestBehavior.opaque,
               onTap: labelHelpIcon,
               child: SizedBox(
                 width: 18.w,
@@ -209,7 +210,7 @@ class WnInputPassword extends HookWidget {
     if (isEmpty && onScan != null) {
       return GestureDetector(
         key: const Key('scan_button'),
-        onTap: onScan,
+        onTap: enabled ? onScan : null,
         child: Container(
           width: buttonWidth,
           height: buttonHeight,
@@ -233,7 +234,7 @@ class WnInputPassword extends HookWidget {
 
     return GestureDetector(
       key: const Key('visibility_toggle'),
-      onTap: () => isVisible.value = !isVisible.value,
+      onTap: enabled ? () => isVisible.value = !isVisible.value : null,
       child: Container(
         width: buttonWidth,
         height: buttonHeight,
@@ -254,6 +255,13 @@ class WnInputPassword extends HookWidget {
       ),
     );
   }
+
+  TextStyle get _baseInfoTextStyle => TextStyle(
+    fontSize: 14.sp,
+    fontWeight: FontWeight.w500,
+    height: 20 / 14,
+    letterSpacing: 0.4.sp,
+  );
 
   Widget _buildTrailingAction(
     SemanticColors colors,
@@ -317,13 +325,7 @@ class WnInputPassword extends HookWidget {
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         helperText!,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.backgroundContentSecondary,
-          height: 20 / 14,
-          letterSpacing: 0.4.sp,
-        ),
+        style: _baseInfoTextStyle.copyWith(color: colors.backgroundContentSecondary),
       ),
     );
   }
@@ -333,13 +335,7 @@ class WnInputPassword extends HookWidget {
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         errorText!,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.fillDestructive,
-          height: 20 / 14,
-          letterSpacing: 0.4.sp,
-        ),
+        style: _baseInfoTextStyle.copyWith(color: colors.fillDestructive),
       ),
     );
   }

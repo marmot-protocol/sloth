@@ -87,7 +87,7 @@ class WnInputTextArea extends StatelessWidget {
               onTap: labelHelpIcon,
               child: SizedBox(
                 width: 18.w,
-                height: 18.w,
+                height: 18.h,
                 child: Center(
                   child: WnIcon(
                     WnIcons.help,
@@ -106,6 +106,7 @@ class WnInputTextArea extends StatelessWidget {
     final borderColor = _hasError ? colors.borderDestructivePrimary : colors.borderTertiary;
 
     return Container(
+      key: const Key('text_area_container'),
       constraints: BoxConstraints(minHeight: _minHeight),
       decoration: BoxDecoration(
         color: enabled ? colors.backgroundPrimary : colors.backgroundSecondary,

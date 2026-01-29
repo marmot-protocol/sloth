@@ -71,6 +71,10 @@ void main() {
           tester,
         );
         expect(find.byKey(const Key('text_area_field')), findsOneWidget);
+        final containerSize = tester.getSize(
+          find.byKey(const Key('text_area_container')),
+        );
+        expect(containerSize.height, greaterThanOrEqualTo(182.0));
       });
 
       testWidgets('can use size44', (tester) async {
@@ -79,6 +83,10 @@ void main() {
           tester,
         );
         expect(find.byKey(const Key('text_area_field')), findsOneWidget);
+        final containerSize = tester.getSize(
+          find.byKey(const Key('text_area_container')),
+        );
+        expect(containerSize.height, greaterThanOrEqualTo(102.0));
       });
     });
 
