@@ -58,17 +58,7 @@ class AppSettingsScreen extends ConsumerWidget {
                   label: context.l10n.language,
                   options: languageOptions,
                   value: currentLocaleSetting,
-                  onChanged: (setting) async {
-                    try {
-                      await ref.read(localeProvider.notifier).setLocale(setting);
-                    } on LocalePersistenceException {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(context.l10n.languageUpdateFailed)),
-                        );
-                      }
-                    }
-                  },
+                  onChanged: (setting) => ref.read(localeProvider.notifier).setLocale(setting),
                 ),
               ],
             ),
