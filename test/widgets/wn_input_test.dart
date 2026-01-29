@@ -1,7 +1,8 @@
 import 'dart:ui' show PointerDeviceKind;
 
-import 'package:flutter/material.dart' show EditableText, Key, TextField;
+import 'package:flutter/material.dart' show BoxDecoration, Container, EditableText, Key, TextField;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/theme/semantic_colors.dart' show SemanticColors;
 import 'package:sloth/widgets/wn_icon.dart' show WnIcons;
 import 'package:sloth/widgets/wn_input.dart';
 import '../test_helpers.dart' show mountWidget;
@@ -63,22 +64,26 @@ void main() {
     });
 
     group('sizes', () {
-      testWidgets('defaults to size56', (tester) async {
+      testWidgets('defaults to size56 with correct height', (tester) async {
         await mountWidget(
           const WnInput(placeholder: 'hint'),
           tester,
         );
-        final field = find.byKey(const Key('input_field'));
-        expect(field, findsOneWidget);
+        final containerSize = tester.getSize(
+          find.byKey(const Key('input_field_container')),
+        );
+        expect(containerSize.height, equals(56.0));
       });
 
-      testWidgets('can use size44', (tester) async {
+      testWidgets('size44 renders with correct height', (tester) async {
         await mountWidget(
           const WnInput(placeholder: 'hint', size: WnInputSize.size44),
           tester,
         );
-        final field = find.byKey(const Key('input_field'));
-        expect(field, findsOneWidget);
+        final containerSize = tester.getSize(
+          find.byKey(const Key('input_field_container')),
+        );
+        expect(containerSize.height, equals(44.0));
       });
     });
 
@@ -173,42 +178,61 @@ void main() {
         expect(field.enabled, isFalse);
       });
 
-      testWidgets('does not update hover state when disabled', (tester) async {
+      testWidgets('keeps tertiary border color when hovered while disabled', (tester) async {
         await mountWidget(
           const WnInput(label: 'Label', placeholder: 'hint', enabled: false),
           tester,
         );
+
+        final containerBefore = tester.widget<Container>(
+          find.byKey(const Key('input_field_container')),
+        );
+        final decorationBefore = containerBefore.decoration! as BoxDecoration;
+        expect(decorationBefore.border!.top.color, equals(SemanticColors.light.borderTertiary));
+
         final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
         await gesture.addPointer(location: Offset.zero);
         addTearDown(gesture.removePointer);
 
-        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field'))));
+        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field_container'))));
         await tester.pump();
 
-        await gesture.moveTo(Offset.zero);
-        await tester.pump();
-
-        expect(find.byKey(const Key('input_field')), findsOneWidget);
+        final containerAfter = tester.widget<Container>(
+          find.byKey(const Key('input_field_container')),
+        );
+        final decorationAfter = containerAfter.decoration! as BoxDecoration;
+        expect(decorationAfter.border!.top.color, equals(SemanticColors.light.borderTertiary));
       });
     });
 
     group('with hover state', () {
-      testWidgets('updates border color on hover', (tester) async {
+      testWidgets('changes border to secondary color on hover', (tester) async {
         await mountWidget(
           const WnInput(label: 'Label', placeholder: 'hint'),
           tester,
         );
+
+        final containerBefore = tester.widget<Container>(
+          find.byKey(const Key('input_field_container')),
+        );
+        final decorationBefore = containerBefore.decoration! as BoxDecoration;
+        expect(decorationBefore.border!.top.color, equals(SemanticColors.light.borderTertiary));
+
         final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
         await gesture.addPointer(location: Offset.zero);
         addTearDown(gesture.removePointer);
 
-        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field'))));
+        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field_container'))));
         await tester.pump();
 
-        expect(find.byKey(const Key('input_field')), findsOneWidget);
+        final containerAfter = tester.widget<Container>(
+          find.byKey(const Key('input_field_container')),
+        );
+        final decorationAfter = containerAfter.decoration! as BoxDecoration;
+        expect(decorationAfter.border!.top.color, equals(SemanticColors.light.borderSecondary));
       });
 
-      testWidgets('clears hover state on exit', (tester) async {
+      testWidgets('reverts to tertiary border color on exit', (tester) async {
         await mountWidget(
           const WnInput(label: 'Label', placeholder: 'hint'),
           tester,
@@ -217,13 +241,23 @@ void main() {
         await gesture.addPointer(location: Offset.zero);
         addTearDown(gesture.removePointer);
 
-        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field'))));
+        await gesture.moveTo(tester.getCenter(find.byKey(const Key('input_field_container'))));
         await tester.pump();
+
+        final containerHovered = tester.widget<Container>(
+          find.byKey(const Key('input_field_container')),
+        );
+        final decorationHovered = containerHovered.decoration! as BoxDecoration;
+        expect(decorationHovered.border!.top.color, equals(SemanticColors.light.borderSecondary));
 
         await gesture.moveTo(Offset.zero);
         await tester.pump();
 
-        expect(find.byKey(const Key('input_field')), findsOneWidget);
+        final containerAfter = tester.widget<Container>(
+          find.byKey(const Key('input_field_container')),
+        );
+        final decorationAfter = containerAfter.decoration! as BoxDecoration;
+        expect(decorationAfter.border!.top.color, equals(SemanticColors.light.borderTertiary));
       });
     });
 

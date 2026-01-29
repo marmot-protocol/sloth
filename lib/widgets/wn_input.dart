@@ -159,6 +159,7 @@ class WnInput extends HookWidget {
       },
       onExit: (_) => isHovered.value = false,
       child: Container(
+        key: const Key('input_field_container'),
         height: fieldHeight,
         decoration: BoxDecoration(
           color: colors.backgroundPrimary,
