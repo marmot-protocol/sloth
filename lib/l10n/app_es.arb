@@ -132,5 +132,6 @@
   "unfollow": "Dejar de seguir",
   "failedToStartChat": "Error al iniciar el chat. Por favor, inténtalo de nuevo.",
   "userNotOnWhiteNoise": "Este usuario aún no está en White Noise.",
-  "failedToUpdateFollow": "Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo."
+  "failedToUpdateFollow": "Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo.",
+  "imagePickerError": "Error al seleccionar imagen. Por favor, inténtalo de nuevo."
 }

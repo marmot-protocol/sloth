@@ -905,6 +905,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to update follow status. Please try again.'**
   String get failedToUpdateFollow;
+
+  /// Error message when image picker fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick image. Please try again.'**
+  String get imagePickerError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

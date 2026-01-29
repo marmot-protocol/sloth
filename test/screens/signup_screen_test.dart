@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData, ProviderScope;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
@@ -18,7 +19,11 @@ import '../test_helpers.dart';
 class _MockApi extends MockWnApi {
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
-    return Account(pubkey: 'test_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now());
+    return Account(
+      pubkey: 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4',
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
   }
 
   @override
@@ -39,8 +44,8 @@ class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String> signup() async {
     if (errorToThrow != null) throw errorToThrow!;
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData('a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4');
+    return 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
   }
 }
 
@@ -166,6 +171,30 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(scrollPosition.pixels, scrollPosition.maxScrollExtent);
+      });
+    });
+
+    group('image picker', () {
+      testWidgets('shows error snackbar when image picker fails', (tester) async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+          (MethodCall methodCall) async {
+            throw PlatformException(code: 'error', message: 'Test error');
+          },
+        );
+        addTearDown(() {
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockMethodCallHandler(
+                const MethodChannel('plugins.flutter.io/image_picker'),
+                null,
+              );
+        });
+
+        await pumpSignupScreen(tester);
+        await tester.tap(find.byKey(const Key('avatar_edit_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
       });
     });
   });

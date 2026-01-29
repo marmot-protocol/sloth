@@ -462,4 +462,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get failedToUpdateFollow => 'Не удалось обновить статус подписки. Попробуйте снова.';
+
+  @override
+  String get imagePickerError => 'Не удалось выбрать изображение. Попробуйте снова.';
 }
