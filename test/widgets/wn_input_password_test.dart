@@ -14,6 +14,37 @@ void main() {
       expect(find.text('Password'), findsOneWidget);
     });
 
+    group('labelHelpIcon', () {
+      testWidgets('shows help icon when labelHelpIcon callback provided', (tester) async {
+        await mountWidget(
+          WnInputPassword(
+            label: 'Password',
+            placeholder: 'hint',
+            labelHelpIcon: () {},
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('label_help_icon')), findsOneWidget);
+      });
+
+      testWidgets('calls labelHelpIcon when tapped', (tester) async {
+        bool helpTapped = false;
+        await mountWidget(
+          WnInputPassword(
+            label: 'Password',
+            placeholder: 'hint',
+            labelHelpIcon: () {
+              helpTapped = true;
+            },
+          ),
+          tester,
+        );
+        await tester.tap(find.byKey(const Key('label_help_icon')));
+        await tester.pump();
+        expect(helpTapped, isTrue);
+      });
+    });
+
     testWidgets('displays placeholder', (tester) async {
       await mountWidget(
         const WnInputPassword(label: 'Password', placeholder: 'Enter password'),
