@@ -35,6 +35,7 @@ class WnCallout extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.backgroundColor,
         borderRadius: BorderRadius.circular(8.r),
+        border: Border.all(color: colorScheme.iconColor),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
