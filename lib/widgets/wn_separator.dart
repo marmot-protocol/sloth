@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 
 enum WnSeparatorOrientation { horizontal, vertical }
@@ -32,16 +33,16 @@ class WnSeparator extends StatelessWidget {
 
   Widget _buildHorizontal(Color separatorColor) {
     return Container(
-      height: thickness,
-      margin: EdgeInsets.only(left: indent, right: endIndent),
+      height: thickness.r,
+      margin: EdgeInsets.only(left: indent.w, right: endIndent.w),
       color: separatorColor,
     );
   }
 
   Widget _buildVertical(Color separatorColor) {
     return Container(
-      width: thickness,
-      margin: EdgeInsets.only(top: indent, bottom: endIndent),
+      width: thickness.r,
+      margin: EdgeInsets.only(top: indent.w, bottom: endIndent.w),
       color: separatorColor,
     );
   }
