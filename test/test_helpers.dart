@@ -76,6 +76,7 @@ class _HookTestWidget<T> extends HookWidget {
 }
 
 Future<void> mountWidget(Widget child, WidgetTester tester) async {
+  setUpTestView(tester);
   final widget = ProviderScope(
     child: ScreenUtilInit(
       designSize: testDesignSize,
@@ -93,6 +94,7 @@ Future<void> mountWidget(Widget child, WidgetTester tester) async {
 }
 
 Future<void> mountStackedWidget(Widget child, WidgetTester tester) async {
+  setUpTestView(tester);
   final widget = ScreenUtilInit(
     designSize: testDesignSize,
     builder: (_, _) {

@@ -53,7 +53,7 @@ class WnCopyableField extends HookWidget {
     useEffect(() {
       controller.text = _getDisplayValue();
       return null;
-    }, [value, obscured]);
+    }, [value, obscured, obscurable]);
 
     return WnInput(
       label: label,
@@ -67,7 +67,7 @@ class WnCopyableField extends HookWidget {
               onTap: onToggleVisibility,
               child: Container(
                 width: 36.w,
-                height: 36.w,
+                height: 36.h,
                 color: Colors.transparent,
                 child: Center(
                   child: WnIcon(
