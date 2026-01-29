@@ -124,8 +124,14 @@ pub fn language_turkish() -> Language {
 }
 
 #[frb(sync)]
+pub fn language_system() -> Language {
+    Language::System
+}
+
+#[frb(sync)]
 pub fn language_to_string(language: &Language) -> String {
     match language {
+        Language::System => "system".to_string(),
         Language::English => "en".to_string(),
         Language::Spanish => "es".to_string(),
         Language::French => "fr".to_string(),
