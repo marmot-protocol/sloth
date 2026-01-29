@@ -225,6 +225,9 @@ class MockWnApi implements RustLibApi {
   rust_api.Language crateApiUtilsLanguageTurkish() => const MockLanguage('tr');
 
   @override
+  rust_api.Language crateApiUtilsLanguageSystem() => const MockLanguage('system');
+
+  @override
   String crateApiUtilsLanguageToString({required rust_api.Language language}) {
     if (language is MockLanguage) {
       return language.code;
