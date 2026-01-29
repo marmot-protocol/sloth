@@ -136,6 +136,7 @@ class WnInputPassword extends HookWidget {
     final borderColor = _hasError ? colors.borderDestructivePrimary : colors.borderTertiary;
 
     return Container(
+      key: const Key('password_field_container'),
       height: fieldHeight,
       decoration: BoxDecoration(
         color: enabled ? colors.backgroundPrimary : colors.backgroundPrimary,

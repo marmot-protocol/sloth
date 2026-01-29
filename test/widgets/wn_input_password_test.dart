@@ -95,6 +95,10 @@ void main() {
           tester,
         );
         expect(find.byKey(const Key('password_field')), findsOneWidget);
+        final containerSize = tester.getSize(
+          find.byKey(const Key('password_field_container')),
+        );
+        expect(containerSize.height, equals(56.0));
       });
 
       testWidgets('can use size44', (tester) async {
@@ -103,6 +107,10 @@ void main() {
           tester,
         );
         expect(find.byKey(const Key('password_field')), findsOneWidget);
+        final containerSize = tester.getSize(
+          find.byKey(const Key('password_field_container')),
+        );
+        expect(containerSize.height, equals(44.0));
       });
     });
 
@@ -131,6 +139,12 @@ void main() {
 
         final fieldAfter = tester.widget<EditableText>(find.byType(EditableText));
         expect(fieldAfter.obscureText, isFalse);
+
+        await tester.tap(find.byKey(const Key('visibility_toggle')));
+        await tester.pump();
+
+        final fieldToggleBack = tester.widget<EditableText>(find.byType(EditableText));
+        expect(fieldToggleBack.obscureText, isTrue);
       });
     });
 
