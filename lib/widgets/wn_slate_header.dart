@@ -141,7 +141,6 @@ class _TitleHeader extends StatelessWidget {
               child: Text(
                 title,
                 style: TextStyle(
-                  fontFamily: 'Manrope',
                   fontWeight: FontWeight.w600,
                   fontSize: 16.sp,
                   height: 22 / 16,
