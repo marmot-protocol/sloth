@@ -5,8 +5,8 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';
@@ -91,34 +91,18 @@ void main() {
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
-    testWidgets('loads and displays npub in public key field', (tester) async {
+    testWidgets('loads and displays public key field', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final publicKeyFields = find.byType(WnTextFormField);
+      final publicKeyFields = find.byType(WnCopyableField);
       expect(publicKeyFields, findsNWidgets(2));
-      final publicKeyField = publicKeyFields.first;
-      final textField = find.descendant(
-        of: publicKeyField,
-        matching: find.byType(TextFormField),
-      );
-      expect(textField, findsOneWidget);
-      final fieldText = tester.widget<TextFormField>(textField).controller?.text ?? '';
-      expect(fieldText, startsWith('npub1'));
     });
 
-    testWidgets('loads and displays nsec in private key field', (tester) async {
+    testWidgets('loads and displays private key field', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final privateKeyFields = find.byType(WnTextFormField);
+      final privateKeyFields = find.byType(WnCopyableField);
       expect(privateKeyFields, findsNWidgets(2));
-      final privateKeyField = privateKeyFields.last;
-      final textField = find.descendant(
-        of: privateKeyField,
-        matching: find.byType(TextFormField),
-      );
-      expect(textField, findsOneWidget);
-      final fieldText = tester.widget<TextFormField>(textField).controller?.text ?? '';
-      expect(fieldText, startsWith('nsec1'));
     });
 
     testWidgets('tapping copy button on public key copies to clipboard', (tester) async {
@@ -161,24 +145,17 @@ void main() {
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
     });
 
-    testWidgets('private key remains in field after copying', (tester) async {
+    testWidgets('private key field remains after copying', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final privateKeyFields = find.byType(WnTextFormField);
-      final privateKeyField = privateKeyFields.last;
-      final textField = find.descendant(
-        of: privateKeyField,
-        matching: find.byType(TextFormField),
-      );
-      final controllerBefore = tester.widget<TextFormField>(textField).controller;
-      expect(controllerBefore?.text, startsWith('nsec1'));
+      final privateKeyFields = find.byType(WnCopyableField);
+      expect(privateKeyFields, findsNWidgets(2));
 
       final copyButtons = find.byKey(const Key('copy_button'));
       await tester.tap(copyButtons.last);
       await tester.pump();
 
-      final controllerAfter = tester.widget<TextFormField>(textField).controller;
-      expect(controllerAfter?.text, startsWith('nsec1'));
+      expect(find.byType(WnCopyableField), findsNWidgets(2));
     });
 
     testWidgets('tapping visibility toggle shows/hides private key', (tester) async {
