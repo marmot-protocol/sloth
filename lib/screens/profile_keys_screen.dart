@@ -8,10 +8,10 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
+import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
-import 'package:sloth/widgets/wn_warning_box.dart';
 
 class ProfileKeysScreen extends HookConsumerWidget {
   const ProfileKeysScreen({super.key});
@@ -84,9 +84,10 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             ),
                           ),
                           Gap(12.h),
-                          WnWarningBox(
+                          WnCallout(
                             title: context.l10n.keepPrivateKeySecure,
                             description: context.l10n.privateKeyWarning,
+                            type: CalloutType.warning,
                           ),
                           Gap(24.h),
                         ],
