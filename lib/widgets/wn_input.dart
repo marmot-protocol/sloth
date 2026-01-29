@@ -7,7 +7,8 @@ import 'package:sloth/widgets/wn_icon.dart';
 
 enum WnInputSize {
   size44(44),
-  size56(56);
+  size56(56)
+  ;
 
   const WnInputSize(this.height);
   final int height;
