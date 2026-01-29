@@ -97,7 +97,7 @@ class WnInput extends HookWidget {
               onTap: labelHelpIcon,
               child: SizedBox(
                 width: 18.w,
-                height: 18.w,
+                height: 18.h,
                 child: Center(
                   child: WnIcon(
                     WnIcons.help,
@@ -149,7 +149,8 @@ class WnInput extends HookWidget {
     ValueNotifier<bool> isHovered,
   ) {
     final fieldHeight = size.height.h;
-    final inlineActionSize = size == WnInputSize.size44 ? 36.w : 48.w;
+    final inlineActionWidth = size == WnInputSize.size44 ? 36.w : 48.w;
+    final inlineActionHeight = size == WnInputSize.size44 ? 36.h : 48.h;
     final borderColor = _getBorderColor(colors, isFocused.value, isHovered.value);
 
     return MouseRegion(
@@ -210,8 +211,8 @@ class WnInput extends HookWidget {
               IgnorePointer(
                 ignoring: !enabled,
                 child: SizedBox(
-                  width: inlineActionSize,
-                  height: inlineActionSize,
+                  width: inlineActionWidth,
+                  height: inlineActionHeight,
                   child: inlineAction,
                 ),
               ),
@@ -266,14 +267,15 @@ class WnInputFieldButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final buttonSize = size == WnInputSize.size44 ? 36.w : 48.w;
+    final buttonWidth = size == WnInputSize.size44 ? 36.w : 48.w;
+    final buttonHeight = size == WnInputSize.size44 ? 36.h : 48.h;
     final iconSize = 16.w;
 
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: buttonSize,
-        height: buttonSize,
+        width: buttonWidth,
+        height: buttonHeight,
         decoration: BoxDecoration(
           color: colors.fillTertiary,
           borderRadius: BorderRadius.circular(8.r),
@@ -305,14 +307,15 @@ class WnInputTrailingButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final buttonSize = size.height.h;
+    final buttonWidth = size.height.w;
+    final buttonHeight = size.height.h;
     final iconSize = 18.w;
 
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        width: buttonSize,
-        height: buttonSize,
+        width: buttonWidth,
+        height: buttonHeight,
         decoration: BoxDecoration(
           color: colors.fillSecondary,
           borderRadius: BorderRadius.circular(8.r),
