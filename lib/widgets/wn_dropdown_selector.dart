@@ -76,6 +76,7 @@ class WnDropdownSelector<T> extends HookWidget {
     }, [options, value]);
 
     final hasSelection = selectedOption != null;
+    final displayLabel = selectedOption?.label ?? 'Select';
 
     void toggleDropdown() {
       if (isDisabled) return;
@@ -175,7 +176,7 @@ class WnDropdownSelector<T> extends HookWidget {
                             child: Padding(
                               padding: EdgeInsets.all(8.w),
                               child: Text(
-                                hasSelection ? selectedOption.label : 'Select',
+                                displayLabel,
                                 style: TextStyle(
                                   fontSize: 14.sp,
                                   fontWeight: FontWeight.w500,
