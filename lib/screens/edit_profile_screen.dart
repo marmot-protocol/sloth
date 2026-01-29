@@ -110,7 +110,6 @@ class EditProfileScreen extends HookConsumerWidget {
                             WnCallout(
                               title: context.l10n.profileIsPublic,
                               description: context.l10n.profilePublicDescription,
-                              type: CalloutType.info,
                             ),
                             Gap(16.h),
                           ],

@@ -35,6 +35,12 @@ class WnCallout extends StatelessWidget {
       decoration: BoxDecoration(
         color: colorScheme.backgroundColor,
         borderRadius: BorderRadius.circular(8.r),
+        border: Border(
+          left: BorderSide(
+            color: colorScheme.borderColor,
+            width: 4.w,
+          ),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -111,6 +117,7 @@ class WnCallout extends StatelessWidget {
       case CalloutType.neutral:
         return _CalloutColorScheme(
           backgroundColor: colors.fillSecondary,
+          borderColor: colors.backgroundContentPrimary,
           iconColor: colors.backgroundContentPrimary,
           titleColor: colors.backgroundContentPrimary,
           descriptionColor: colors.backgroundContentSecondary,
@@ -119,6 +126,7 @@ class WnCallout extends StatelessWidget {
       case CalloutType.info:
         return _CalloutColorScheme(
           backgroundColor: colors.intentionInfoBackground,
+          borderColor: colors.intentionInfoContent,
           iconColor: colors.intentionInfoContent,
           titleColor: colors.intentionInfoContent,
           descriptionColor: colors.backgroundContentQuaternary,
@@ -127,6 +135,7 @@ class WnCallout extends StatelessWidget {
       case CalloutType.warning:
         return _CalloutColorScheme(
           backgroundColor: colors.intentionWarningBackground,
+          borderColor: colors.intentionWarningContent,
           iconColor: colors.intentionWarningContent,
           titleColor: colors.intentionWarningContent,
           descriptionColor: colors.backgroundContentQuaternary,
@@ -135,6 +144,7 @@ class WnCallout extends StatelessWidget {
       case CalloutType.success:
         return _CalloutColorScheme(
           backgroundColor: colors.intentionSuccessBackground,
+          borderColor: colors.intentionSuccessContent,
           iconColor: colors.intentionSuccessContent,
           titleColor: colors.intentionSuccessContent,
           descriptionColor: colors.backgroundContentQuaternary,
@@ -143,6 +153,7 @@ class WnCallout extends StatelessWidget {
       case CalloutType.error:
         return _CalloutColorScheme(
           backgroundColor: colors.intentionErrorBackground,
+          borderColor: colors.intentionErrorContent,
           iconColor: colors.intentionErrorContent,
           titleColor: colors.intentionErrorContent,
           descriptionColor: colors.backgroundContentQuaternary,
@@ -155,6 +166,7 @@ class WnCallout extends StatelessWidget {
 class _CalloutColorScheme {
   const _CalloutColorScheme({
     required this.backgroundColor,
+    required this.borderColor,
     required this.iconColor,
     required this.titleColor,
     required this.descriptionColor,
@@ -162,6 +174,7 @@ class _CalloutColorScheme {
   });
 
   final Color backgroundColor;
+  final Color borderColor;
   final Color iconColor;
   final Color titleColor;
   final Color descriptionColor;
