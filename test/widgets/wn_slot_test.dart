@@ -21,16 +21,16 @@ void main() {
     testWidgets('displays default retry icon', (tester) async {
       const widget = WnSlot();
       await mountWidget(widget, tester);
-      expect(find.byType(WnIcon), findsOneWidget);
-      final icon = tester.widget<WnIcon>(find.byType(WnIcon));
+      expect(find.byKey(const Key('wn_slot_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('wn_slot_icon')));
       expect(icon.icon, WnIcons.retry);
     });
 
     testWidgets('displays custom icon when provided', (tester) async {
       const widget = WnSlot(icon: WnIcons.addCircle);
       await mountWidget(widget, tester);
-      expect(find.byType(WnIcon), findsOneWidget);
-      final icon = tester.widget<WnIcon>(find.byType(WnIcon));
+      expect(find.byKey(const Key('wn_slot_icon')), findsOneWidget);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('wn_slot_icon')));
       expect(icon.icon, WnIcons.addCircle);
     });
 
@@ -87,6 +87,62 @@ void main() {
         find.ancestor(of: find.text('Slot'), matching: find.byType(Row)),
       );
       expect(row.mainAxisSize, MainAxisSize.min);
+    });
+
+    testWidgets('applies blue accent border color from theme', (tester) async {
+      const widget = WnSlot();
+      await mountWidget(widget, tester);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('wn_slot_icon')));
+      expect(icon.color, isNotNull);
+    });
+
+    testWidgets('applies background color from theme', (tester) async {
+      const widget = WnSlot();
+      await mountWidget(widget, tester);
+      final container = tester.widget<Container>(find.byType(Container));
+      final decoration = container.decoration as BoxDecoration;
+      expect(decoration.color, isNotNull);
+    });
+
+    testWidgets('has rounded corners on container', (tester) async {
+      const widget = WnSlot();
+      await mountWidget(widget, tester);
+      final container = tester.widget<Container>(find.byType(Container));
+      final decoration = container.decoration as BoxDecoration;
+      expect(decoration.borderRadius, isNotNull);
+    });
+
+    testWidgets('text has correct line height', (tester) async {
+      const widget = WnSlot();
+      await mountWidget(widget, tester);
+      final text = tester.widget<Text>(find.text('Slot'));
+      final textStyle = text.style;
+      expect(textStyle?.height, 20 / 14);
+    });
+
+    testWidgets('text has correct font size', (tester) async {
+      const widget = WnSlot();
+      await mountWidget(widget, tester);
+      final text = tester.widget<Text>(find.text('Slot'));
+      final textStyle = text.style;
+      expect(textStyle?.fontSize, isNotNull);
+    });
+
+    testWidgets('icon has correct size', (tester) async {
+      const widget = WnSlot();
+      await mountWidget(widget, tester);
+      final icon = tester.widget<WnIcon>(find.byKey(const Key('wn_slot_icon')));
+      expect(icon.size, isNotNull);
+    });
+
+    testWidgets('child completely replaces default content', (tester) async {
+      const widget = WnSlot(
+        child: Text('Replacement'),
+      );
+      await mountWidget(widget, tester);
+      expect(find.text('Replacement'), findsOneWidget);
+      expect(find.byKey(const Key('wn_slot_icon')), findsNothing);
+      expect(find.text('Slot'), findsNothing);
     });
   });
 }

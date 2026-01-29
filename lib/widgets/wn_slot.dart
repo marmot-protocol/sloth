@@ -32,9 +32,9 @@ class WnSlot extends StatelessWidget {
     return CustomPaint(
       painter: _DashedBorderPainter(
         color: borderColor,
-        strokeWidth: 1,
-        dashWidth: 4,
-        dashSpace: 4,
+        strokeWidth: 1.w,
+        dashWidth: 4.w,
+        dashSpace: 4.w,
         borderRadius: 8.r,
       ),
       child: Container(
@@ -52,6 +52,7 @@ class WnSlot extends StatelessWidget {
             children: [
               WnIcon(
                 icon,
+                key: const Key('wn_slot_icon'),
                 size: 18.w,
                 color: borderColor,
               ),
