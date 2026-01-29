@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:sloth/theme.dart';
@@ -12,7 +13,7 @@ enum WnInputSize {
   final int height;
 }
 
-class WnInput extends StatelessWidget {
+class WnInput extends HookWidget {
   const WnInput({
     super.key,
     required this.placeholder,
@@ -53,13 +54,15 @@ class WnInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final isFocused = useState(false);
+    final isHovered = useState(false);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
         if (label != null) _buildLabel(colors),
-        _buildInputRow(colors),
+        _buildInputRow(colors, isFocused, isHovered),
         if (_hasError)
           _buildErrorText(colors)
         else if (helperText != null)
@@ -109,79 +112,111 @@ class WnInput extends StatelessWidget {
     );
   }
 
-  Widget _buildInputRow(SemanticColors colors) {
+  Widget _buildInputRow(
+    SemanticColors colors,
+    ValueNotifier<bool> isFocused,
+    ValueNotifier<bool> isHovered,
+  ) {
     return Row(
       children: [
-        Expanded(child: _buildInputField(colors)),
+        Expanded(child: _buildInputField(colors, isFocused, isHovered)),
         if (trailingAction != null) ...[
           Gap(6.w),
-          trailingAction!,
+          IgnorePointer(
+            ignoring: !enabled,
+            child: trailingAction!,
+          ),
         ],
       ],
     );
   }
 
-  Widget _buildInputField(SemanticColors colors) {
+  Color _getBorderColor(SemanticColors colors, bool isFocused, bool isHovered) {
+    if (!enabled) return colors.borderTertiary;
+    if (_hasError) {
+      return (isFocused || isHovered)
+          ? colors.borderDestructiveSecondary
+          : colors.borderDestructivePrimary;
+    }
+    if (isFocused) return colors.borderPrimary;
+    if (isHovered) return colors.borderSecondary;
+    return colors.borderTertiary;
+  }
+
+  Widget _buildInputField(
+    SemanticColors colors,
+    ValueNotifier<bool> isFocused,
+    ValueNotifier<bool> isHovered,
+  ) {
     final fieldHeight = size.height.h;
     final inlineActionSize = size == WnInputSize.size44 ? 36.w : 48.w;
+    final borderColor = _getBorderColor(colors, isFocused.value, isHovered.value);
 
-    final borderColor = _hasError ? colors.borderDestructivePrimary : colors.borderTertiary;
-
-    return Container(
-      height: fieldHeight,
-      decoration: BoxDecoration(
-        color: colors.backgroundPrimary,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: borderColor),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 8.w),
-              child: TextField(
-                key: const Key('input_field'),
-                controller: controller,
-                focusNode: focusNode,
-                autofocus: autofocus,
-                enabled: enabled,
-                readOnly: readOnly,
-                onChanged: onChanged,
-                textInputAction: textInputAction,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: enabled
-                      ? (_hasError ? colors.fillDestructive : colors.backgroundContentPrimary)
-                      : colors.backgroundContentTertiary,
-                  height: 20 / 14,
-                  letterSpacing: 0.4.sp,
-                ),
-                decoration: InputDecoration(
-                  hintText: placeholder,
-                  hintStyle: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: colors.backgroundContentSecondary,
-                    height: 20 / 14,
-                    letterSpacing: 0.4.sp,
+    return MouseRegion(
+      onEnter: enabled ? (_) => isHovered.value = true : null,
+      onExit: enabled ? (_) => isHovered.value = false : null,
+      child: Container(
+        height: fieldHeight,
+        decoration: BoxDecoration(
+          color: colors.backgroundPrimary,
+          borderRadius: BorderRadius.circular(8.r),
+          border: Border.all(color: borderColor),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 8.w),
+                child: Focus(
+                  onFocusChange: (focused) => isFocused.value = focused,
+                  child: TextField(
+                    key: const Key('input_field'),
+                    controller: controller,
+                    focusNode: focusNode,
+                    autofocus: autofocus,
+                    enabled: enabled,
+                    readOnly: readOnly,
+                    onChanged: onChanged,
+                    textInputAction: textInputAction,
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                      color: enabled
+                          ? (_hasError ? colors.fillDestructive : colors.backgroundContentPrimary)
+                          : colors.backgroundContentTertiary,
+                      height: 20 / 14,
+                      letterSpacing: 0.4.sp,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: placeholder,
+                      hintStyle: TextStyle(
+                        fontSize: 14.sp,
+                        fontWeight: FontWeight.w500,
+                        color: colors.backgroundContentSecondary,
+                        height: 20 / 14,
+                        letterSpacing: 0.4.sp,
+                      ),
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.zero,
+                      isDense: true,
+                    ),
                   ),
-                  border: InputBorder.none,
-                  contentPadding: EdgeInsets.zero,
-                  isDense: true,
                 ),
               ),
             ),
-          ),
-          if (inlineAction != null) ...[
-            SizedBox(
-              width: inlineActionSize,
-              height: inlineActionSize,
-              child: inlineAction,
-            ),
-            Gap(4.w),
+            if (inlineAction != null) ...[
+              IgnorePointer(
+                ignoring: !enabled,
+                child: SizedBox(
+                  width: inlineActionSize,
+                  height: inlineActionSize,
+                  child: inlineAction,
+                ),
+              ),
+              Gap(4.w),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
