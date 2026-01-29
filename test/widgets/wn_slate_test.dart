@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
 import 'package:sloth/widgets/wn_slate.dart';
@@ -234,7 +235,7 @@ void main() {
 
       testWidgets('flightShuttleBuilder returns Material with Container', (tester) async {
         await mountWidget(
-          const WnSlate(padding: EdgeInsets.all(10)),
+          WnSlate(padding: EdgeInsets.all(10.w)),
           tester,
         );
 
@@ -256,7 +257,7 @@ void main() {
 
         final container = material.child! as Container;
         expect(container.margin, isNotNull);
-        expect(container.padding, const EdgeInsets.all(10));
+        expect(container.padding, EdgeInsets.all(10.w));
         expect(container.decoration, isA<BoxDecoration>());
       });
     });

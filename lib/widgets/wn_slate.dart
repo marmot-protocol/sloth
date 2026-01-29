@@ -82,9 +82,9 @@ class WnSlate extends StatelessWidget {
                   ],
                 ),
                 if (showTopScrollEffect)
-                  WnScrollEdgeEffect.slateTop(color: colors.backgroundPrimary),
+                  WnScrollEdgeEffect.slateTop(color: colors.backgroundSecondary),
                 if (showBottomScrollEffect)
-                  WnScrollEdgeEffect.slateBottom(color: colors.backgroundPrimary),
+                  WnScrollEdgeEffect.slateBottom(color: colors.backgroundSecondary),
               ],
             ),
           ),
