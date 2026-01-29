@@ -1,14 +1,5 @@
 import 'package:flutter/material.dart'
-    show
-        FilledButton,
-        Key,
-        Locale,
-        MaterialApp,
-        Scaffold,
-        Builder,
-        ElevatedButton,
-        Text,
-        TextFormField;
+    show FilledButton, Key, Locale, MaterialApp, Scaffold, Builder, ElevatedButton, Text, TextField;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/l10n/generated/app_localizations.dart';
@@ -38,7 +29,7 @@ void main() {
         onRelayAdded: (_) async {},
       );
       await mountWidget(widget, tester);
-      final textField = tester.widget<TextFormField>(find.byType(TextFormField));
+      final textField = tester.widget<TextField>(find.byType(TextField));
       expect(textField.controller?.text, 'wss://');
     });
 
@@ -70,7 +61,7 @@ void main() {
       );
       await mountWidget(widget, tester);
 
-      await tester.enterText(find.byType(TextFormField), 'wss://relay.example.com');
+      await tester.enterText(find.byType(TextField), 'wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
       final buttons = find.byType(FilledButton);
@@ -84,7 +75,7 @@ void main() {
       );
       await mountWidget(widget, tester);
 
-      await tester.enterText(find.byType(TextFormField), 'invalid-url');
+      await tester.enterText(find.byType(TextField), 'invalid-url');
       await tester.pump(const Duration(milliseconds: 600));
 
       expect(find.textContaining('URL must start with wss:// or ws://'), findsOneWidget);
@@ -96,7 +87,7 @@ void main() {
       );
       await mountWidget(widget, tester);
 
-      await tester.enterText(find.byType(TextFormField), 'https://relay.example.com');
+      await tester.enterText(find.byType(TextField), 'https://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
       expect(find.textContaining('wss://'), findsWidgets);
@@ -108,7 +99,7 @@ void main() {
       );
       await mountWidget(widget, tester);
 
-      await tester.enterText(find.byType(TextFormField), 'wss://wss://relay.example.com');
+      await tester.enterText(find.byType(TextField), 'wss://wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
       expect(find.text('Invalid relay URL'), findsOneWidget);
@@ -120,7 +111,7 @@ void main() {
       );
       await mountWidget(widget, tester);
 
-      await tester.enterText(find.byType(TextFormField), 'wss://localhost');
+      await tester.enterText(find.byType(TextField), 'wss://localhost');
       await tester.pump(const Duration(milliseconds: 600));
 
       expect(find.text('Invalid relay URL'), findsOneWidget);
@@ -155,7 +146,7 @@ void main() {
       await tester.tap(find.text('Open'));
       await tester.pumpAndSettle();
 
-      await tester.enterText(find.byType(TextFormField), 'wss://relay.example.com');
+      await tester.enterText(find.byType(TextField), 'wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
       await tester.tap(find.byKey(const Key('add_relay_submit_button')));
@@ -194,7 +185,7 @@ void main() {
 
       expect(find.text('Enter relay address'), findsOneWidget);
 
-      await tester.enterText(find.byType(TextFormField), 'wss://relay.example.com');
+      await tester.enterText(find.byType(TextField), 'wss://relay.example.com');
       await tester.pump(const Duration(milliseconds: 600));
 
       await tester.tap(find.byKey(const Key('add_relay_submit_button')));
@@ -244,7 +235,7 @@ void main() {
         );
         await mountWidget(widget, tester);
 
-        await tester.enterText(find.byType(TextFormField), 'wss://');
+        await tester.enterText(find.byType(TextField), 'wss://');
         await tester.pump(const Duration(milliseconds: 600));
 
         final buttons = find.byType(FilledButton);
@@ -258,7 +249,7 @@ void main() {
         );
         await mountWidget(widget, tester);
 
-        await tester.enterText(find.byType(TextFormField), 'ws://');
+        await tester.enterText(find.byType(TextField), 'ws://');
         await tester.pump(const Duration(milliseconds: 600));
 
         final buttons = find.byType(FilledButton);
@@ -272,7 +263,7 @@ void main() {
         );
         await mountWidget(widget, tester);
 
-        await tester.enterText(find.byType(TextFormField), '');
+        await tester.enterText(find.byType(TextField), '');
         await tester.pump(const Duration(milliseconds: 600));
 
         final buttons = find.byType(FilledButton);
