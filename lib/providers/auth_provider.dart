@@ -15,6 +15,7 @@ final secureStorageProvider = Provider<FlutterSecureStorage>(
   (_) => const FlutterSecureStorage(),
 );
 
+/// Notifier for managing authentication state.
 class AuthNotifier extends AsyncNotifier<String?> {
   @override
   Future<String?> build() async {
@@ -33,6 +34,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return pubkey;
   }
 
+  /// Login with a private key (nsec) or hex key.
   Future<void> login(String nsec) async {
     _logger.info('Login attempt started');
     final storage = ref.read(secureStorageProvider);
@@ -157,6 +159,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
     }
   }
 
+  /// Create a new identity (signup).
   Future<String> signup() async {
     _logger.info('Signup started');
     final storage = ref.read(secureStorageProvider);
@@ -168,6 +171,10 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return account.pubkey;
   }
 
+  /// Logout the current user.
+  ///
+  /// If [onAndroidSignerDisconnect] is provided, it will be called to disconnect
+  /// from the Android signer if the current session is using one.
   Future<String?> logout({Future<void> Function()? onAndroidSignerDisconnect}) async {
     final pubkey = state.value;
     if (pubkey == null) return null;
@@ -177,7 +184,11 @@ class AuthNotifier extends AsyncNotifier<String?> {
 
     // Disconnect from Android signer if logged in via signer
     if (await isUsingAndroidSigner() && onAndroidSignerDisconnect != null) {
-      await onAndroidSignerDisconnect();
+      try {
+        await onAndroidSignerDisconnect();
+      } catch (e, st) {
+        _logger.warning('Error disconnecting Android signer during logout', e, st);
+      }
     }
 
     await accounts_api.logout(pubkey: pubkey);
@@ -202,6 +213,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return null;
   }
 
+  /// Switch the active profile to the given pubkey.
   Future<void> switchProfile(String pubkey) async {
     _logger.info('Switching profile');
     final storage = ref.read(secureStorageProvider);

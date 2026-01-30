@@ -46,6 +46,10 @@ useAndroidSigner() {
     };
   }, const []);
 
+  /// Connect to the Android signer.
+  ///
+  /// This will open the signer app (if available) and request the user to
+  /// authorize the app. It returns the public key of the selected account.
   Future<String> connect() async {
     _logger.info('Connecting to Android signer...');
     isConnecting.value = true;
@@ -83,6 +87,10 @@ useAndroidSigner() {
     }
   }
 
+  /// Disconnect from the Android signer.
+  ///
+  /// This resets the connection state. Note that NIP-55 doesn't strictly
+  /// have a "disconnect" concept, but this clears our local session state.
   Future<void> disconnect() async {
     _logger.info('Disconnecting from Android signer...');
     // No persistent state to clean up - the hook only manages ephemeral state.

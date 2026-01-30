@@ -29,15 +29,20 @@ class SignOutScreen extends HookConsumerWidget {
     final isUsingExternalSigner = useState<bool?>(null);
 
     useEffect(() {
+      var disposed = false;
       loadNsec();
 
       Future<void> checkSignerType() async {
         final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
-        isUsingExternalSigner.value = isExternal;
+        if (!disposed) {
+          isUsingExternalSigner.value = isExternal;
+        }
       }
 
       checkSignerType();
-      return null;
+      return () {
+        disposed = true;
+      };
     }, [pubkey]);
 
     if (pubkey == null) {

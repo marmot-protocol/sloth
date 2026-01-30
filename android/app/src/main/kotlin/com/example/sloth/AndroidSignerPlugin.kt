@@ -31,6 +31,7 @@ class AndroidSignerPlugin :
     private lateinit var channel: MethodChannel
     private var context: Context? = null
     private var activity: Activity? = null
+    private var activityBinding: ActivityPluginBinding? = null
     private var pendingResult: Result? = null
     private var currentRequestId: String? = null
 
@@ -52,20 +53,26 @@ class AndroidSignerPlugin :
     }
 
     override fun onAttachedToActivity(binding: ActivityPluginBinding) {
+        activityBinding = binding
         activity = binding.activity
         binding.addActivityResultListener(this)
     }
 
     override fun onDetachedFromActivityForConfigChanges() {
+        activityBinding?.removeActivityResultListener(this)
+        activityBinding = null
         activity = null
     }
 
     override fun onReattachedToActivityForConfigChanges(binding: ActivityPluginBinding) {
+        activityBinding = binding
         activity = binding.activity
         binding.addActivityResultListener(this)
     }
 
     override fun onDetachedFromActivity() {
+        activityBinding?.removeActivityResultListener(this)
+        activityBinding = null
         activity = null
     }
 
@@ -310,10 +317,19 @@ class AndroidSignerPlugin :
 
             cursor?.use {
                 if (it.moveToFirst()) {
-                    // Check if rejected (value should be non-null if rejected)
+                    // Check if rejected (value should be non-null and true/1 if rejected)
                     val rejectedIndex = it.getColumnIndex("rejected")
-                    if (rejectedIndex >= 0 && !it.isNull(rejectedIndex)) {
-                        return null
+                    if (rejectedIndex >= 0) {
+                        val isRejected =
+                            if (it.getType(rejectedIndex) == android.database.Cursor.FIELD_TYPE_INTEGER) {
+                                it.getInt(rejectedIndex) != 0
+                            } else {
+                                it.getString(rejectedIndex)?.toBoolean() == true
+                            }
+
+                        if (isRejected) {
+                            return null
+                        }
                     }
 
                     val resultIndex = it.getColumnIndex("result")
@@ -421,9 +437,7 @@ class AndroidSignerPlugin :
         if (currentUser.isNotEmpty()) {
             intent.putExtra("current_user", currentUser)
         }
-        if (id.isNotEmpty()) {
-            intent.putExtra("id", id)
-        }
+        intent.putExtra("id", id)
         intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP or Intent.FLAG_ACTIVITY_CLEAR_TOP)
 
         try {
@@ -476,10 +490,19 @@ class AndroidSignerPlugin :
 
             cursor?.use {
                 if (it.moveToFirst()) {
-                    // Check if rejected (value should be non-null if rejected)
+                    // Check if rejected (value should be non-null and true/1 if rejected)
                     val rejectedIndex = it.getColumnIndex("rejected")
-                    if (rejectedIndex >= 0 && !it.isNull(rejectedIndex)) {
-                        return null
+                    if (rejectedIndex >= 0) {
+                        val isRejected =
+                            if (it.getType(rejectedIndex) == android.database.Cursor.FIELD_TYPE_INTEGER) {
+                                it.getInt(rejectedIndex) != 0
+                            } else {
+                                it.getString(rejectedIndex)?.toBoolean() == true
+                            }
+
+                        if (isRejected) {
+                            return null
+                        }
                     }
 
                     val resultIndex = it.getColumnIndex("result")
@@ -529,6 +552,12 @@ class AndroidSignerPlugin :
         // Save package name if returned (from get_public_key)
         if (!packageName.isNullOrEmpty()) {
             setSignerPackageName(packageName)
+        }
+
+        // Validate that result is present
+        if (resultValue.isNullOrBlank()) {
+            result.error("INVALID_RESPONSE", "Missing result field from signer", null)
+            return true
         }
 
         // Build response map
