@@ -3741,7 +3741,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
   ChatSummary dco_decode_chat_summary(dynamic raw) {
     // Codec=Dco (DartCObject based), see doc to use other codecs
     final arr = raw as List<dynamic>;
-    if (arr.length != 11) throw Exception('unexpected arr length: expect 11 but see ${arr.length}');
+    if (arr.length != 12) throw Exception('unexpected arr length: expect 12 but see ${arr.length}');
     return ChatSummary(
       mlsGroupId: dco_decode_String(arr[0]),
       name: dco_decode_opt_String(arr[1]),
@@ -3754,6 +3754,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       welcomerPubkey: dco_decode_opt_String(arr[8]),
       unreadCount: dco_decode_u_64(arr[9]),
       pinOrder: dco_decode_opt_box_autoadd_i_64(arr[10]),
+      dmPeerPubkey: dco_decode_opt_String(arr[11]),
     );
   }
 
@@ -4828,6 +4829,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     final var_welcomerPubkey = sse_decode_opt_String(deserializer);
     final var_unreadCount = sse_decode_u_64(deserializer);
     final var_pinOrder = sse_decode_opt_box_autoadd_i_64(deserializer);
+    final var_dmPeerPubkey = sse_decode_opt_String(deserializer);
     return ChatSummary(
       mlsGroupId: var_mlsGroupId,
       name: var_name,
@@ -4840,6 +4842,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
       welcomerPubkey: var_welcomerPubkey,
       unreadCount: var_unreadCount,
       pinOrder: var_pinOrder,
+      dmPeerPubkey: var_dmPeerPubkey,
     );
   }
 
@@ -6130,6 +6133,7 @@ class RustLibApiImpl extends RustLibApiImplPlatform implements RustLibApi {
     sse_encode_opt_String(self.welcomerPubkey, serializer);
     sse_encode_u_64(self.unreadCount, serializer);
     sse_encode_opt_box_autoadd_i_64(self.pinOrder, serializer);
+    sse_encode_opt_String(self.dmPeerPubkey, serializer);
   }
 
   @protected
