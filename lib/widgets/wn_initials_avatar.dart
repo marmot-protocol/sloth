@@ -45,7 +45,6 @@ class WnInitialsAvatar extends StatelessWidget {
                   : SvgPicture.asset(
                       key: const Key('avatar_fallback_icon'),
                       'assets/svgs/user.svg',
-                      package: 'sloth',
                       width: avatarSize * 0.4,
                       height: avatarSize * 0.4,
                       colorFilter: ColorFilter.mode(

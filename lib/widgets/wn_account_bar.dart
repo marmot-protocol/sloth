@@ -40,7 +40,6 @@ class WnAccountBar extends HookConsumerWidget {
           },
           icon: SvgPicture.asset(
             'assets/svgs/new_chat.svg',
-            package: 'sloth',
             width: 24.w,
             height: 24.w,
             colorFilter: ColorFilter.mode(

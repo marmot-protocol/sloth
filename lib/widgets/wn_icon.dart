@@ -116,7 +116,6 @@ class WnIcon extends StatelessWidget {
     final resolvedColor = color ?? IconTheme.of(context).color;
     return SvgPicture.asset(
       icon.path,
-      package: 'sloth',
       width: s,
       height: s,
       colorFilter: resolvedColor != null ? ColorFilter.mode(resolvedColor, BlendMode.srcIn) : null,
