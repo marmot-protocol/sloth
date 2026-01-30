@@ -584,45 +584,20 @@ class _StaticScrollEdgeEffect extends StatelessWidget {
   Widget build(BuildContext context) {
     final color = context.colors.backgroundPrimary;
 
-    Widget edgeEffect;
-    switch (type) {
-      case ScrollEdgeEffectType.canvas:
-        if (position == ScrollEdgePosition.top) {
-          edgeEffect = WnScrollEdgeEffect.canvasTop(
-            color: color,
-            height: height,
-          );
-        } else {
-          edgeEffect = WnScrollEdgeEffect.canvasBottom(
-            color: color,
-            height: height,
-          );
-        }
-      case ScrollEdgeEffectType.slate:
-        if (position == ScrollEdgePosition.top) {
-          edgeEffect = WnScrollEdgeEffect.slateTop(
-            color: color,
-            height: height,
-          );
-        } else {
-          edgeEffect = WnScrollEdgeEffect.slateBottom(
-            color: color,
-            height: height,
-          );
-        }
-      case ScrollEdgeEffectType.dropdown:
-        if (position == ScrollEdgePosition.top) {
-          edgeEffect = WnScrollEdgeEffect.dropdownTop(
-            color: color,
-            height: height,
-          );
-        } else {
-          edgeEffect = WnScrollEdgeEffect.dropdownBottom(
-            color: color,
-            height: height,
-          );
-        }
-    }
+    final Widget edgeEffect = switch (type) {
+      ScrollEdgeEffectType.canvas =>
+        position == ScrollEdgePosition.top
+            ? WnScrollEdgeEffect.canvasTop(color: color, height: height)
+            : WnScrollEdgeEffect.canvasBottom(color: color, height: height),
+      ScrollEdgeEffectType.slate =>
+        position == ScrollEdgePosition.top
+            ? WnScrollEdgeEffect.slateTop(color: color, height: height)
+            : WnScrollEdgeEffect.slateBottom(color: color, height: height),
+      ScrollEdgeEffectType.dropdown =>
+        position == ScrollEdgePosition.top
+            ? WnScrollEdgeEffect.dropdownTop(color: color, height: height)
+            : WnScrollEdgeEffect.dropdownBottom(color: color, height: height),
+    };
 
     return SizedBox(
       width: 180,
@@ -682,45 +657,20 @@ class _InteractiveScrollEdgeEffect extends StatelessWidget {
 
     final color = context.colors.backgroundPrimary;
 
-    Widget edgeEffect;
-    switch (type) {
-      case ScrollEdgeEffectType.canvas:
-        if (position == ScrollEdgePosition.top) {
-          edgeEffect = WnScrollEdgeEffect.canvasTop(
-            color: color,
-            height: height,
-          );
-        } else {
-          edgeEffect = WnScrollEdgeEffect.canvasBottom(
-            color: color,
-            height: height,
-          );
-        }
-      case ScrollEdgeEffectType.slate:
-        if (position == ScrollEdgePosition.top) {
-          edgeEffect = WnScrollEdgeEffect.slateTop(
-            color: color,
-            height: height,
-          );
-        } else {
-          edgeEffect = WnScrollEdgeEffect.slateBottom(
-            color: color,
-            height: height,
-          );
-        }
-      case ScrollEdgeEffectType.dropdown:
-        if (position == ScrollEdgePosition.top) {
-          edgeEffect = WnScrollEdgeEffect.dropdownTop(
-            color: color,
-            height: height,
-          );
-        } else {
-          edgeEffect = WnScrollEdgeEffect.dropdownBottom(
-            color: color,
-            height: height,
-          );
-        }
-    }
+    final Widget edgeEffect = switch (type) {
+      ScrollEdgeEffectType.canvas =>
+        position == ScrollEdgePosition.top
+            ? WnScrollEdgeEffect.canvasTop(color: color, height: height)
+            : WnScrollEdgeEffect.canvasBottom(color: color, height: height),
+      ScrollEdgeEffectType.slate =>
+        position == ScrollEdgePosition.top
+            ? WnScrollEdgeEffect.slateTop(color: color, height: height)
+            : WnScrollEdgeEffect.slateBottom(color: color, height: height),
+      ScrollEdgeEffectType.dropdown =>
+        position == ScrollEdgePosition.top
+            ? WnScrollEdgeEffect.dropdownTop(color: color, height: height)
+            : WnScrollEdgeEffect.dropdownBottom(color: color, height: height),
+    };
 
     return SizedBox(
       width: 300,
