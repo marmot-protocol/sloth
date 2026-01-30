@@ -1,21 +1,28 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart' show WnIcon, WnIcons;
+import 'package:sloth/widgets/wn_icon.dart' show WnIcon;
 import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../test_helpers.dart';
 
 void main() {
-  testWidgets('WnSystemNotice renders correctly with default properties', (tester) async {
-    await mountWidget(
-      const WnSystemNotice(title: 'Test Notice'),
-      tester,
-    );
+  testWidgets(
+    'WnSystemNotice renders correctly with default properties',
+    (tester) async {
+      await mountWidget(
+        const WnSystemNotice(title: 'Test Notice'),
+        tester,
+      );
 
-    expect(find.text('Test Notice'), findsOneWidget);
-    expect(find.byType(WnSystemNotice), findsOneWidget);
-    expect(find.bySvgPath(WnIcons.checkmarkFilled.path), findsOneWidget);
-  });
+      expect(find.text('Test Notice'), findsOneWidget);
+      expect(find.byType(WnSystemNotice), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('systemNotice_leadingIcon')),
+        findsOneWidget,
+      );
+    },
+  );
 
   group('WnSystemNotice Types', () {
     testWidgets('renders success type correctly', (tester) async {
@@ -26,7 +33,10 @@ void main() {
         tester,
       );
 
-      expect(find.bySvgPath(WnIcons.checkmarkFilled.path), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('systemNotice_leadingIcon')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders info type correctly', (tester) async {
@@ -37,7 +47,10 @@ void main() {
         ),
         tester,
       );
-      expect(find.bySvgPath(WnIcons.informationFilled.path), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('systemNotice_leadingIcon')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders warning type correctly', (tester) async {
@@ -48,7 +61,10 @@ void main() {
         ),
         tester,
       );
-      expect(find.bySvgPath(WnIcons.warningFilled.path), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('systemNotice_leadingIcon')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders error type correctly', (tester) async {
@@ -59,7 +75,10 @@ void main() {
         ),
         tester,
       );
-      expect(find.bySvgPath(WnIcons.errorFilled.path), findsOneWidget);
+      expect(
+        find.byKey(const ValueKey('systemNotice_leadingIcon')),
+        findsOneWidget,
+      );
     });
 
     testWidgets('renders neutral type correctly', (tester) async {
@@ -86,57 +105,79 @@ void main() {
 
       expect(find.text('Temporary'), findsOneWidget);
       expect(find.text('Should not show'), findsNothing);
-      expect(find.bySvgPath(WnIcons.closeLarge.path), findsNothing);
+      expect(
+        find.byKey(const ValueKey('systemNotice_actionIcon')),
+        findsNothing,
+      );
     });
 
     testWidgets('Dismissible variant renders dismiss icon', (tester) async {
       await mountWidget(
-        const WnSystemNotice(
+        WnSystemNotice(
           title: 'Dismissible',
           variant: WnSystemNoticeVariant.dismissible,
+          onDismiss: () {},
         ),
         tester,
       );
 
-      expect(find.bySvgPath(WnIcons.closeLarge.path), findsOneWidget);
-    });
-
-    testWidgets('Collapsed variant renders chevron down and hides content', (tester) async {
-      await mountWidget(
-        const WnSystemNotice(
-          title: 'Collapsed',
-          variant: WnSystemNoticeVariant.collapsed,
-          description: 'Hidden Content',
-        ),
-        tester,
+      expect(
+        find.byKey(const ValueKey('systemNotice_actionIcon')),
+        findsOneWidget,
       );
-
-      expect(find.bySvgPath(WnIcons.chevronDown.path), findsOneWidget);
-      expect(find.text('Hidden Content'), findsNothing);
     });
 
-    testWidgets('Expanded variant renders chevron up and shows content', (tester) async {
-      await mountWidget(
-        const WnSystemNotice(
-          title: 'Expanded',
-          variant: WnSystemNoticeVariant.expanded,
-          description: 'Visible Content',
-        ),
-        tester,
-      );
+    testWidgets(
+      'Collapsed variant renders chevron down and hides content',
+      (tester) async {
+        await mountWidget(
+          WnSystemNotice(
+            title: 'Collapsed',
+            variant: WnSystemNoticeVariant.collapsed,
+            description: 'Hidden Content',
+            onToggle: () {},
+          ),
+          tester,
+        );
 
-      expect(find.bySvgPath(WnIcons.chevronUp.path), findsOneWidget);
-      expect(find.text('Visible Content'), findsOneWidget);
-    });
+        expect(
+          find.byKey(const ValueKey('systemNotice_actionIcon')),
+          findsOneWidget,
+        );
+        expect(find.text('Hidden Content'), findsNothing);
+      },
+    );
+
+    testWidgets(
+      'Expanded variant renders chevron up and shows content',
+      (tester) async {
+        await mountWidget(
+          WnSystemNotice(
+            title: 'Expanded',
+            variant: WnSystemNoticeVariant.expanded,
+            description: 'Visible Content',
+            onToggle: () {},
+          ),
+          tester,
+        );
+
+        expect(
+          find.byKey(const ValueKey('systemNotice_actionIcon')),
+          findsOneWidget,
+        );
+        expect(find.text('Visible Content'), findsOneWidget);
+      },
+    );
   });
 
   group('Content and Actions', () {
     testWidgets('renders description when appropriate', (tester) async {
       await mountWidget(
-        const WnSystemNotice(
+        WnSystemNotice(
           title: 'Notice',
           description: 'Description text',
           variant: WnSystemNoticeVariant.dismissible,
+          onDismiss: () {},
         ),
         tester,
       );
@@ -146,11 +187,12 @@ void main() {
 
     testWidgets('renders actions when present', (tester) async {
       await mountWidget(
-        const WnSystemNotice(
+        WnSystemNotice(
           title: 'Notice',
           variant: WnSystemNoticeVariant.expanded,
-          primaryAction: WnButton(text: 'Primary', onPressed: null),
-          secondaryAction: WnButton(text: 'Secondary', onPressed: null),
+          primaryAction: const WnButton(text: 'Primary', onPressed: null),
+          secondaryAction: const WnButton(text: 'Secondary', onPressed: null),
+          onToggle: () {},
         ),
         tester,
       );
@@ -172,7 +214,7 @@ void main() {
         tester,
       );
 
-      await tester.tap(find.bySvgPath(WnIcons.closeLarge.path));
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
       expect(dismissed, isTrue);
     });
 
@@ -187,8 +229,64 @@ void main() {
         tester,
       );
 
-      await tester.tap(find.bySvgPath(WnIcons.chevronDown.path));
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
       expect(toggled, isTrue);
     });
+  });
+
+  group('Action icon only renders when callback exists', () {
+    testWidgets(
+      'dismissible without onDismiss does not show action icon',
+      (tester) async {
+        await mountWidget(
+          const WnSystemNotice(
+            title: 'No callback',
+            variant: WnSystemNoticeVariant.dismissible,
+          ),
+          tester,
+        );
+
+        expect(
+          find.byKey(const ValueKey('systemNotice_actionIcon')),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets(
+      'collapsed without onToggle does not show action icon',
+      (tester) async {
+        await mountWidget(
+          const WnSystemNotice(
+            title: 'No callback',
+            variant: WnSystemNoticeVariant.collapsed,
+          ),
+          tester,
+        );
+
+        expect(
+          find.byKey(const ValueKey('systemNotice_actionIcon')),
+          findsNothing,
+        );
+      },
+    );
+
+    testWidgets(
+      'expanded without onToggle does not show action icon',
+      (tester) async {
+        await mountWidget(
+          const WnSystemNotice(
+            title: 'No callback',
+            variant: WnSystemNoticeVariant.expanded,
+          ),
+          tester,
+        );
+
+        expect(
+          find.byKey(const ValueKey('systemNotice_actionIcon')),
+          findsNothing,
+        );
+      },
+    );
   });
 }

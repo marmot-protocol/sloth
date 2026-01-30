@@ -51,6 +51,13 @@ class WnSystemNotice extends StatelessWidget {
     final colors = context.colors;
     final (bgColor, contentColor, icon) = _getStyle(colors);
     final descriptionColor = colors.backgroundContentQuaternary;
+    final bool shouldShowDetails =
+        !_isCollapsed &&
+        !_isTemporary &&
+        (description != null || primaryAction != null || secondaryAction != null);
+    final bool shouldShowActionIcon =
+        (_isDismissible && onDismiss != null) ||
+        ((_isCollapsed || _isExpanded) && onToggle != null);
 
     return Container(
       padding: EdgeInsets.all(16.w),
@@ -85,7 +92,7 @@ class WnSystemNotice extends StatelessWidget {
                   ),
                 ),
               ),
-              if (_isDismissible || _isCollapsed || _isExpanded) ...[
+              if (shouldShowActionIcon) ...[
                 Gap(8.w),
                 GestureDetector(
                   onTap: _isDismissible ? onDismiss : onToggle,
@@ -100,9 +107,7 @@ class WnSystemNotice extends StatelessWidget {
               ],
             ],
           ),
-          if (!_isCollapsed &&
-              !_isTemporary &&
-              (description != null || primaryAction != null || secondaryAction != null)) ...[
+          if (shouldShowDetails) ...[
             if (description != null) ...[
               Gap(4.h),
               Padding(
