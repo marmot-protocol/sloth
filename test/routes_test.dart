@@ -17,12 +17,14 @@ import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
+import 'package:sloth/src/rust/api/accounts.dart' show Account, AccountType, FlutterEvent;
 import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/src/rust/frb_generated.dart';
+
 import 'test_helpers.dart';
 
 class _MockRustLibApi implements RustLibApi {
@@ -100,6 +102,23 @@ class _MockRustLibApi implements RustLibApi {
 
   @override
   Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
+    return [];
+  }
+
+  @override
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
+    return Account(
+      pubkey: pubkey,
+      accountType: AccountType.local,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({
+    required String accountPubkey,
+  }) async {
     return [];
   }
 

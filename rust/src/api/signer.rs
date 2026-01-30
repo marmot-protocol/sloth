@@ -139,6 +139,48 @@ impl NostrSigner for DartSigner {
     }
 }
 
+/// Register an external signer for an existing account.
+///
+/// This function is used to re-register an external signer after app restart.
+/// Unlike `login_with_external_signer_and_callbacks`, this does NOT perform
+/// any account setup or key package publishing - it only registers the signer
+/// so that subsequent signing operations will work.
+///
+/// Call this on app startup when restoring an external signer account session.
+///
+/// # Arguments
+///
+/// * `pubkey` - The account's public key (hex format).
+/// * `sign_event` - Callback to sign unsigned events.
+/// * `nip04_encrypt` - Callback for NIP-04 encryption.
+/// * `nip04_decrypt` - Callback for NIP-04 decryption.
+/// * `nip44_encrypt` - Callback for NIP-44 encryption.
+/// * `nip44_decrypt` - Callback for NIP-44 decryption.
+#[frb]
+pub fn register_external_signer(
+    pubkey: String,
+    sign_event: impl Fn(String) -> DartFnFuture<String> + Send + Sync + 'static,
+    nip04_encrypt: impl Fn(String, String) -> DartFnFuture<String> + Send + Sync + 'static,
+    nip04_decrypt: impl Fn(String, String) -> DartFnFuture<String> + Send + Sync + 'static,
+    nip44_encrypt: impl Fn(String, String) -> DartFnFuture<String> + Send + Sync + 'static,
+    nip44_decrypt: impl Fn(String, String) -> DartFnFuture<String> + Send + Sync + 'static,
+) -> Result<(), ApiError> {
+    let whitenoise = whitenoise::Whitenoise::get_instance()?;
+    let pubkey = PublicKey::parse(&pubkey)?;
+
+    let signer = DartSigner::new(
+        pubkey,
+        sign_event,
+        nip04_encrypt,
+        nip04_decrypt,
+        nip44_encrypt,
+        nip44_decrypt,
+    );
+
+    whitenoise.register_external_signer(pubkey, signer);
+    Ok(())
+}
+
 /// Login with an external signer (like Amber via NIP-55) and publish key package.
 ///
 /// This function creates an account for the given public key and uses the provided
@@ -147,6 +189,9 @@ impl NostrSigner for DartSigner {
 /// - Relay configuration (fetches existing or uses defaults)
 /// - Publishing relay lists when using defaults
 /// - Publishing the MLS key package
+///
+/// The signer is stored in whitenoise and will be used automatically for all
+/// subsequent signing operations (key package deletion, publishing, etc.).
 ///
 /// # Arguments
 ///
@@ -178,7 +223,8 @@ pub async fn login_with_external_signer_and_callbacks(
     );
 
     // Login handles: account setup, relay config, publishing relay lists
-    // (if defaults used), and publishing the key package
+    // (if defaults used), and publishing the key package.
+    // The signer is stored in whitenoise for future operations.
     let account = whitenoise
         .login_with_external_signer(pubkey, signer)
         .await?;

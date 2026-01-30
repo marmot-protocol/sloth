@@ -12,6 +12,39 @@ import 'error.dart';
 
 // These function are ignored because they are on traits that is not defined in current crate (put an empty `#[frb]` on it to unignore): `backend`, `clone`, `fmt`, `get_public_key`, `nip04_decrypt`, `nip04_encrypt`, `nip44_decrypt`, `nip44_encrypt`, `sign_event`
 
+/// Register an external signer for an existing account.
+///
+/// This function is used to re-register an external signer after app restart.
+/// Unlike `login_with_external_signer_and_callbacks`, this does NOT perform
+/// any account setup or key package publishing - it only registers the signer
+/// so that subsequent signing operations will work.
+///
+/// Call this on app startup when restoring an external signer account session.
+///
+/// # Arguments
+///
+/// * `pubkey` - The account's public key (hex format).
+/// * `sign_event` - Callback to sign unsigned events.
+/// * `nip04_encrypt` - Callback for NIP-04 encryption.
+/// * `nip04_decrypt` - Callback for NIP-04 decryption.
+/// * `nip44_encrypt` - Callback for NIP-44 encryption.
+/// * `nip44_decrypt` - Callback for NIP-44 decryption.
+Future<void> registerExternalSigner({
+  required String pubkey,
+  required FutureOr<String> Function(String) signEvent,
+  required FutureOr<String> Function(String, String) nip04Encrypt,
+  required FutureOr<String> Function(String, String) nip04Decrypt,
+  required FutureOr<String> Function(String, String) nip44Encrypt,
+  required FutureOr<String> Function(String, String) nip44Decrypt,
+}) => RustLib.instance.api.crateApiSignerRegisterExternalSigner(
+  pubkey: pubkey,
+  signEvent: signEvent,
+  nip04Encrypt: nip04Encrypt,
+  nip04Decrypt: nip04Decrypt,
+  nip44Encrypt: nip44Encrypt,
+  nip44Decrypt: nip44Decrypt,
+);
+
 /// Login with an external signer (like Amber via NIP-55) and publish key package.
 ///
 /// This function creates an account for the given public key and uses the provided
@@ -20,6 +53,9 @@ import 'error.dart';
 /// - Relay configuration (fetches existing or uses defaults)
 /// - Publishing relay lists when using defaults
 /// - Publishing the MLS key package
+///
+/// The signer is stored in whitenoise and will be used automatically for all
+/// subsequent signing operations (key package deletion, publishing, etc.).
 ///
 /// # Arguments
 ///
