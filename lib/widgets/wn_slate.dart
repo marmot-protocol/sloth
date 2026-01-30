@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
 import 'package:sloth/widgets/wn_slate_content_transition.dart';
 
-class WnSlate extends StatelessWidget {
+class WnSlate extends HookWidget {
   const WnSlate({
     super.key,
     this.tag = 'wn-slate',
@@ -14,6 +15,7 @@ class WnSlate extends StatelessWidget {
     this.showBottomScrollEffect = false,
     this.systemNotice,
     this.child,
+    this.footer,
     this.animateContent = true,
   });
 
@@ -24,6 +26,7 @@ class WnSlate extends StatelessWidget {
   final bool showBottomScrollEffect;
   final Widget? systemNotice;
   final Widget? child;
+  final Widget? footer;
   final bool animateContent;
 
   BoxDecoration _decoration(SemanticColors colors) {
@@ -47,31 +50,60 @@ class WnSlate extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(SemanticColors colors) {
-    return Stack(
-      children: [
-        Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            if (header != null) header!,
-            if (child != null) Flexible(child: child!),
-            if (systemNotice != null) systemNotice!,
-          ],
-        ),
-        if (showTopScrollEffect) WnScrollEdgeEffect.slateTop(color: colors.backgroundSecondary),
-        if (showBottomScrollEffect)
-          WnScrollEdgeEffect.slateBottom(color: colors.backgroundSecondary),
-      ],
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final route = ModalRoute.of(context);
     final animation = route?.animation ?? kAlwaysCompleteAnimation;
 
-    final content = _buildContent(colors);
+    final canScrollUp = useState(false);
+    final canScrollDown = useState(false);
+
+    final hasScrollEffects = showTopScrollEffect || showBottomScrollEffect;
+
+    void updateScrollState(ScrollMetrics metrics) {
+      canScrollUp.value = metrics.extentBefore > 0;
+      canScrollDown.value = metrics.extentAfter > 0;
+    }
+
+    Widget? childWidget;
+    if (child != null) {
+      if (hasScrollEffects) {
+        childWidget = NotificationListener<ScrollMetricsNotification>(
+          onNotification: (notification) {
+            updateScrollState(notification.metrics);
+            return false;
+          },
+          child: NotificationListener<ScrollNotification>(
+            onNotification: (notification) {
+              updateScrollState(notification.metrics);
+              return false;
+            },
+            child: Stack(
+              children: [
+                child!,
+                if (showTopScrollEffect && canScrollUp.value)
+                  WnScrollEdgeEffect.slateTop(color: colors.backgroundSecondary),
+                if (showBottomScrollEffect && canScrollDown.value)
+                  WnScrollEdgeEffect.slateBottom(color: colors.backgroundSecondary),
+              ],
+            ),
+          ),
+        );
+      } else {
+        childWidget = child;
+      }
+    }
+
+    final content = Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (systemNotice != null) systemNotice!,
+        if (header != null) header!,
+        if (childWidget != null) Flexible(child: childWidget),
+        if (footer != null) footer!,
+      ],
+    );
 
     return Hero(
       tag: tag,

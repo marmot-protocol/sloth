@@ -69,79 +69,16 @@ class EditProfileScreen extends HookConsumerWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
           child: WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
             header: WnSlateNavigationHeader(
               title: context.l10n.editProfile,
+              type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
-            child: Column(
-              spacing: 16.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                if (state.error != null) ...[
-                  Builder(
-                    builder: (context) {
-                      _logger.warning('Profile error: ${state.error}');
-                      final message = state.currentMetadata == null
-                          ? context.l10n.profileLoadError
-                          : context.l10n.profileSaveError;
-                      return Center(
-                        child: Text(
-                          message,
-                          style: TextStyle(color: colors.fillDestructive),
-                        ),
-                      );
-                    },
-                  ),
-                ] else
-                  Expanded(
-                    child: SingleChildScrollView(
-                      padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Gap(16.h),
-                          Center(
-                            child: WnAvatar(
-                              pictureUrl: state.pictureUrl,
-                              displayName: state.displayName ?? '',
-                              size: WnAvatarSize.large,
-                              color: avatarColorFromPubkey(pubkey),
-                              onEditTap: state.loadingState == EditProfileLoadingState.saving
-                                  ? null
-                                  : pickImage,
-                            ),
-                          ),
-                          Gap(36.h),
-                          WnInput(
-                            label: context.l10n.profileName,
-                            placeholder: context.l10n.enterYourName,
-                            controller: displayNameController,
-                          ),
-                          Gap(36.h),
-                          WnInput(
-                            label: context.l10n.nostrAddress,
-                            placeholder: 'example@whitenoise.chat',
-                            controller: nip05Controller,
-                          ),
-                          Gap(36.h),
-                          WnInputTextArea(
-                            label: context.l10n.aboutYou,
-                            placeholder: context.l10n.writeSomethingAboutYourself,
-                            controller: aboutController,
-                          ),
-                          Gap(36.h),
-                          WnCallout(
-                            title: context.l10n.profileIsPublic,
-                            description: context.l10n.profilePublicDescription,
-                          ),
-                          Gap(16.h),
-                        ],
-                      ),
-                    ),
-                  ),
-                if (state.loadingState != EditProfileLoadingState.loading && state.error == null)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+            footer: state.loadingState != EditProfileLoadingState.loading && state.error == null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                     child: Column(
                       spacing: 8.h,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -176,9 +113,67 @@ class EditProfileScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
+                  )
+                : null,
+            child: state.error != null
+                ? Builder(
+                    builder: (context) {
+                      _logger.warning('Profile error: ${state.error}');
+                      final message = state.currentMetadata == null
+                          ? context.l10n.profileLoadError
+                          : context.l10n.profileSaveError;
+                      return Center(
+                        child: Text(
+                          message,
+                          style: TextStyle(color: colors.fillDestructive),
+                        ),
+                      );
+                    },
+                  )
+                : SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(16.h),
+                        Center(
+                          child: WnAvatar(
+                            pictureUrl: state.pictureUrl,
+                            displayName: state.displayName ?? '',
+                            size: WnAvatarSize.large,
+                            color: avatarColorFromPubkey(pubkey),
+                            onEditTap: state.loadingState == EditProfileLoadingState.saving
+                                ? null
+                                : pickImage,
+                          ),
+                        ),
+                        Gap(36.h),
+                        WnInput(
+                          label: context.l10n.profileName,
+                          placeholder: context.l10n.enterYourName,
+                          controller: displayNameController,
+                        ),
+                        Gap(36.h),
+                        WnInput(
+                          label: context.l10n.nostrAddress,
+                          placeholder: 'example@whitenoise.chat',
+                          controller: nip05Controller,
+                        ),
+                        Gap(36.h),
+                        WnInputTextArea(
+                          label: context.l10n.aboutYou,
+                          placeholder: context.l10n.writeSomethingAboutYourself,
+                          controller: aboutController,
+                        ),
+                        Gap(36.h),
+                        WnCallout(
+                          title: context.l10n.profileIsPublic,
+                          description: context.l10n.profilePublicDescription,
+                        ),
+                        Gap(16.h),
+                      ],
+                    ),
                   ),
-              ],
-            ),
           ),
         ),
       ),

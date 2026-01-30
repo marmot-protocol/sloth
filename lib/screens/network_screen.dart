@@ -162,8 +162,11 @@ class NetworkScreen extends HookConsumerWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
           child: WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
             header: WnSlateNavigationHeader(
               title: context.l10n.networkRelaysTitle,
+              type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
             child: Padding(

@@ -39,6 +39,8 @@ class SettingsScreen extends HookConsumerWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
           child: WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
             header: WnSlateNavigationHeader(
               title: context.l10n.settings,
               onNavigate: () => Routes.goBack(context),

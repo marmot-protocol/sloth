@@ -100,14 +100,75 @@ void main() {
       });
     });
 
-    group('scroll edge effects', () {
-      testWidgets('shows top scroll effect when enabled', (tester) async {
-        await mountStackedWidget(
+    group('footer', () {
+      testWidgets('renders footer when provided', (tester) async {
+        await mountWidget(
           const WnSlate(
-            showTopScrollEffect: true,
+            footer: Text('Footer Content'),
           ),
           tester,
         );
+
+        expect(find.text('Footer Content'), findsOneWidget);
+      });
+
+      testWidgets('renders footer below child', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            footer: Text('Footer Content'),
+            child: Text('Child Content'),
+          ),
+          tester,
+        );
+
+        final childOffset = tester.getTopLeft(find.text('Child Content'));
+        final footerOffset = tester.getTopLeft(find.text('Footer Content'));
+        expect(footerOffset.dy, greaterThan(childOffset.dy));
+      });
+
+      testWidgets('does not render footer when not provided', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            child: Text('Child Content'),
+          ),
+          tester,
+        );
+
+        expect(find.text('Footer Content'), findsNothing);
+      });
+    });
+
+    group('scroll edge effects', () {
+      Widget buildScrollableSlate({
+        bool showTopScrollEffect = false,
+        bool showBottomScrollEffect = false,
+      }) {
+        return SizedBox(
+          height: 200.h,
+          child: WnSlate(
+            showTopScrollEffect: showTopScrollEffect,
+            showBottomScrollEffect: showBottomScrollEffect,
+            child: ListView.builder(
+              itemCount: 50,
+              itemBuilder: (context, index) => SizedBox(
+                height: 50.h,
+                child: Text('Item $index'),
+              ),
+            ),
+          ),
+        );
+      }
+
+      testWidgets('shows top scroll effect when scrolled down', (tester) async {
+        await mountStackedWidget(
+          buildScrollableSlate(showTopScrollEffect: true),
+          tester,
+        );
+
+        expect(find.byType(WnScrollEdgeEffect), findsNothing);
+
+        await tester.drag(find.byType(ListView), Offset(0, -100.h));
+        await tester.pumpAndSettle();
 
         final effectFinders = find.byType(WnScrollEdgeEffect);
         expect(effectFinders, findsOneWidget);
@@ -117,13 +178,13 @@ void main() {
         expect(effect.type, ScrollEdgeEffectType.slate);
       });
 
-      testWidgets('shows bottom scroll effect when enabled', (tester) async {
+      testWidgets('shows bottom scroll effect when content extends below', (tester) async {
         await mountStackedWidget(
-          const WnSlate(
-            showBottomScrollEffect: true,
-          ),
+          buildScrollableSlate(showBottomScrollEffect: true),
           tester,
         );
+
+        await tester.pump();
 
         final effectFinders = find.byType(WnScrollEdgeEffect);
         expect(effectFinders, findsOneWidget);
@@ -133,14 +194,36 @@ void main() {
         expect(effect.type, ScrollEdgeEffectType.slate);
       });
 
-      testWidgets('shows both scroll effects when both enabled', (tester) async {
+      testWidgets('hides bottom scroll effect when scrolled to end', (tester) async {
         await mountStackedWidget(
-          const WnSlate(
+          buildScrollableSlate(showBottomScrollEffect: true),
+          tester,
+        );
+
+        await tester.pumpAndSettle();
+        expect(find.byType(WnScrollEdgeEffect), findsOneWidget);
+
+        await tester.dragUntilVisible(
+          find.text('Item 49'),
+          find.byType(ListView),
+          Offset(0, -100.h),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnScrollEdgeEffect), findsNothing);
+      });
+
+      testWidgets('shows both scroll effects when scrolled to middle', (tester) async {
+        await mountStackedWidget(
+          buildScrollableSlate(
             showTopScrollEffect: true,
             showBottomScrollEffect: true,
           ),
           tester,
         );
+
+        await tester.drag(find.byType(ListView), Offset(0, -100.h));
+        await tester.pumpAndSettle();
 
         final effectFinders = find.byType(WnScrollEdgeEffect);
         expect(effectFinders, findsNWidgets(2));
@@ -148,7 +231,21 @@ void main() {
 
       testWidgets('hides scroll effects by default', (tester) async {
         await mountWidget(
-          const WnSlate(),
+          const WnSlate(
+            child: Text('Content'),
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnScrollEdgeEffect), findsNothing);
+      });
+
+      testWidgets('does not show scroll effects without child', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
+          ),
           tester,
         );
 

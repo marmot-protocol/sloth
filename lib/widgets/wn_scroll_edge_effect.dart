@@ -103,7 +103,7 @@ class WnScrollEdgeEffect extends StatelessWidget {
       case ScrollEdgeEffectType.canvas:
         return 48.h;
       case ScrollEdgeEffectType.slate:
-        return 80.h;
+        return 32.h;
       case ScrollEdgeEffectType.dropdown:
         return 40.h;
     }
