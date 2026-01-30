@@ -54,7 +54,7 @@ class LoginScreen extends HookConsumerWidget {
                     onNavigate: () => Routes.goBack(context),
                   ),
                   child: Padding(
-                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                     child: Column(
                       spacing: 8.h,
                       mainAxisSize: MainAxisSize.min,

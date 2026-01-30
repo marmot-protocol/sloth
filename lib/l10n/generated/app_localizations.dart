@@ -327,13 +327,13 @@ abstract class AppLocalizations {
   /// Description of public key
   ///
   /// In en, this message translates to:
-  /// **'Your public key (npub) can be shared with others. It\'s used to identify you on the network.'**
+  /// **'Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.'**
   String get publicKeyDescription;
 
   /// Private key label
   ///
   /// In en, this message translates to:
-  /// **'Private key'**
+  /// **'Private Key'**
   String get privateKey;
 
   /// Snackbar message when private key is copied
@@ -345,13 +345,13 @@ abstract class AppLocalizations {
   /// Description of private key
   ///
   /// In en, this message translates to:
-  /// **'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.'**
+  /// **'Your private key works like a secret password that grants access to your Nostr identity.'**
   String get privateKeyDescription;
 
   /// Warning box title for private key
   ///
   /// In en, this message translates to:
-  /// **'Keep your private key secure'**
+  /// **'Keep your private key safe!'**
   String get keepPrivateKeySecure;
 
   /// Warning message about private key

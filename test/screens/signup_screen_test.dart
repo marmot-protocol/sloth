@@ -171,7 +171,8 @@ void main() {
 
           expect(scrollPosition.pixels, scrollPosition.maxScrollExtent);
         },
-        skip: true, // WnSlate Column overflow when keyboard appears needs fix
+        // TODO(scroll): WnSlate Column overflow when keyboard appears needs fix
+        skip: true,
       );
     });
 

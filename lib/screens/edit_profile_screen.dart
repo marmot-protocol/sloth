@@ -131,7 +131,7 @@ class EditProfileScreen extends HookConsumerWidget {
                     },
                   )
                 : SingleChildScrollView(
-                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [

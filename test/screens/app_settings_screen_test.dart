@@ -65,9 +65,9 @@ void main() {
       expect(find.text('System'), findsNWidgets(2));
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpAppSettingsScreen(tester);
-      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -128,7 +128,7 @@ void main() {
       await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
 
       Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
@@ -338,7 +338,7 @@ void main() {
       await tester.tap(find.text('Deutsch'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
 
       Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));

@@ -124,9 +124,9 @@ void main() {
       expect(find.text('Package 1'), findsOneWidget);
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpScreen(tester);
-      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(DeveloperSettingsScreen), findsNothing);
     });

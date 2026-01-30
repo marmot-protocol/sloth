@@ -46,10 +46,11 @@ class AppSettingsScreen extends ConsumerWidget {
           child: WnSlate(
             header: WnSlateNavigationHeader(
               title: context.l10n.appSettingsTitle,
+              type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(
                 spacing: 24.h,
                 crossAxisAlignment: CrossAxisAlignment.start,

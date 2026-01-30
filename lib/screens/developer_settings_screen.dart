@@ -35,6 +35,7 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
           child: WnSlate(
             header: WnSlateNavigationHeader(
               title: context.l10n.developerSettingsTitle,
+              type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
             child: Padding(

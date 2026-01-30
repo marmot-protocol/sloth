@@ -13,6 +13,7 @@ import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class SignOutScreen extends HookConsumerWidget {
   const SignOutScreen({super.key});
@@ -24,6 +25,7 @@ class SignOutScreen extends HookConsumerWidget {
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
+    final noticeMessage = useState<String?>(null);
 
     useEffect(() {
       loadNsec();
@@ -36,6 +38,14 @@ class SignOutScreen extends HookConsumerWidget {
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
+    }
+
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
     }
 
     Future<void> signOut() async {
@@ -60,10 +70,18 @@ class SignOutScreen extends HookConsumerWidget {
           child: WnSlate(
             header: WnSlateNavigationHeader(
               title: context.l10n.signOut,
+              type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -105,7 +123,7 @@ class SignOutScreen extends HookConsumerWidget {
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,
-                              copiedMessage: context.l10n.privateKeyCopied,
+                              onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
                             ),
                             Gap(32.h),
                             SizedBox(

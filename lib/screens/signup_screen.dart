@@ -105,7 +105,7 @@ class SignupScreen extends HookConsumerWidget {
                     child: SingleChildScrollView(
                       controller: scrollController,
                       child: Padding(
-                        padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                        padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                         child: Column(
                           spacing: 16.h,
                           mainAxisSize: MainAxisSize.min,

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -11,6 +12,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 import 'package:sloth/widgets/wn_user_profile_card.dart';
 
 class ChatInfoScreen extends HookConsumerWidget {
@@ -25,6 +27,16 @@ class ChatInfoScreen extends HookConsumerWidget {
 
     final metadataSnapshot = useUserMetadata(context, userPubkey);
     final followsState = useFollows(accountPubkey);
+
+    final noticeMessage = useState<String?>(null);
+
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final metadata = metadataSnapshot.data;
     final isLoading = metadataSnapshot.connectionState == ConnectionState.waiting;
@@ -49,8 +61,15 @@ class ChatInfoScreen extends HookConsumerWidget {
               title: context.l10n.profile,
               onNavigate: () => Routes.goBack(context),
             ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
             child: Padding(
-              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -72,6 +91,8 @@ class ChatInfoScreen extends HookConsumerWidget {
                             WnUserProfileCard(
                               userPubkey: userPubkey,
                               metadata: metadata,
+                              onPublicKeyCopied: () =>
+                                  showCopiedNotice(context.l10n.publicKeyCopied),
                             ),
                             if (!isOwnProfile) ...[
                               Gap(24.h),

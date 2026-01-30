@@ -15,6 +15,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 import 'package:sloth/widgets/wn_user_profile_card.dart';
 
 final _logger = Logger('StartChatScreen');
@@ -34,6 +35,15 @@ class StartChatScreen extends HookConsumerWidget {
     final keyPackageSnapshot = useUserHasKeyPackage(userPubkey);
 
     final isStartingChat = useState(false);
+    final noticeMessage = useState<String?>(null);
+
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final metadata = metadataSnapshot.data;
     final isLoading =
@@ -103,8 +113,15 @@ class StartChatScreen extends HookConsumerWidget {
                   title: context.l10n.startNewChat,
                   onNavigate: () => Routes.goBack(context),
                 ),
+                systemNotice: noticeMessage.value != null
+                    ? WnSystemNotice(
+                        key: ValueKey(noticeMessage.value),
+                        title: noticeMessage.value!,
+                        onDismiss: dismissNotice,
+                      )
+                    : null,
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -123,6 +140,7 @@ class StartChatScreen extends HookConsumerWidget {
                         WnUserProfileCard(
                           userPubkey: userPubkey,
                           metadata: metadata,
+                          onPublicKeyCopied: () => showCopiedNotice(context.l10n.publicKeyCopied),
                         ),
                         Gap(24.h),
                         if (hasKeyPackage) ...[

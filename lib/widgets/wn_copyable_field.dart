@@ -15,7 +15,7 @@ class WnCopyableField extends HookWidget {
     this.obscurable = false,
     this.obscured = true,
     this.onToggleVisibility,
-    this.copiedMessage,
+    this.onCopied,
   });
 
   final String label;
@@ -23,18 +23,11 @@ class WnCopyableField extends HookWidget {
   final bool obscurable;
   final bool obscured;
   final VoidCallback? onToggleVisibility;
-  final String? copiedMessage;
+  final VoidCallback? onCopied;
 
-  void _handleCopy(BuildContext context, String text) {
+  void _handleCopy(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    if (copiedMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(copiedMessage!),
-          duration: const Duration(seconds: 2),
-        ),
-      );
-    }
+    onCopied?.call();
   }
 
   String _getDisplayValue() {
@@ -86,7 +79,7 @@ class WnCopyableField extends HookWidget {
           WnInputTrailingButton(
             key: const Key('copy_button'),
             icon: WnIcons.copy,
-            onPressed: () => _handleCopy(context, value),
+            onPressed: () => _handleCopy(value),
             size: WnInputSize.size44,
           ),
         ],

@@ -181,12 +181,12 @@
     "description": "Snackbar message when public key is copied"
   },
 
-  "publicKeyDescription": "Your public key (npub) can be shared with others. It's used to identify you on the network.",
+  "publicKeyDescription": "Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.",
   "@publicKeyDescription": {
     "description": "Description of public key"
   },
 
-  "privateKey": "Private key",
+  "privateKey": "Private Key",
   "@privateKey": {
     "description": "Private key label"
   },
@@ -196,12 +196,12 @@
     "description": "Snackbar message when private key is copied"
   },
 
-  "privateKeyDescription": "Your private key (nsec) should be kept secret. Anyone with access to it can control your account.",
+  "privateKeyDescription": "Your private key works like a secret password that grants access to your Nostr identity.",
   "@privateKeyDescription": {
     "description": "Description of private key"
   },
 
-  "keepPrivateKeySecure": "Keep your private key secure",
+  "keepPrivateKeySecure": "Keep your private key safe!",
   "@keepPrivateKeySecure": {
     "description": "Warning box title for private key"
   },

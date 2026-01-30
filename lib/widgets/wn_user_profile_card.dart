@@ -15,10 +15,12 @@ class WnUserProfileCard extends StatelessWidget {
     super.key,
     required this.userPubkey,
     this.metadata,
+    this.onPublicKeyCopied,
   });
 
   final String userPubkey;
   final FlutterMetadata? metadata;
+  final VoidCallback? onPublicKeyCopied;
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +75,7 @@ class WnUserProfileCard extends StatelessWidget {
           WnCopyableField(
             label: context.l10n.publicKey,
             value: npub,
-            copiedMessage: context.l10n.publicKeyCopied,
+            onCopied: onPublicKeyCopied,
           ),
         ],
       ],
