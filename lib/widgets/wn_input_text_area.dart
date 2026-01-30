@@ -130,7 +130,9 @@ class WnInputTextArea extends StatelessWidget {
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             color: enabled
-                ? (_hasError ? colors.fillDestructive : colors.backgroundContentPrimary)
+                ? (_hasError
+                      ? colors.backgroundContentDestructive
+                      : colors.backgroundContentPrimary)
                 : colors.backgroundContentTertiary,
             height: 20 / 14,
             letterSpacing: 0.4.sp,
@@ -177,7 +179,7 @@ class WnInputTextArea extends StatelessWidget {
         style: TextStyle(
           fontSize: 14.sp,
           fontWeight: FontWeight.w500,
-          color: colors.fillDestructive,
+          color: colors.backgroundContentDestructive,
           height: 20 / 14,
           letterSpacing: 0.4.sp,
         ),

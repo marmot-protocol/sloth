@@ -164,7 +164,9 @@ class WnInputPassword extends HookWidget {
                   fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                   color: enabled
-                      ? (_hasError ? colors.fillDestructive : colors.backgroundContentPrimary)
+                      ? (_hasError
+                            ? colors.backgroundContentDestructive
+                            : colors.backgroundContentPrimary)
                       : colors.backgroundContentTertiary,
                   height: 20 / 14,
                   letterSpacing: 0.4.sp,
@@ -335,7 +337,7 @@ class WnInputPassword extends HookWidget {
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         errorText!,
-        style: _baseInfoTextStyle.copyWith(color: colors.fillDestructive),
+        style: _baseInfoTextStyle.copyWith(color: colors.backgroundContentDestructive),
       ),
     );
   }
