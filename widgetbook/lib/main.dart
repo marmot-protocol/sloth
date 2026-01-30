@@ -19,20 +19,32 @@ class WidgetbookApp extends StatelessWidget {
     return Widgetbook.material(
       initialRoute: '?path=introduction/resources',
       addons: [
+        ViewportAddon(Viewports.all),
         ThemeAddon(
           themes: [
             WidgetbookTheme(name: 'Light', data: lightTheme),
             WidgetbookTheme(name: 'Dark', data: darkTheme),
           ],
           themeBuilder: (context, theme, child) {
+            return Theme(data: theme, child: child);
+          },
+        ),
+        BuilderAddon(
+          name: 'ScreenUtil',
+          builder: (context, child) {
             return ScreenUtilInit(
               designSize: const Size(390, 844),
               minTextAdapt: true,
-              child: Theme(data: theme, child: child),
+              splitScreenMode: true,
+              useInheritedMediaQuery: true,
+              builder: (context, child) {
+                ScreenUtil.configure(data: MediaQuery.of(context));
+                return child!;
+              },
+              child: child,
             );
           },
         ),
-        ViewportAddon(Viewports.all),
       ],
       directories: directories,
     );

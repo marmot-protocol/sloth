@@ -31,6 +31,7 @@ class HomeScreen extends StatelessWidget {
                         Gap(60.h),
                         SvgPicture.asset(
                           'assets/svgs/whitenoise.svg',
+                          package: 'sloth',
                           colorFilter: ColorFilter.mode(
                             colors.backgroundContentPrimary,
                             BlendMode.srcIn,

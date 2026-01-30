@@ -52,6 +52,7 @@ class WnPixelsLayer extends HookWidget {
           children: [
             SvgPicture.asset(
               'assets/svgs/pixels.svg',
+              package: 'sloth',
               fit: BoxFit.cover,
             ),
             if (isAnimating)

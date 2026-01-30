@@ -76,6 +76,7 @@ class WnImagePicker extends HookWidget {
               child: Center(
                 child: SvgPicture.asset(
                   'assets/svgs/edit.svg',
+                  package: 'sloth',
                   width: 14.w,
                   height: 14.w,
                   colorFilter: ColorFilter.mode(
@@ -221,6 +222,7 @@ class _ImageDisplay extends HookWidget {
     return SvgPicture.asset(
       key: const Key('user_icon'),
       'assets/svgs/user.svg',
+      package: 'sloth',
       width: _size * 0.4,
       height: _size * 0.4,
       colorFilter: ColorFilter.mode(
