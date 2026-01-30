@@ -44,10 +44,14 @@ flutter_rust_bridge::frb_generated_boilerplate!(
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
 <<<<<<< HEAD
+<<<<<<< HEAD
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 1573964385;
 =======
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 2130604590;
 >>>>>>> 4efd726 (I'm an idiot and I screwed up the rebase lol)
+=======
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 7045695;
+>>>>>>> 756f9d0 (fix issue where signer sometimes didn't get loaded on app restarts)
 
 // Section: executor
 
@@ -2476,6 +2480,65 @@ fn wire__crate__api__accounts__publish_account_key_package_impl(
                     })()
                     .await,
                 )
+            }
+        },
+    )
+}
+fn wire__crate__api__signer__register_external_signer_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_normal::<flutter_rust_bridge::for_generated::SseCodec, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "register_external_signer",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_pubkey = <String>::sse_decode(&mut deserializer);
+            let api_sign_event = decode_DartFn_Inputs_String_Output_String_AnyhowException(
+                <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
+            );
+            let api_nip04_encrypt =
+                decode_DartFn_Inputs_String_String_Output_String_AnyhowException(
+                    <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
+                );
+            let api_nip04_decrypt =
+                decode_DartFn_Inputs_String_String_Output_String_AnyhowException(
+                    <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
+                );
+            let api_nip44_encrypt =
+                decode_DartFn_Inputs_String_String_Output_String_AnyhowException(
+                    <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
+                );
+            let api_nip44_decrypt =
+                decode_DartFn_Inputs_String_String_Output_String_AnyhowException(
+                    <flutter_rust_bridge::DartOpaque>::sse_decode(&mut deserializer),
+                );
+            deserializer.end();
+            move |context| {
+                transform_result_sse::<_, crate::api::error::ApiError>((move || {
+                    let output_ok = crate::api::signer::register_external_signer(
+                        api_pubkey,
+                        api_sign_event,
+                        api_nip04_encrypt,
+                        api_nip04_decrypt,
+                        api_nip44_encrypt,
+                        api_nip44_decrypt,
+                    )?;
+                    Ok(output_ok)
+                })())
             }
         },
     )
@@ -5078,71 +5141,82 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
+<<<<<<< HEAD
 >>>>>>> 4efd726 (I'm an idiot and I screwed up the rebase lol)
         62 => wire__crate__api__relays__relay_type_inbox_impl(port, ptr, rust_vec_len, data_len),
         63 => {
+=======
+        62 => wire__crate__api__signer__register_external_signer_impl(
+            port,
+            ptr,
+            rust_vec_len,
+            data_len,
+        ),
+        63 => wire__crate__api__relays__relay_type_inbox_impl(port, ptr, rust_vec_len, data_len),
+        64 => {
+>>>>>>> 756f9d0 (fix issue where signer sometimes didn't get loaded on app restarts)
             wire__crate__api__relays__relay_type_key_package_impl(port, ptr, rust_vec_len, data_len)
         }
-        64 => wire__crate__api__relays__relay_type_nip65_impl(port, ptr, rust_vec_len, data_len),
-        65 => {
+        65 => wire__crate__api__relays__relay_type_nip65_impl(port, ptr, rust_vec_len, data_len),
+        66 => {
             wire__crate__api__utils__relay_url_from_string_impl(port, ptr, rust_vec_len, data_len)
         }
-        66 => {
+        67 => {
             wire__crate__api__accounts__remove_account_relay_impl(port, ptr, rust_vec_len, data_len)
         }
-        67 => wire__crate__api__groups__remove_members_from_group_impl(
+        68 => wire__crate__api__groups__remove_members_from_group_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        68 => wire__crate__api__messages__send_message_to_group_impl(
+        69 => wire__crate__api__messages__send_message_to_group_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        69 => {
+        70 => {
             wire__crate__api__chat_list__set_chat_pin_order_impl(port, ptr, rust_vec_len, data_len)
         }
-        70 => {
+        71 => {
             wire__crate__api__utils__string_from_relay_url_impl(port, ptr, rust_vec_len, data_len)
         }
-        71 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
+        72 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        72 => wire__crate__api__messages__subscribe_to_group_messages_impl(
+        73 => wire__crate__api__messages__subscribe_to_group_messages_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        73 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
-        78 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
-        79 => wire__crate__api__accounts__update_account_metadata_impl(
+        74 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
+        79 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
+        80 => wire__crate__api__accounts__update_account_metadata_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        80 => wire__crate__api__update_language_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire__crate__api__accounts__upload_account_profile_picture_impl(
+        81 => wire__crate__api__update_language_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire__crate__api__accounts__upload_account_profile_picture_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        83 => {
+        84 => {
             wire__crate__api__media_files__upload_chat_media_impl(port, ptr, rust_vec_len, data_len)
         }
-        84 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
-        85 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
-        86 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
-        87 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
+        85 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
+        86 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
+        87 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
+        88 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -5176,10 +5250,10 @@ fn pde_ffi_dispatcher_sync_impl(
         55 => wire__crate__api__utils__language_turkish_impl(ptr, rust_vec_len, data_len),
 >>>>>>> 4efd726 (I'm an idiot and I screwed up the rebase lol)
         60 => wire__crate__api__utils__npub_from_hex_pubkey_impl(ptr, rust_vec_len, data_len),
-        74 => wire__crate__api__utils__theme_mode_dark_impl(ptr, rust_vec_len, data_len),
-        75 => wire__crate__api__utils__theme_mode_light_impl(ptr, rust_vec_len, data_len),
-        76 => wire__crate__api__utils__theme_mode_system_impl(ptr, rust_vec_len, data_len),
-        77 => wire__crate__api__utils__theme_mode_to_string_impl(ptr, rust_vec_len, data_len),
+        75 => wire__crate__api__utils__theme_mode_dark_impl(ptr, rust_vec_len, data_len),
+        76 => wire__crate__api__utils__theme_mode_light_impl(ptr, rust_vec_len, data_len),
+        77 => wire__crate__api__utils__theme_mode_system_impl(ptr, rust_vec_len, data_len),
+        78 => wire__crate__api__utils__theme_mode_to_string_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
