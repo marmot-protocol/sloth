@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
+import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:sloth/widgets/wn_icon.dart';
@@ -14,9 +15,25 @@ import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 class _MockApi extends MockWnApi {
+  AccountType _accountType = AccountType.local;
+
+  void setAccountType(AccountType type) {
+    _accountType = type;
+  }
+
   @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
+  }
+
+  @override
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
+    return Account(
+      pubkey: pubkey,
+      accountType: _accountType,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
   }
 }
 
@@ -29,7 +46,16 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  setUpAll(() => RustLib.initMock(api: _MockApi()));
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.setAccountType(AccountType.local);
+  });
 
   Future<void> pumpProfileKeysScreen(WidgetTester tester) async {
     await mountTestApp(
@@ -179,6 +205,31 @@ void main() {
       await tester.pump();
 
       expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
+    });
+
+    testWidgets('hides private key section when using external signer', (tester) async {
+      mockApi.setAccountType(AccountType.external_);
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Private Key'), findsNothing);
+      expect(
+        find.text(
+          'Your private key works like a secret password that grants access to your Nostr identity.',
+        ),
+        findsNothing,
+      );
+      expect(find.text('Keep your private key safe!'), findsNothing);
+    });
+
+    testWidgets('shows only public key field when using external signer', (tester) async {
+      mockApi.setAccountType(AccountType.external_);
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      final copyableFields = find.byType(WnCopyableField);
+      expect(copyableFields, findsOneWidget);
+      expect(find.text('Public key'), findsOneWidget);
     });
 
     testWidgets('success notice auto-dismisses after timeout', (tester) async {
