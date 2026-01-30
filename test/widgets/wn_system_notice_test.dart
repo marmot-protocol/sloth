@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart' show WnIcon;
+import 'package:sloth/widgets/wn_icon.dart' show WnIcon, WnIcons;
 import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../test_helpers.dart';
+
+const _animationDuration = Duration(milliseconds: 200);
 
 void main() {
   testWidgets(
@@ -33,10 +35,10 @@ void main() {
         tester,
       );
 
-      expect(
-        find.byKey(const ValueKey('systemNotice_leadingIcon')),
-        findsOneWidget,
-      );
+      final iconFinder = find.byKey(const ValueKey('systemNotice_leadingIcon'));
+      expect(iconFinder, findsOneWidget);
+      final icon = tester.widget<WnIcon>(iconFinder);
+      expect(icon.icon, equals(WnIcons.checkmarkFilled));
     });
 
     testWidgets('renders info type correctly', (tester) async {
@@ -47,10 +49,11 @@ void main() {
         ),
         tester,
       );
-      expect(
-        find.byKey(const ValueKey('systemNotice_leadingIcon')),
-        findsOneWidget,
-      );
+
+      final iconFinder = find.byKey(const ValueKey('systemNotice_leadingIcon'));
+      expect(iconFinder, findsOneWidget);
+      final icon = tester.widget<WnIcon>(iconFinder);
+      expect(icon.icon, equals(WnIcons.informationFilled));
     });
 
     testWidgets('renders warning type correctly', (tester) async {
@@ -61,10 +64,11 @@ void main() {
         ),
         tester,
       );
-      expect(
-        find.byKey(const ValueKey('systemNotice_leadingIcon')),
-        findsOneWidget,
-      );
+
+      final iconFinder = find.byKey(const ValueKey('systemNotice_leadingIcon'));
+      expect(iconFinder, findsOneWidget);
+      final icon = tester.widget<WnIcon>(iconFinder);
+      expect(icon.icon, equals(WnIcons.warningFilled));
     });
 
     testWidgets('renders error type correctly', (tester) async {
@@ -75,10 +79,11 @@ void main() {
         ),
         tester,
       );
-      expect(
-        find.byKey(const ValueKey('systemNotice_leadingIcon')),
-        findsOneWidget,
-      );
+
+      final iconFinder = find.byKey(const ValueKey('systemNotice_leadingIcon'));
+      expect(iconFinder, findsOneWidget);
+      final icon = tester.widget<WnIcon>(iconFinder);
+      expect(icon.icon, equals(WnIcons.errorFilled));
     });
 
     testWidgets('renders neutral type correctly', (tester) async {
@@ -214,7 +219,9 @@ void main() {
         tester,
       );
 
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
+      await tester.pumpAndSettle();
       expect(dismissed, isTrue);
     });
 
@@ -229,6 +236,7 @@ void main() {
         tester,
       );
 
+      await tester.pumpAndSettle();
       await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
       expect(toggled, isTrue);
     });
@@ -288,5 +296,260 @@ void main() {
         );
       },
     );
+  });
+
+  group('Entrance Animation', () {
+    testWidgets('slides down from top on mount', (tester) async {
+      await mountWidget(
+        const WnSystemNotice(title: 'Animated Notice'),
+        tester,
+      );
+
+      final slideTransition = tester.widget<SlideTransition>(
+        find.byKey(const Key('systemNotice_slideTransition')),
+      );
+      expect(slideTransition.position.value, const Offset(0, -1));
+
+      await tester.pumpAndSettle();
+
+      expect(slideTransition.position.value, Offset.zero);
+    });
+
+    testWidgets('uses ClipRect to prevent overflow during animation', (tester) async {
+      await mountWidget(
+        const WnSystemNotice(title: 'Clipped Notice'),
+        tester,
+      );
+
+      expect(find.byKey(const Key('systemNotice_clipRect')), findsOneWidget);
+    });
+  });
+
+  group('Exit Animation', () {
+    testWidgets('slides up when dismissed', (tester) async {
+      var dismissed = false;
+      await mountWidget(
+        WnSystemNotice(
+          title: 'Dismiss me',
+          variant: WnSystemNoticeVariant.dismissible,
+          onDismiss: () => dismissed = true,
+        ),
+        tester,
+      );
+
+      await tester.pumpAndSettle();
+
+      final slideTransitionBefore = tester.widget<SlideTransition>(
+        find.byKey(const Key('systemNotice_slideTransition')),
+      );
+      expect(slideTransitionBefore.position.value, Offset.zero);
+
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
+      await tester.pump();
+      await tester.pump(_animationDuration ~/ 2);
+
+      final slideTransitionMid = tester.widget<SlideTransition>(
+        find.byKey(const Key('systemNotice_slideTransition')),
+      );
+      expect(slideTransitionMid.position.value.dy, lessThan(0));
+
+      await tester.pumpAndSettle();
+
+      expect(dismissed, isTrue);
+    });
+
+    testWidgets('onDismiss called after animation completes', (tester) async {
+      var dismissed = false;
+      await mountWidget(
+        WnSystemNotice(
+          title: 'Dismiss me',
+          variant: WnSystemNoticeVariant.dismissible,
+          onDismiss: () => dismissed = true,
+        ),
+        tester,
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
+      await tester.pump();
+
+      expect(dismissed, isFalse);
+
+      await tester.pumpAndSettle();
+
+      expect(dismissed, isTrue);
+    });
+  });
+
+  group('Auto-hide', () {
+    testWidgets(
+      'temporary variant auto-hides after default duration (3s)',
+      (tester) async {
+        var dismissed = false;
+        await mountWidget(
+          WnSystemNotice(
+            title: 'Auto-hide',
+            onDismiss: () => dismissed = true,
+          ),
+          tester,
+        );
+
+        await tester.pumpAndSettle();
+
+        expect(dismissed, isFalse);
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
+
+        expect(dismissed, isTrue);
+      },
+    );
+
+    testWidgets('custom autoHideDuration is respected', (tester) async {
+      var dismissed = false;
+      await mountWidget(
+        WnSystemNotice(
+          title: 'Custom duration',
+          autoHideDuration: const Duration(seconds: 1),
+          onDismiss: () => dismissed = true,
+        ),
+        tester,
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.pump(const Duration(milliseconds: 500));
+      expect(dismissed, isFalse);
+
+      await tester.pump(const Duration(milliseconds: 500));
+      await tester.pumpAndSettle();
+
+      expect(dismissed, isTrue);
+    });
+
+    testWidgets('non-temporary variants do not auto-hide', (tester) async {
+      var dismissed = false;
+      await mountWidget(
+        WnSystemNotice(
+          title: 'No auto-hide',
+          variant: WnSystemNoticeVariant.dismissible,
+          onDismiss: () => dismissed = true,
+        ),
+        tester,
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.pump(const Duration(seconds: 5));
+      await tester.pumpAndSettle();
+
+      expect(dismissed, isFalse);
+    });
+
+    testWidgets('auto-hide timer cancelled on manual dismiss', (tester) async {
+      var dismissCount = 0;
+      await mountWidget(
+        WnSystemNotice(
+          title: 'Manual dismiss',
+          variant: WnSystemNoticeVariant.dismissible,
+          autoHideDuration: const Duration(seconds: 3),
+          onDismiss: () => dismissCount++,
+        ),
+        tester,
+      );
+
+      await tester.pumpAndSettle();
+
+      await tester.pump(const Duration(seconds: 1));
+
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
+      await tester.pumpAndSettle();
+
+      expect(dismissCount, 1);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
+      expect(dismissCount, 1);
+    });
+  });
+
+  group('Expand/Collapse Animation', () {
+    testWidgets('expand animates height and fades in content', (tester) async {
+      var isExpanded = false;
+
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return MaterialApp(
+              home: Scaffold(
+                body: WnSystemNotice(
+                  title: 'Toggle me',
+                  description: 'Content',
+                  variant: isExpanded
+                      ? WnSystemNoticeVariant.expanded
+                      : WnSystemNoticeVariant.collapsed,
+                  onToggle: () {
+                    setState(() => isExpanded = !isExpanded);
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Content'), findsNothing);
+
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
+      await tester.pump();
+
+      expect(find.byType(AnimatedSize), findsOneWidget);
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Content'), findsOneWidget);
+    });
+
+    testWidgets('collapse animates height and fades out content', (tester) async {
+      var isExpanded = true;
+
+      await tester.pumpWidget(
+        StatefulBuilder(
+          builder: (context, setState) {
+            return MaterialApp(
+              home: Scaffold(
+                body: WnSystemNotice(
+                  title: 'Toggle me',
+                  description: 'Content',
+                  variant: isExpanded
+                      ? WnSystemNoticeVariant.expanded
+                      : WnSystemNoticeVariant.collapsed,
+                  onToggle: () {
+                    setState(() => isExpanded = !isExpanded);
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Content'), findsOneWidget);
+
+      await tester.tap(find.byKey(const ValueKey('systemNotice_actionIcon')));
+      await tester.pump();
+
+      expect(find.byType(AnimatedSize), findsOneWidget);
+
+      await tester.pumpAndSettle();
+
+      expect(find.text('Content'), findsNothing);
+    });
   });
 }
