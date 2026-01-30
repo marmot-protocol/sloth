@@ -9,10 +9,12 @@ class _BaseColors {
 class _BlackAlphaColors {
   static const Color blackAlpha200 = Color(0x33000000);
   static const Color blackAlpha300 = Color(0x4D000000);
+  static const Color blackAlpha500 = Color(0x80000000);
   static const Color blackAlpha600 = Color(0x99000000);
 }
 
 class _WhiteAlphaColors {
+  static const Color whiteAlpha500 = Color(0x80FFFFFF);
   static const Color whiteAlpha600 = Color(0x99FFFFFF);
   static const Color whiteAlpha800 = Color(0xCCFFFFFF);
   static const Color whiteAlpha900 = Color(0xE6FFFFFF);
@@ -427,6 +429,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color intentionErrorBackground;
   final Color intentionErrorContent;
   final Color shadow;
+  final Color overlayPrimary;
   final SemanticAccentColors accent;
 
   const SemanticColors({
@@ -472,6 +475,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.intentionErrorBackground,
     required this.intentionErrorContent,
     required this.shadow,
+    required this.overlayPrimary,
     required this.accent,
   });
 
@@ -518,6 +522,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorBackground: _RedColors.red50,
     intentionErrorContent: _RedColors.red600,
     shadow: _BaseColors.black,
+    overlayPrimary: _WhiteAlphaColors.whiteAlpha500,
     accent: _lightAccentColors,
   );
 
@@ -564,6 +569,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorBackground: _RedColors.red950,
     intentionErrorContent: _RedColors.red500,
     shadow: _BaseColors.black,
+    overlayPrimary: _BlackAlphaColors.blackAlpha500,
     accent: _darkAccentColors,
   );
 
@@ -611,6 +617,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? intentionErrorBackground,
     Color? intentionErrorContent,
     Color? shadow,
+    Color? overlayPrimary,
     SemanticAccentColors? accent,
   }) {
     return SemanticColors(
@@ -658,6 +665,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       intentionErrorBackground: intentionErrorBackground ?? this.intentionErrorBackground,
       intentionErrorContent: intentionErrorContent ?? this.intentionErrorContent,
       shadow: shadow ?? this.shadow,
+      overlayPrimary: overlayPrimary ?? this.overlayPrimary,
       accent: accent ?? this.accent,
     );
   }
@@ -764,6 +772,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       )!,
       intentionErrorContent: Color.lerp(intentionErrorContent, other.intentionErrorContent, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
+      overlayPrimary: Color.lerp(overlayPrimary, other.overlayPrimary, t)!,
       accent: SemanticAccentColors.lerp(accent, other.accent, t),
     );
   }
