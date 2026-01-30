@@ -29,9 +29,17 @@ class SignOutScreen extends HookConsumerWidget {
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
     final noticeMessage = useState<String?>(null);
+    final isUsingExternalSigner = useState<bool?>(null);
 
     useEffect(() {
       loadNsec();
+
+      Future<void> checkSignerType() async {
+        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
+        isUsingExternalSigner.value = isExternal;
+      }
+
+      checkSignerType();
       return null;
     }, [pubkey]);
 
@@ -103,29 +111,31 @@ class SignOutScreen extends HookConsumerWidget {
                             description: context.l10n.signOutWarning,
                             type: CalloutType.warning,
                           ),
-                          Gap(24.h),
-                          Text(
-                            context.l10n.backUpPrivateKey,
-                            style: typography.semiBold16.copyWith(
-                              color: colors.backgroundContentPrimary,
+                          if (isUsingExternalSigner.value == false) ...[
+                            Gap(24.h),
+                            Text(
+                              context.l10n.backUpPrivateKey,
+                              style: context.typographyScaled.semiBold16.copyWith(
+                                color: colors.backgroundContentPrimary,
+                              ),
                             ),
-                          ),
-                          Gap(8.h),
-                          Text(
-                            context.l10n.copyPrivateKeyHint,
-                            style: typography.medium14.copyWith(
-                              color: colors.backgroundContentSecondary,
+                            Gap(8.h),
+                            Text(
+                              context.l10n.copyPrivateKeyHint,
+                              style: context.typographyScaled.medium14.copyWith(
+                                color: colors.backgroundContentSecondary,
+                              ),
                             ),
-                          ),
-                          Gap(16.h),
-                          WnCopyableField(
-                            label: context.l10n.privateKey,
-                            value: state.nsec ?? '',
-                            obscurable: true,
-                            obscured: obscurePrivateKey.value,
-                            onToggleVisibility: togglePrivateKeyVisibility,
-                            onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
-                          ),
+                            Gap(16.h),
+                            WnCopyableField(
+                              label: context.l10n.privateKey,
+                              value: state.nsec ?? '',
+                              obscurable: true,
+                              obscured: obscurePrivateKey.value,
+                              onToggleVisibility: togglePrivateKeyVisibility,
+                              onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
+                            ),
+                          ],
                           Gap(32.h),
                           SizedBox(
                             width: double.infinity,

@@ -27,6 +27,7 @@ class LoginScreen extends HookConsumerWidget {
     );
     final androidSigner = useAndroidSigner();
     final signerError = useState<String?>(null);
+    final isSignerLoading = useState(false);
 
     Future<void> onSubmit() async {
       final success = await submit();
@@ -46,6 +47,7 @@ class LoginScreen extends HookConsumerWidget {
     Future<void> onAndroidSignerLogin() async {
       signerError.value = null;
       clearError();
+      isSignerLoading.value = true;
       try {
         final pubkey = await androidSigner.connect();
         await ref
@@ -61,10 +63,12 @@ class LoginScreen extends HookConsumerWidget {
         signerError.value = e.userFriendlyMessage;
       } catch (e) {
         signerError.value = 'Unable to connect to signer. Please try again.';
+      } finally {
+        isSignerLoading.value = false;
       }
     }
 
-    final anyLoading = state.isLoading || androidSigner.isConnecting;
+    final anyLoading = state.isLoading || isSignerLoading.value;
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
