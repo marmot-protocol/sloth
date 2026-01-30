@@ -27,9 +27,16 @@ useAndroidSigner() {
     var disposed = false;
 
     Future<void> checkAvailability() async {
-      final available = await signerService.isAvailable();
-      if (!disposed) {
-        isAvailable.value = available;
+      try {
+        final available = await signerService.isAvailable();
+        if (!disposed) {
+          isAvailable.value = available;
+        }
+      } catch (e, stackTrace) {
+        _logger.warning('Failed to check Android signer availability', e, stackTrace);
+        if (!disposed) {
+          isAvailable.value = false;
+        }
       }
     }
 

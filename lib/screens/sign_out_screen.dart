@@ -26,9 +26,17 @@ class SignOutScreen extends HookConsumerWidget {
     final androidSigner = useAndroidSigner();
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
+    final isUsingExternalSigner = useState<bool?>(null);
 
     useEffect(() {
       loadNsec();
+
+      Future<void> checkSignerType() async {
+        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
+        isUsingExternalSigner.value = isExternal;
+      }
+
+      checkSignerType();
       return null;
     }, [pubkey]);
 
@@ -80,33 +88,35 @@ class SignOutScreen extends HookConsumerWidget {
                             title: context.l10n.signOutConfirmation,
                             description: context.l10n.signOutWarning,
                           ),
-                          Gap(24.h),
-                          Text(
-                            context.l10n.backUpPrivateKey,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                              color: colors.backgroundContentPrimary,
+                          if (isUsingExternalSigner.value == false) ...[
+                            Gap(24.h),
+                            Text(
+                              context.l10n.backUpPrivateKey,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: colors.backgroundContentPrimary,
+                              ),
                             ),
-                          ),
-                          Gap(8.h),
-                          Text(
-                            context.l10n.copyPrivateKeyHint,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentSecondary,
+                            Gap(8.h),
+                            Text(
+                              context.l10n.copyPrivateKeyHint,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentSecondary,
+                              ),
                             ),
-                          ),
-                          Gap(16.h),
-                          WnCopyableField(
-                            label: context.l10n.privateKey,
-                            value: state.nsec ?? '',
-                            obscurable: true,
-                            obscured: obscurePrivateKey.value,
-                            onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: context.l10n.privateKeyCopied,
-                          ),
+                            Gap(16.h),
+                            WnCopyableField(
+                              label: context.l10n.privateKey,
+                              value: state.nsec ?? '',
+                              obscurable: true,
+                              obscured: obscurePrivateKey.value,
+                              onToggleVisibility: togglePrivateKeyVisibility,
+                              copiedMessage: context.l10n.privateKeyCopied,
+                            ),
+                          ],
                           Gap(32.h),
                           SizedBox(
                             width: double.infinity,

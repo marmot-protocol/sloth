@@ -148,8 +148,13 @@ class AuthNotifier extends AsyncNotifier<String?> {
     final pubkey = state.value;
     if (pubkey == null) return false;
 
-    final account = await accounts_api.getAccount(pubkey: pubkey);
-    return account.accountType == accounts_api.AccountType.external_;
+    try {
+      final account = await accounts_api.getAccount(pubkey: pubkey);
+      return account.accountType == accounts_api.AccountType.external_;
+    } on ApiError catch (e) {
+      _logger.warning('Failed to read account type: ${e.message}');
+      return false;
+    }
   }
 
   Future<String> signup() async {

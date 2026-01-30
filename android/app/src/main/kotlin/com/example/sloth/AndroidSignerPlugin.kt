@@ -274,6 +274,11 @@ class AndroidSignerPlugin :
 
         try {
             currentActivity.startActivityForResult(intent, REQUEST_CODE_SIGNER)
+        } catch (e: android.content.ActivityNotFoundException) {
+            pendingResult = null
+            currentRequestId = null
+            setSignerPackageName("")
+            result.error("NO_SIGNER", "No signer app found: ${e.message}", null)
         } catch (e: Exception) {
             pendingResult = null
             currentRequestId = null
@@ -423,6 +428,11 @@ class AndroidSignerPlugin :
 
         try {
             currentActivity.startActivityForResult(intent, REQUEST_CODE_SIGNER)
+        } catch (e: android.content.ActivityNotFoundException) {
+            pendingResult = null
+            currentRequestId = null
+            setSignerPackageName("")
+            result.error("NO_SIGNER", "No signer app found: ${e.message}", null)
         } catch (e: Exception) {
             pendingResult = null
             currentRequestId = null
