@@ -7,7 +7,7 @@ import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
 
 class ChatListScreen extends HookConsumerWidget {
   const ChatListScreen({super.key});
@@ -26,7 +26,7 @@ class ChatListScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const WnSlateContainer(child: WnAccountBar()),
+            const WnSlate(header: WnAccountBar()),
             Expanded(child: _buildContent(context, chatList, isLoading)),
           ],
         ),

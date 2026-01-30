@@ -18,7 +18,7 @@ import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_fade_overlay.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
 
 final _logger = Logger('ChatScreen');
 
@@ -95,8 +95,8 @@ class ChatScreen extends HookConsumerWidget {
         body: SafeArea(
           child: Column(
             children: [
-              WnSlateContainer(
-                child: WnChatHeader(
+              WnSlate(
+                header: WnChatHeader(
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   onBack: () => Routes.goToChatList(context),

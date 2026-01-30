@@ -8,9 +8,9 @@ import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
-import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
 
 class LoginScreen extends HookConsumerWidget {
@@ -47,53 +47,36 @@ class LoginScreen extends HookConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                WnSlateContainer(
-                  child: Column(
-                    spacing: 8.h,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        spacing: 4.w,
-                        children: [
-                          IconButton(
-                            key: const Key('back_button'),
-                            onPressed: () => Routes.goBack(context),
-                            icon: WnIcon(
-                              WnIcons.chevronLeft,
-                              size: 24.sp,
-                              color: context.colors.backgroundContentTertiary,
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              context.l10n.loginTitle,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: context.colors.backgroundContentTertiary,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      Gap(8.h),
-                      WnTextFormField(
-                        label: context.l10n.enterPrivateKey,
-                        placeholder: context.l10n.nsecPlaceholder,
-                        controller: controller,
-                        autofocus: true,
-                        obscureText: true,
-                        errorText: state.error,
-                        onChanged: (_) => clearError(),
-                        onPaste: paste,
-                      ),
-                      WnButton(
-                        text: context.l10n.login,
-                        onPressed: onSubmit,
-                        loading: state.isLoading,
-                      ),
-                    ],
+                WnSlate(
+                  header: WnSlateNavigationHeader(
+                    title: context.l10n.loginTitle,
+                    type: WnSlateNavigationType.back,
+                    onNavigate: () => Routes.goBack(context),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                    child: Column(
+                      spacing: 8.h,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        WnTextFormField(
+                          label: context.l10n.enterPrivateKey,
+                          placeholder: context.l10n.nsecPlaceholder,
+                          controller: controller,
+                          autofocus: true,
+                          obscureText: true,
+                          errorText: state.error,
+                          onChanged: (_) => clearError(),
+                          onPaste: paste,
+                        ),
+                        WnButton(
+                          text: context.l10n.login,
+                          onPressed: onSubmit,
+                          loading: state.isLoading,
+                        ),
+                      ],
+                    ),
                   ),
                 ),
                 Gap(16.h),

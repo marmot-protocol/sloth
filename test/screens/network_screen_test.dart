@@ -303,7 +303,7 @@ void main() {
       testWidgets('close button is visible', (tester) async {
         await pumpNetworkScreen(tester);
 
-        expect(find.byKey(const Key('close_button')), findsOneWidget);
+        expect(find.byKey(const Key('slate_close_button')), findsOneWidget);
       });
 
       testWidgets('close button pops the screen', (tester) async {
@@ -311,7 +311,7 @@ void main() {
 
         expect(find.text('Network Relays'), findsOneWidget);
 
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(find.text('Network Relays'), findsNothing);

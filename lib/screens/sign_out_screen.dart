@@ -10,8 +10,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 
 class SignOutScreen extends HookConsumerWidget {
@@ -57,66 +57,72 @@ class SignOutScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.signOut),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Gap(24.h),
-                          WnWarningBox(
-                            title: context.l10n.signOutConfirmation,
-                            description: context.l10n.signOutWarning,
-                          ),
-                          Gap(24.h),
-                          Text(
-                            context.l10n.backUpPrivateKey,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
-                              color: colors.backgroundContentPrimary,
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.signOut,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Gap(24.h),
+                            WnWarningBox(
+                              title: context.l10n.signOutConfirmation,
+                              description: context.l10n.signOutWarning,
                             ),
-                          ),
-                          Gap(8.h),
-                          Text(
-                            context.l10n.copyPrivateKeyHint,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentSecondary,
+                            Gap(24.h),
+                            Text(
+                              context.l10n.backUpPrivateKey,
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w600,
+                                color: colors.backgroundContentPrimary,
+                              ),
                             ),
-                          ),
-                          Gap(16.h),
-                          WnCopyableField(
-                            label: context.l10n.privateKey,
-                            value: state.nsec ?? '',
-                            obscurable: true,
-                            obscured: obscurePrivateKey.value,
-                            onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: context.l10n.privateKeyCopied,
-                          ),
-                          Gap(32.h),
-                          SizedBox(
-                            width: double.infinity,
-                            child: WnButton(
-                              text: context.l10n.signOut,
-                              onPressed: signOut,
-                              loading: isLoggingOut.value,
+                            Gap(8.h),
+                            Text(
+                              context.l10n.copyPrivateKeyHint,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentSecondary,
+                              ),
                             ),
-                          ),
-                          Gap(24.h),
-                        ],
+                            Gap(16.h),
+                            WnCopyableField(
+                              label: context.l10n.privateKey,
+                              value: state.nsec ?? '',
+                              obscurable: true,
+                              obscured: obscurePrivateKey.value,
+                              onToggleVisibility: togglePrivateKeyVisibility,
+                              copiedMessage: context.l10n.privateKeyCopied,
+                            ),
+                            Gap(32.h),
+                            SizedBox(
+                              width: double.infinity,
+                              child: WnButton(
+                                text: context.l10n.signOut,
+                                onPressed: signOut,
+                                loading: isLoggingOut.value,
+                              ),
+                            ),
+                            Gap(24.h),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

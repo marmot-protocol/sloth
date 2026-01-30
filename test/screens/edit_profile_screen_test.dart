@@ -129,7 +129,7 @@ void main() {
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpEditProfileScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -207,6 +207,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
       expect(find.text('Profile updated successfully'), findsOneWidget);
@@ -219,6 +224,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
       expect(find.textContaining('Unable to save profile'), findsOneWidget);
@@ -283,6 +293,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pump();
       final imagePicker = tester.widget<WnImagePicker>(find.byType(WnImagePicker));
@@ -297,6 +312,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pump();
       final imagePicker = tester.widget<WnImagePicker>(find.byType(WnImagePicker));

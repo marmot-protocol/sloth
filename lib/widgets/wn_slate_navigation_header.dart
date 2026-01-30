@@ -31,6 +31,7 @@ class WnSlateNavigationHeader extends StatelessWidget {
         children: [
           if (hasLeadingAction)
             _SlateHeaderAction(
+              key: const Key('slate_back_button'),
               isBack: true,
               onPressed: onNavigate!,
             ),
@@ -57,6 +58,7 @@ class WnSlateNavigationHeader extends StatelessWidget {
           ),
           if (hasTrailingAction)
             _SlateHeaderAction(
+              key: const Key('slate_close_button'),
               isBack: false,
               onPressed: onNavigate!,
             ),
@@ -68,6 +70,7 @@ class WnSlateNavigationHeader extends StatelessWidget {
 
 class _SlateHeaderAction extends StatelessWidget {
   const _SlateHeaderAction({
+    super.key,
     required this.isBack,
     required this.onPressed,
   });

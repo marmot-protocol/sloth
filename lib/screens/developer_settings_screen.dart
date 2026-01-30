@@ -5,12 +5,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class DeveloperSettingsScreen extends HookConsumerWidget {
   const DeveloperSettingsScreen({super.key});
@@ -31,50 +32,56 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.developerSettingsTitle),
-                SizedBox(height: 16.h),
-                _ActionButtons(
-                  isLoading: state.isLoading,
-                  onPublish: publish,
-                  onFetch: fetch,
-                  onDeleteAll: deleteAll,
-                ),
-                if (state.error != null) ...[
-                  SizedBox(height: 12.h),
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.developerSettingsTitle,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SizedBox(height: 16.h),
+                  _ActionButtons(
+                    isLoading: state.isLoading,
+                    onPublish: publish,
+                    onFetch: fetch,
+                    onDeleteAll: deleteAll,
+                  ),
+                  if (state.error != null) ...[
+                    SizedBox(height: 12.h),
+                    Text(
+                      state.error!,
+                      style: TextStyle(color: colors.fillDestructive, fontSize: 14.sp),
+                    ),
+                  ],
+                  SizedBox(height: 16.h),
                   Text(
-                    state.error!,
-                    style: TextStyle(color: colors.fillDestructive, fontSize: 14.sp),
+                    context.l10n.keyPackagesCount(state.packages.length),
+                    style: TextStyle(
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w600,
+                      color: colors.backgroundContentPrimary,
+                    ),
+                  ),
+                  SizedBox(height: 12.h),
+                  Expanded(
+                    child: state.isLoading && state.packages.isEmpty
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              strokeCap: StrokeCap.round,
+                              color: colors.backgroundContentPrimary,
+                            ),
+                          )
+                        : _KeyPackagesList(
+                            packages: state.packages,
+                            onDelete: delete,
+                            disabled: state.isLoading,
+                          ),
                   ),
                 ],
-                SizedBox(height: 16.h),
-                Text(
-                  context.l10n.keyPackagesCount(state.packages.length),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
-                    color: colors.backgroundContentPrimary,
-                  ),
-                ),
-                SizedBox(height: 12.h),
-                Expanded(
-                  child: state.isLoading && state.packages.isEmpty
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            strokeCap: StrokeCap.round,
-                            color: colors.backgroundContentPrimary,
-                          ),
-                        )
-                      : _KeyPackagesList(
-                          packages: state.packages,
-                          onDelete: delete,
-                          disabled: state.isLoading,
-                        ),
-                ),
-              ],
+              ),
             ),
           ),
         ),

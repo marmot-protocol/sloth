@@ -10,8 +10,9 @@ import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -112,12 +113,12 @@ void main() {
   group('ChatInfoScreen', () {
     testWidgets('displays slate container', (tester) async {
       await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
-      expect(find.byType(WnSlateContainer), findsOneWidget);
+      expect(find.byType(WnSlate), findsOneWidget);
     });
 
     testWidgets('displays screen header with Profile title', (tester) async {
       await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
-      expect(find.byType(WnScreenHeader), findsOneWidget);
+      expect(find.byType(WnSlateNavigationHeader), findsOneWidget);
       expect(find.text('Profile'), findsOneWidget);
     });
 

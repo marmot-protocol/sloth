@@ -14,9 +14,9 @@ import 'package:sloth/utils/formatting.dart' show formatPublicKey, npubFromHex;
 import 'package:sloth/utils/metadata.dart' show presentName;
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_fade_overlay.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_search_field.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class UserSearchScreen extends HookConsumerWidget {
   const UserSearchScreen({super.key});
@@ -40,54 +40,59 @@ class UserSearchScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            padding: EdgeInsets.only(left: 14.w, right: 14.w, top: 14.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.startNewChat),
-                Gap(16.h),
-                WnSearchField(
-                  placeholder: 'npub1...',
-                  controller: searchController,
-                  onChanged: (value) => searchQuery.value = value,
-                ),
-                Expanded(
-                  child: state.isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: colors.backgroundContentPrimary,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        )
-                      : state.users.isEmpty
-                      ? Center(
-                          child: Text(
-                            state.hasSearchQuery
-                                ? context.l10n.noResults
-                                : context.l10n.noFollowsYet,
-                            style: TextStyle(color: colors.backgroundContentTertiary),
-                          ),
-                        )
-                      : Stack(
-                          children: [
-                            ListView.builder(
-                              padding: EdgeInsets.symmetric(vertical: 12.h),
-                              itemCount: state.users.length,
-                              itemBuilder: (context, index) {
-                                final user = state.users[index];
-                                return _UserListTile(
-                                  user: user,
-                                  onTap: () => Routes.pushToStartChat(context, user.pubkey),
-                                );
-                              },
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.startNewChat,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Gap(16.h),
+                  WnSearchField(
+                    placeholder: 'npub1...',
+                    controller: searchController,
+                    onChanged: (value) => searchQuery.value = value,
+                  ),
+                  Expanded(
+                    child: state.isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: colors.backgroundContentPrimary,
+                              strokeCap: StrokeCap.round,
                             ),
-                            WnFadeOverlay.top(color: colors.backgroundTertiary),
-                            WnFadeOverlay.bottom(color: colors.backgroundTertiary),
-                          ],
-                        ),
-                ),
-              ],
+                          )
+                        : state.users.isEmpty
+                        ? Center(
+                            child: Text(
+                              state.hasSearchQuery
+                                  ? context.l10n.noResults
+                                  : context.l10n.noFollowsYet,
+                              style: TextStyle(color: colors.backgroundContentTertiary),
+                            ),
+                          )
+                        : Stack(
+                            children: [
+                              ListView.builder(
+                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                itemCount: state.users.length,
+                                itemBuilder: (context, index) {
+                                  final user = state.users[index];
+                                  return _UserListTile(
+                                    user: user,
+                                    onTap: () => Routes.pushToStartChat(context, user.pubkey),
+                                  );
+                                },
+                              ),
+                              WnFadeOverlay.top(color: colors.backgroundTertiary),
+                              WnFadeOverlay.bottom(color: colors.backgroundTertiary),
+                            ],
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

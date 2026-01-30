@@ -6,11 +6,12 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import 'package:sloth/widgets/wn_warning_box.dart';
 
 class ProfileKeysScreen extends HookConsumerWidget {
@@ -38,63 +39,69 @@ class ProfileKeysScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.profileKeys),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Gap(24.h),
-                          WnCopyableField(
-                            label: context.l10n.publicKey,
-                            value: npub ?? '',
-                            copiedMessage: context.l10n.publicKeyCopied,
-                          ),
-                          Gap(12.h),
-                          Text(
-                            context.l10n.publicKeyDescription,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentSecondary,
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.profileKeys,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Gap(24.h),
+                            WnCopyableField(
+                              label: context.l10n.publicKey,
+                              value: npub ?? '',
+                              copiedMessage: context.l10n.publicKeyCopied,
                             ),
-                          ),
-                          Gap(36.h),
-                          WnCopyableField(
-                            label: context.l10n.privateKey,
-                            value: state.nsec ?? '',
-                            obscurable: true,
-                            obscured: obscurePrivateKey.value,
-                            onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: context.l10n.privateKeyCopied,
-                          ),
-                          Gap(10.h),
-                          Text(
-                            context.l10n.privateKeyDescription,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentSecondary,
+                            Gap(12.h),
+                            Text(
+                              context.l10n.publicKeyDescription,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentSecondary,
+                              ),
                             ),
-                          ),
-                          Gap(12.h),
-                          WnWarningBox(
-                            title: context.l10n.keepPrivateKeySecure,
-                            description: context.l10n.privateKeyWarning,
-                          ),
-                          Gap(24.h),
-                        ],
+                            Gap(36.h),
+                            WnCopyableField(
+                              label: context.l10n.privateKey,
+                              value: state.nsec ?? '',
+                              obscurable: true,
+                              obscured: obscurePrivateKey.value,
+                              onToggleVisibility: togglePrivateKeyVisibility,
+                              copiedMessage: context.l10n.privateKeyCopied,
+                            ),
+                            Gap(10.h),
+                            Text(
+                              context.l10n.privateKeyDescription,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentSecondary,
+                              ),
+                            ),
+                            Gap(12.h),
+                            WnWarningBox(
+                              title: context.l10n.keepPrivateKeySecure,
+                              description: context.l10n.privateKeyWarning,
+                            ),
+                            Gap(24.h),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

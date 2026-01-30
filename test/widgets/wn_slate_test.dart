@@ -3,6 +3,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
 import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_content_transition.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import '../test_helpers.dart';
 
@@ -284,6 +285,86 @@ void main() {
         expect(container.margin, isNotNull);
         expect(container.padding, EdgeInsets.all(10.w));
         expect(container.decoration, isA<BoxDecoration>());
+      });
+    });
+
+    group('content transition', () {
+      testWidgets('wraps content in WnSlateContentTransition', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            child: Text('Content'),
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnSlateContentTransition), findsOneWidget);
+      });
+
+      testWidgets('content is inside WnSlateContentTransition', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            child: Text('Child Content'),
+          ),
+          tester,
+        );
+
+        final transitionFinder = find.byType(WnSlateContentTransition);
+        expect(transitionFinder, findsOneWidget);
+
+        expect(
+          find.descendant(
+            of: transitionFinder,
+            matching: find.text('Child Content'),
+          ),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets('header is inside WnSlateContentTransition', (tester) async {
+        await mountWidget(
+          WnSlate(
+            header: WnSlateNavigationHeader(
+              title: 'Header',
+              onNavigate: () {},
+            ),
+          ),
+          tester,
+        );
+
+        final transitionFinder = find.byType(WnSlateContentTransition);
+        expect(transitionFinder, findsOneWidget);
+
+        expect(
+          find.descendant(
+            of: transitionFinder,
+            matching: find.byType(WnSlateNavigationHeader),
+          ),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets('does not animate content when animateContent is false', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            animateContent: false,
+            child: Text('Content'),
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnSlateContentTransition), findsNothing);
+        expect(find.text('Content'), findsOneWidget);
+      });
+
+      testWidgets('animates content by default', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            child: Text('Content'),
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnSlateContentTransition), findsOneWidget);
       });
     });
   });

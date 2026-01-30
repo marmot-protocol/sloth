@@ -5,8 +5,8 @@ import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_auth_buttons_container.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class AddProfileScreen extends ConsumerWidget {
   const AddProfileScreen({super.key});
@@ -30,17 +30,23 @@ class AddProfileScreen extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const WnScreenHeader(title: 'Add a New Profile'),
-                const Spacer(),
-                WnAuthButtonsContainer(
-                  onLogin: navigateToLogin,
-                  onSignup: navigateToSignup,
-                ),
-              ],
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: 'Add a New Profile',
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Spacer(),
+                  WnAuthButtonsContainer(
+                    onLogin: navigateToLogin,
+                    onSignup: navigateToSignup,
+                  ),
+                ],
+              ),
             ),
           ),
         ),

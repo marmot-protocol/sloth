@@ -6,8 +6,9 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -91,12 +92,12 @@ void main() {
   group('UserSearchScreen', () {
     testWidgets('displays slate container', (tester) async {
       await pumpUserSearchScreen(tester);
-      expect(find.byType(WnSlateContainer), findsOneWidget);
+      expect(find.byType(WnSlate), findsOneWidget);
     });
 
     testWidgets('displays screen header with title', (tester) async {
       await pumpUserSearchScreen(tester);
-      expect(find.byType(WnScreenHeader), findsOneWidget);
+      expect(find.byType(WnSlateNavigationHeader), findsOneWidget);
       expect(find.text('Start new chat'), findsOneWidget);
     });
 

@@ -13,7 +13,7 @@ import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_account_bar.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -104,7 +104,7 @@ void main() {
     testWidgets('displays slate container', (tester) async {
       await pumpChatListScreen(tester);
 
-      expect(find.byType(WnSlateContainer), findsOneWidget);
+      expect(find.byType(WnSlate), findsOneWidget);
     });
 
     testWidgets('tapping avatar navigates to settings', (tester) async {

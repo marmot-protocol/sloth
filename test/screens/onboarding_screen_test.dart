@@ -47,7 +47,7 @@ void main() {
 
     testWidgets('tapping close icon navigates to chat list', (tester) async {
       await pumpOnboardingScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });

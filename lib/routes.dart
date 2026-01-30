@@ -1,8 +1,7 @@
-import 'package:flutter/material.dart'
-    show BuildContext, CurvedAnimation, Curves, FadeTransition, Widget, Navigator;
+import 'package:flutter/material.dart' show BuildContext, Navigator, Widget;
 import 'package:flutter_riverpod/flutter_riverpod.dart' show WidgetRef;
 import 'package:go_router/go_router.dart'
-    show CustomTransitionPage, GoRouter, GoRoute, GoRouterState;
+    show CustomTransitionPage, GoRoute, GoRouter, GoRouterState;
 import 'package:sloth/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
@@ -28,6 +27,7 @@ import 'package:sloth/screens/start_chat_screen.dart' show StartChatScreen;
 import 'package:sloth/screens/switch_profile_screen.dart' show SwitchProfileScreen;
 import 'package:sloth/screens/user_search_screen.dart' show UserSearchScreen;
 import 'package:sloth/screens/wip_screen.dart' show WipScreen;
+import 'package:sloth/widgets/wn_slate_content_transition.dart' show WnSlateContentTransition;
 
 abstract final class Routes {
   static const _home = '/';
@@ -238,11 +238,10 @@ abstract final class Routes {
     return CustomTransitionPage<void>(
       key: state.pageKey,
       child: child,
+      transitionDuration: WnSlateContentTransition.duration,
+      reverseTransitionDuration: WnSlateContentTransition.duration,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return FadeTransition(
-          opacity: CurvedAnimation(parent: animation, curve: Curves.easeOut),
-          child: child,
-        );
+        return child;
       },
     );
   }

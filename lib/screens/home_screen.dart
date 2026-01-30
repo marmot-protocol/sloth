@@ -6,7 +6,7 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
-import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
+import 'package:sloth/widgets/wn_slate.dart' show WnSlate;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -71,8 +71,11 @@ class HomeScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const WnSlateContainer(
-                  child: WnAuthButtonsContainer(),
+                WnSlate(
+                  child: Padding(
+                    padding: EdgeInsets.all(14.w),
+                    child: const WnAuthButtonsContainer(),
+                  ),
                 ),
                 Gap(44.h),
               ],

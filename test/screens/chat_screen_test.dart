@@ -514,7 +514,7 @@ void main() {
 
         await longPressMessage(tester, 'm1');
 
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(find.byType(MessageActionsScreen), findsNothing);
@@ -550,7 +550,7 @@ void main() {
         await longPressMessage(tester, 'm1');
         expect(textField.focusNode!.hasFocus, isFalse);
 
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(find.byType(MessageActionsScreen), findsNothing);

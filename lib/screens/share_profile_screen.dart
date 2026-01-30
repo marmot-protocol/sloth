@@ -7,13 +7,14 @@ import 'package:qr_flutter/qr_flutter.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class ShareProfileScreen extends HookConsumerWidget {
   const ShareProfileScreen({super.key});
@@ -54,97 +55,105 @@ class ShareProfileScreen extends HookConsumerWidget {
               constraints: BoxConstraints(
                 maxHeight: MediaQuery.of(context).size.height * 0.8,
               ),
-              child: WnSlateContainer(
-                child: Column(
-                  spacing: 16.h,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    WnScreenHeader(title: context.l10n.shareProfileTitle),
-                    Flexible(
-                      child: SingleChildScrollView(
-                        child: Center(
-                          child: Column(
-                            children: [
-                              WnAvatar(
-                                pictureUrl: metadata?.picture,
-                                displayName: displayName,
-                                size: 96.w,
-                              ),
-                              Gap(8.h),
-                              if (displayName != null)
-                                Text(
-                                  displayName,
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                    fontSize: 18.sp,
-                                    fontWeight: FontWeight.w600,
-                                    color: colors.backgroundContentPrimary,
-                                  ),
+              child: WnSlate(
+                header: WnSlateNavigationHeader(
+                  title: context.l10n.shareProfileTitle,
+                  onNavigate: () => Routes.goBack(context),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                  child: Column(
+                    spacing: 16.h,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Flexible(
+                        child: SingleChildScrollView(
+                          child: Center(
+                            child: Column(
+                              children: [
+                                WnAvatar(
+                                  pictureUrl: metadata?.picture,
+                                  displayName: displayName,
+                                  size: 96.w,
                                 ),
-                              Gap(18.h),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        formatPublicKey(npub ?? pubkey),
-                                        textAlign: TextAlign.center,
-                                        style: TextStyle(
-                                          fontSize: 14.sp,
-                                          fontWeight: FontWeight.w500,
-                                          color: colors.backgroundContentTertiary,
+                                Gap(8.h),
+                                if (displayName != null)
+                                  Text(
+                                    displayName,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      fontSize: 18.sp,
+                                      fontWeight: FontWeight.w600,
+                                      color: colors.backgroundContentPrimary,
+                                    ),
+                                  ),
+                                Gap(18.h),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Expanded(
+                                        child: Text(
+                                          formatPublicKey(npub ?? pubkey),
+                                          textAlign: TextAlign.center,
+                                          style: TextStyle(
+                                            fontSize: 14.sp,
+                                            fontWeight: FontWeight.w500,
+                                            color: colors.backgroundContentTertiary,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                    Gap(8.w),
-                                    IconButton(
-                                      key: const Key('copy_button'),
-                                      onPressed: npub != null ? () => copyToClipboard(npub) : null,
-                                      icon: WnIcon(
-                                        WnIcons.copy,
-                                        color: npub != null
-                                            ? colors.backgroundContentPrimary
-                                            : colors.backgroundContentTertiary,
+                                      Gap(8.w),
+                                      IconButton(
+                                        key: const Key('copy_button'),
+                                        onPressed: npub != null
+                                            ? () => copyToClipboard(npub)
+                                            : null,
+                                        icon: WnIcon(
+                                          WnIcons.copy,
+                                          color: npub != null
+                                              ? colors.backgroundContentPrimary
+                                              : colors.backgroundContentTertiary,
+                                        ),
+                                        padding: EdgeInsets.zero,
+                                        constraints: BoxConstraints(
+                                          minWidth: 24.w,
+                                          minHeight: 24.w,
+                                        ),
                                       ),
-                                      padding: EdgeInsets.zero,
-                                      constraints: BoxConstraints(
-                                        minWidth: 24.w,
-                                        minHeight: 24.w,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              Gap(32.h),
-                              if (npub != null)
-                                QrImageView(
-                                  data: npub,
-                                  size: 256.w,
-                                  gapless: false,
-                                  eyeStyle: QrEyeStyle(
-                                    eyeShape: QrEyeShape.square,
-                                    color: colors.backgroundContentPrimary,
+                                    ],
                                   ),
-                                  backgroundColor: colors.backgroundPrimary,
                                 ),
-                              Gap(10.h),
-                              Text(
-                                context.l10n.scanToConnect,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: colors.backgroundContentTertiary,
+                                Gap(32.h),
+                                if (npub != null)
+                                  QrImageView(
+                                    data: npub,
+                                    size: 256.w,
+                                    gapless: false,
+                                    eyeStyle: QrEyeStyle(
+                                      eyeShape: QrEyeShape.square,
+                                      color: colors.backgroundContentPrimary,
+                                    ),
+                                    backgroundColor: colors.backgroundPrimary,
+                                  ),
+                                Gap(10.h),
+                                Text(
+                                  context.l10n.scanToConnect,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    fontWeight: FontWeight.w500,
+                                    color: colors.backgroundContentTertiary,
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
