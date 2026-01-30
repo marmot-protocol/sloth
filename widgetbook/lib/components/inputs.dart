@@ -23,7 +23,35 @@ Widget wnInputShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this input field.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveInput(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Size Variants',
           'Input fields come in two sizes: 56px (default) and 44px (compact).',
           [
@@ -45,6 +73,7 @@ Widget wnInputShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'States',
           'Input fields can be in different states: enabled, disabled, read-only, or error.',
           [
@@ -75,6 +104,7 @@ Widget wnInputShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With Label',
           'Labels help identify the purpose of the input field.',
           [
@@ -105,6 +135,7 @@ Widget wnInputShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'Helper & Error Text',
           'Additional text below the input provides guidance or error feedback.',
           [
@@ -142,6 +173,7 @@ Widget wnInputShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With Content',
           'Inputs with pre-filled content in various states.',
           [
@@ -180,6 +212,7 @@ Widget wnInputShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With Actions',
           'Input fields can have inline or trailing action buttons.',
           [
@@ -218,6 +251,7 @@ Widget wnInputShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'Complete Examples',
           'Full configurations combining multiple features.',
           [
@@ -251,37 +285,35 @@ Widget wnInputShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this input field.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveInput(context: context),
       ],
     ),
   );
 }
 
-Widget _buildSection(String title, String description, List<Widget> children) {
+Widget _buildSection(
+  BuildContext context,
+  String title,
+  String description,
+  List<Widget> children,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: context.colors.backgroundContentPrimary,
+        ),
       ),
       const SizedBox(height: 4),
       Text(
         description,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF757575)),
+        style: TextStyle(
+          fontSize: 13,
+          color: context.colors.backgroundContentSecondary,
+        ),
       ),
       const SizedBox(height: 16),
       Wrap(spacing: 24, runSpacing: 24, children: children),
@@ -304,10 +336,10 @@ class _InputExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -463,7 +495,35 @@ Widget wnInputPasswordShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this password input field.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractivePasswordInput(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Size Variants',
           'Password input fields come in two sizes.',
           [
@@ -485,6 +545,7 @@ Widget wnInputPasswordShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'States',
           'Password inputs can be enabled, disabled, or show errors.',
           [
@@ -510,6 +571,7 @@ Widget wnInputPasswordShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With Label & Helper',
           'Labels and helper text provide context for the password field.',
           [
@@ -538,20 +600,6 @@ Widget wnInputPasswordShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this password input field.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractivePasswordInput(context: context),
       ],
     ),
   );
@@ -572,10 +620,10 @@ class _PasswordExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -667,7 +715,35 @@ Widget wnInputTextAreaShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this text area.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveTextArea(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Size Variants',
           'Text areas come in two sizes with configurable line count.',
           [
@@ -689,6 +765,7 @@ Widget wnInputTextAreaShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'States',
           'Text areas can be enabled, disabled, read-only, or show errors.',
           [
@@ -722,6 +799,7 @@ Widget wnInputTextAreaShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With Label & Helper',
           'Labels and helper text provide context.',
           [
@@ -751,34 +829,25 @@ Widget wnInputTextAreaShowcase(BuildContext context) {
           ],
         ),
         const SizedBox(height: 32),
-        _buildSection('Max Lines', 'Control the height by setting max lines.', [
-          _TextAreaExample(
-            label: '3 Lines',
-            child: _StaticTextArea(placeholder: 'Enter text...', maxLines: 3),
-          ),
-          _TextAreaExample(
-            label: '5 Lines (Default)',
-            child: _StaticTextArea(placeholder: 'Enter text...', maxLines: 5),
-          ),
-          _TextAreaExample(
-            label: '8 Lines',
-            child: _StaticTextArea(placeholder: 'Enter text...', maxLines: 8),
-          ),
-        ]),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+        _buildSection(
+          context,
+          'Max Lines',
+          'Control the height by setting max lines.',
+          [
+            _TextAreaExample(
+              label: '3 Lines',
+              child: _StaticTextArea(placeholder: 'Enter text...', maxLines: 3),
+            ),
+            _TextAreaExample(
+              label: '5 Lines (Default)',
+              child: _StaticTextArea(placeholder: 'Enter text...', maxLines: 5),
+            ),
+            _TextAreaExample(
+              label: '8 Lines',
+              child: _StaticTextArea(placeholder: 'Enter text...', maxLines: 8),
+            ),
+          ],
         ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this text area.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveTextArea(context: context),
       ],
     ),
   );
@@ -799,10 +868,10 @@ class _TextAreaExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),

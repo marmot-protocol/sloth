@@ -20,7 +20,35 @@ Widget wnCalloutShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this callout.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveCallout(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Callout Types',
           'Callouts come in 5 types to communicate different levels of importance.',
           [
@@ -63,6 +91,7 @@ Widget wnCalloutShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'Content Variations',
           'Callouts can display a title only or include an additional description.',
           [
@@ -86,6 +115,7 @@ Widget wnCalloutShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'Dismissible',
           'Callouts can include a dismiss button to allow users to close them.',
           [
@@ -109,6 +139,7 @@ Widget wnCalloutShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'Complete Examples',
           'Combinations of different callout configurations.',
           [
@@ -159,37 +190,35 @@ Widget wnCalloutShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this callout.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveCallout(context: context),
       ],
     ),
   );
 }
 
-Widget _buildSection(String title, String description, List<Widget> children) {
+Widget _buildSection(
+  BuildContext context,
+  String title,
+  String description,
+  List<Widget> children,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: context.colors.backgroundContentPrimary,
+        ),
       ),
       const SizedBox(height: 4),
       Text(
         description,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF757575)),
+        style: TextStyle(
+          fontSize: 13,
+          color: context.colors.backgroundContentSecondary,
+        ),
       ),
       const SizedBox(height: 16),
       Wrap(spacing: 24, runSpacing: 24, children: children),
@@ -212,10 +241,10 @@ class _CalloutExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),

@@ -22,7 +22,35 @@ Widget wnMenuItemShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this menu item.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveMenuItem(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Menu Item Types',
           'Menu items come in three types: primary (default), secondary, and destructive.',
           [
@@ -54,6 +82,7 @@ Widget wnMenuItemShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With/Without Icon',
           'Menu items can be displayed with or without an icon.',
           [
@@ -91,20 +120,6 @@ Widget wnMenuItemShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this menu item.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveMenuItem(context: context),
       ],
     ),
   );
@@ -126,7 +141,35 @@ Widget wnMenuShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this menu.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveMenu(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Menu Examples',
           'Menu containers group multiple menu items together.',
           [
@@ -190,37 +233,35 @@ Widget wnMenuShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this menu.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveMenu(context: context),
       ],
     ),
   );
 }
 
-Widget _buildSection(String title, String description, List<Widget> children) {
+Widget _buildSection(
+  BuildContext context,
+  String title,
+  String description,
+  List<Widget> children,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: context.colors.backgroundContentPrimary,
+        ),
       ),
       const SizedBox(height: 4),
       Text(
         description,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF757575)),
+        style: TextStyle(
+          fontSize: 13,
+          color: context.colors.backgroundContentSecondary,
+        ),
       ),
       const SizedBox(height: 16),
       Wrap(spacing: 24, runSpacing: 24, children: children),
@@ -243,16 +284,16 @@ class _MenuItemExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Container(
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.backgroundSecondary,
               borderRadius: BorderRadius.circular(8),
             ),
             child: child,
@@ -278,17 +319,17 @@ class _MenuExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
           Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.colors.backgroundSecondary,
               borderRadius: BorderRadius.circular(12),
               boxShadow: [
                 BoxShadow(
@@ -372,7 +413,7 @@ class _InteractiveMenuItem extends StatelessWidget {
     return Container(
       width: 300,
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.backgroundSecondary,
         borderRadius: BorderRadius.circular(8),
       ),
       child: WnMenuItem(
@@ -439,7 +480,7 @@ class _InteractiveMenu extends StatelessWidget {
       width: 300,
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: context.colors.backgroundSecondary,
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(

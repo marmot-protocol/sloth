@@ -22,7 +22,35 @@ Widget wnSeparatorShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this separator.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveSeparator(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Orientation',
           'Separators can be horizontal or vertical.',
           [
@@ -55,6 +83,7 @@ Widget wnSeparatorShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'With Indents',
           'Separators can have start indent, end indent, or both.',
           [
@@ -98,20 +127,6 @@ Widget wnSeparatorShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this separator.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveSeparator(context: context),
       ],
     ),
   );
@@ -132,10 +147,10 @@ class _SeparatorExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -211,7 +226,35 @@ Widget wnOverlayShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this overlay.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveOverlay(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Blur Variants',
           'Overlay blur can be adjusted with sigmaX and sigmaY values.',
           [
@@ -237,20 +280,6 @@ Widget wnOverlayShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this overlay.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveOverlay(context: context),
       ],
     ),
   );
@@ -271,10 +300,10 @@ class _OverlayExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -392,7 +421,35 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize this scroll edge effect.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveScrollEdgeEffect(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Effect Types',
           'Different edge effect types for various UI contexts.',
           [
@@ -424,6 +481,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
         ),
         const SizedBox(height: 32),
         _buildSection(
+          context,
           'Positions',
           'Effects can be positioned at top or bottom of scrollable areas.',
           [
@@ -477,20 +535,6 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize this scroll edge effect.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveScrollEdgeEffect(context: context),
       ],
     ),
   );
@@ -511,10 +555,10 @@ class _ScrollEdgeExample extends StatelessWidget {
         children: [
           Text(
             label,
-            style: const TextStyle(
+            style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.w500,
-              color: Color(0xFF757575),
+              color: context.colors.backgroundContentSecondary,
             ),
           ),
           const SizedBox(height: 8),
@@ -585,14 +629,20 @@ class _StaticScrollEdgeEffect extends StatelessWidget {
       height: 150,
       child: Stack(
         children: [
-          Container(color: Colors.blue.shade100),
+          Container(color: context.colors.backgroundSecondary),
           ListView.builder(
             itemCount: 10,
             itemBuilder: (context, index) => Container(
               height: 30,
               alignment: Alignment.centerLeft,
               padding: const EdgeInsets.symmetric(horizontal: 8),
-              child: Text('Item $index', style: const TextStyle(fontSize: 12)),
+              child: Text(
+                'Item $index',
+                style: TextStyle(
+                  fontSize: 12,
+                  color: context.colors.backgroundContentPrimary,
+                ),
+              ),
             ),
           ),
           edgeEffect,
@@ -677,11 +727,17 @@ class _InteractiveScrollEdgeEffect extends StatelessWidget {
       height: 250,
       child: Stack(
         children: [
-          Container(color: Colors.blue.shade100),
+          Container(color: context.colors.backgroundSecondary),
           ListView.builder(
             itemCount: 20,
-            itemBuilder: (context, index) =>
-                ListTile(title: Text('Item $index')),
+            itemBuilder: (context, index) => ListTile(
+              title: Text(
+                'Item $index',
+                style: TextStyle(
+                  color: context.colors.backgroundContentPrimary,
+                ),
+              ),
+            ),
           ),
           edgeEffect,
         ],
@@ -690,18 +746,30 @@ class _InteractiveScrollEdgeEffect extends StatelessWidget {
   }
 }
 
-Widget _buildSection(String title, String description, List<Widget> children) {
+Widget _buildSection(
+  BuildContext context,
+  String title,
+  String description,
+  List<Widget> children,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: context.colors.backgroundContentPrimary,
+        ),
       ),
       const SizedBox(height: 4),
       Text(
         description,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF757575)),
+        style: TextStyle(
+          fontSize: 13,
+          color: context.colors.backgroundContentSecondary,
+        ),
       ),
       const SizedBox(height: 16),
       Wrap(spacing: 24, runSpacing: 24, children: children),

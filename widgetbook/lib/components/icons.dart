@@ -24,7 +24,35 @@ Widget wnIconShowcase(BuildContext context) {
     body: ListView(
       padding: const EdgeInsets.all(24),
       children: [
+        Text(
+          'Playground',
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+            color: context.colors.backgroundContentPrimary,
+          ),
+        ),
+        const SizedBox(height: 8),
+        Text(
+          'Use the knobs panel to customize icon appearance.',
+          style: TextStyle(
+            fontSize: 14,
+            color: context.colors.backgroundContentSecondary,
+          ),
+        ),
+        const SizedBox(height: 16),
+        Align(
+          alignment: Alignment.centerLeft,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveIcon(context: context),
+          ),
+        ),
+        const SizedBox(height: 32),
+        Divider(color: context.colors.borderTertiary),
+        const SizedBox(height: 24),
         _buildSection(
+          context,
           'Icon Library',
           'All available icons in the design system. Each icon is displayed at 24px.',
           [
@@ -37,37 +65,35 @@ Widget wnIconShowcase(BuildContext context) {
             ),
           ],
         ),
-        const SizedBox(height: 48),
-        const Divider(),
-        const SizedBox(height: 24),
-        const Text(
-          'Interactive Playground',
-          style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        ),
-        const SizedBox(height: 8),
-        const Text(
-          'Use the knobs panel to customize icon appearance.',
-          style: TextStyle(fontSize: 14, color: Color(0xFF757575)),
-        ),
-        const SizedBox(height: 16),
-        _InteractiveIcon(context: context),
       ],
     ),
   );
 }
 
-Widget _buildSection(String title, String description, List<Widget> children) {
+Widget _buildSection(
+  BuildContext context,
+  String title,
+  String description,
+  List<Widget> children,
+) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
       Text(
         title,
-        style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+        style: TextStyle(
+          fontSize: 18,
+          fontWeight: FontWeight.bold,
+          color: context.colors.backgroundContentPrimary,
+        ),
       ),
       const SizedBox(height: 4),
       Text(
         description,
-        style: const TextStyle(fontSize: 13, color: Color(0xFF757575)),
+        style: TextStyle(
+          fontSize: 13,
+          color: context.colors.backgroundContentSecondary,
+        ),
       ),
       const SizedBox(height: 16),
       ...children,
@@ -99,7 +125,10 @@ class _IconTile extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             icon.name,
-            style: const TextStyle(fontSize: 10, color: Color(0xFF757575)),
+            style: TextStyle(
+              fontSize: 10,
+              color: context.colors.backgroundContentSecondary,
+            ),
             textAlign: TextAlign.center,
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
@@ -133,7 +162,7 @@ class _InteractiveIcon extends StatelessWidget {
 
     final color = this.context.knobs.color(
       label: 'Color',
-      initialValue: Colors.black,
+      initialValue: context.colors.backgroundContentPrimary,
     );
 
     return Container(
@@ -148,11 +177,18 @@ class _InteractiveIcon extends StatelessWidget {
           const SizedBox(height: 16),
           Text(
             selectedIcon.name,
-            style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500),
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.w500,
+              color: context.colors.backgroundContentPrimary,
+            ),
           ),
           Text(
             '${size.toInt()}px',
-            style: const TextStyle(fontSize: 12, color: Color(0xFF757575)),
+            style: TextStyle(
+              fontSize: 12,
+              color: context.colors.backgroundContentSecondary,
+            ),
           ),
         ],
       ),
