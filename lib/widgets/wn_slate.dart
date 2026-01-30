@@ -11,6 +11,7 @@ class WnSlate extends StatelessWidget {
     this.padding,
     this.showTopScrollEffect = false,
     this.showBottomScrollEffect = false,
+    this.systemNotice,
     this.child,
   });
 
@@ -19,6 +20,7 @@ class WnSlate extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final bool showTopScrollEffect;
   final bool showBottomScrollEffect;
+  final Widget? systemNotice;
   final Widget? child;
 
   BoxDecoration _decoration(SemanticColors colors) {
@@ -80,6 +82,7 @@ class WnSlate extends StatelessWidget {
                   children: [
                     if (header != null) header!,
                     if (child != null) child!,
+                    if (systemNotice != null) systemNotice!,
                   ],
                 ),
                 if (showTopScrollEffect)

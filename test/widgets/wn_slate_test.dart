@@ -77,6 +77,28 @@ void main() {
       });
     });
 
+    group('systemNotice', () {
+      testWidgets('renders systemNotice when provided', (tester) async {
+        await mountWidget(
+          const WnSlate(
+            systemNotice: Text('System Notice'),
+          ),
+          tester,
+        );
+
+        expect(find.text('System Notice'), findsOneWidget);
+      });
+
+      testWidgets('does not render systemNotice when not provided', (tester) async {
+        await mountWidget(
+          const WnSlate(),
+          tester,
+        );
+
+        expect(find.byType(WnSlate), findsOneWidget);
+      });
+    });
+
     group('scroll edge effects', () {
       testWidgets('shows top scroll effect when enabled', (tester) async {
         await mountStackedWidget(
