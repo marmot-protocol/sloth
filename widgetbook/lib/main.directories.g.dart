@@ -39,6 +39,113 @@ final directories = <_widgetbook.WidgetbookNode>[
     ],
   ),
   _widgetbook.WidgetbookFolder(
+    name: 'components',
+    children: [
+      _widgetbook.WidgetbookComponent(
+        name: 'WnButtonStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Button',
+            builder: _sloth_widgetbook_components_buttons.wnButtonShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnCalloutStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Callout',
+            builder: _sloth_widgetbook_components_feedback.wnCalloutShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnIconStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Icons',
+            builder: _sloth_widgetbook_components_icons.wnIconShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnInputPasswordStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Password Input',
+            builder:
+                _sloth_widgetbook_components_inputs.wnInputPasswordShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnInputStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Text Input',
+            builder: _sloth_widgetbook_components_inputs.wnInputShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnInputTextAreaStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Text Area',
+            builder:
+                _sloth_widgetbook_components_inputs.wnInputTextAreaShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnMenuItemStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Menu Item',
+            builder: _sloth_widgetbook_components_menu.wnMenuItemShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnMenuStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Menu Container',
+            builder: _sloth_widgetbook_components_menu.wnMenuShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnOverlayStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Overlay',
+            builder: _sloth_widgetbook_components_structure.wnOverlayShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnScrollEdgeEffectStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Scroll Edge Effect',
+            builder: _sloth_widgetbook_components_structure
+                .wnScrollEdgeEffectShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnSeparatorStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Separator',
+            builder: _sloth_widgetbook_components_structure.wnSeparatorShowcase,
+          ),
+        ],
+      ),
+    ],
+  ),
+  _widgetbook.WidgetbookFolder(
     name: 'foundations',
     children: [
       _widgetbook.WidgetbookComponent(
@@ -47,111 +154,6 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Semantic Colors',
             builder: _sloth_widgetbook_foundations_semantic_colors.allColors,
-          ),
-        ],
-      ),
-    ],
-  ),
-  _widgetbook.WidgetbookFolder(
-    name: 'widgets',
-    children: [
-      _widgetbook.WidgetbookComponent(
-        name: 'WnButton',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_buttons.wnButtonUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnCallout',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_feedback.wnCalloutUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnIcon',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_icons.wnIconUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnInput',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_inputs.wnInputUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnInputPassword',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Password',
-            builder: _sloth_widgetbook_components_inputs.wnInputPasswordUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnInputTextArea',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Text Area',
-            builder: _sloth_widgetbook_components_inputs.wnInputTextAreaUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnMenu',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Menu Container',
-            builder: _sloth_widgetbook_components_menu.wnMenuUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnMenuItem',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_menu.wnMenuItemUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnOverlay',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_structure.wnOverlayUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnScrollEdgeEffect',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_structure
-                .wnScrollEdgeEffectUseCase,
-          ),
-        ],
-      ),
-      _widgetbook.WidgetbookComponent(
-        name: 'WnSeparator',
-        useCases: [
-          _widgetbook.WidgetbookUseCase(
-            name: 'Default',
-            builder: _sloth_widgetbook_components_structure.wnSeparatorUseCase,
           ),
         ],
       ),
