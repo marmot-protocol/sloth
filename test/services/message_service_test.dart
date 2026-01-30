@@ -3,6 +3,10 @@ import 'package:sloth/services/message_service.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../test_helpers.dart';
+
+const _testPubkey = testPubkeyA;
+
 class _MockTag implements Tag {
   final List<String> vec;
   _MockTag(this.vec);
@@ -57,7 +61,7 @@ void main() {
 
   setUp(() {
     mockApi.sentMessages.clear();
-    service = const MessageService(pubkey: 'test_pubkey', groupId: 'group1');
+    service = const MessageService(pubkey: _testPubkey, groupId: 'group1');
   });
 
   group('sendTextMessage', () {
@@ -70,7 +74,7 @@ void main() {
     test('calls API with pubkey from constructor', () async {
       await service.sendTextMessage(content: 'Hello');
 
-      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+      expect(mockApi.sentMessages.first.pubkey, _testPubkey);
     });
 
     test('calls API with groupId from constructor', () async {
@@ -108,7 +112,7 @@ void main() {
         messagePubkey: 'author_pubkey',
       );
 
-      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+      expect(mockApi.sentMessages.first.pubkey, _testPubkey);
     });
 
     test('calls API with groupId from constructor', () async {
@@ -185,7 +189,7 @@ void main() {
         reactionPubkey: 'author_pubkey',
       );
 
-      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+      expect(mockApi.sentMessages.first.pubkey, _testPubkey);
     });
 
     test('calls API with groupId from constructor', () async {
@@ -279,12 +283,16 @@ void main() {
       final message = createMessage(
         reactions: ReactionSummary(
           byEmoji: [
-            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['test_pubkey']),
+            EmojiReaction(
+              emoji: '👍',
+              count: BigInt.one,
+              users: const [_testPubkey],
+            ),
           ],
           userReactions: [
             UserReaction(
               reactionId: 'reaction_to_delete',
-              user: 'test_pubkey',
+              user: _testPubkey,
               emoji: '👍',
               createdAt: DateTime.now(),
             ),
@@ -304,12 +312,16 @@ void main() {
       final message = createMessage(
         reactions: ReactionSummary(
           byEmoji: [
-            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['test_pubkey']),
+            EmojiReaction(
+              emoji: '👍',
+              count: BigInt.one,
+              users: const [_testPubkey],
+            ),
           ],
           userReactions: [
             UserReaction(
               reactionId: 'existing_reaction',
-              user: 'test_pubkey',
+              user: _testPubkey,
               emoji: '👍',
               createdAt: DateTime.now(),
             ),
@@ -369,7 +381,7 @@ void main() {
         emoji: '👍',
       );
 
-      expect(mockApi.sentMessages.first.pubkey, 'test_pubkey');
+      expect(mockApi.sentMessages.first.pubkey, _testPubkey);
     });
 
     test('calls API with groupId from constructor', () async {

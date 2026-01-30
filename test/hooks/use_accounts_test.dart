@@ -150,7 +150,7 @@ void main() {
 
       await mountTestWidget(
         tester,
-        currentPubkey: 'pubkey1',
+        currentPubkey: testPubkeyA,
         onBuild: (accounts, state, switchTo) {
           capturedAccounts = accounts;
         },
@@ -163,12 +163,12 @@ void main() {
       late AsyncSnapshot<List<Account>> capturedAccounts;
       mockApi.accounts = [
         Account(
-          pubkey: 'pubkey1',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
-          pubkey: 'pubkey2',
+          pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -176,7 +176,7 @@ void main() {
 
       await mountTestWidget(
         tester,
-        currentPubkey: 'pubkey1',
+        currentPubkey: testPubkeyA,
         onBuild: (accounts, state, switchTo) {
           capturedAccounts = accounts;
         },
@@ -186,8 +186,8 @@ void main() {
       expect(capturedAccounts.connectionState, ConnectionState.done);
       expect(capturedAccounts.data, isNotNull);
       expect(capturedAccounts.data!.length, 2);
-      expect(capturedAccounts.data![0].pubkey, 'pubkey1');
-      expect(capturedAccounts.data![1].pubkey, 'pubkey2');
+      expect(capturedAccounts.data![0].pubkey, testPubkeyA);
+      expect(capturedAccounts.data![1].pubkey, testPubkeyB);
     });
 
     testWidgets('returns empty list when no accounts', (tester) async {
@@ -196,7 +196,7 @@ void main() {
 
       await mountTestWidget(
         tester,
-        currentPubkey: 'pubkey1',
+        currentPubkey: testPubkeyA,
         onBuild: (accounts, state, switchTo) {
           capturedAccounts = accounts;
         },
@@ -214,7 +214,7 @@ void main() {
 
       await mountTestWidget(
         tester,
-        currentPubkey: 'pubkey1',
+        currentPubkey: testPubkeyA,
         onBuild: (accounts, state, switchTo) {
           capturedState = state;
         },
@@ -228,16 +228,16 @@ void main() {
     testWidgets('switchTo sets isSwitching true during operation and clears on success', (
       tester,
     ) async {
-      final mockAuthNotifier = _MockAuthNotifier('pubkey1');
+      final mockAuthNotifier = _MockAuthNotifier(testPubkeyA);
       mockAuthNotifier.switchProfileCompleter = Completer<void>();
       mockApi.accounts = [
         Account(
-          pubkey: 'pubkey1',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
-          pubkey: 'pubkey2',
+          pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -255,7 +255,7 @@ void main() {
       Routes.pushToSwitchProfile(tester.element(find.byType(Scaffold)));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.text('Display pubkey2'));
+      await tester.tap(find.text('Display $testPubkeyB'));
       await tester.pump();
 
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
@@ -270,16 +270,16 @@ void main() {
     testWidgets('sets error state when switchProfile throws', (tester) async {
       late Future<void> Function(String) capturedSwitchTo;
       late AccountsState capturedState;
-      final mockAuthNotifier = _MockAuthNotifier('pubkey1');
+      final mockAuthNotifier = _MockAuthNotifier(testPubkeyA);
       mockAuthNotifier.shouldThrowOnSwitch = true;
       mockApi.accounts = [
         Account(
-          pubkey: 'pubkey1',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
-          pubkey: 'pubkey2',
+          pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -295,7 +295,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: _TestWidget(
-                currentPubkey: 'pubkey1',
+                currentPubkey: testPubkeyA,
                 onBuild: (accounts, state, switchTo) {
                   capturedSwitchTo = switchTo;
                   capturedState = state;
@@ -307,7 +307,7 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await capturedSwitchTo('pubkey2');
+      await capturedSwitchTo(testPubkeyB);
       await tester.pumpAndSettle();
 
       expect(capturedState.error, isNotNull);
@@ -318,16 +318,16 @@ void main() {
     testWidgets('clears error when retrying switchTo', (tester) async {
       late Future<void> Function(String) capturedSwitchTo;
       late AccountsState capturedState;
-      final mockAuthNotifier = _MockAuthNotifier('pubkey1');
+      final mockAuthNotifier = _MockAuthNotifier(testPubkeyA);
       mockAuthNotifier.shouldThrowOnSwitch = true;
       mockApi.accounts = [
         Account(
-          pubkey: 'pubkey1',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
-          pubkey: 'pubkey2',
+          pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
@@ -343,7 +343,7 @@ void main() {
           child: MaterialApp(
             home: Scaffold(
               body: _TestWidget(
-                currentPubkey: 'pubkey1',
+                currentPubkey: testPubkeyA,
                 onBuild: (accounts, state, switchTo) {
                   capturedSwitchTo = switchTo;
                   capturedState = state;
@@ -355,14 +355,14 @@ void main() {
       );
       await tester.pumpAndSettle();
 
-      await capturedSwitchTo('pubkey2');
+      await capturedSwitchTo(testPubkeyB);
       await tester.pumpAndSettle();
       expect(capturedState.error, isNotNull);
       expect(capturedState.isSwitching, false);
 
       mockAuthNotifier.shouldThrowOnSwitch = false;
       mockAuthNotifier.switchProfileCompleter = Completer<void>();
-      unawaited(capturedSwitchTo('pubkey2'));
+      unawaited(capturedSwitchTo(testPubkeyB));
       await tester.pump();
 
       expect(capturedState.error, isNull);

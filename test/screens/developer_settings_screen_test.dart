@@ -54,8 +54,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -112,7 +112,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -135,7 +135,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg_to_delete',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -161,7 +161,7 @@ void main() {
       mockApi.keyPackages = [
         FlutterEvent(
           id: 'pkg1',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],
@@ -169,7 +169,7 @@ void main() {
         ),
         FlutterEvent(
           id: 'pkg2',
-          pubkey: 'test',
+          pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           kind: 443,
           tags: [],

@@ -714,5 +714,10 @@
   "failedToUpdateFollow": "Failed to update follow status. Please try again.",
   "@failedToUpdateFollow": {
     "description": "Error when follow or unfollow action fails"
+  },
+
+  "imagePickerError": "Failed to pick image. Please try again.",
+  "@imagePickerError": {
+    "description": "Error message when image picker fails"
   }
 }

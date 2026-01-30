@@ -16,8 +16,8 @@ import 'package:sloth/widgets/wn_message_bubble.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_pubkey';
-const _testGroupId = 'test_group_id';
+const _testPubkey = testPubkeyA;
+const _testGroupId = testGroupId;
 
 class _MockTag implements Tag {
   final List<String> vec;
@@ -33,7 +33,7 @@ class _MockTag implements Tag {
 ChatMessage _message(
   String id,
   DateTime createdAt, {
-  String pubkey = 'other',
+  String pubkey = testPubkeyB,
   bool isDeleted = false,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
@@ -303,8 +303,8 @@ void main() {
 
       testWidgets('menu button navigates to chat info screen for DM', (tester) async {
         _api.isDm = true;
-        _api.groupMembers = [_testPubkey, 'other_member_pubkey'];
-        _api.pubkeyToNpub['other_member_pubkey'] = 'npub1othermember';
+        _api.groupMembers = [_testPubkey, testPubkeyC];
+        _api.pubkeyToNpub[testPubkeyC] = 'npub1othermember';
         await pumpChatScreen(tester);
         await tester.tap(find.byKey(const Key('menu_button')));
         await tester.pumpAndSettle();

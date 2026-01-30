@@ -7,6 +7,7 @@ import 'package:sloth/src/rust/api/relays.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_relay_type.dart';
+import '../test_helpers.dart';
 
 class MockApi implements RustLibApi {
   List<Relay> normalRelays = [];
@@ -121,7 +122,7 @@ Future<void> pump(WidgetTester tester) async {
     MaterialApp(
       home: HookBuilder(
         builder: (context) {
-          hook = useNetworkRelays('test_pubkey');
+          hook = useNetworkRelays(testPubkeyA);
           return const SizedBox();
         },
       ),

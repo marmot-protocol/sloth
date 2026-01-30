@@ -4,15 +4,16 @@ import 'package:flutter_hooks/flutter_hooks.dart'
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
+import 'package:sloth/hooks/use_image_picker.dart';
 import 'package:sloth/hooks/use_signup.dart' show useSignup;
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_image_picker.dart' show WnImagePicker;
 import 'package:sloth/widgets/wn_input.dart' show WnInput;
 import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
@@ -30,6 +31,9 @@ class SignupScreen extends HookConsumerWidget {
     final (:state, :submit, :onImageSelected, :clearErrors) = useSignup(
       () => ref.read(authProvider.notifier).signup(),
     );
+    final (:pickImage, error: imagePickerError, clearError: clearImagePickerError) = useImagePicker(
+      onImageSelected: onImageSelected,
+    );
 
     final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
     useEffect(() {
@@ -44,6 +48,20 @@ class SignupScreen extends HookConsumerWidget {
       }
       return null;
     }, [keyboardHeight]);
+
+    useEffect(() {
+      if (imagePickerError != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.l10n.imagePickerError)),
+            );
+          }
+        });
+        clearImagePickerError();
+      }
+      return null;
+    }, [imagePickerError]);
 
     Future<void> onSubmit() async {
       final wasAddingAccount = ref.read(isAddingAccountProvider);
@@ -114,12 +132,11 @@ class SignupScreen extends HookConsumerWidget {
                             child: ValueListenableBuilder(
                               valueListenable: displayNameController,
                               builder: (context, value, child) {
-                                return WnImagePicker(
-                                  imagePath: state.selectedImagePath,
+                                return WnAvatar(
+                                  pictureUrl: state.selectedImagePath,
                                   displayName: value.text,
-                                  onImageSelected: onImageSelected,
-                                  loading: state.isLoading,
-                                  disabled: state.isLoading,
+                                  size: WnAvatarSize.large,
+                                  onEditTap: pickImage,
                                 );
                               },
                             ),

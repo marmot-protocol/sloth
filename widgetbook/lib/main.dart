@@ -28,6 +28,8 @@ class WidgetbookApp extends StatelessWidget {
             return ScreenUtilInit(
               designSize: const Size(390, 844),
               minTextAdapt: true,
+              enableScaleWH: () => false,
+              enableScaleText: () => false,
               child: Theme(data: theme, child: child),
             );
           },

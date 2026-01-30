@@ -132,5 +132,6 @@
   "unfollow": "Entfolgen",
   "failedToStartChat": "Chat konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
   "userNotOnWhiteNoise": "Dieser Benutzer ist noch nicht bei White Noise.",
-  "failedToUpdateFollow": "Folgestatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut."
+  "failedToUpdateFollow": "Folgestatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
+  "imagePickerError": "Bild konnte nicht ausgewählt werden. Bitte versuchen Sie es erneut."
 }
