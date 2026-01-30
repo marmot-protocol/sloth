@@ -19,12 +19,6 @@ class WidgetbookApp extends StatelessWidget {
     return Widgetbook.material(
       initialRoute: '?path=introduction/resources',
       addons: [
-        ViewportAddon([
-          IosViewports.iPhone13ProMax,
-          ...IosViewports.phones,
-          ...IosViewports.tablets,
-          ...AndroidViewports.all,
-        ]),
         ThemeAddon(
           themes: [
             WidgetbookTheme(name: 'Light', data: lightTheme),
