@@ -6,10 +6,6 @@ import 'package:sloth/widgets/wn_separator.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
-// =============================================================================
-// WnSeparator Story
-// =============================================================================
-
 class WnSeparatorStory extends StatelessWidget {
   const WnSeparatorStory({super.key});
 
@@ -199,10 +195,6 @@ class _InteractiveSeparator extends StatelessWidget {
   }
 }
 
-// =============================================================================
-// WnOverlay Story
-// =============================================================================
-
 class WnOverlayStory extends StatelessWidget {
   const WnOverlayStory({super.key});
 
@@ -384,10 +376,6 @@ class _InteractiveOverlay extends StatelessWidget {
   }
 }
 
-// =============================================================================
-// WnScrollEdgeEffect Story
-// =============================================================================
-
 class WnScrollEdgeEffectStory extends StatelessWidget {
   const WnScrollEdgeEffectStory({super.key});
 
@@ -413,6 +401,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.canvas,
                 position: ScrollEdgePosition.top,
+                height: 48,
               ),
             ),
             _ScrollEdgeExample(
@@ -420,6 +409,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.slate,
                 position: ScrollEdgePosition.top,
+                height: 80,
               ),
             ),
             _ScrollEdgeExample(
@@ -427,6 +417,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.dropdown,
                 position: ScrollEdgePosition.top,
+                height: 40,
               ),
             ),
           ],
@@ -441,6 +432,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.canvas,
                 position: ScrollEdgePosition.top,
+                height: 48,
               ),
             ),
             _ScrollEdgeExample(
@@ -448,6 +440,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.canvas,
                 position: ScrollEdgePosition.bottom,
+                height: 48,
               ),
             ),
             _ScrollEdgeExample(
@@ -455,6 +448,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.slate,
                 position: ScrollEdgePosition.top,
+                height: 80,
               ),
             ),
             _ScrollEdgeExample(
@@ -462,6 +456,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.slate,
                 position: ScrollEdgePosition.bottom,
+                height: 80,
               ),
             ),
             _ScrollEdgeExample(
@@ -469,6 +464,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.dropdown,
                 position: ScrollEdgePosition.top,
+                height: 40,
               ),
             ),
             _ScrollEdgeExample(
@@ -476,6 +472,7 @@ Widget wnScrollEdgeEffectShowcase(BuildContext context) {
               child: _StaticScrollEdgeEffect(
                 type: ScrollEdgeEffectType.dropdown,
                 position: ScrollEdgePosition.bottom,
+                height: 40,
               ),
             ),
           ],
@@ -529,15 +526,19 @@ class _ScrollEdgeExample extends StatelessWidget {
 }
 
 class _StaticScrollEdgeEffect extends StatelessWidget {
-  const _StaticScrollEdgeEffect({required this.type, required this.position});
+  const _StaticScrollEdgeEffect({
+    required this.type,
+    required this.position,
+    required this.height,
+  });
 
   final ScrollEdgeEffectType type;
   final ScrollEdgePosition position;
+  final double height;
 
   @override
   Widget build(BuildContext context) {
     final color = context.colors.backgroundPrimary;
-    const height = 48.0;
 
     Widget edgeEffect;
     switch (type) {
@@ -689,10 +690,6 @@ class _InteractiveScrollEdgeEffect extends StatelessWidget {
   }
 }
 
-// =============================================================================
-// Shared Helpers
-// =============================================================================
-
 Widget _buildSection(String title, String description, List<Widget> children) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
@@ -711,10 +708,6 @@ Widget _buildSection(String title, String description, List<Widget> children) {
     ],
   );
 }
-
-// =============================================================================
-// Extensions
-// =============================================================================
 
 extension on WnSeparatorOrientation {
   String get name => toString().split('.').last;
