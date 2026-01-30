@@ -9,7 +9,6 @@ import 'package:sloth/services/user_service.dart';
 import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
 import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/theme.dart';
-import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
@@ -89,7 +88,7 @@ class ChatListTile extends HookConsumerWidget {
       leading: WnAvatar(
         pictureUrl: pictureUrl,
         displayName: avatarName,
-        color: avatarColorFromPubkey(chatSummary.mlsGroupId),
+        color: AvatarColor.fromPubkey(chatSummary.mlsGroupId),
       ),
       title: Text(
         title,

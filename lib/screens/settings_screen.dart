@@ -6,7 +6,6 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -58,7 +57,7 @@ class SettingsScreen extends HookConsumerWidget {
                         pictureUrl: metadata?.picture,
                         displayName: displayName,
                         size: WnAvatarSize.medium,
-                        color: avatarColorFromPubkey(pubkey),
+                        color: AvatarColor.fromPubkey(pubkey),
                       ),
                       Flexible(
                         child: Column(

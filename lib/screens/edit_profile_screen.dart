@@ -143,7 +143,7 @@ class EditProfileScreen extends HookConsumerWidget {
                             pictureUrl: state.pictureUrl,
                             displayName: state.displayName ?? '',
                             size: WnAvatarSize.large,
-                            color: avatarColorFromPubkey(pubkey),
+                            color: AvatarColor.fromPubkey(pubkey),
                             onEditTap: state.loadingState == EditProfileLoadingState.saving
                                 ? null
                                 : pickImage,

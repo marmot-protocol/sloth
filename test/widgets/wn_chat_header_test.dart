@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 
@@ -76,7 +75,7 @@ void main() {
       await pumpHeader(tester);
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, avatarColorFromPubkey(testGroupId));
+      expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
     });
 
     testWidgets('different mlsGroupId produces different color', (tester) async {

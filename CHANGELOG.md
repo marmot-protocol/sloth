@@ -30,7 +30,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Setup Widgetbook [PR #82](https://github.com/marmot-protocol/sloth/pull/82)
 - Delete reactions [PR #95](https://github.com/marmot-protocol/sloth/pull/95)
 - Add start chat and chat info screens with follow/unfollow [PR #96](https://github.com/marmot-protocol/sloth/pull/96)
-- Avatar colors [PR #108](https://github.com/marmot-protocol/sloth/pull/108)
+- Avatar colors [PR #108](https://github.com/marmot-protocol/sloth/pull/108), [PR #137](https://github.com/marmot-protocol/sloth/pull/137)
 
 ### Changed
 
