@@ -23,8 +23,9 @@ class WnSlate extends StatelessWidget {
 
   BoxDecoration _decoration(SemanticColors colors) {
     return BoxDecoration(
-      color: colors.backgroundPrimary,
+      color: colors.backgroundSecondary,
       borderRadius: BorderRadius.circular(16.r),
+      border: Border.all(color: colors.borderTertiary),
       boxShadow: [
         BoxShadow(
           color: colors.shadow.withValues(alpha: 0.1),

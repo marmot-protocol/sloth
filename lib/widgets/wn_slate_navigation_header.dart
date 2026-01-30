@@ -94,7 +94,7 @@ class _SlateHeaderAction extends StatelessWidget {
         child: WnIcon(
           _icon,
           size: 24.w,
-          color: colors.backgroundContentPrimary,
+          color: colors.backgroundContentSecondary,
         ),
       ),
     );
