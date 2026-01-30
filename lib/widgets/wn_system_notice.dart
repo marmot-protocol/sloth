@@ -76,7 +76,6 @@ class WnSystemNotice extends StatelessWidget {
                 child: Text(
                   title,
                   style: TextStyle(
-                    fontFamily: 'Manrope',
                     fontWeight: FontWeight.w700,
                     fontSize: 14.sp,
                     height: 20 / 14,
@@ -109,7 +108,6 @@ class WnSystemNotice extends StatelessWidget {
                 child: Text(
                   description!,
                   style: TextStyle(
-                    fontFamily: 'Manrope',
                     fontWeight: FontWeight.w500,
                     fontSize: 14.sp,
                     height: 20 / 14,

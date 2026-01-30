@@ -1,6 +1,4 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_system_notice.dart';
@@ -24,7 +22,6 @@ void main() {
       await mountWidget(
         const WnSystemNotice(
           title: 'Success',
-          type: WnSystemNoticeType.success,
         ),
         tester,
       );
@@ -82,7 +79,6 @@ void main() {
       await mountWidget(
         const WnSystemNotice(
           title: 'Temporary',
-          variant: WnSystemNoticeVariant.temporary,
           description: 'Should not show',
         ),
         tester,
@@ -150,11 +146,11 @@ void main() {
 
     testWidgets('renders actions when present', (tester) async {
       await mountWidget(
-        WnSystemNotice(
+        const WnSystemNotice(
           title: 'Notice',
           variant: WnSystemNoticeVariant.expanded,
-          primaryAction: const WnButton(text: 'Primary', onPressed: null),
-          secondaryAction: const WnButton(text: 'Secondary', onPressed: null),
+          primaryAction: WnButton(text: 'Primary', onPressed: null),
+          secondaryAction: WnButton(text: 'Secondary', onPressed: null),
         ),
         tester,
       );
