@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
@@ -23,10 +24,23 @@ class ProfileKeysScreen extends HookConsumerWidget {
     final npub = npubFromHex(pubkey);
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
+    final isUsingExternalSigner = useState<bool?>(null);
 
     useEffect(() {
+      var disposed = false;
       loadNsec();
-      return null;
+
+      Future<void> checkSignerType() async {
+        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
+        if (!disposed) {
+          isUsingExternalSigner.value = isExternal;
+        }
+      }
+
+      checkSignerType();
+      return () {
+        disposed = true;
+      };
     }, [pubkey]);
 
     void togglePrivateKeyVisibility() {
@@ -65,29 +79,31 @@ class ProfileKeysScreen extends HookConsumerWidget {
                               color: colors.backgroundContentSecondary,
                             ),
                           ),
-                          Gap(36.h),
-                          WnCopyableField(
-                            label: context.l10n.privateKey,
-                            value: state.nsec ?? '',
-                            obscurable: true,
-                            obscured: obscurePrivateKey.value,
-                            onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: context.l10n.privateKeyCopied,
-                          ),
-                          Gap(10.h),
-                          Text(
-                            context.l10n.privateKeyDescription,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentSecondary,
+                          if (isUsingExternalSigner.value == false) ...[
+                            Gap(36.h),
+                            WnCopyableField(
+                              label: context.l10n.privateKey,
+                              value: state.nsec ?? '',
+                              obscurable: true,
+                              obscured: obscurePrivateKey.value,
+                              onToggleVisibility: togglePrivateKeyVisibility,
+                              copiedMessage: context.l10n.privateKeyCopied,
                             ),
-                          ),
-                          Gap(12.h),
-                          WnWarningBox(
-                            title: context.l10n.keepPrivateKeySecure,
-                            description: context.l10n.privateKeyWarning,
-                          ),
+                            Gap(10.h),
+                            Text(
+                              context.l10n.privateKeyDescription,
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentSecondary,
+                              ),
+                            ),
+                            Gap(12.h),
+                            WnWarningBox(
+                              title: context.l10n.keepPrivateKeySecure,
+                              description: context.l10n.privateKeyWarning,
+                            ),
+                          ],
                           Gap(24.h),
                         ],
                       ),
