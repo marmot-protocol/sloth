@@ -160,6 +160,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profilePublicDescription => 'Информация вашего профиля будет видна всем в сети.';
 
   @override
+  String get discard => 'Отменить';
+
+  @override
   String get discardChanges => 'Отменить изменения';
 
   @override

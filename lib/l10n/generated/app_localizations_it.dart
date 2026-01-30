@@ -161,6 +161,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Le informazioni del tuo profilo saranno visibili a tutti sulla rete.';
 
   @override
+  String get discard => 'Annulla';
+
+  @override
   String get discardChanges => 'Annulla modifiche';
 
   @override

@@ -85,8 +85,9 @@ class EditProfileScreen extends HookConsumerWidget {
                       children: [
                         if (state.hasUnsavedChanges)
                           WnButton(
-                            text: context.l10n.discardChanges,
+                            text: context.l10n.discard,
                             type: WnButtonType.outline,
+                            size: WnButtonSize.medium,
                             onPressed: () {
                               discardChanges();
                             },
@@ -94,6 +95,7 @@ class EditProfileScreen extends HookConsumerWidget {
                           ),
                         WnButton(
                           text: context.l10n.save,
+                          size: WnButtonSize.medium,
                           onPressed:
                               state.hasUnsavedChanges &&
                                   state.loadingState != EditProfileLoadingState.saving

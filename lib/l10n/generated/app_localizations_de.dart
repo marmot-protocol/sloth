@@ -161,6 +161,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Deine Profilinformationen sind für alle im Netzwerk sichtbar.';
 
   @override
+  String get discard => 'Verwerfen';
+
+  @override
   String get discardChanges => 'Änderungen verwerfen';
 
   @override

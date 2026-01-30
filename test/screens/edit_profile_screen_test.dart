@@ -173,22 +173,22 @@ void main() {
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('Discard changes button appears when there are changes', (tester) async {
+    testWidgets('Discard button appears when there are changes', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      expect(find.text('Discard changes'), findsNothing);
+      expect(find.text('Discard'), findsNothing);
       await tester.enterText(find.byType(TextField).first, 'New Name');
       await tester.pump();
-      expect(find.text('Discard changes'), findsOneWidget);
+      expect(find.text('Discard'), findsOneWidget);
     });
 
-    testWidgets('Discard changes button resets form fields', (tester) async {
+    testWidgets('Discard button resets form fields', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
       final displayNameField = find.byType(TextField).first;
       await tester.enterText(displayNameField, 'New Name');
       await tester.pump();
-      await tester.tap(find.text('Discard changes'));
+      await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
       final fieldText = tester.widget<TextField>(displayNameField).controller?.text ?? '';
       expect(fieldText, 'Test Display Name');

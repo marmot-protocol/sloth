@@ -161,6 +161,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Les informations de votre profil seront visibles par tous sur le réseau.';
 
   @override
+  String get discard => 'Annuler';
+
+  @override
   String get discardChanges => 'Annuler les modifications';
 
   @override

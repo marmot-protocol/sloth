@@ -161,6 +161,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Profil bilgileriniz ağdaki herkes tarafından görülebilir.';
 
   @override
+  String get discard => 'At';
+
+  @override
   String get discardChanges => 'Değişiklikleri at';
 
   @override

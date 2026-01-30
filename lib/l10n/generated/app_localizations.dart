@@ -402,6 +402,12 @@ abstract class AppLocalizations {
   /// **'Your profile information will be visible to everyone on the network.'**
   String get profilePublicDescription;
 
+  /// Discard button text
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
+
   /// Discard changes button text
   ///
   /// In en, this message translates to:

@@ -246,6 +246,11 @@
     "description": "Description about public profile visibility"
   },
 
+  "discard": "Discard",
+  "@discard": {
+    "description": "Discard button text"
+  },
+
   "discardChanges": "Discard changes",
   "@discardChanges": {
     "description": "Discard changes button text"
