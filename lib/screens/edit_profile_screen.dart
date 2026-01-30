@@ -11,9 +11,10 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_image_picker.dart';
+import 'package:sloth/widgets/wn_input.dart' show WnInput;
+import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
 import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_slate_container.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
 
 final _logger = Logger('EditProfileScreen');
 
@@ -87,24 +88,22 @@ class EditProfileScreen extends HookConsumerWidget {
                               ),
                             ),
                             Gap(36.h),
-                            WnTextFormField(
+                            WnInput(
                               label: context.l10n.profileName,
                               placeholder: context.l10n.enterYourName,
                               controller: displayNameController,
                             ),
                             Gap(36.h),
-                            WnTextFormField(
+                            WnInput(
                               label: context.l10n.nostrAddress,
                               placeholder: 'example@whitenoise.chat',
                               controller: nip05Controller,
                             ),
                             Gap(36.h),
-                            WnTextFormField(
+                            WnInputTextArea(
                               label: context.l10n.aboutYou,
                               placeholder: context.l10n.writeSomethingAboutYourself,
                               controller: aboutController,
-                              maxLines: 3,
-                              minLines: 3,
                             ),
                             Gap(36.h),
                             WnCallout(
