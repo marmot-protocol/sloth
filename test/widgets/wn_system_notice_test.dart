@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_icon.dart' show WnIcon, WnIcons;
 import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../test_helpers.dart';
@@ -191,15 +191,4 @@ void main() {
       expect(toggled, isTrue);
     });
   });
-}
-
-extension FinderExtensions on CommonFinders {
-  Finder bySvgPath(String path) {
-    return find.byWidgetPredicate((widget) {
-      if (widget is WnIcon) {
-        return widget.icon.path == path;
-      }
-      return false;
-    });
-  }
 }

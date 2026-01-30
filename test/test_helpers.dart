@@ -3,9 +3,11 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Consumer, ProviderScope;
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
-import 'package:flutter_test/flutter_test.dart' show WidgetTester, addTearDown;
+import 'package:flutter_test/flutter_test.dart'
+    show CommonFinders, Finder, WidgetTester, addTearDown, find;
 import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 
 const testDesignSize = Size(390, 844);
 
@@ -105,4 +107,15 @@ Future<void> mountStackedWidget(Widget child, WidgetTester tester) async {
     },
   );
   await tester.pumpWidget(widget);
+}
+
+extension FinderExtensions on CommonFinders {
+  Finder bySvgPath(String path) {
+    return find.byWidgetPredicate((widget) {
+      if (widget is WnIcon) {
+        return widget.icon.path == path;
+      }
+      return false;
+    });
+  }
 }

@@ -67,6 +67,7 @@ class WnSystemNotice extends StatelessWidget {
               if (icon != null) ...[
                 WnIcon(
                   icon,
+                  key: const Key('systemNotice_leadingIcon'),
                   size: 20.w,
                   color: contentColor,
                 ),
@@ -91,6 +92,7 @@ class WnSystemNotice extends StatelessWidget {
                   behavior: HitTestBehavior.opaque,
                   child: WnIcon(
                     _getActionIcon(),
+                    key: const Key('systemNotice_actionIcon'),
                     size: 20.w,
                     color: contentColor,
                   ),
