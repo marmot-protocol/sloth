@@ -66,3 +66,8 @@ opencode.json
 
 # Flutter DevTools
 devtools_options.yaml
+# Widgetbook
+/widgetbook/build/
+/widgetbook/android/local.properties
+/widgetbook/ios/Pods/
+/widgetbook/macos/Pods/

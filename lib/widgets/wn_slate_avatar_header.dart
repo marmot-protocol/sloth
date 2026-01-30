@@ -33,7 +33,6 @@ class WnSlateAvatarHeader extends StatelessWidget {
               child: WnAvatar(
                 pictureUrl: avatarUrl,
                 displayName: displayName,
-                size: 48.w,
               ),
             ),
           ),

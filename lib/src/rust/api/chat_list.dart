@@ -147,6 +147,10 @@ class ChatSummary {
   /// - `Some(n)` = pinned, lower values appear first
   final PlatformInt64? pinOrder;
 
+  /// For DMs: the public key (hex) of the other participant.
+  /// `None` for Group chats.
+  final String? dmPeerPubkey;
+
   const ChatSummary({
     required this.mlsGroupId,
     this.name,
@@ -159,6 +163,7 @@ class ChatSummary {
     this.welcomerPubkey,
     required this.unreadCount,
     this.pinOrder,
+    this.dmPeerPubkey,
   });
 
   @override
@@ -173,7 +178,8 @@ class ChatSummary {
       pendingConfirmation.hashCode ^
       welcomerPubkey.hashCode ^
       unreadCount.hashCode ^
-      pinOrder.hashCode;
+      pinOrder.hashCode ^
+      dmPeerPubkey.hashCode;
 
   @override
   bool operator ==(Object other) =>
@@ -190,5 +196,6 @@ class ChatSummary {
           pendingConfirmation == other.pendingConfirmation &&
           welcomerPubkey == other.welcomerPubkey &&
           unreadCount == other.unreadCount &&
-          pinOrder == other.pinOrder;
+          pinOrder == other.pinOrder &&
+          dmPeerPubkey == other.dmPeerPubkey;
 }

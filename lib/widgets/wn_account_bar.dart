@@ -6,6 +6,7 @@ import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
@@ -37,6 +38,7 @@ class WnAccountBar extends HookConsumerWidget {
               child: WnAvatar(
                 pictureUrl: metadata?.picture,
                 displayName: presentName(metadata),
+                color: avatarColorFromPubkey(pubkey),
               ),
             ),
           ),

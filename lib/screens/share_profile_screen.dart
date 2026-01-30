@@ -9,6 +9,7 @@ import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -74,7 +75,8 @@ class ShareProfileScreen extends HookConsumerWidget {
                                 WnAvatar(
                                   pictureUrl: metadata?.picture,
                                   displayName: displayName,
-                                  size: 96.w,
+                                  size: WnAvatarSize.large,
+                                  color: avatarColorFromPubkey(pubkey),
                                 ),
                                 Gap(8.h),
                                 if (displayName != null)

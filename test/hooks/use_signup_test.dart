@@ -7,6 +7,8 @@ import 'package:sloth/hooks/use_signup.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../test_helpers.dart';
+
 class MockApi implements RustLibApi {
   bool imageUploaded = false;
   FlutterMetadata? updatedMetadata;
@@ -70,7 +72,7 @@ Future<String> mockSignup() async {
     throw Exception('Network error');
   }
   signupCalled = true;
-  return 'test_pubkey';
+  return testPubkeyA;
 }
 
 Future<void> _pump(WidgetTester tester) async {

@@ -456,4 +456,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get failedToUpdateFollow => 'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get imagePickerError => 'Görsel seçilemedi. Lütfen tekrar deneyin.';
 }

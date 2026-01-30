@@ -6,8 +6,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/home_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';
@@ -32,8 +32,8 @@ class _MockAuthNotifier extends AuthNotifier {
 
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 
   @override
@@ -89,18 +89,11 @@ void main() {
       expect(find.text('Private key'), findsOneWidget);
     });
 
-    testWidgets('loads and displays nsec in private key field', (tester) async {
+    testWidgets('loads and displays private key field', (tester) async {
       await pumpSignOutScreen(tester);
       await tester.pumpAndSettle();
-      final privateKeyField = find.byType(WnTextFormField);
+      final privateKeyField = find.byType(WnCopyableField);
       expect(privateKeyField, findsOneWidget);
-      final textField = find.descendant(
-        of: privateKeyField,
-        matching: find.byType(TextFormField),
-      );
-      expect(textField, findsOneWidget);
-      final fieldText = tester.widget<TextFormField>(textField).controller?.text ?? '';
-      expect(fieldText, startsWith('nsec1'));
     });
 
     testWidgets('tapping copy button copies private key to clipboard', (tester) async {
@@ -197,7 +190,7 @@ void main() {
       await tester.pump();
 
       expect(find.text('Are you sure you want to sign out?'), findsNothing);
-      expect(find.byType(WnTextFormField), findsNothing);
+      expect(find.byType(WnCopyableField), findsNothing);
     });
   });
 }

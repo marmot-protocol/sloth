@@ -91,6 +91,7 @@ deps-rust:
 deps-flutter:
     @echo "📦 Installing Flutter dependencies..."
     @flutter pub get > /dev/null 2>&1 || flutter pub get
+    @cd widgetbook && (flutter pub get > /dev/null 2>&1 || flutter pub get)
 
 # ==============================================================================
 # RUST OPERATIONS
@@ -100,6 +101,12 @@ deps-flutter:
 build-rust-debug:
     @echo "🔨 Building Rust library (debug)..."
     cd rust && cargo build
+
+build-android:
+    ./scripts/build_android.sh
+
+build-android-quiet:
+    @./scripts/build_android.sh > /dev/null 2>&1 && echo "✅ Android build complete" || { echo "❌ Android build failed"; false; }
 
 # Test Rust code
 test-rust:
@@ -138,16 +145,18 @@ docs-rust:
 analyze:
     @echo "🔍 Running Flutter analyzer..."
     flutter analyze --fatal-infos
+    @echo "🔍 Running Flutter analyzer (widgetbook)..."
+    cd widgetbook && flutter analyze --fatal-infos
 
 # Format Dart code
 format-dart:
     @echo "💅 Formatting Dart code..."
-    dart format lib/ test/
+    dart format lib/ test/ widgetbook/lib/
 
 # Check Dart code formatting (CI-style check)
 check-dart-format:
     @echo "🔍 Checking Dart code formatting..."
-    dart format --set-exit-if-changed lib/ test/
+    dart format --set-exit-if-changed lib/ test/ widgetbook/lib/
 
 # Test Flutter code
 test-flutter:
@@ -206,6 +215,26 @@ clean-rust:
 # Clean everything (bridge files + flutter + rust)
 clean-all: clean-bridge clean-flutter clean-rust
     @echo "✨ All clean!"
+
+# ==============================================================================
+# WIDGETBOOK
+# ==============================================================================
+
+deps-widgetbook:
+    @echo "📦 Installing Widgetbook dependencies..."
+    @cd widgetbook && (flutter pub get > /dev/null 2>&1 || flutter pub get)
+
+generate-widgetbook:
+    @echo "🔄 Generating Widgetbook stories..."
+    cd widgetbook && dart run build_runner build --delete-conflicting-outputs
+
+widgetbook-macos: deps-widgetbook generate-widgetbook
+    @echo "📖 Running Widgetbook on macOS..."
+    cd widgetbook && flutter run -d macos
+
+widgetbook-linux: deps-widgetbook generate-widgetbook
+    @echo "📖 Running Widgetbook on Linux..."
+    cd widgetbook && flutter run -d linux
 
 # ==============================================================================
 # FORMATTING & LINTING

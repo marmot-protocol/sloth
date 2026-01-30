@@ -460,4 +460,7 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get failedToUpdateFollow =>
       'Échec de la mise à jour du statut de suivi. Veuillez réessayer.';
+
+  @override
+  String get imagePickerError => 'Échec de la sélection de l\'image. Veuillez réessayer.';
 }

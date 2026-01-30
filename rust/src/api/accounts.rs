@@ -31,7 +31,7 @@ pub struct FlutterEvent {
     pub pubkey: String,
     pub created_at: DateTime<Utc>,
     pub kind: u16,
-    pub tags: Vec<String>,
+    pub tags: Vec<Vec<String>>,
     pub content: String,
 }
 
@@ -47,7 +47,11 @@ impl From<Event> for FlutterEvent {
                     .unwrap_or_else(|| Utc.timestamp_opt(0, 0).single().unwrap())
             },
             kind: event.kind.as_u16(),
-            tags: event.tags.iter().map(|tag| format!("{:?}", tag)).collect(),
+            tags: event
+                .tags
+                .iter()
+                .map(|tag| tag.as_slice().to_vec())
+                .collect(),
             content: event.content,
         }
     }
@@ -269,6 +273,21 @@ pub async fn unfollow_user(
     let user_to_unfollow_pubkey = PublicKey::parse(&user_to_unfollow_pubkey)?;
     whitenoise
         .unfollow_user(&account, &user_to_unfollow_pubkey)
+        .await
+        .map_err(ApiError::from)
+}
+
+#[frb]
+pub async fn is_following_user(
+    account_pubkey: String,
+    user_pubkey: String,
+) -> Result<bool, ApiError> {
+    let whitenoise = Whitenoise::get_instance()?;
+    let pubkey = PublicKey::parse(&account_pubkey)?;
+    let account = whitenoise.find_account_by_pubkey(&pubkey).await?;
+    let user_pubkey = PublicKey::parse(&user_pubkey)?;
+    whitenoise
+        .is_following_user(&account, &user_pubkey)
         .await
         .map_err(ApiError::from)
 }

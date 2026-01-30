@@ -460,4 +460,7 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get failedToUpdateFollow =>
       'Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get imagePickerError => 'Error al seleccionar imagen. Por favor, inténtalo de nuevo.';
 }

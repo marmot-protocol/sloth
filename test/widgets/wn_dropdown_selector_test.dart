@@ -466,6 +466,7 @@ void main() {
     });
 
     testWidgets('closes dropdown when isDisabled changes to true while open', (tester) async {
+      setUpTestView(tester);
       bool isDisabled = false;
 
       await tester.pumpWidget(
@@ -512,6 +513,7 @@ void main() {
     });
 
     testWidgets('does not call onChanged when selecting while disabled', (tester) async {
+      setUpTestView(tester);
       bool isDisabled = false;
       String? selectedValue;
 

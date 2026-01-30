@@ -60,20 +60,20 @@ void main() {
       expect(formatInitials('Alice'), 'A');
     });
 
-    test('returns two initials for two words', () {
-      expect(formatInitials('Alice Bob'), 'AB');
+    test('returns first initial for two words', () {
+      expect(formatInitials('Alice Bob'), 'A');
     });
 
-    test('uses only first two words when more provided', () {
-      expect(formatInitials('Alice Bob Charlie'), 'AB');
+    test('uses only first initial when more words provided', () {
+      expect(formatInitials('Alice Bob Charlie'), 'A');
     });
 
     test('converts to uppercase', () {
-      expect(formatInitials('alice bob'), 'AB');
+      expect(formatInitials('alice bob'), 'A');
     });
 
     test('handles multiple consecutive spaces', () {
-      expect(formatInitials('John  Doe'), 'JD');
+      expect(formatInitials('John  Doe'), 'J');
     });
 
     test('handles leading and trailing whitespace', () {

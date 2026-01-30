@@ -10,6 +10,8 @@ import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -23,22 +25,29 @@ class _MockApi extends MockWnApi {
 }
 
 class _MockAuthNotifier extends AuthNotifier {
+  final String _pubkey;
+  _MockAuthNotifier([this._pubkey = testPubkeyA]);
+
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = AsyncData(_pubkey);
+    return _pubkey;
   }
 }
 
 void main() {
   setUpAll(() => RustLib.initMock(api: _MockApi()));
 
-  Future<void> pumpChatListScreen(WidgetTester tester) async {
+  Future<void> pumpChatListScreen(
+    WidgetTester tester, {
+    _MockAuthNotifier? authNotifier,
+  }) async {
     setUpTestView(tester);
+    final notifier = authNotifier ?? _MockAuthNotifier();
 
     await tester.pumpWidget(
       ProviderScope(
-        overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
+        overrides: [authProvider.overrideWith(() => notifier)],
         child: ScreenUtilInit(
           designSize: testDesignSize,
           builder: (_, _) => Consumer(
@@ -85,6 +94,23 @@ void main() {
       await tester.tap(find.byKey(const Key('chat_add_button')));
       await tester.pumpAndSettle();
       expect(find.byType(UserSearchScreen), findsOneWidget);
+    });
+
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
+      await pumpChatListScreen(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey passes different avatar color', (tester) async {
+      await pumpChatListScreen(
+        tester,
+        authNotifier: _MockAuthNotifier(testPubkeyD),
+      );
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.cyan);
     });
   });
 }

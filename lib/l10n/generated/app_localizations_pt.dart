@@ -458,4 +458,7 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get failedToUpdateFollow =>
       'Falha ao atualizar o status de seguir. Por favor, tente novamente.';
+
+  @override
+  String get imagePickerError => 'Falha ao selecionar imagem. Por favor, tente novamente.';
 }

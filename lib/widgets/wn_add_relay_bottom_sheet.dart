@@ -6,7 +6,8 @@ import 'package:sloth/hooks/use_add_relay.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
+import 'package:sloth/widgets/wn_icon.dart' show WnIcons;
+import 'package:sloth/widgets/wn_input.dart' show WnInput, WnInputTrailingButton;
 
 class WnAddRelayBottomSheet extends HookWidget {
   final Future<void> Function(String) onRelayAdded;
@@ -78,12 +79,16 @@ class WnAddRelayBottomSheet extends HookWidget {
               ),
             ),
             Gap(16.h),
-            WnTextFormField(
+            WnInput(
               label: context.l10n.enterRelayAddress,
               placeholder: 'wss://relay.example.com',
               controller: controller,
               errorText: validationError,
-              onPaste: paste,
+              trailingAction: WnInputTrailingButton(
+                key: const Key('paste_button'),
+                icon: WnIcons.paste,
+                onPressed: paste,
+              ),
             ),
             Gap(16.h),
             SizedBox(

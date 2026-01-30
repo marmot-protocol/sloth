@@ -59,6 +59,8 @@ Language languageRussian() => RustLib.instance.api.crateApiUtilsLanguageRussian(
 
 Language languageTurkish() => RustLib.instance.api.crateApiUtilsLanguageTurkish();
 
+Language languageSystem() => RustLib.instance.api.crateApiUtilsLanguageSystem();
+
 String languageToString({required Language language}) =>
     RustLib.instance.api.crateApiUtilsLanguageToString(language: language);
 

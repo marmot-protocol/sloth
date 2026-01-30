@@ -713,6 +713,92 @@ void main() {
     });
   });
 
+  group('getAccentColorSet', () {
+    test('returns blue accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.blue, SemanticColors.light.accent),
+        SemanticColors.light.accent.blue,
+      );
+    });
+
+    test('returns cyan accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.cyan, SemanticColors.light.accent),
+        SemanticColors.light.accent.cyan,
+      );
+    });
+
+    test('returns emerald accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.emerald, SemanticColors.light.accent),
+        SemanticColors.light.accent.emerald,
+      );
+    });
+
+    test('returns fuchsia accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.fuchsia, SemanticColors.light.accent),
+        SemanticColors.light.accent.fuchsia,
+      );
+    });
+
+    test('returns indigo accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.indigo, SemanticColors.light.accent),
+        SemanticColors.light.accent.indigo,
+      );
+    });
+
+    test('returns lime accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.lime, SemanticColors.light.accent),
+        SemanticColors.light.accent.lime,
+      );
+    });
+
+    test('returns orange accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.orange, SemanticColors.light.accent),
+        SemanticColors.light.accent.orange,
+      );
+    });
+
+    test('returns rose accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.rose, SemanticColors.light.accent),
+        SemanticColors.light.accent.rose,
+      );
+    });
+
+    test('returns sky accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.sky, SemanticColors.light.accent),
+        SemanticColors.light.accent.sky,
+      );
+    });
+
+    test('returns teal accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.teal, SemanticColors.light.accent),
+        SemanticColors.light.accent.teal,
+      );
+    });
+
+    test('returns violet accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.violet, SemanticColors.light.accent),
+        SemanticColors.light.accent.violet,
+      );
+    });
+
+    test('returns amber accent color set', () {
+      expect(
+        getAccentColorSet(AccentColor.amber, SemanticColors.light.accent),
+        SemanticColors.light.accent.amber,
+      );
+    });
+  });
+
   group('SemanticColorsExtension', () {
     testWidgets('returns SemanticColors from theme', (tester) async {
       late SemanticColors colors;

@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -31,8 +32,8 @@ class WnUserProfileCard extends StatelessWidget {
         WnAvatar(
           pictureUrl: metadata?.picture,
           displayName: displayName,
-          size: 80.w,
-          animated: true,
+          size: WnAvatarSize.large,
+          color: avatarColorFromPubkey(userPubkey),
         ),
         Gap(16.h),
         if (displayName != null)

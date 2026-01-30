@@ -112,7 +112,7 @@ class _MockRustLibApi implements RustLibApi {
 
 class _AuthenticatedAuthNotifier extends AuthNotifier {
   @override
-  Future<String?> build() async => 'test_pubkey';
+  Future<String?> build() async => testPubkeyA;
 }
 
 void main() {
@@ -509,7 +509,7 @@ void main() {
           authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
         ],
       );
-      Routes.pushToInvite(getContext(tester), 'test-id');
+      Routes.pushToInvite(getContext(tester), testGroupId);
       await tester.pumpAndSettle();
       expect(find.byType(ChatInviteScreen), findsOneWidget);
     });
@@ -521,7 +521,7 @@ void main() {
           authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
         ],
       );
-      Routes.pushToInvite(getContext(tester), 'test-id');
+      Routes.pushToInvite(getContext(tester), testGroupId);
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();
@@ -537,7 +537,7 @@ void main() {
           authProvider.overrideWith(() => _AuthenticatedAuthNotifier()),
         ],
       );
-      Routes.goToChat(getContext(tester), 'test-group-id');
+      Routes.goToChat(getContext(tester), testGroupId);
       await tester.pumpAndSettle();
       expect(find.byType(ChatScreen), findsOneWidget);
     });
@@ -551,7 +551,7 @@ void main() {
       );
       Routes.pushToSettings(getContext(tester));
       await tester.pumpAndSettle();
-      Routes.goToChat(getContext(tester), 'test-group-id');
+      Routes.goToChat(getContext(tester), testGroupId);
       await tester.pumpAndSettle();
       Routes.goBack(getContext(tester));
       await tester.pumpAndSettle();

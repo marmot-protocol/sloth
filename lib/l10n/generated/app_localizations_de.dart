@@ -465,4 +465,8 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get failedToUpdateFollow =>
       'Folgestatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get imagePickerError =>
+      'Bild konnte nicht ausgewählt werden. Bitte versuchen Sie es erneut.';
 }

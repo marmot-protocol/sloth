@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/providers/auth_provider.dart';
 
+import '../test_helpers.dart';
+
 class _MockAuthNotifier extends AuthNotifier {
   _MockAuthNotifier(this._state);
   final AsyncValue<String?> _state;
@@ -36,12 +38,14 @@ void main() {
       test('returns pubkey', () {
         final container = ProviderContainer(
           overrides: [
-            authProvider.overrideWith(() => _MockAuthNotifier(const AsyncData('test_pubkey'))),
+            authProvider.overrideWith(
+              () => _MockAuthNotifier(const AsyncData(testPubkeyA)),
+            ),
           ],
         );
         addTearDown(container.dispose);
 
-        expect(container.read(accountPubkeyProvider), 'test_pubkey');
+        expect(container.read(accountPubkeyProvider), testPubkeyA);
       });
     });
   });

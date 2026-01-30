@@ -7,6 +7,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';
@@ -29,10 +31,14 @@ class _MockApi extends MockWnApi {
 late _MockApi _mockApi;
 
 class _MockAuthNotifier extends AuthNotifier {
+  _MockAuthNotifier([this._pubkey = testPubkeyA]);
+
+  final String _pubkey;
+
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = AsyncData(_pubkey);
+    return _pubkey;
   }
 }
 
@@ -117,6 +123,28 @@ void main() {
 
       final iconButton = tester.widget<IconButton>(copyButton);
       expect(iconButton.onPressed, isNull);
+    });
+
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
+      await pumpShareProfileScreen(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey passes different avatar color', (tester) async {
+      await mountTestApp(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _MockAuthNotifier(testPubkeyD)),
+          secureStorageProvider.overrideWithValue(MockSecureStorage()),
+        ],
+      );
+      Routes.pushToShareProfile(tester.element(find.byType(Scaffold)));
+      await tester.pumpAndSettle();
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.cyan);
     });
   });
 }

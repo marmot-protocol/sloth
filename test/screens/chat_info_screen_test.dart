@@ -16,8 +16,8 @@ import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_account_pubkey';
-const _otherPubkey = 'other_user_pubkey';
+const _testPubkey = testPubkeyA;
+const _otherPubkey = testPubkeyB;
 
 User _userFactory(String pubkey, {String? displayName}) => User(
   pubkey: pubkey,

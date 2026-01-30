@@ -9,6 +9,7 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/account_groups.dart' as account_groups_api;
 import 'package:sloth/src/rust/api/messages.dart' as messages_api;
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
@@ -93,6 +94,7 @@ class ChatInviteScreen extends HookConsumerWidget {
             Column(
               children: [
                 WnChatHeader(
+                  mlsGroupId: mlsGroupId,
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   onBack: () => Routes.goToChatList(context),
@@ -102,7 +104,8 @@ class ChatInviteScreen extends HookConsumerWidget {
                 WnAvatar(
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   displayName: groupAvatarSnapshot.data?.displayName,
-                  size: 96.w,
+                  size: WnAvatarSize.large,
+                  color: avatarColorFromPubkey(mlsGroupId),
                 ),
                 SizedBox(height: 16.h),
                 Text(

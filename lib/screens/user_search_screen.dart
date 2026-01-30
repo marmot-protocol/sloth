@@ -10,6 +10,7 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart' show formatPublicKey, npubFromHex;
 import 'package:sloth/utils/metadata.dart' show presentName;
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -123,7 +124,7 @@ class _UserListTile extends StatelessWidget {
       leading: WnAvatar(
         pictureUrl: user.metadata.picture,
         displayName: displayName,
-        animated: true,
+        color: avatarColorFromPubkey(user.pubkey),
       ),
       title: hasDisplayName
           ? Text(

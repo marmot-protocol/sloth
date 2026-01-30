@@ -18,7 +18,7 @@ import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 ChatSummary _chatSummary({required String id, required bool pendingConfirmation}) => ChatSummary(
-  mlsGroupId: 'mls_$id',
+  mlsGroupId: id,
   name: 'Chat $id',
   groupType: GroupType.group,
   createdAt: DateTime(2024),
@@ -75,8 +75,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -139,8 +139,8 @@ void main() {
     group('with chats', () {
       setUp(
         () => _api.initialChats = [
-          _chatSummary(id: 'c1', pendingConfirmation: true),
-          _chatSummary(id: 'c2', pendingConfirmation: false),
+          _chatSummary(id: testPubkeyA, pendingConfirmation: true),
+          _chatSummary(id: testPubkeyB, pendingConfirmation: false),
         ],
       );
 
@@ -154,8 +154,8 @@ void main() {
         await pumpChatListScreen(tester);
         final tiles = tester.widgetList<ChatListTile>(find.byType(ChatListTile)).toList();
 
-        expect(tiles.first.key, const Key('mls_c1'));
-        expect(tiles.last.key, const Key('mls_c2'));
+        expect(tiles.first.key, const Key(testPubkeyA));
+        expect(tiles.last.key, const Key(testPubkeyB));
       });
 
       testWidgets('hides empty state', (tester) async {

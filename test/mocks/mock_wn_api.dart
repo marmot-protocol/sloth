@@ -33,7 +33,7 @@ class MockAppSettings implements rust_api.AppSettings {
 
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
-  String currentLanguage = 'en';
+  String currentLanguage = 'system';
   bool shouldFailUpdateLanguage = false;
   bool shouldFailNpubConversion = false;
   List<Account> accounts = [];
@@ -225,6 +225,9 @@ class MockWnApi implements RustLibApi {
   rust_api.Language crateApiUtilsLanguageTurkish() => const MockLanguage('tr');
 
   @override
+  rust_api.Language crateApiUtilsLanguageSystem() => const MockLanguage('system');
+
+  @override
   String crateApiUtilsLanguageToString({required rust_api.Language language}) {
     if (language is MockLanguage) {
       return language.code;
@@ -253,7 +256,7 @@ class MockWnApi implements RustLibApi {
 
   void reset() {
     currentThemeMode = 'system';
-    currentLanguage = 'en';
+    currentLanguage = 'system';
     shouldFailUpdateLanguage = false;
     shouldFailNpubConversion = false;
     accounts = [];

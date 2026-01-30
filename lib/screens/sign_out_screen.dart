@@ -9,10 +9,10 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
+import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
-import 'package:sloth/widgets/wn_warning_box.dart';
 
 class SignOutScreen extends HookConsumerWidget {
   const SignOutScreen({super.key});
@@ -75,9 +75,10 @@ class SignOutScreen extends HookConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Gap(24.h),
-                            WnWarningBox(
+                            WnCallout(
                               title: context.l10n.signOutConfirmation,
                               description: context.l10n.signOutWarning,
+                              type: CalloutType.warning,
                             ),
                             Gap(24.h),
                             Text(

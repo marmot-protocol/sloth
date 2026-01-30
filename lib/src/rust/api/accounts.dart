@@ -123,6 +123,14 @@ Future<void> unfollowUser({
   userToUnfollowPubkey: userToUnfollowPubkey,
 );
 
+Future<bool> isFollowingUser({
+  required String accountPubkey,
+  required String userPubkey,
+}) => RustLib.instance.api.crateApiAccountsIsFollowingUser(
+  accountPubkey: accountPubkey,
+  userPubkey: userPubkey,
+);
+
 // Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<RelayType>>
 abstract class RelayType implements RustOpaqueInterface {}
 
@@ -159,7 +167,7 @@ class FlutterEvent {
   final String pubkey;
   final DateTime createdAt;
   final int kind;
-  final List<String> tags;
+  final List<List<String>> tags;
   final String content;
 
   const FlutterEvent({
