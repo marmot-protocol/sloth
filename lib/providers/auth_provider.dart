@@ -170,6 +170,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
       users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
       await storage.write(key: _storageKey, value: account.pubkey);
       state = AsyncData(account.pubkey);
+      ref.read(isAddingAccountProvider.notifier).set(false);
       _logger.info('Android signer login successful with key package published');
     } on ApiError catch (e) {
       await safeDisconnect();
