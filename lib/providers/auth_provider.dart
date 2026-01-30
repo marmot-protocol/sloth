@@ -28,7 +28,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
 
       // Re-register external signer callbacks for external accounts
       if (account.accountType == accounts_api.AccountType.external_) {
-        await _registerExternalSignerCallbacks(pubkey);
+        _registerExternalSignerCallbacks(pubkey);
       }
     } catch (e) {
       if (e is ApiError && e.message.contains('Account not found')) {
@@ -39,15 +39,16 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return pubkey;
   }
 
-  /// Register external signer callbacks for an external account.
-  ///
-  /// This is called on app startup to restore the signer for external accounts.
-  Future<void> _registerExternalSignerCallbacks(String pubkey) async {
-    const signerService = AndroidSignerService();
-    _logger.info('Re-registering external signer for account $pubkey');
-
-    signer_api.registerExternalSigner(
-      pubkey: pubkey,
+  /// Creates the signer callback functions for an external account.
+  static ({
+    Future<String> Function(String) signEvent,
+    Future<String> Function(String, String) nip04Encrypt,
+    Future<String> Function(String, String) nip04Decrypt,
+    Future<String> Function(String, String) nip44Encrypt,
+    Future<String> Function(String, String) nip44Decrypt,
+  })
+  _createSignerCallbacks(String pubkey, AndroidSignerService signerService) {
+    return (
       signEvent: (unsignedEventJson) async {
         _logger.fine('Signing event via Android signer...');
         final response = await signerService.signEvent(
@@ -97,6 +98,24 @@ class AuthNotifier extends AsyncNotifier<String?> {
     );
   }
 
+  /// Register external signer callbacks for an external account.
+  ///
+  /// This is called on app startup to restore the signer for external accounts.
+  void _registerExternalSignerCallbacks(String pubkey) {
+    const signerService = AndroidSignerService();
+    _logger.info('Re-registering external signer for account $pubkey');
+
+    final callbacks = _createSignerCallbacks(pubkey, signerService);
+    signer_api.registerExternalSigner(
+      pubkey: pubkey,
+      signEvent: callbacks.signEvent,
+      nip04Encrypt: callbacks.nip04Encrypt,
+      nip04Decrypt: callbacks.nip04Decrypt,
+      nip44Encrypt: callbacks.nip44Encrypt,
+      nip44Decrypt: callbacks.nip44Decrypt,
+    );
+  }
+
   /// Login with a private key (nsec) or hex key.
   Future<void> login(String nsec) async {
     _logger.info('Login attempt started');
@@ -138,55 +157,14 @@ class AuthNotifier extends AsyncNotifier<String?> {
     }
 
     try {
-      // Login with external signer using callbacks
+      final callbacks = _createSignerCallbacks(pubkey, signerService);
       final account = await signer_api.loginWithExternalSignerAndCallbacks(
         pubkey: pubkey,
-        signEvent: (unsignedEventJson) async {
-          _logger.fine('Signing event via Android signer...');
-          final response = await signerService.signEvent(
-            eventJson: unsignedEventJson,
-            currentUser: pubkey,
-          );
-          if (response.event == null) {
-            throw const AndroidSignerException(
-              'NO_EVENT',
-              'Signer did not return signed event',
-            );
-          }
-          return response.event!;
-        },
-        nip04Encrypt: (plaintext, recipientPubkey) async {
-          _logger.fine('NIP-04 encrypting via Android signer...');
-          return signerService.nip04Encrypt(
-            plaintext: plaintext,
-            pubkey: recipientPubkey,
-            currentUser: pubkey,
-          );
-        },
-        nip04Decrypt: (ciphertext, senderPubkey) async {
-          _logger.fine('NIP-04 decrypting via Android signer...');
-          return signerService.nip04Decrypt(
-            encryptedText: ciphertext,
-            pubkey: senderPubkey,
-            currentUser: pubkey,
-          );
-        },
-        nip44Encrypt: (plaintext, recipientPubkey) async {
-          _logger.fine('NIP-44 encrypting via Android signer...');
-          return signerService.nip44Encrypt(
-            plaintext: plaintext,
-            pubkey: recipientPubkey,
-            currentUser: pubkey,
-          );
-        },
-        nip44Decrypt: (ciphertext, senderPubkey) async {
-          _logger.fine('NIP-44 decrypting via Android signer...');
-          return signerService.nip44Decrypt(
-            encryptedText: ciphertext,
-            pubkey: senderPubkey,
-            currentUser: pubkey,
-          );
-        },
+        signEvent: callbacks.signEvent,
+        nip04Encrypt: callbacks.nip04Encrypt,
+        nip04Decrypt: callbacks.nip04Decrypt,
+        nip44Encrypt: callbacks.nip44Encrypt,
+        nip44Decrypt: callbacks.nip44Decrypt,
       );
 
       users_api.userMetadata(pubkey: account.pubkey, blockingDataSync: false);
