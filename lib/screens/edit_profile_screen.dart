@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_hooks/flutter_hooks.dart' show useEffect;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState, useEditProfile;
+import 'package:sloth/hooks/use_image_picker.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
+import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_callout.dart';
-import 'package:sloth/widgets/wn_image_picker.dart';
 import 'package:sloth/widgets/wn_input.dart' show WnInput;
 import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
 import 'package:sloth/widgets/wn_screen_header.dart';
@@ -37,11 +39,28 @@ class EditProfileScreen extends HookConsumerWidget {
     ) = useEditProfile(
       pubkey,
     );
+    final (:pickImage, error: imagePickerError, clearError: clearImagePickerError) = useImagePicker(
+      onImageSelected: onImageSelected,
+    );
 
     useEffect(() {
       loadProfile();
       return null;
     }, []);
+
+    useEffect(() {
+      if (imagePickerError != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.l10n.imagePickerError)),
+            );
+          }
+        });
+        clearImagePickerError();
+      }
+      return null;
+    }, [imagePickerError]);
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
@@ -79,12 +98,14 @@ class EditProfileScreen extends HookConsumerWidget {
                           children: [
                             Gap(16.h),
                             Center(
-                              child: WnImagePicker(
-                                imagePath: state.pictureUrl,
+                              child: WnAvatar(
+                                pictureUrl: state.pictureUrl,
                                 displayName: state.displayName ?? '',
-                                onImageSelected: onImageSelected,
-                                loading: state.loadingState == EditProfileLoadingState.saving,
-                                disabled: state.loadingState == EditProfileLoadingState.saving,
+                                size: WnAvatarSize.large,
+                                color: avatarColorFromPubkey(pubkey),
+                                onEditTap: state.loadingState == EditProfileLoadingState.saving
+                                    ? null
+                                    : pickImage,
                               ),
                             ),
                             Gap(36.h),

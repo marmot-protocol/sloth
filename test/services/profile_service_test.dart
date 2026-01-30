@@ -5,6 +5,8 @@ import 'package:sloth/services/profile_service.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../test_helpers.dart';
+
 class _MockApi implements RustLibApi {
   FlutterMetadata? updatedMetadata;
   String? updatedPubkey;
@@ -58,14 +60,14 @@ void main() {
     mockApi.updatedMetadata = null;
     mockApi.updatedPubkey = null;
     mockApi.uploadedPubkey = null;
-    service = const ProfileService('test_pubkey');
+    service = const ProfileService(testPubkeyA);
   });
 
   group('setProfile', () {
     test('calls API with pubkey', () async {
       await service.setProfile(displayName: 'Test');
 
-      expect(mockApi.updatedPubkey, 'test_pubkey');
+      expect(mockApi.updatedPubkey, testPubkeyA);
     });
 
     test('passes displayName to metadata', () async {
@@ -114,7 +116,7 @@ void main() {
       test('uploads image with expected pubkey', () async {
         await service.uploadProfilePicture(filePath: testFile.path);
 
-        expect(mockApi.uploadedPubkey, 'test_pubkey');
+        expect(mockApi.uploadedPubkey, testPubkeyA);
       });
 
       test('uploads to expected blossom server url', () async {

@@ -31,22 +31,12 @@ class WidgetbookApp extends StatelessWidget {
             WidgetbookTheme(name: 'Dark', data: darkTheme),
           ],
           themeBuilder: (context, theme, child) {
-            return Theme(data: theme, child: child);
-          },
-        ),
-        BuilderAddon(
-          name: 'ScreenUtil',
-          builder: (context, child) {
             return ScreenUtilInit(
               designSize: const Size(390, 844),
               minTextAdapt: true,
-              splitScreenMode: true,
-              useInheritedMediaQuery: true,
-              builder: (context, child) {
-                ScreenUtil.configure(data: MediaQuery.of(context));
-                return child!;
-              },
-              child: child,
+              enableScaleWH: () => false,
+              enableScaleText: () => false,
+              child: Theme(data: theme, child: child),
             );
           },
         ),

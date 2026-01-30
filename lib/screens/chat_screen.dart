@@ -97,6 +97,7 @@ class ChatScreen extends HookConsumerWidget {
             children: [
               WnSlateContainer(
                 child: WnChatHeader(
+                  mlsGroupId: groupId,
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   onBack: () => Routes.goToChatList(context),

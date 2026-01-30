@@ -32,9 +32,9 @@ flutter:
   fonts:
     - family: Manrope
       fonts:
-        - asset: ../assets/fonts/Manrope-Regular.ttf
+        - asset: assets/fonts/Manrope-Regular.ttf
           weight: 400
-        - asset: ../assets/fonts/Manrope-SemiBold.ttf
+        - asset: assets/fonts/Manrope-SemiBold.ttf
           weight: 600
-        - asset: ../assets/fonts/Manrope-Bold.ttf
+        - asset: assets/fonts/Manrope-Bold.ttf
           weight: 700
