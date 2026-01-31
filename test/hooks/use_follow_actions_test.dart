@@ -1,29 +1,31 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/hooks/use_is_following.dart';
+import 'package:sloth/hooks/use_follow_actions.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 class _MockApi extends MockWnApi {
-  final Set<String> followingPubkeys = {};
   Completer<bool>? isFollowingCompleter;
   Completer<void>? followCompleter;
   Completer<void>? unfollowCompleter;
+  Exception? isFollowingError;
   Exception? followError;
   Exception? unfollowError;
   final isFollowingCalls = <({String account, String user})>[];
   final followCalls = <({String account, String target})>[];
   final unfollowCalls = <({String account, String target})>[];
+  final followingPubkeys = <String>{};
 
   @override
   Future<bool> crateApiAccountsIsFollowingUser({
     required String accountPubkey,
     required String userPubkey,
-  }) {
+  }) async {
     isFollowingCalls.add((account: accountPubkey, user: userPubkey));
+    if (isFollowingError != null) throw isFollowingError!;
     if (isFollowingCompleter != null) return isFollowingCompleter!.future;
-    return Future.value(followingPubkeys.contains(userPubkey));
+    return followingPubkeys.contains(userPubkey);
   }
 
   @override
@@ -34,7 +36,6 @@ class _MockApi extends MockWnApi {
     followCalls.add((account: accountPubkey, target: userToFollowPubkey));
     if (followCompleter != null) await followCompleter!.future;
     if (followError != null) throw followError!;
-    followingPubkeys.add(userToFollowPubkey);
   }
 
   @override
@@ -45,28 +46,28 @@ class _MockApi extends MockWnApi {
     unfollowCalls.add((account: accountPubkey, target: userToUnfollowPubkey));
     if (unfollowCompleter != null) await unfollowCompleter!.future;
     if (unfollowError != null) throw unfollowError!;
-    followingPubkeys.remove(userToUnfollowPubkey);
   }
 
   @override
   void reset() {
     super.reset();
-    followingPubkeys.clear();
     isFollowingCompleter = null;
     followCompleter = null;
     unfollowCompleter = null;
+    isFollowingError = null;
     followError = null;
     unfollowError = null;
     isFollowingCalls.clear();
     followCalls.clear();
     unfollowCalls.clear();
+    followingPubkeys.clear();
   }
 }
 
 final _api = _MockApi();
 
 void main() {
-  late IsFollowingState Function() getState;
+  late FollowActionsState Function() getState;
 
   setUpAll(() => RustLib.initMock(api: _api));
   setUp(() => _api.reset());
@@ -78,18 +79,17 @@ void main() {
   }) async {
     getState = await mountHook(
       tester,
-      () => useIsFollowing(
+      () => useFollowActions(
         accountPubkey: accountPubkey,
         userPubkey: userPubkey,
       ),
     );
   }
 
-  group('useIsFollowing', () {
+  group('useFollowActions', () {
     group('loading state', () {
-      setUp(() => _api.isFollowingCompleter = Completer());
-
       testWidgets('isLoading is true while fetching', (tester) async {
+        _api.isFollowingCompleter = Completer();
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
 
         expect(getState().isLoading, isTrue);
@@ -103,7 +103,7 @@ void main() {
         expect(getState().isLoading, isTrue);
 
         _api.isFollowingCompleter!.complete(true);
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(getState().isLoading, isFalse);
         expect(getState().isFollowing, isTrue);
@@ -113,7 +113,7 @@ void main() {
     group('follow status', () {
       testWidgets('returns false for non-followed user', (tester) async {
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(getState().isFollowing, isFalse);
         expect(getState().isLoading, isFalse);
@@ -122,9 +122,18 @@ void main() {
       testWidgets('returns true for followed user', (tester) async {
         _api.followingPubkeys.add('user1');
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(getState().isFollowing, isTrue);
+        expect(getState().isLoading, isFalse);
+      });
+
+      testWidgets('defaults to false when fetch fails', (tester) async {
+        _api.isFollowingError = Exception('Network error');
+        await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
+        await tester.pumpAndSettle();
+
+        expect(getState().isFollowing, isFalse);
         expect(getState().isLoading, isFalse);
       });
     });
@@ -132,7 +141,7 @@ void main() {
     group('API calls', () {
       testWidgets('calls API with correct parameters', (tester) async {
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(_api.isFollowingCalls.length, 1);
         expect(_api.isFollowingCalls[0].account, 'account1');
@@ -143,7 +152,7 @@ void main() {
     group('follow action', () {
       testWidgets('calls follow API with correct parameters', (tester) async {
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         await getState().follow();
         await tester.pump();
@@ -156,7 +165,7 @@ void main() {
       testWidgets('isActionLoading is true during follow', (tester) async {
         _api.followCompleter = Completer();
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         final future = getState().follow();
         await tester.pump();
@@ -170,24 +179,23 @@ void main() {
         expect(getState().isActionLoading, isFalse);
       });
 
-      testWidgets('refreshes isFollowing after follow', (tester) async {
+      testWidgets('updates isFollowing to true after follow', (tester) async {
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
-
-        expect(getState().isFollowing, isFalse);
-        expect(_api.isFollowingCalls.length, 1);
-
-        await getState().follow();
         await tester.pumpAndSettle();
 
-        expect(_api.isFollowingCalls.length, 2);
+        expect(getState().isFollowing, isFalse);
+
+        await getState().follow();
+        await tester.pump();
+
         expect(getState().isFollowing, isTrue);
+        expect(_api.isFollowingCalls.length, 1);
       });
 
       testWidgets('sets error on follow failure', (tester) async {
         _api.followError = Exception('Network error');
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(getState().error, isNull);
 
@@ -204,7 +212,7 @@ void main() {
       testWidgets('calls unfollow API with correct parameters', (tester) async {
         _api.followingPubkeys.add('user1');
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         await getState().unfollow();
         await tester.pump();
@@ -218,7 +226,7 @@ void main() {
         _api.followingPubkeys.add('user1');
         _api.unfollowCompleter = Completer();
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         final future = getState().unfollow();
         await tester.pump();
@@ -232,26 +240,25 @@ void main() {
         expect(getState().isActionLoading, isFalse);
       });
 
-      testWidgets('refreshes isFollowing after unfollow', (tester) async {
+      testWidgets('updates isFollowing to false after unfollow', (tester) async {
         _api.followingPubkeys.add('user1');
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
-
-        expect(getState().isFollowing, isTrue);
-        expect(_api.isFollowingCalls.length, 1);
-
-        await getState().unfollow();
         await tester.pumpAndSettle();
 
-        expect(_api.isFollowingCalls.length, 2);
+        expect(getState().isFollowing, isTrue);
+
+        await getState().unfollow();
+        await tester.pump();
+
         expect(getState().isFollowing, isFalse);
+        expect(_api.isFollowingCalls.length, 1);
       });
 
       testWidgets('sets error on unfollow failure', (tester) async {
         _api.followingPubkeys.add('user1');
         _api.unfollowError = Exception('Network error');
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         expect(getState().error, isNull);
 
@@ -264,11 +271,42 @@ void main() {
       });
     });
 
+    group('toggleFollow action', () {
+      testWidgets('calls follow when not following', (tester) async {
+        await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
+        await tester.pumpAndSettle();
+
+        expect(getState().isFollowing, isFalse);
+
+        await getState().toggleFollow();
+        await tester.pump();
+
+        expect(_api.followCalls.length, 1);
+        expect(_api.unfollowCalls.length, 0);
+        expect(getState().isFollowing, isTrue);
+      });
+
+      testWidgets('calls unfollow when following', (tester) async {
+        _api.followingPubkeys.add('user1');
+        await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
+        await tester.pumpAndSettle();
+
+        expect(getState().isFollowing, isTrue);
+
+        await getState().toggleFollow();
+        await tester.pump();
+
+        expect(_api.followCalls.length, 0);
+        expect(_api.unfollowCalls.length, 1);
+        expect(getState().isFollowing, isFalse);
+      });
+    });
+
     group('clearError', () {
       testWidgets('clears error state', (tester) async {
         _api.followError = Exception('Network error');
         await pump(tester, accountPubkey: 'account1', userPubkey: 'user1');
-        await tester.pump();
+        await tester.pumpAndSettle();
 
         try {
           await getState().follow();

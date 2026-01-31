@@ -1,11 +1,10 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 
-final _logger = Logger('useIsFollowing');
+final _logger = Logger('useFollowActions');
 
-typedef IsFollowingState = ({
+typedef FollowActionsState = ({
   bool isFollowing,
   bool isLoading,
   bool isActionLoading,
@@ -13,33 +12,38 @@ typedef IsFollowingState = ({
   void Function() clearError,
   Future<void> Function() follow,
   Future<void> Function() unfollow,
+  Future<void> Function() toggleFollow,
 });
 
-IsFollowingState useIsFollowing({
+FollowActionsState useFollowActions({
   required String accountPubkey,
   required String userPubkey,
 }) {
-  final refreshKey = useState(0);
+  final isFollowing = useState<bool?>(null);
+  final isLoading = useState(true);
   final isActionLoading = useState(false);
   final error = useState<String?>(null);
-  final isFollowingRef = useRef<bool?>(null);
 
-  final isFollowingFuture = useMemoized(
-    () => accounts_api.isFollowingUser(
-      accountPubkey: accountPubkey,
-      userPubkey: userPubkey,
-    ),
-    [accountPubkey, userPubkey, refreshKey.value],
-  );
-  final isFollowingSnapshot = useFuture(isFollowingFuture);
+  useEffect(() {
+    Future<void> fetchIsFollowing() async {
+      isLoading.value = true;
+      try {
+        final result = await accounts_api.isFollowingUser(
+          accountPubkey: accountPubkey,
+          userPubkey: userPubkey,
+        );
+        isFollowing.value = result;
+      } catch (e) {
+        _logger.severe('Failed to fetch follow status: $e');
+        isFollowing.value = false;
+      } finally {
+        isLoading.value = false;
+      }
+    }
 
-  if (isFollowingSnapshot.hasData) {
-    isFollowingRef.value = isFollowingSnapshot.data;
-  }
-
-  final hasInitialData = isFollowingRef.value != null;
-  final isLoading =
-      !hasInitialData && isFollowingSnapshot.connectionState == ConnectionState.waiting;
+    fetchIsFollowing();
+    return null;
+  }, [accountPubkey, userPubkey]);
 
   void clearError() {
     error.value = null;
@@ -53,7 +57,7 @@ IsFollowingState useIsFollowing({
         accountPubkey: accountPubkey,
         userToFollowPubkey: userPubkey,
       );
-      refreshKey.value++;
+      isFollowing.value = true;
     } catch (e) {
       _logger.severe('Failed to follow user: $e');
       error.value = 'Failed to follow user';
@@ -71,7 +75,7 @@ IsFollowingState useIsFollowing({
         accountPubkey: accountPubkey,
         userToUnfollowPubkey: userPubkey,
       );
-      refreshKey.value++;
+      isFollowing.value = false;
     } catch (e) {
       _logger.severe('Failed to unfollow user: $e');
       error.value = 'Failed to unfollow user';
@@ -81,13 +85,22 @@ IsFollowingState useIsFollowing({
     }
   }
 
+  Future<void> toggleFollow() async {
+    if (isFollowing.value == true) {
+      await unfollow();
+    } else {
+      await follow();
+    }
+  }
+
   return (
-    isFollowing: isFollowingRef.value ?? false,
-    isLoading: isLoading,
+    isFollowing: isFollowing.value ?? false,
+    isLoading: isLoading.value,
     isActionLoading: isActionLoading.value,
     error: error.value,
     clearError: clearError,
     follow: follow,
     unfollow: unfollow,
+    toggleFollow: toggleFollow,
   );
 }

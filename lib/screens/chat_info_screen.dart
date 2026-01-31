@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_is_following.dart';
+import 'package:sloth/hooks/use_follow_actions.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
@@ -23,22 +23,26 @@ class ChatInfoScreen extends HookConsumerWidget {
     final accountPubkey = ref.watch(accountPubkeyProvider);
 
     final metadataSnapshot = useUserMetadata(context, userPubkey);
-    final isFollowingState = useIsFollowing(
+    final followState = useFollowActions(
       accountPubkey: accountPubkey,
       userPubkey: userPubkey,
     );
 
     final metadata = metadataSnapshot.data;
     final isLoading =
-        metadataSnapshot.connectionState == ConnectionState.waiting || isFollowingState.isLoading;
-    final isFollowing = isFollowingState.isFollowing;
+        metadataSnapshot.connectionState == ConnectionState.waiting || followState.isLoading;
+    final isFollowing = followState.isFollowing;
     final isOwnProfile = userPubkey == accountPubkey;
 
     Future<void> handleFollowAction() async {
-      if (isFollowing) {
-        await isFollowingState.unfollow();
-      } else {
-        await isFollowingState.follow();
+      try {
+        await followState.toggleFollow();
+      } catch (_) {
+        if (context.mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(context.l10n.failedToUpdateFollow)),
+          );
+        }
       }
     }
 
@@ -80,7 +84,7 @@ class ChatInfoScreen extends HookConsumerWidget {
                                 key: const Key('follow_button'),
                                 text: isFollowing ? context.l10n.unfollow : context.l10n.follow,
                                 type: isFollowing ? WnButtonType.outline : WnButtonType.primary,
-                                loading: isFollowingState.isActionLoading,
+                                loading: followState.isActionLoading,
                                 onPressed: handleFollowAction,
                               ),
                             ),

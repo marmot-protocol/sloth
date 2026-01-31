@@ -22,6 +22,8 @@ class _MockApi extends MockWnApi {
   Completer<FlutterMetadata>? metadataCompleter;
   Completer<void>? followCompleter;
   Completer<void>? unfollowCompleter;
+  Exception? followError;
+  Exception? unfollowError;
   final followCalls = <({String account, String target})>[];
   final unfollowCalls = <({String account, String target})>[];
   final Map<String, String> pubkeyToNpub = {};
@@ -43,6 +45,7 @@ class _MockApi extends MockWnApi {
   }) async {
     followCalls.add((account: accountPubkey, target: userToFollowPubkey));
     if (followCompleter != null) await followCompleter!.future;
+    if (followError != null) throw followError!;
   }
 
   @override
@@ -52,6 +55,7 @@ class _MockApi extends MockWnApi {
   }) async {
     unfollowCalls.add((account: accountPubkey, target: userToUnfollowPubkey));
     if (unfollowCompleter != null) await unfollowCompleter!.future;
+    if (unfollowError != null) throw unfollowError!;
   }
 
   @override
@@ -76,6 +80,8 @@ class _MockApi extends MockWnApi {
     metadataCompleter = null;
     followCompleter = null;
     unfollowCompleter = null;
+    followError = null;
+    unfollowError = null;
     followCalls.clear();
     unfollowCalls.clear();
     pubkeyToNpub.clear();
@@ -241,6 +247,33 @@ void main() {
 
         final button = tester.widget<WnButton>(find.byType(WnButton));
         expect(button.loading, isTrue);
+      });
+
+      testWidgets('shows snackbar when follow fails', (tester) async {
+        _api.followError = Exception('Network error');
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text('Failed to update follow status. Please try again.'),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets('shows snackbar when unfollow fails', (tester) async {
+        _api.followingPubkeys.add(_otherPubkey);
+        _api.unfollowError = Exception('Network error');
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.text('Failed to update follow status. Please try again.'),
+          findsOneWidget,
+        );
       });
     });
 
