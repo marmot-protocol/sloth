@@ -3,7 +3,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_follows.dart';
 import 'package:sloth/hooks/use_user_search.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
@@ -29,10 +28,8 @@ class UserSearchScreen extends HookConsumerWidget {
     final searchController = useTextEditingController();
     final searchQuery = useState('');
 
-    final followsState = useFollows(accountPubkey);
     final state = useUserSearch(
-      follows: followsState.follows,
-      isLoadingFollows: followsState.isLoading,
+      accountPubkey: accountPubkey,
       searchQuery: searchQuery.value,
     );
 

@@ -4,6 +4,7 @@ import 'package:sloth/hooks/use_user_search.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 User _userFactory(
@@ -23,7 +24,8 @@ User _userFactory(
   updatedAt: DateTime(2024),
 );
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
+  Completer<List<User>>? followsCompleter;
   final Map<String, User> userByPubkey = {};
   final Map<String, User> blockingUserByPubkey = {};
   final Map<String, String> npubToPubkey = {};
@@ -31,6 +33,14 @@ class _MockApi implements RustLibApi {
   final Set<String> errorPubkeys = {};
   Completer<User>? userCompleter;
   final userCalls = <({String pubkey, bool blocking})>[];
+  final followsCalls = <String>[];
+
+  @override
+  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) {
+    followsCalls.add(pubkey);
+    if (followsCompleter != null) return followsCompleter!.future;
+    return Future.value(follows);
+  }
 
   @override
   Future<User> crateApiUsersGetUser({
@@ -62,7 +72,18 @@ class _MockApi implements RustLibApi {
   }
 
   @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
+  void reset() {
+    super.reset();
+    followsCompleter = null;
+    userByPubkey.clear();
+    blockingUserByPubkey.clear();
+    npubToPubkey.clear();
+    pubkeyToNpub.clear();
+    errorPubkeys.clear();
+    userCompleter = null;
+    userCalls.clear();
+    followsCalls.clear();
+  }
 }
 
 void main() {
@@ -72,26 +93,18 @@ void main() {
   setUpAll(() => RustLib.initMock(api: api));
 
   setUp(() {
-    api.userByPubkey.clear();
-    api.blockingUserByPubkey.clear();
-    api.npubToPubkey.clear();
-    api.pubkeyToNpub.clear();
-    api.errorPubkeys.clear();
-    api.userCompleter = null;
-    api.userCalls.clear();
+    api.reset();
   });
 
   Future<void> pump(
     WidgetTester tester, {
-    List<User> follows = const [],
-    bool isLoadingFollows = false,
+    String accountPubkey = 'test_account',
     String searchQuery = '',
   }) async {
     getState = await mountHook(
       tester,
       () => useUserSearch(
-        follows: follows,
-        isLoadingFollows: isLoadingFollows,
+        accountPubkey: accountPubkey,
         searchQuery: searchQuery,
       ),
     );
@@ -100,7 +113,8 @@ void main() {
   group('useUserSearch', () {
     group('when follows are loading', () {
       testWidgets('isLoading is true and users is empty', (tester) async {
-        await pump(tester, isLoadingFollows: true);
+        api.followsCompleter = Completer();
+        await pump(tester);
 
         expect(getState().isLoading, isTrue);
         expect(getState().users, isEmpty);
@@ -119,18 +133,28 @@ void main() {
     });
 
     group('with follows', () {
-      final follows = [
-        _userFactory('follow1', displayName: 'Alice'),
-        _userFactory('follow2', displayName: 'Bob'),
-      ];
+      setUp(() {
+        api.follows = [
+          _userFactory('follow1', displayName: 'Alice'),
+          _userFactory('follow2', displayName: 'Bob'),
+        ];
+      });
 
       testWidgets('returns users list', (tester) async {
-        await pump(tester, follows: follows);
+        await pump(tester);
         await tester.pump();
 
         expect(getState().users.length, 2);
         expect(getState().users[0].pubkey, 'follow1');
         expect(getState().users[1].pubkey, 'follow2');
+      });
+
+      testWidgets('calls follows API with correct accountPubkey', (tester) async {
+        await pump(tester, accountPubkey: 'my_account');
+        await tester.pump();
+
+        expect(api.followsCalls.length, 1);
+        expect(api.followsCalls[0], 'my_account');
       });
     });
 
@@ -213,10 +237,8 @@ void main() {
     });
 
     group('partial npub search', () {
-      late List<User> follows;
-
       setUp(() {
-        follows = [
+        api.follows = [
           _userFactory('pub1', displayName: 'Alice'),
           _userFactory('pub2', displayName: 'Bob'),
           _userFactory('pub3', displayName: 'Charlie'),
@@ -227,25 +249,25 @@ void main() {
       });
 
       testWidgets('returns all follows for partial npub1 prefix queries', (tester) async {
-        await pump(tester, follows: follows, searchQuery: 'n');
+        await pump(tester, searchQuery: 'n');
         await tester.pump();
         expect(getState().users.length, 3);
-        await pump(tester, follows: follows, searchQuery: 'np');
+        await pump(tester, searchQuery: 'np');
         await tester.pump();
         expect(getState().users.length, 3);
-        await pump(tester, follows: follows, searchQuery: 'npu');
+        await pump(tester, searchQuery: 'npu');
         await tester.pump();
         expect(getState().users.length, 3);
-        await pump(tester, follows: follows, searchQuery: 'npub');
+        await pump(tester, searchQuery: 'npub');
         await tester.pump();
         expect(getState().users.length, 3);
-        await pump(tester, follows: follows, searchQuery: 'npub1');
+        await pump(tester, searchQuery: 'npub1');
         await tester.pump();
         expect(getState().users.length, 3);
       });
 
       testWidgets('filters follows by npub prefix', (tester) async {
-        await pump(tester, follows: follows, searchQuery: 'npub1ali');
+        await pump(tester, searchQuery: 'npub1ali');
         await tester.pump();
 
         expect(getState().users.length, 2);
@@ -253,14 +275,14 @@ void main() {
       });
 
       testWidgets('filters follows case-insensitively', (tester) async {
-        await pump(tester, follows: follows, searchQuery: 'NPUB1ALI');
+        await pump(tester, searchQuery: 'NPUB1ALI');
         await tester.pump();
 
         expect(getState().users.length, 2);
       });
 
       testWidgets('returns empty list when no matches', (tester) async {
-        await pump(tester, follows: follows, searchQuery: 'npub1xyz');
+        await pump(tester, searchQuery: 'npub1xyz');
         await tester.pump();
 
         expect(getState().users, isEmpty);
@@ -268,21 +290,21 @@ void main() {
       });
 
       testWidgets('returns all follows when query is empty', (tester) async {
-        await pump(tester, follows: follows);
+        await pump(tester);
         await tester.pump();
 
         expect(getState().users.length, 3);
       });
 
       testWidgets('excludes follows with invalid pubkeys', (tester) async {
-        final mixedFollows = [
+        api.follows = [
           _userFactory('valid_pub', displayName: 'Alice'),
           _userFactory('invalid_pub', displayName: 'Bob'),
         ];
         api.pubkeyToNpub['valid_pub'] =
             'npub1alice111111111111111111111111111111111111111111111111111';
 
-        await pump(tester, follows: mixedFollows, searchQuery: 'npub1ali');
+        await pump(tester, searchQuery: 'npub1ali');
         await tester.pump();
 
         expect(getState().users.length, 1);
