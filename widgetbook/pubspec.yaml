@@ -24,7 +24,7 @@ dev_dependencies:
 flutter:
   uses-material-design: true
 
-  # Reference assets from parent package
+  # Symlinked assets from parent package (avoids needing package: 'sloth' prefix)
   assets:
     - assets/images/
     - assets/svgs/

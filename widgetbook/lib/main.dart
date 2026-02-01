@@ -34,7 +34,6 @@ class WidgetbookApp extends StatelessWidget {
             );
           },
         ),
-        ViewportAddon(Viewports.all),
       ],
       directories: directories,
     );
