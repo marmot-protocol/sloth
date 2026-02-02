@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_follows.dart';
+import 'package:sloth/hooks/use_follow_actions.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
@@ -26,7 +26,10 @@ class ChatInfoScreen extends HookConsumerWidget {
     final accountPubkey = ref.watch(accountPubkeyProvider);
 
     final metadataSnapshot = useUserMetadata(context, userPubkey);
-    final followsState = useFollows(accountPubkey);
+    final followState = useFollowActions(
+      accountPubkey: accountPubkey,
+      userPubkey: userPubkey,
+    );
 
     final noticeMessage = useState<String?>(null);
 
@@ -39,17 +42,14 @@ class ChatInfoScreen extends HookConsumerWidget {
     }
 
     final metadata = metadataSnapshot.data;
-    final isLoading = metadataSnapshot.connectionState == ConnectionState.waiting;
-    final isFollowing = followsState.isFollowing(userPubkey);
+    final isLoading =
+        metadataSnapshot.connectionState == ConnectionState.waiting || followState.isLoading;
+    final isFollowing = followState.isFollowing;
     final isOwnProfile = userPubkey == accountPubkey;
 
     Future<void> handleFollowAction() async {
       try {
-        if (isFollowing) {
-          await followsState.unfollow(userPubkey);
-        } else {
-          await followsState.follow(userPubkey);
-        }
+        await followState.toggleFollow();
       } catch (_) {
         if (context.mounted) {
           noticeMessage.value = context.l10n.failedToUpdateFollow;
@@ -108,7 +108,7 @@ class ChatInfoScreen extends HookConsumerWidget {
                                   key: const Key('follow_button'),
                                   text: isFollowing ? context.l10n.unfollow : context.l10n.follow,
                                   type: isFollowing ? WnButtonType.outline : WnButtonType.primary,
-                                  loading: followsState.isActionLoading,
+                                  loading: followState.isActionLoading,
                                   onPressed: handleFollowAction,
                                 ),
                               ),

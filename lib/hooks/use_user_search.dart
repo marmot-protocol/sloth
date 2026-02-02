@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sloth/services/user_service.dart';
+import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
 import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/utils/encoding.dart';
 
@@ -18,12 +19,25 @@ typedef UserSearchState = ({
 });
 
 UserSearchState useUserSearch({
-  required List<User> follows,
-  required bool isLoadingFollows,
+  required String accountPubkey,
   required String searchQuery,
 }) {
+  final followsRef = useRef(<User>[]);
   final trimmedSearchQuery = searchQuery.trim().toLowerCase();
   final hexPubkeyFromQuery = hexFromNpub(trimmedSearchQuery);
+
+  final followsFuture = useMemoized(
+    () => accounts_api.accountFollows(pubkey: accountPubkey),
+    [accountPubkey],
+  );
+  final followsSnapshot = useFuture(followsFuture);
+  final isLoadingFollows = followsSnapshot.connectionState == ConnectionState.waiting;
+
+  if (followsSnapshot.hasData) {
+    followsRef.value = followsSnapshot.data!;
+  }
+
+  final follows = followsRef.value;
 
   final followNpubs = useMemoized(() {
     final Map<String, String?> npubMap = {};

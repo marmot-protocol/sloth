@@ -68,6 +68,14 @@ class MockWnApi implements RustLibApi {
   }) async {}
 
   @override
+  Future<bool> crateApiAccountsIsFollowingUser({
+    required String accountPubkey,
+    required String userPubkey,
+  }) async {
+    return follows.any((user) => user.pubkey == userPubkey);
+  }
+
+  @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
     if (shouldFailNpubConversion) {
       throw Exception('Invalid hex pubkey');
