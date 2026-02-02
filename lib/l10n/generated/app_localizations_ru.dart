@@ -483,4 +483,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Не удалось выбрать изображение. Попробуйте снова.';
+
+  @override
+  String get loginWithSigner => 'Войти через Signer';
+
+  @override
+  String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
 }

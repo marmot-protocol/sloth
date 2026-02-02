@@ -477,4 +477,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Görsel seçilemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get loginWithSigner => 'Signer ile giriş yap';
+
+  @override
+  String get signerConnectionError => 'Signer\'a bağlanılamadı. Lütfen tekrar deneyin.';
 }

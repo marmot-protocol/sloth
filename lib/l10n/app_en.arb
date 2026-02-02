@@ -749,5 +749,15 @@
   "imagePickerError": "Failed to pick image. Please try again.",
   "@imagePickerError": {
     "description": "Error message when image picker fails"
+  },
+
+  "loginWithSigner": "Login with Signer",
+  "@loginWithSigner": {
+    "description": "Button text to login using an external signer app"
+  },
+
+  "signerConnectionError": "Unable to connect to signer. Please try again.",
+  "@signerConnectionError": {
+    "description": "Error message when connection to external signer fails"
   }
 }

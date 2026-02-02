@@ -139,5 +139,7 @@
   "failedToStartChat": "Falha ao iniciar a conversa. Por favor, tente novamente.",
   "userNotOnWhiteNoise": "Este usuário ainda não está no White Noise.",
   "failedToUpdateFollow": "Falha ao atualizar o status de seguir. Por favor, tente novamente.",
-  "imagePickerError": "Falha ao selecionar imagem. Por favor, tente novamente."
+  "imagePickerError": "Falha ao selecionar imagem. Por favor, tente novamente.",
+  "loginWithSigner": "Entrar com Signer",
+  "signerConnectionError": "Não foi possível conectar ao signer. Por favor, tente novamente."
 }

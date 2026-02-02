@@ -139,5 +139,7 @@
   "failedToStartChat": "Не удалось начать чат. Попробуйте снова.",
   "userNotOnWhiteNoise": "Этот пользователь ещё не в White Noise.",
   "failedToUpdateFollow": "Не удалось обновить статус подписки. Попробуйте снова.",
-  "imagePickerError": "Не удалось выбрать изображение. Попробуйте снова."
+  "imagePickerError": "Не удалось выбрать изображение. Попробуйте снова.",
+  "loginWithSigner": "Войти через Signer",
+  "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова."
 }

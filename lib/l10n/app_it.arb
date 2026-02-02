@@ -139,5 +139,7 @@
   "failedToStartChat": "Impossibile avviare la chat. Riprova.",
   "userNotOnWhiteNoise": "Questo utente non è ancora su White Noise.",
   "failedToUpdateFollow": "Impossibile aggiornare lo stato del seguito. Riprova.",
-  "imagePickerError": "Impossibile selezionare l'immagine. Riprova."
+  "imagePickerError": "Impossibile selezionare l'immagine. Riprova.",
+  "loginWithSigner": "Accedi con Signer",
+  "signerConnectionError": "Impossibile connettersi al signer. Riprova."
 }

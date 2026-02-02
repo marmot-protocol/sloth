@@ -478,4 +478,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Impossibile selezionare l\'immagine. Riprova.';
+
+  @override
+  String get loginWithSigner => 'Accedi con Signer';
+
+  @override
+  String get signerConnectionError => 'Impossibile connettersi al signer. Riprova.';
 }

@@ -37,6 +37,7 @@ class LoginScreen extends HookConsumerWidget {
     }
 
     Future<void> onAndroidSignerLogin() async {
+      final signerConnectionErrorMessage = context.l10n.signerConnectionError;
       signerError.value = null;
       clearError();
       isSignerLoading.value = true;
@@ -53,8 +54,8 @@ class LoginScreen extends HookConsumerWidget {
         }
       } on AndroidSignerException catch (e) {
         signerError.value = e.userFriendlyMessage;
-      } catch (e) {
-        signerError.value = 'Unable to connect to signer. Please try again.';
+      } catch (_) {
+        signerError.value = signerConnectionErrorMessage;
       } finally {
         isSignerLoading.value = false;
       }
@@ -112,7 +113,7 @@ class LoginScreen extends HookConsumerWidget {
                         if (androidSigner.isAvailable) ...[
                           WnButton(
                             key: const Key('android_signer_login_button'),
-                            text: 'Login with Signer',
+                            text: context.l10n.loginWithSigner,
                             type: WnButtonType.outline,
                             onPressed: onAndroidSignerLogin,
                             loading: isSignerLoading.value,

@@ -139,5 +139,7 @@
   "failedToStartChat": "Sohbet başlatılamadı. Lütfen tekrar deneyin.",
   "userNotOnWhiteNoise": "Bu kullanıcı henüz White Noise'da değil.",
   "failedToUpdateFollow": "Takip durumu güncellenemedi. Lütfen tekrar deneyin.",
-  "imagePickerError": "Görsel seçilemedi. Lütfen tekrar deneyin."
+  "imagePickerError": "Görsel seçilemedi. Lütfen tekrar deneyin.",
+  "loginWithSigner": "Signer ile giriş yap",
+  "signerConnectionError": "Signer'a bağlanılamadı. Lütfen tekrar deneyin."
 }

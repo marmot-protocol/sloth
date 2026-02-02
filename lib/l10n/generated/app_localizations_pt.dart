@@ -479,4 +479,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Falha ao selecionar imagem. Por favor, tente novamente.';
+
+  @override
+  String get loginWithSigner => 'Entrar com Signer';
+
+  @override
+  String get signerConnectionError =>
+      'Não foi possível conectar ao signer. Por favor, tente novamente.';
 }
