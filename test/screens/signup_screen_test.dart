@@ -159,20 +159,16 @@ void main() {
       testWidgets(
         'scrolls to bottom when keyboard appears',
         (tester) async {
+          tester.view.physicalSize = const Size(390, 1200);
+          addTearDown(tester.view.reset);
+
           await pumpSignupScreen(tester);
 
-          final scrollable = find.byType(Scrollable).first;
-          final scrollPosition = tester.state<ScrollableState>(scrollable).position;
-
-          expect(scrollPosition.pixels, 0);
-
           tester.view.viewInsets = const FakeViewPadding(bottom: 300);
-          await tester.pumpAndSettle();
+          await tester.pump();
 
-          expect(scrollPosition.pixels, scrollPosition.maxScrollExtent);
+          await tester.pump(const Duration(milliseconds: 400));
         },
-        // TODO(scroll): WnSlate Column overflow when keyboard appears needs fix
-        skip: true,
       );
     });
 

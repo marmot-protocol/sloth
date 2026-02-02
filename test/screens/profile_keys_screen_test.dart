@@ -180,5 +180,21 @@ void main() {
 
       expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
     });
+
+    testWidgets('success notice auto-dismisses after timeout', (tester) async {
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      final copyButtons = find.byKey(const Key('copy_button'));
+      await tester.tap(copyButtons.first);
+      await tester.pump();
+
+      expect(find.text('Public key copied to clipboard'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('Public key copied to clipboard'), findsNothing);
+    });
   });
 }

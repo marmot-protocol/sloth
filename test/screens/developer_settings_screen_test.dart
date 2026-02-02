@@ -244,6 +244,21 @@ void main() {
 
         expect(find.text('Key package deleted'), findsOneWidget);
       });
+
+      testWidgets('notice auto-dismisses after timeout', (tester) async {
+        await pumpScreen(tester);
+
+        await tester.tap(find.text('Publish New Key Package'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Key package published'), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Key package published'), findsNothing);
+      });
     });
   });
 }
