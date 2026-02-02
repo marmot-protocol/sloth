@@ -109,5 +109,22 @@ void main() {
         );
       });
     });
+
+    group('system notice', () {
+      testWidgets('auto-dismisses after timeout', (tester) async {
+        await pumpDonateScreen(tester);
+
+        await tester.tap(find.byKey(const Key('copy_button')).first);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 4));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsNothing);
+      });
+    });
   });
 }

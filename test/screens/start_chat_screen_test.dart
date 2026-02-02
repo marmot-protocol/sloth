@@ -354,5 +354,17 @@ void main() {
         expect(find.byKey(const Key('start_chat_button')), findsNothing);
       });
     });
+
+    group('system notice', () {
+      testWidgets('shows notice when public key is copied', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Public key copied to clipboard'), findsOneWidget);
+      });
+    });
   });
 }

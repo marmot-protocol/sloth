@@ -181,5 +181,69 @@ void main() {
       expect(find.text('Package 1'), findsOneWidget);
       expect(find.text('Package 2'), findsOneWidget);
     });
+
+    group('action buttons', () {
+      testWidgets('tapping Publish shows success notice', (tester) async {
+        await pumpScreen(tester);
+
+        await tester.tap(find.text('Publish New Key Package'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Key package published'), findsOneWidget);
+      });
+
+      testWidgets('tapping Refresh shows success notice', (tester) async {
+        await pumpScreen(tester);
+
+        await tester.tap(find.text('Refresh Key Packages'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Key packages refreshed'), findsOneWidget);
+      });
+
+      testWidgets('tapping Delete All shows success notice', (tester) async {
+        mockApi.keyPackages = [
+          FlutterEvent(
+            id: 'pkg1',
+            pubkey: testPubkeyA,
+            createdAt: DateTime.now(),
+            kind: 443,
+            tags: [],
+            content: '',
+          ),
+        ];
+
+        await pumpScreen(tester);
+
+        await tester.tap(find.text('Delete All Key Packages'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('All key packages deleted'), findsOneWidget);
+      });
+
+      testWidgets('deleting single package shows success notice', (tester) async {
+        mockApi.keyPackages = [
+          FlutterEvent(
+            id: 'pkg_test',
+            pubkey: testPubkeyA,
+            createdAt: DateTime.now(),
+            kind: 443,
+            tags: [],
+            content: '',
+          ),
+        ];
+
+        await pumpScreen(tester);
+
+        await tester.tap(find.byKey(const Key('delete_key_package_pkg_test')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Key package deleted'), findsOneWidget);
+      });
+    });
   });
 }

@@ -265,5 +265,55 @@ void main() {
         expect(find.text('My Profile'), findsOneWidget);
       });
     });
+
+    group('loading state', () {
+      testWidgets('hides loading indicator when metadata loads', (tester) async {
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        expect(find.byType(CircularProgressIndicator), findsNothing);
+      });
+    });
+
+    group('system notice', () {
+      setUp(() {
+        _api.metadata = const FlutterMetadata(displayName: 'Test User', custom: {});
+      });
+
+      testWidgets('shows notice when public key is copied', (tester) async {
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Public key copied to clipboard'), findsOneWidget);
+      });
+
+      testWidgets('shows error notice when follow action fails', (tester) async {
+        _api.follows = [];
+        _api.followCompleter = Completer();
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('follow_button')));
+        await tester.pump();
+
+        _api.followCompleter!.completeError(Exception('Network error'));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Failed to update follow status. Please try again.'), findsOneWidget);
+      });
+    });
+
+    group('navigation', () {
+      testWidgets('navigates back when close button is pressed', (tester) async {
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('slate_close_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Profile'), findsNothing);
+      });
+    });
   });
 }
