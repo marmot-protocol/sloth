@@ -574,4 +574,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Ara';
+
+  @override
+  String get loginWithSigner => 'Signer ile giriş yap';
+
+  @override
+  String get signerConnectionError => 'Signer\'a bağlanılamadı. Lütfen tekrar deneyin.';
 }

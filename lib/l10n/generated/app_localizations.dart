@@ -1133,6 +1133,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dec'**
   String get monthDecShort;
+
+  /// Button text to login using an external signer app
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Signer'**
+  String get loginWithSigner;
+
+  /// Error message when connection to external signer fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to connect to signer. Please try again.'**
+  String get signerConnectionError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

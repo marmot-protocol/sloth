@@ -580,4 +580,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Дек';
+
+  @override
+  String get loginWithSigner => 'Войти через Signer';
+
+  @override
+  String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
 }

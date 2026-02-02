@@ -575,4 +575,10 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Dic';
+
+  @override
+  String get loginWithSigner => 'Accedi con Signer';
+
+  @override
+  String get signerConnectionError => 'Impossibile connettersi al signer. Riprova.';
 }

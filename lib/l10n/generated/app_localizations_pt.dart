@@ -576,4 +576,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Dez';
+
+  @override
+  String get loginWithSigner => 'Entrar com Signer';
+
+  @override
+  String get signerConnectionError =>
+      'Não foi possível conectar ao signer. Por favor, tente novamente.';
 }

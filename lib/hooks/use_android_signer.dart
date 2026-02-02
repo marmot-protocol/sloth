@@ -8,6 +8,9 @@ final _logger = Logger('useAndroidSigner');
 ///
 /// Provides ephemeral state for signer availability, connection status,
 /// and methods to connect/disconnect from the Android signer.
+///
+/// [service] can be provided for testing purposes. If not provided,
+/// a default [AndroidSignerService] will be created.
 ({
   bool isAvailable,
   bool isConnecting,
@@ -15,8 +18,8 @@ final _logger = Logger('useAndroidSigner');
   Future<String> Function() connect,
   Future<void> Function() disconnect,
 })
-useAndroidSigner() {
-  final signerService = useMemoized(() => const AndroidSignerService());
+useAndroidSigner({AndroidSignerService? service}) {
+  final signerService = useMemoized(() => service ?? const AndroidSignerService());
 
   final isAvailable = useState(false);
   final isConnecting = useState(false);

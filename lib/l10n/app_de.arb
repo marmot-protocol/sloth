@@ -170,5 +170,7 @@
   "monthSepShort": "Sep",
   "monthOctShort": "Okt",
   "monthNovShort": "Nov",
-  "monthDecShort": "Dez"
+  "monthDecShort": "Dez",
+  "loginWithSigner": "Mit Signer anmelden",
+  "signerConnectionError": "Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut."
 }

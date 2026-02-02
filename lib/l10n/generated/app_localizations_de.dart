@@ -585,4 +585,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Dez';
+
+  @override
+  String get loginWithSigner => 'Mit Signer anmelden';
+
+  @override
+  String get signerConnectionError =>
+      'Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.';
 }
