@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
 import 'package:sloth/widgets/wn_user_profile_card.dart';
@@ -55,7 +54,7 @@ void main() {
       await pumpCard(tester);
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.violet);
+      expect(avatar.color, AvatarColor.violet);
     });
 
     testWidgets('different pubkey passes different avatar color', (tester) async {
@@ -69,7 +68,7 @@ void main() {
       );
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.cyan);
+      expect(avatar.color, AvatarColor.cyan);
     });
 
     group('with metadata', () {

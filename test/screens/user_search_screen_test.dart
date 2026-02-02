@@ -6,7 +6,6 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
@@ -150,8 +149,8 @@ void main() {
 
         final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
         expect(avatars.length, 2);
-        expect(avatars[0].color, AccentColor.violet);
-        expect(avatars[1].color, AccentColor.amber);
+        expect(avatars[0].color, AvatarColor.violet);
+        expect(avatars[1].color, AvatarColor.amber);
       });
     });
 

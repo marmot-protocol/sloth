@@ -6,6 +6,12 @@ import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 const _sampleImageUrl = 'https://www.whitenoise.chat/images/mask-man.webp';
 
+final _colorOptions = AvatarColor.values;
+
+String _colorLabel(AvatarColor color) {
+  return color.name[0].toUpperCase() + color.name.substring(1);
+}
+
 class WnAvatarStory extends StatelessWidget {
   const WnAvatarStory({super.key});
 
@@ -36,11 +42,11 @@ Widget allVariants(BuildContext context) {
     labelBuilder: (size) => size.name,
   );
 
-  final color = context.knobs.objectOrNull.dropdown<AccentColor>(
+  final color = context.knobs.object.dropdown<AvatarColor>(
     label: 'Color',
-    options: AccentColor.values,
-    initialOption: AccentColor.blue,
-    labelBuilder: (color) => color.name,
+    options: _colorOptions,
+    initialOption: AvatarColor.neutral,
+    labelBuilder: _colorLabel,
   );
 
   final editable = context.knobs.boolean(
@@ -95,7 +101,7 @@ Widget allVariants(BuildContext context) {
           ),
           const SizedBox(height: 8),
           Text(
-            'Image avatars use neutral border. Initials/icon avatars use accent colors.',
+            'Image avatars use neutral border. Initials/icon avatars use accent or neutral colors.',
             style: TextStyle(
               fontSize: 14,
               color: colors.backgroundContentSecondary,
@@ -106,7 +112,7 @@ Widget allVariants(BuildContext context) {
           const SizedBox(height: 16),
           _buildImageRow(colors),
           const SizedBox(height: 8),
-          ...AccentColor.values.expand(
+          ..._colorOptions.expand(
             (color) => [_buildInitialsRow(color, colors), _buildIconRow(color)],
           ),
         ],
@@ -177,9 +183,7 @@ Widget _buildHeader(SemanticColors colors) {
   );
 }
 
-Widget _buildInitialsRow(AccentColor color, SemanticColors colors) {
-  final colorName = color.name[0].toUpperCase() + color.name.substring(1);
-
+Widget _buildInitialsRow(AvatarColor color, SemanticColors colors) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 16),
     child: Row(
@@ -187,7 +191,7 @@ Widget _buildInitialsRow(AccentColor color, SemanticColors colors) {
         SizedBox(
           width: 80,
           child: Text(
-            colorName,
+            _colorLabel(color),
             style: TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w500,
@@ -237,7 +241,7 @@ Widget _buildInitialsRow(AccentColor color, SemanticColors colors) {
   );
 }
 
-Widget _buildIconRow(AccentColor color) {
+Widget _buildIconRow(AvatarColor color) {
   return Padding(
     padding: const EdgeInsets.only(bottom: 16),
     child: Row(
