@@ -3,6 +3,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/android_signer_service_provider.dart';
 import 'package:sloth/services/android_signer_service.dart';
 
+import '../test_helpers.dart';
+
 void main() {
   group('androidSignerServiceProvider', () {
     test('returns AndroidSignerService instance', () {
@@ -35,7 +37,7 @@ class _MockAndroidSignerService implements AndroidSignerService {
   Future<bool> isAvailable() async => true;
 
   @override
-  Future<String> getPublicKey({List<SignerPermission>? permissions}) async => '';
+  Future<String> getPublicKey({List<SignerPermission>? permissions}) async => testPubkeyA;
 
   @override
   Future<AndroidSignerResponse> signEvent({

@@ -90,15 +90,17 @@ useAndroidSigner({AndroidSignerService? service}) {
     }
   }
 
-  /// Disconnect from the Android signer.
+  /// Reset local ephemeral state for the Android signer.
   ///
-  /// This resets the connection state. Note that NIP-55 doesn't strictly
-  /// have a "disconnect" concept, but this clears our local session state.
+  /// NIP-55 does not define a disconnect operation - the signer app manages its
+  /// own lifecycle and permissions. This method simply resets any local error
+  /// state to allow a fresh connection attempt.
+  ///
+  /// The [AndroidSignerService] manages the signer package name separately.
   Future<void> disconnect() async {
-    _logger.info('Disconnecting from Android signer...');
-    // No persistent state to clean up - the hook only manages ephemeral state.
-    // The signer package name is managed by AndroidSignerService.
-    _logger.info('Disconnected from Android signer');
+    _logger.info('Resetting Android signer state...');
+    error.value = null;
+    _logger.info('Android signer state reset');
   }
 
   return (
