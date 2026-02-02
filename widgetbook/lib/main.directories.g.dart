@@ -22,6 +22,8 @@ import 'package:sloth_widgetbook/components/menu.dart'
     as _sloth_widgetbook_components_menu;
 import 'package:sloth_widgetbook/components/structure.dart'
     as _sloth_widgetbook_components_structure;
+import 'package:sloth_widgetbook/components/tooltip.dart'
+    as _sloth_widgetbook_components_tooltip;
 import 'package:sloth_widgetbook/components/wn_avatar.dart'
     as _sloth_widgetbook_components_wn_avatar;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
@@ -151,6 +153,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Separator',
             builder: _sloth_widgetbook_components_structure.wnSeparatorShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnTooltipStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Tooltip',
+            builder: _sloth_widgetbook_components_tooltip.wnTooltipShowcase,
           ),
         ],
       ),
