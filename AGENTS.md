@@ -255,3 +255,7 @@ Screen (watches providers)
 4. Follow existing code patterns and naming conventions
 
 The precommit command runs all checks: formatting, linting, and tests. If it passes, you're good to commit. If it fails, fix the issues before committing.
+
+## Fixing Bugs
+
+When I report a bug, don't start by trying to fix it. Instead, start by writing a test that reproduces the bug. Then, have subagents try to fix the bug and prove it with a passing test.
