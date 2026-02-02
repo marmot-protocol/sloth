@@ -24,7 +24,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signUp => 'Registrati';
 
   @override
-  String get loginTitle => 'Accedi a White Noise';
+  String get loginTitle => 'Accedi';
 
   @override
   String get enterPrivateKey => 'Inserisci la tua chiave privata';
@@ -71,6 +71,9 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get switchProfile => 'Cambia profilo';
+
+  @override
+  String get addNewProfile => 'Aggiungi un nuovo profilo';
 
   @override
   String get editProfile => 'Modifica profilo';
@@ -159,6 +162,9 @@ class AppLocalizationsIt extends AppLocalizations {
   @override
   String get profilePublicDescription =>
       'Le informazioni del tuo profilo saranno visibili a tutti sulla rete.';
+
+  @override
+  String get discard => 'Annulla';
 
   @override
   String get discardChanges => 'Annulla modifiche';
@@ -316,6 +322,18 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get noKeyPackagesFound => 'Nessun pacchetto chiavi trovato';
+
+  @override
+  String get keyPackagePublished => 'Pacchetto chiavi pubblicato';
+
+  @override
+  String get keyPackagesRefreshed => 'Pacchetti chiavi aggiornati';
+
+  @override
+  String get keyPackagesDeleted => 'Tutti i pacchetti chiavi eliminati';
+
+  @override
+  String get keyPackageDeleted => 'Pacchetto chiavi eliminato';
 
   @override
   String packageNumber(int number) {

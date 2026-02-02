@@ -42,9 +42,9 @@ void main() {
   }
 
   group('DonateScreen', () {
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpDonateScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
 
       expect(find.byType(ChatListScreen), findsOneWidget);
@@ -107,6 +107,23 @@ void main() {
           getClipboard(),
           'sp1qqvp56mxcj9pz9xudvlch5g4ah5hrc8rj6neu25p34rc9gxhp38cwqqlmld28u57w2srgckr34dkyg3q02phu8tm05cyj483q026xedp0s5f5j40p',
         );
+      });
+    });
+
+    group('system notice', () {
+      testWidgets('auto-dismisses after timeout', (tester) async {
+        await pumpDonateScreen(tester);
+
+        await tester.tap(find.byKey(const Key('copy_button')).first);
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 4));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsNothing);
       });
     });
   });

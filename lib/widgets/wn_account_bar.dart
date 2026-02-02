@@ -23,34 +23,47 @@ class WnAccountBar extends HookConsumerWidget {
 
     final metadata = metadataSnapshot.data;
 
-    return Row(
-      children: [
-        GestureDetector(
-          key: const Key('avatar_button'),
-          onTap: () => Routes.pushToSettings(context),
-          child: WnAvatar(
-            pictureUrl: metadata?.picture,
-            displayName: presentName(metadata),
-            color: avatarColorFromPubkey(pubkey),
-          ),
-        ),
-        const Spacer(),
-        IconButton(
-          key: const Key('chat_add_button'),
-          onPressed: () {
-            Routes.pushToUserSearch(context);
-          },
-          icon: SvgPicture.asset(
-            'assets/svgs/new_chat.svg',
-            width: 24.w,
-            height: 24.w,
-            colorFilter: ColorFilter.mode(
-              colors.backgroundContentPrimary,
-              BlendMode.srcIn,
+    return SizedBox(
+      height: 80.h,
+      child: Row(
+        children: [
+          GestureDetector(
+            key: const Key('avatar_button'),
+            onTap: () => Routes.pushToSettings(context),
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              height: 80.h,
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              alignment: Alignment.center,
+              child: WnAvatar(
+                pictureUrl: metadata?.picture,
+                displayName: presentName(metadata),
+                color: avatarColorFromPubkey(pubkey),
+              ),
             ),
           ),
-        ),
-      ],
+          const Spacer(),
+          GestureDetector(
+            key: const Key('chat_add_button'),
+            onTap: () => Routes.pushToUserSearch(context),
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              height: 80.h,
+              padding: EdgeInsets.only(left: 32.w, right: 24.w),
+              alignment: Alignment.center,
+              child: SvgPicture.asset(
+                'assets/svgs/new_chat.svg',
+                width: 24.w,
+                height: 24.w,
+                colorFilter: ColorFilter.mode(
+                  colors.backgroundContentPrimary,
+                  BlendMode.srcIn,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -11,7 +11,7 @@ import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -158,7 +158,7 @@ void main() {
   group('StartChatScreen', () {
     testWidgets('displays slate container', (tester) async {
       await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
-      expect(find.byType(WnSlateContainer), findsOneWidget);
+      expect(find.byType(WnSlate), findsOneWidget);
     });
 
     testWidgets('displays title', (tester) async {
@@ -168,7 +168,7 @@ void main() {
 
     testWidgets('displays close button', (tester) async {
       await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
-      expect(find.byKey(const Key('close_button')), findsOneWidget);
+      expect(find.byKey(const Key('slate_close_button')), findsOneWidget);
     });
 
     testWidgets('displays avatar', (tester) async {
@@ -315,7 +315,7 @@ void main() {
     group('close button', () {
       testWidgets('navigates back when tapped', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(find.text('Start new chat'), findsNothing);
@@ -351,6 +351,18 @@ void main() {
       testWidgets('does not show start chat button', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.byKey(const Key('start_chat_button')), findsNothing);
+      });
+    });
+
+    group('system notice', () {
+      testWidgets('shows notice when public key is copied', (tester) async {
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+
+        expect(find.text('Public key copied to clipboard'), findsOneWidget);
       });
     });
   });

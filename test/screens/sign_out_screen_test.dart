@@ -86,7 +86,7 @@ void main() {
     testWidgets('displays back up section', (tester) async {
       await pumpSignOutScreen(tester);
       expect(find.text('Back up your private key'), findsOneWidget);
-      expect(find.text('Private key'), findsOneWidget);
+      expect(find.text('Private Key'), findsOneWidget);
     });
 
     testWidgets('loads and displays private key field', (tester) async {
@@ -141,9 +141,9 @@ void main() {
       expect(hasViewIcon, isTrue);
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpSignOutScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });

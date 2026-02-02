@@ -14,8 +14,8 @@ import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_menu.dart';
 import 'package:sloth/widgets/wn_menu_item.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class SettingsScreen extends HookConsumerWidget {
   const SettingsScreen({super.key});
@@ -38,13 +38,19 @@ class SettingsScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
+          child: WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
+            header: WnSlateNavigationHeader(
+              title: context.l10n.settings,
+              onNavigate: () => Routes.goBack(context),
+            ),
             child: SingleChildScrollView(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(
                 spacing: 16.h,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  WnScreenHeader(title: context.l10n.settings),
                   Row(
                     spacing: 8.w,
                     children: [

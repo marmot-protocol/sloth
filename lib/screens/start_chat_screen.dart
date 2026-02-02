@@ -13,8 +13,9 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/groups.dart' as groups_api;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 import 'package:sloth/widgets/wn_user_profile_card.dart';
 
 final _logger = Logger('StartChatScreen');
@@ -32,6 +33,15 @@ class StartChatScreen extends HookConsumerWidget {
     final metadataSnapshot = useUserMetadata(context, userPubkey);
     final keyPackageSnapshot = useUserHasKeyPackage(userPubkey);
     final isStartingChat = useState(false);
+    final noticeMessage = useState<String?>(null);
+
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final followState = useFollowActions(
       accountPubkey: accountPubkey,
@@ -98,85 +108,75 @@ class StartChatScreen extends HookConsumerWidget {
           child: Column(
             children: [
               const Spacer(),
-              WnSlateContainer(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            context.l10n.startNewChat,
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w600,
+              WnSlate(
+                header: WnSlateNavigationHeader(
+                  title: context.l10n.startNewChat,
+                  onNavigate: () => Routes.goBack(context),
+                ),
+                systemNotice: noticeMessage.value != null
+                    ? WnSystemNotice(
+                        key: ValueKey(noticeMessage.value),
+                        title: noticeMessage.value!,
+                        onDismiss: dismissNotice,
+                      )
+                    : null,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      if (isLoading)
+                        Center(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(vertical: 40.h),
+                            child: CircularProgressIndicator(
                               color: colors.backgroundContentPrimary,
+                              strokeCap: StrokeCap.round,
                             ),
                           ),
+                        )
+                      else ...[
+                        WnUserProfileCard(
+                          userPubkey: userPubkey,
+                          metadata: metadata,
+                          onPublicKeyCopied: () => showCopiedNotice(context.l10n.publicKeyCopied),
                         ),
-                        IconButton(
-                          key: const Key('close_button'),
-                          onPressed: () => Routes.goBack(context),
-                          icon: WnIcon(
-                            WnIcons.closeLarge,
-                            size: 20.w,
-                            color: colors.backgroundContentTertiary,
+                        Gap(24.h),
+                        if (hasKeyPackage) ...[
+                          SizedBox(
+                            width: double.infinity,
+                            child: WnButton(
+                              key: const Key('follow_button'),
+                              text: isFollowing ? context.l10n.unfollow : context.l10n.follow,
+                              type: WnButtonType.outline,
+                              loading: followState.isActionLoading,
+                              onPressed: handleFollowAction,
+                            ),
                           ),
-                        ),
+                          Gap(8.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: WnButton(
+                              key: const Key('start_chat_button'),
+                              text: context.l10n.startChat,
+                              loading: isStartingChat.value,
+                              onPressed: startChat,
+                            ),
+                          ),
+                        ] else
+                          Text(
+                            key: const Key('user_not_on_whitenoise'),
+                            context.l10n.userNotOnWhiteNoise,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: colors.backgroundContentSecondary,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
                       ],
-                    ),
-                    Gap(16.h),
-                    if (isLoading)
-                      Center(
-                        child: Padding(
-                          padding: EdgeInsets.symmetric(vertical: 40.h),
-                          child: CircularProgressIndicator(
-                            color: colors.backgroundContentPrimary,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        ),
-                      )
-                    else ...[
-                      WnUserProfileCard(
-                        userPubkey: userPubkey,
-                        metadata: metadata,
-                      ),
-                      Gap(24.h),
-                      if (hasKeyPackage) ...[
-                        SizedBox(
-                          width: double.infinity,
-                          child: WnButton(
-                            key: const Key('follow_button'),
-                            text: isFollowing ? context.l10n.unfollow : context.l10n.follow,
-                            type: WnButtonType.outline,
-                            loading: followState.isActionLoading,
-                            onPressed: handleFollowAction,
-                          ),
-                        ),
-                        Gap(8.h),
-                        SizedBox(
-                          width: double.infinity,
-                          child: WnButton(
-                            key: const Key('start_chat_button'),
-                            text: context.l10n.startChat,
-                            loading: isStartingChat.value,
-                            onPressed: startChat,
-                          ),
-                        ),
-                      ] else
-                        Text(
-                          key: const Key('user_not_on_whitenoise'),
-                          context.l10n.userNotOnWhiteNoise,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: colors.backgroundContentSecondary,
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
                     ],
-                  ],
+                  ),
                 ),
               ),
             ],

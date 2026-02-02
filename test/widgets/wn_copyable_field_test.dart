@@ -164,21 +164,22 @@ void main() {
         expect(getClipboard(), 'updated-value');
       });
 
-      testWidgets('shows snackbar when copiedMessage is provided', (tester) async {
+      testWidgets('calls onCopied callback when copy button is tapped', (tester) async {
+        var onCopiedCalled = false;
         await mountWidget(
-          const WnCopyableField(
+          WnCopyableField(
             label: 'Label',
             value: 'value',
-            copiedMessage: 'Copied!',
+            onCopied: () => onCopiedCalled = true,
           ),
           tester,
         );
         await tester.tap(find.byKey(const Key('copy_button')));
         await tester.pump();
-        expect(find.text('Copied!'), findsOneWidget);
+        expect(onCopiedCalled, isTrue);
       });
 
-      testWidgets('does not show snackbar when copiedMessage is null', (tester) async {
+      testWidgets('does not throw when onCopied is null', (tester) async {
         await mountWidget(
           const WnCopyableField(
             label: 'Label',
@@ -188,7 +189,6 @@ void main() {
         );
         await tester.tap(find.byKey(const Key('copy_button')));
         await tester.pump();
-        expect(find.byType(SnackBar), findsNothing);
       });
     });
 

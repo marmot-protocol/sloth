@@ -88,7 +88,7 @@ void main() {
 
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpShareProfileScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });

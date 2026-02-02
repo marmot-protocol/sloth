@@ -133,9 +133,9 @@ void main() {
       expect(find.text('Profile is public'), findsOneWidget);
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpEditProfileScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -173,22 +173,22 @@ void main() {
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('Discard changes button appears when there are changes', (tester) async {
+    testWidgets('Discard button appears when there are changes', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      expect(find.text('Discard changes'), findsNothing);
+      expect(find.text('Discard'), findsNothing);
       await tester.enterText(find.byType(TextField).first, 'New Name');
       await tester.pump();
-      expect(find.text('Discard changes'), findsOneWidget);
+      expect(find.text('Discard'), findsOneWidget);
     });
 
-    testWidgets('Discard changes button resets form fields', (tester) async {
+    testWidgets('Discard button resets form fields', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
       final displayNameField = find.byType(TextField).first;
       await tester.enterText(displayNameField, 'New Name');
       await tester.pump();
-      await tester.tap(find.text('Discard changes'));
+      await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
       final fieldText = tester.widget<TextField>(displayNameField).controller?.text ?? '';
       expect(fieldText, 'Test Display Name');
@@ -213,6 +213,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
       expect(find.text('Profile updated successfully'), findsOneWidget);
@@ -225,6 +230,11 @@ void main() {
       await tester.pumpAndSettle();
       await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
       expect(find.textContaining('Unable to save profile'), findsOneWidget);
@@ -278,7 +288,7 @@ void main() {
       Routes.pushToEditProfile(tester.element(find.byType(Scaffold)));
       await tester.pump();
       expect(find.text('Save'), findsNothing);
-      expect(find.text('Discard changes'), findsNothing);
+      expect(find.text('Discard'), findsNothing);
       await tester.pumpAndSettle();
       expect(find.text('Save'), findsOneWidget);
     });
@@ -290,6 +300,11 @@ void main() {
       expect(find.byKey(const Key('avatar_edit_button')), findsOneWidget);
       await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pump();
       expect(find.byKey(const Key('avatar_edit_button')), findsNothing);

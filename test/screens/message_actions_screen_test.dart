@@ -6,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/screens/message_actions_screen.dart';
 import 'package:sloth/src/rust/api/messages.dart';
+import 'package:sloth/widgets/wn_message_bubble.dart';
 import '../test_helpers.dart';
 
 ChatMessage _createTestMessage({
@@ -172,7 +173,7 @@ void main() {
           tester,
         );
 
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(closeCalled, isTrue);
@@ -298,7 +299,9 @@ void main() {
           tester,
         );
 
-        final align = tester.widget<Align>(find.byType(Align).first);
+        final align = tester.widget<Align>(
+          find.descendant(of: find.byType(WnMessageBubble), matching: find.byType(Align)).first,
+        );
         expect(align.alignment, Alignment.centerRight);
       });
     });
@@ -317,7 +320,9 @@ void main() {
           tester,
         );
 
-        final align = tester.widget<Align>(find.byType(Align).first);
+        final align = tester.widget<Align>(
+          find.descendant(of: find.byType(WnMessageBubble), matching: find.byType(Align)).first,
+        );
         expect(align.alignment, Alignment.centerLeft);
       });
     });
@@ -455,7 +460,7 @@ void main() {
 
       expect(find.text('Message actions'), findsOneWidget);
 
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_close_button')));
       await tester.pumpAndSettle();
 
       expect(find.text('Message actions'), findsNothing);
@@ -539,11 +544,9 @@ void main() {
       await tester.tap(find.text('Show Menu'));
       await tester.pumpAndSettle();
 
-      final alignFinder = find.descendant(
-        of: find.byType(MessageActionsModal),
-        matching: find.byType(Align),
+      final align = tester.widget<Align>(
+        find.descendant(of: find.byType(WnMessageBubble), matching: find.byType(Align)).first,
       );
-      final align = tester.widget<Align>(alignFinder.first);
       expect(align.alignment, Alignment.centerRight);
     });
 
@@ -565,11 +568,9 @@ void main() {
       await tester.tap(find.text('Show Menu'));
       await tester.pumpAndSettle();
 
-      final alignFinder = find.descendant(
-        of: find.byType(MessageActionsModal),
-        matching: find.byType(Align),
+      final align = tester.widget<Align>(
+        find.descendant(of: find.byType(WnMessageBubble), matching: find.byType(Align)).first,
       );
-      final align = tester.widget<Align>(alignFinder.first);
       expect(align.alignment, Alignment.centerLeft);
     });
 

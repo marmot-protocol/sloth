@@ -6,12 +6,13 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_network_relays.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_relay_tile.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class NetworkScreen extends HookConsumerWidget {
   const NetworkScreen({super.key});
@@ -71,7 +72,7 @@ class NetworkScreen extends HookConsumerWidget {
                     boxShadow: [
                       BoxShadow(
                         color: colors.shadow.withValues(alpha: 0.2),
-                        blurRadius: 8,
+                        blurRadius: 8.r,
                         offset: const Offset(0, 4),
                       ),
                     ],
@@ -160,68 +161,77 @@ class NetworkScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              children: [
-                WnScreenHeader(title: context.l10n.networkRelaysTitle),
-                Expanded(
-                  child: ListView(
-                    padding: EdgeInsets.only(top: 16.h),
-                    children: [
-                      RepaintBoundary(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildSectionHeader(
-                              title: context.l10n.myRelays,
-                              helpMessage: context.l10n.myRelaysHelp,
-                              infoIconKey: const Key('info_icon_my_relays'),
-                              addIconKey: const Key('add_icon_my_relays'),
-                              onAdd: () => showAddRelaySheet(RelayCategory.normal),
-                            ),
-                            Gap(12.h),
-                            buildRelayList(state.normalRelays, RelayCategory.normal),
-                          ],
+          child: WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
+            header: WnSlateNavigationHeader(
+              title: context.l10n.networkRelaysTitle,
+              type: WnSlateNavigationType.back,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              child: Column(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      padding: EdgeInsets.only(top: 16.h),
+                      children: [
+                        RepaintBoundary(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildSectionHeader(
+                                title: context.l10n.myRelays,
+                                helpMessage: context.l10n.myRelaysHelp,
+                                infoIconKey: const Key('info_icon_my_relays'),
+                                addIconKey: const Key('add_icon_my_relays'),
+                                onAdd: () => showAddRelaySheet(RelayCategory.normal),
+                              ),
+                              Gap(12.h),
+                              buildRelayList(state.normalRelays, RelayCategory.normal),
+                            ],
+                          ),
                         ),
-                      ),
-                      Gap(16.h),
-                      RepaintBoundary(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildSectionHeader(
-                              title: context.l10n.inboxRelays,
-                              helpMessage: context.l10n.inboxRelaysHelp,
-                              infoIconKey: const Key('info_icon_inbox_relays'),
-                              addIconKey: const Key('add_icon_inbox_relays'),
-                              onAdd: () => showAddRelaySheet(RelayCategory.inbox),
-                            ),
-                            Gap(12.h),
-                            buildRelayList(state.inboxRelays, RelayCategory.inbox),
-                          ],
+                        Gap(16.h),
+                        RepaintBoundary(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildSectionHeader(
+                                title: context.l10n.inboxRelays,
+                                helpMessage: context.l10n.inboxRelaysHelp,
+                                infoIconKey: const Key('info_icon_inbox_relays'),
+                                addIconKey: const Key('add_icon_inbox_relays'),
+                                onAdd: () => showAddRelaySheet(RelayCategory.inbox),
+                              ),
+                              Gap(12.h),
+                              buildRelayList(state.inboxRelays, RelayCategory.inbox),
+                            ],
+                          ),
                         ),
-                      ),
-                      Gap(16.h),
-                      RepaintBoundary(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildSectionHeader(
-                              title: context.l10n.keyPackageRelays,
-                              helpMessage: context.l10n.keyPackageRelaysHelp,
-                              infoIconKey: const Key('info_icon_key_package_relays'),
-                              addIconKey: const Key('add_icon_key_package_relays'),
-                              onAdd: () => showAddRelaySheet(RelayCategory.keyPackage),
-                            ),
-                            Gap(12.h),
-                            buildRelayList(state.keyPackageRelays, RelayCategory.keyPackage),
-                          ],
+                        Gap(16.h),
+                        RepaintBoundary(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              buildSectionHeader(
+                                title: context.l10n.keyPackageRelays,
+                                helpMessage: context.l10n.keyPackageRelaysHelp,
+                                infoIconKey: const Key('info_icon_key_package_relays'),
+                                addIconKey: const Key('add_icon_key_package_relays'),
+                                onAdd: () => showAddRelaySheet(RelayCategory.keyPackage),
+                              ),
+                              Gap(12.h),
+                              buildRelayList(state.keyPackageRelays, RelayCategory.keyPackage),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

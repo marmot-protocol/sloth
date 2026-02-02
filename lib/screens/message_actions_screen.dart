@@ -10,7 +10,8 @@ import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_emoji_picker.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class MessageActionsScreen extends HookWidget {
   const MessageActionsScreen({
@@ -185,82 +186,68 @@ class MessageActionsModal extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return WnSlateContainer(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                context.l10n.messageActions,
-                style: TextStyle(
-                  color: colors.backgroundContentPrimary,
-                  fontSize: 16.sp,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-              GestureDetector(
-                key: const Key('close_button'),
-                onTap: onClose,
-                child: WnIcon(
-                  WnIcons.closeLarge,
-                  color: colors.backgroundContentPrimary,
-                ),
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          WnMessageBubble(
-            message: message,
-            isOwnMessage: isOwnMessage,
-            currentUserPubkey: currentUserPubkey,
-          ),
-          SizedBox(height: 16.h),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              ...reactions.map(
-                (emoji) => _ReactionButton(
-                  key: Key('reaction_$emoji'),
-                  colors: colors,
-                  emoji: emoji,
-                  isSelected: selectedEmojis.contains(emoji),
-                  onTap: () => onReaction(emoji),
-                ),
-              ),
-              GestureDetector(
-                key: const Key('emoji_picker_button'),
-                onTap: onEmojiPicker,
-                child: Container(
-                  padding: EdgeInsets.all(8.w),
-                  child: WnIcon(
-                    WnIcons.addEmoji,
-                    color: colors.backgroundContentPrimary,
-                    size: 20.sp,
+    return WnSlate(
+      header: WnSlateNavigationHeader(
+        title: context.l10n.messageActions,
+        onNavigate: onClose,
+      ),
+      child: Padding(
+        padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            SizedBox(height: 12.h),
+            WnMessageBubble(
+              message: message,
+              isOwnMessage: isOwnMessage,
+              currentUserPubkey: currentUserPubkey,
+            ),
+            SizedBox(height: 16.h),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                ...reactions.map(
+                  (emoji) => _ReactionButton(
+                    key: Key('reaction_$emoji'),
+                    colors: colors,
+                    emoji: emoji,
+                    isSelected: selectedEmojis.contains(emoji),
+                    onTap: () => onReaction(emoji),
                   ),
                 ),
+                GestureDetector(
+                  key: const Key('emoji_picker_button'),
+                  onTap: onEmojiPicker,
+                  child: Container(
+                    padding: EdgeInsets.all(8.w),
+                    child: WnIcon(
+                      WnIcons.addEmoji,
+                      color: colors.backgroundContentPrimary,
+                      size: 20.sp,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: 16.h),
+            WnButton(
+              key: const Key('reply_button'),
+              text: context.l10n.reply,
+              type: WnButtonType.outline,
+              onPressed: onClose,
+            ),
+            if (onDelete != null) ...[
+              Gap(8.h),
+              WnButton(
+                key: const Key('delete_button'),
+                text: context.l10n.delete,
+                type: WnButtonType.outline,
+                onPressed: onDelete,
               ),
             ],
-          ),
-          SizedBox(height: 16.h),
-          WnButton(
-            key: const Key('reply_button'),
-            text: context.l10n.reply,
-            type: WnButtonType.outline,
-            onPressed: onClose,
-          ),
-          if (onDelete != null) ...[
-            Gap(8.h),
-            WnButton(
-              key: const Key('delete_button'),
-              text: context.l10n.delete,
-              type: WnButtonType.outline,
-              onPressed: onDelete,
-            ),
           ],
-        ],
+        ),
       ),
     );
   }

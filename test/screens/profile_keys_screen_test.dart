@@ -56,14 +56,14 @@ void main() {
 
     testWidgets('displays private key label', (tester) async {
       await pumpProfileKeysScreen(tester);
-      expect(find.text('Private key'), findsOneWidget);
+      expect(find.text('Private Key'), findsOneWidget);
     });
 
     testWidgets('displays public key description', (tester) async {
       await pumpProfileKeysScreen(tester);
       expect(
         find.text(
-          'Your public key (npub) can be shared with others. It\'s used to identify you on the network.',
+          'Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.',
         ),
         findsOneWidget,
       );
@@ -73,7 +73,7 @@ void main() {
       await pumpProfileKeysScreen(tester);
       expect(
         find.text(
-          'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.',
+          'Your private key works like a secret password that grants access to your Nostr identity.',
         ),
         findsOneWidget,
       );
@@ -81,12 +81,12 @@ void main() {
 
     testWidgets('displays warning box', (tester) async {
       await pumpProfileKeysScreen(tester);
-      expect(find.text('Keep your private key secure'), findsOneWidget);
+      expect(find.text('Keep your private key safe!'), findsOneWidget);
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpProfileKeysScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -179,6 +179,22 @@ void main() {
       await tester.pump();
 
       expect(tester.widget<WnIcon>(visibilityIcon).icon, WnIcons.view);
+    });
+
+    testWidgets('success notice auto-dismisses after timeout', (tester) async {
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      final copyButtons = find.byKey(const Key('copy_button'));
+      await tester.tap(copyButtons.first);
+      await tester.pump();
+
+      expect(find.text('Public key copied to clipboard'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('Public key copied to clipboard'), findsNothing);
     });
   });
 }

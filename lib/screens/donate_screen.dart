@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/l10n/l10n.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
-class DonateScreen extends StatelessWidget {
+class DonateScreen extends HookWidget {
   const DonateScreen({super.key});
 
   static const _lightningAddress = 'whitenoise@npub.cash';
@@ -16,37 +19,60 @@ class DonateScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final noticeMessage = useState<String?>(null);
+
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              spacing: 24.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.donateToWhiteNoise),
-                Text(
-                  context.l10n.donateDescription,
-                  style: TextStyle(
-                    color: colors.backgroundContentTertiary,
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.donateToWhiteNoise,
+              type: WnSlateNavigationType.back,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              child: Column(
+                spacing: 24.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    context.l10n.donateDescription,
+                    style: TextStyle(
+                      color: colors.backgroundContentTertiary,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
                   ),
-                ),
-                WnCopyableField(
-                  label: context.l10n.lightningAddress,
-                  value: _lightningAddress,
-                  copiedMessage: context.l10n.copiedToClipboardThankYou,
-                ),
-                WnCopyableField(
-                  label: context.l10n.bitcoinSilentPayment,
-                  value: _bitcoinAddress,
-                  copiedMessage: context.l10n.copiedToClipboardThankYou,
-                ),
-              ],
+                  WnCopyableField(
+                    label: context.l10n.lightningAddress,
+                    value: _lightningAddress,
+                    onCopied: () => showCopiedNotice(context.l10n.copiedToClipboardThankYou),
+                  ),
+                  WnCopyableField(
+                    label: context.l10n.bitcoinSilentPayment,
+                    value: _bitcoinAddress,
+                    onCopied: () => showCopiedNotice(context.l10n.copiedToClipboardThankYou),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -6,12 +6,14 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class ProfileKeysScreen extends HookConsumerWidget {
   const ProfileKeysScreen({super.key});
@@ -23,6 +25,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
     final npub = npubFromHex(pubkey);
     final (:state, :loadNsec) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
+    final noticeMessage = useState<String?>(null);
 
     useEffect(() {
       loadNsec();
@@ -33,20 +36,39 @@ class ProfileKeysScreen extends HookConsumerWidget {
       obscurePrivateKey.value = !obscurePrivateKey.value;
     }
 
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
+
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.profileKeys),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.profileKeys,
+              type: WnSlateNavigationType.back,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -54,7 +76,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                           WnCopyableField(
                             label: context.l10n.publicKey,
                             value: npub ?? '',
-                            copiedMessage: context.l10n.publicKeyCopied,
+                            onCopied: () => showCopiedNotice(context.l10n.publicKeyCopied),
                           ),
                           Gap(12.h),
                           Text(
@@ -72,7 +94,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                             obscurable: true,
                             obscured: obscurePrivateKey.value,
                             onToggleVisibility: togglePrivateKeyVisibility,
-                            copiedMessage: context.l10n.privateKeyCopied,
+                            onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
                           ),
                           Gap(10.h),
                           Text(
@@ -94,8 +116,8 @@ class ProfileKeysScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

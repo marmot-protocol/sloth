@@ -4,9 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
-import 'package:sloth/screens/settings_screen.dart';
+import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
-import 'package:sloth/screens/wip_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -47,7 +46,7 @@ void main() {
 
     testWidgets('tapping close icon navigates to chat list', (tester) async {
       await pumpOnboardingScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_close_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -59,30 +58,16 @@ void main() {
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Share your profile navigates to WIP screen', (tester) async {
+    testWidgets('tapping Share your profile navigates to share profile screen', (tester) async {
       await pumpOnboardingScreen(tester);
       await tester.tap(find.text('Share your profile'));
       await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
+      expect(find.byType(ShareProfileScreen), findsOneWidget);
     });
 
-    testWidgets('tapping Start a chat navigates to WIP screen', (tester) async {
+    testWidgets('tapping Start a chat navigates to user search screen', (tester) async {
       await pumpOnboardingScreen(tester);
       await tester.tap(find.text('Start a chat'));
-      await tester.pumpAndSettle();
-      expect(find.byType(WipScreen), findsOneWidget);
-    });
-
-    testWidgets('tapping avatar navigates to settings', (tester) async {
-      await pumpOnboardingScreen(tester);
-      await tester.tap(find.byKey(const Key('avatar_button')));
-      await tester.pumpAndSettle();
-      expect(find.byType(SettingsScreen), findsOneWidget);
-    });
-
-    testWidgets('tapping chat icon navigates to user search', (tester) async {
-      await pumpOnboardingScreen(tester);
-      await tester.tap(find.byKey(const Key('chat_add_button')));
       await tester.pumpAndSettle();
       expect(find.byType(UserSearchScreen), findsOneWidget);
     });

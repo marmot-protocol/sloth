@@ -24,7 +24,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get signUp => 'Регистрация';
 
   @override
-  String get loginTitle => 'Вход в White Noise';
+  String get loginTitle => 'Войти';
 
   @override
   String get enterPrivateKey => 'Введите ваш приватный ключ';
@@ -71,6 +71,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get switchProfile => 'Сменить профиль';
+
+  @override
+  String get addNewProfile => 'Добавить новый профиль';
 
   @override
   String get editProfile => 'Редактировать профиль';
@@ -158,6 +161,9 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profilePublicDescription => 'Информация вашего профиля будет видна всем в сети.';
+
+  @override
+  String get discard => 'Отменить';
 
   @override
   String get discardChanges => 'Отменить изменения';
@@ -315,6 +321,18 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get noKeyPackagesFound => 'Пакеты ключей не найдены';
+
+  @override
+  String get keyPackagePublished => 'Пакет ключей опубликован';
+
+  @override
+  String get keyPackagesRefreshed => 'Пакеты ключей обновлены';
+
+  @override
+  String get keyPackagesDeleted => 'Все пакеты ключей удалены';
+
+  @override
+  String get keyPackageDeleted => 'Пакет ключей удалён';
 
   @override
   String packageNumber(int number) {

@@ -24,7 +24,7 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signUp => 'S\'inscrire';
 
   @override
-  String get loginTitle => 'Connexion à White Noise';
+  String get loginTitle => 'Connexion';
 
   @override
   String get enterPrivateKey => 'Entrez votre clé privée';
@@ -71,6 +71,9 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get switchProfile => 'Changer de profil';
+
+  @override
+  String get addNewProfile => 'Ajouter un nouveau profil';
 
   @override
   String get editProfile => 'Modifier le profil';
@@ -159,6 +162,9 @@ class AppLocalizationsFr extends AppLocalizations {
   @override
   String get profilePublicDescription =>
       'Les informations de votre profil seront visibles par tous sur le réseau.';
+
+  @override
+  String get discard => 'Annuler';
 
   @override
   String get discardChanges => 'Annuler les modifications';
@@ -316,6 +322,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get noKeyPackagesFound => 'Aucun paquet de clés trouvé';
+
+  @override
+  String get keyPackagePublished => 'Paquet de clés publié';
+
+  @override
+  String get keyPackagesRefreshed => 'Paquets de clés actualisés';
+
+  @override
+  String get keyPackagesDeleted => 'Tous les paquets de clés supprimés';
+
+  @override
+  String get keyPackageDeleted => 'Paquet de clés supprimé';
 
   @override
   String packageNumber(int number) {
