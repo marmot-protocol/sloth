@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
@@ -8,8 +9,9 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_image_picker.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -66,10 +68,14 @@ class _MockApi extends MockWnApi {
 }
 
 class _MockAuthNotifier extends AuthNotifier {
+  _MockAuthNotifier([this._pubkey = testPubkeyA]);
+
+  final String _pubkey;
+
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = AsyncData(_pubkey);
+    return _pubkey;
   }
 }
 
@@ -127,9 +133,9 @@ void main() {
       expect(find.text('Profile is public'), findsOneWidget);
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpEditProfileScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -160,31 +166,31 @@ void main() {
       await tester.pumpAndSettle();
       final displayNameField = find.text('Profile name');
       expect(displayNameField, findsOneWidget);
-      await tester.enterText(find.byType(TextFormField).first, 'New Name');
+      await tester.enterText(find.byType(TextField).first, 'New Name');
       await tester.pump();
       final saveButton = find.widgetWithText(WnButton, 'Save');
       final button = tester.widget<WnButton>(saveButton);
       expect(button.onPressed, isNotNull);
     });
 
-    testWidgets('Discard changes button appears when there are changes', (tester) async {
+    testWidgets('Discard button appears when there are changes', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      expect(find.text('Discard changes'), findsNothing);
-      await tester.enterText(find.byType(TextFormField).first, 'New Name');
+      expect(find.text('Discard'), findsNothing);
+      await tester.enterText(find.byType(TextField).first, 'New Name');
       await tester.pump();
-      expect(find.text('Discard changes'), findsOneWidget);
+      expect(find.text('Discard'), findsOneWidget);
     });
 
-    testWidgets('Discard changes button resets form fields', (tester) async {
+    testWidgets('Discard button resets form fields', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final displayNameField = find.byType(TextFormField).first;
+      final displayNameField = find.byType(TextField).first;
       await tester.enterText(displayNameField, 'New Name');
       await tester.pump();
-      await tester.tap(find.text('Discard changes'));
+      await tester.tap(find.text('Discard'));
       await tester.pumpAndSettle();
-      final fieldText = tester.widget<TextFormField>(displayNameField).controller?.text ?? '';
+      final fieldText = tester.widget<TextField>(displayNameField).controller?.text ?? '';
       expect(fieldText, 'Test Display Name');
     });
 
@@ -205,8 +211,13 @@ void main() {
     testWidgets('Save button saves changes successfully', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
       expect(find.text('Profile updated successfully'), findsOneWidget);
@@ -217,8 +228,13 @@ void main() {
       mockApi.shouldThrowOnUpdate = true;
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pumpAndSettle();
       expect(find.textContaining('Unable to save profile'), findsOneWidget);
@@ -227,7 +243,7 @@ void main() {
     testWidgets('calls onChanged when profile name field is changed', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final textFields = find.byType(TextFormField);
+      final textFields = find.byType(TextField);
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(0), 'New Profile Name');
       await tester.pump();
@@ -239,7 +255,7 @@ void main() {
     testWidgets('calls onChanged when Nostr address field is changed', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final textFields = find.byType(TextFormField);
+      final textFields = find.byType(TextField);
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(1), 'new@example.com');
       await tester.pump();
@@ -251,7 +267,7 @@ void main() {
     testWidgets('calls onChanged when About you field is changed', (tester) async {
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      final textFields = find.byType(TextFormField);
+      final textFields = find.byType(TextField);
       expect(textFields, findsAtLeastNWidgets(3));
       await tester.enterText(textFields.at(2), 'New about text');
       await tester.pump();
@@ -272,38 +288,71 @@ void main() {
       Routes.pushToEditProfile(tester.element(find.byType(Scaffold)));
       await tester.pump();
       expect(find.text('Save'), findsNothing);
-      expect(find.text('Discard changes'), findsNothing);
+      expect(find.text('Discard'), findsNothing);
       await tester.pumpAndSettle();
       expect(find.text('Save'), findsOneWidget);
     });
 
-    testWidgets('passes loading state to image picker when saving', (tester) async {
+    testWidgets('hides avatar edit button during save', (tester) async {
       mockApi.updateCompleter = Completer<void>();
       await pumpEditProfileScreen(tester);
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
+      expect(find.byKey(const Key('avatar_edit_button')), findsOneWidget);
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
       await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
       await tester.tap(find.text('Save'));
       await tester.pump();
-      final imagePicker = tester.widget<WnImagePicker>(find.byType(WnImagePicker));
-      expect(imagePicker.loading, isTrue);
+      expect(find.byKey(const Key('avatar_edit_button')), findsNothing);
       mockApi.updateCompleter!.complete();
       await tester.pumpAndSettle();
     });
 
-    testWidgets('disables image picker during save', (tester) async {
-      mockApi.updateCompleter = Completer<void>();
+    testWidgets('passes color derived from pubkey to avatar', (tester) async {
       await pumpEditProfileScreen(tester);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.violet);
+    });
+
+    testWidgets('different pubkey passes different avatar color', (tester) async {
+      await mountTestApp(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => _MockAuthNotifier(testPubkeyD)),
+          secureStorageProvider.overrideWithValue(MockSecureStorage()),
+        ],
+      );
+      Routes.pushToEditProfile(tester.element(find.byType(Scaffold)));
       await tester.pumpAndSettle();
-      await tester.enterText(find.byType(TextFormField).first, 'Updated Name');
-      await tester.pump();
-      await tester.tap(find.text('Save'));
-      await tester.pump();
-      final imagePicker = tester.widget<WnImagePicker>(find.byType(WnImagePicker));
-      expect(imagePicker.disabled, isTrue);
-      expect(find.byKey(const Key('edit_icon')), findsNothing);
-      mockApi.updateCompleter!.complete();
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AccentColor.cyan);
+    });
+
+    testWidgets('shows error snackbar when image picker fails', (tester) async {
+      TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('plugins.flutter.io/image_picker'),
+        (MethodCall methodCall) async {
+          throw PlatformException(code: 'error', message: 'Test error');
+        },
+      );
+      addTearDown(() {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+          null,
+        );
+      });
+
+      await pumpEditProfileScreen(tester);
+      await tester.tap(find.byKey(const Key('avatar_edit_button')));
       await tester.pumpAndSettle();
+
+      expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
     });
   });
 }

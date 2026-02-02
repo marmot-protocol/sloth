@@ -10,10 +10,11 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
+import 'package:sloth/widgets/wn_callout.dart';
 import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
-import 'package:sloth/widgets/wn_warning_box.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class SignOutScreen extends HookConsumerWidget {
   const SignOutScreen({super.key});
@@ -27,6 +28,7 @@ class SignOutScreen extends HookConsumerWidget {
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
     final isUsingExternalSigner = useState<bool?>(null);
+    final noticeMessage = useState<String?>(null);
 
     useEffect(() {
       var disposed = false;
@@ -53,6 +55,14 @@ class SignOutScreen extends HookConsumerWidget {
       obscurePrivateKey.value = !obscurePrivateKey.value;
     }
 
+    void showCopiedNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
+
     Future<void> signOut() async {
       isLoggingOut.value = true;
       final nextPubkey = await ref
@@ -76,22 +86,34 @@ class SignOutScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.signOut),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.signOut,
+              type: WnSlateNavigationType.back,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    child: SingleChildScrollView(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Gap(24.h),
-                          WnWarningBox(
+                          WnCallout(
                             title: context.l10n.signOutConfirmation,
                             description: context.l10n.signOutWarning,
+                            type: CalloutType.warning,
                           ),
                           if (isUsingExternalSigner.value == false) ...[
                             Gap(24.h),
@@ -119,7 +141,7 @@ class SignOutScreen extends HookConsumerWidget {
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,
-                              copiedMessage: context.l10n.privateKeyCopied,
+                              onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
                             ),
                           ],
                           Gap(32.h),
@@ -129,6 +151,7 @@ class SignOutScreen extends HookConsumerWidget {
                               text: context.l10n.signOut,
                               onPressed: signOut,
                               loading: isLoggingOut.value,
+                              size: WnButtonSize.medium,
                             ),
                           ),
                           Gap(24.h),
@@ -136,8 +159,8 @@ class SignOutScreen extends HookConsumerWidget {
                       ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

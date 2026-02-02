@@ -5,7 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
+import 'package:sloth/widgets/wn_input.dart';
 
 class WnCopyableField extends HookWidget {
   const WnCopyableField({
@@ -15,7 +15,7 @@ class WnCopyableField extends HookWidget {
     this.obscurable = false,
     this.obscured = true,
     this.onToggleVisibility,
-    this.copiedMessage,
+    this.onCopied,
   });
 
   final String label;
@@ -23,72 +23,67 @@ class WnCopyableField extends HookWidget {
   final bool obscurable;
   final bool obscured;
   final VoidCallback? onToggleVisibility;
-  final String? copiedMessage;
+  final VoidCallback? onCopied;
 
-  void _handleCopy(BuildContext context, String text) {
+  void _handleCopy(String text) {
     Clipboard.setData(ClipboardData(text: text));
-    if (copiedMessage != null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(copiedMessage!),
-          duration: const Duration(seconds: 2),
-        ),
-      );
+    onCopied?.call();
+  }
+
+  String _getDisplayValue() {
+    if (!obscurable || !obscured) {
+      return value;
     }
+    final maskedLength = value.length.clamp(8, 24).toInt();
+    return '●' * maskedLength;
   }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final controller = useTextEditingController(text: value);
+    final controller = useTextEditingController(text: _getDisplayValue());
 
     useEffect(() {
-      controller.text = value;
+      controller.text = _getDisplayValue();
       return null;
-    }, [value]);
+    }, [value, obscured, obscurable]);
 
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.end,
-      children: [
-        Expanded(
-          child: WnTextFormField(
-            label: label,
-            placeholder: '',
-            controller: controller,
-            readOnly: true,
-            obscureText: obscurable && obscured,
-            suffixIcon: obscurable
-                ? IconButton(
-                    key: const Key('visibility_toggle'),
-                    onPressed: onToggleVisibility,
-                    icon: WnIcon(
-                      obscured ? WnIcons.view : WnIcons.viewOff,
-                      size: 20.w,
-                      color: colors.backgroundContentPrimary,
-                    ),
-                  )
-                : null,
-          ),
-        ),
-        Gap(4.w),
-        Padding(
-          padding: EdgeInsets.only(bottom: 4.h),
-          child: IconButton(
+    return WnInput(
+      label: label,
+      placeholder: '',
+      controller: controller,
+      readOnly: true,
+      size: WnInputSize.size44,
+      inlineAction: obscurable
+          ? GestureDetector(
+              key: const Key('visibility_toggle'),
+              onTap: onToggleVisibility,
+              child: Container(
+                width: 36.w,
+                height: 36.h,
+                color: Colors.transparent,
+                child: Center(
+                  child: WnIcon(
+                    obscured ? WnIcons.view : WnIcons.viewOff,
+                    size: 16.w,
+                    color: colors.backgroundContentPrimary,
+                  ),
+                ),
+              ),
+            )
+          : null,
+      trailingAction: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Gap(2.w),
+          WnInputTrailingButton(
             key: const Key('copy_button'),
-            onPressed: () => _handleCopy(context, controller.text),
-            icon: WnIcon(
-              WnIcons.copy,
-              color: colors.backgroundContentPrimary,
-              size: 20.w,
-            ),
-            style: IconButton.styleFrom(
-              backgroundColor: colors.backgroundPrimary,
-              minimumSize: Size(44.w, 44.h),
-              padding: EdgeInsets.all(14.w),
-            ),
+            icon: WnIcons.copy,
+            onPressed: () => _handleCopy(value),
+            size: WnInputSize.size44,
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

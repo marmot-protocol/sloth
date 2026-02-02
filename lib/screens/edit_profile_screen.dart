@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_hooks/flutter_hooks.dart' show useEffect;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/hooks/use_edit_profile.dart' show EditProfileLoadingState, useEditProfile;
+import 'package:sloth/hooks/use_image_picker.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
+import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_image_picker.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
-import 'package:sloth/widgets/wn_warning_box.dart';
+import 'package:sloth/widgets/wn_callout.dart';
+import 'package:sloth/widgets/wn_input.dart' show WnInput;
+import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 final _logger = Logger('EditProfileScreen');
 
@@ -37,104 +40,54 @@ class EditProfileScreen extends HookConsumerWidget {
     ) = useEditProfile(
       pubkey,
     );
+    final (:pickImage, error: imagePickerError, clearError: clearImagePickerError) = useImagePicker(
+      onImageSelected: onImageSelected,
+    );
 
     useEffect(() {
       loadProfile();
       return null;
     }, []);
 
+    useEffect(() {
+      if (imagePickerError != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(context.l10n.imagePickerError)),
+            );
+          }
+        });
+        clearImagePickerError();
+      }
+      return null;
+    }, [imagePickerError]);
+
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              spacing: 16.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.editProfile),
-                if (state.error != null) ...[
-                  Builder(
-                    builder: (context) {
-                      _logger.warning('Profile error: ${state.error}');
-                      final message = state.currentMetadata == null
-                          ? context.l10n.profileLoadError
-                          : context.l10n.profileSaveError;
-                      return Center(
-                        child: Text(
-                          message,
-                          style: TextStyle(color: colors.fillDestructive),
-                        ),
-                      );
-                    },
-                  ),
-                ] else
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Gap(16.h),
-                            Center(
-                              child: WnImagePicker(
-                                imagePath: state.pictureUrl,
-                                displayName: state.displayName ?? '',
-                                onImageSelected: onImageSelected,
-                                loading: state.loadingState == EditProfileLoadingState.saving,
-                                disabled: state.loadingState == EditProfileLoadingState.saving,
-                              ),
-                            ),
-                            Gap(36.h),
-                            WnTextFormField(
-                              label: context.l10n.profileName,
-                              placeholder: context.l10n.enterYourName,
-                              controller: displayNameController,
-                            ),
-                            Gap(36.h),
-                            WnTextFormField(
-                              label: context.l10n.nostrAddress,
-                              placeholder: 'example@whitenoise.chat',
-                              controller: nip05Controller,
-                            ),
-                            Gap(36.h),
-                            WnTextFormField(
-                              label: context.l10n.aboutYou,
-                              placeholder: context.l10n.writeSomethingAboutYourself,
-                              controller: aboutController,
-                              maxLines: 3,
-                              minLines: 3,
-                            ),
-                            Gap(36.h),
-                            WnWarningBox(
-                              title: context.l10n.profileIsPublic,
-                              description: context.l10n.profilePublicDescription,
-                              backgroundColor: colors.backgroundTertiary,
-                              borderColor: colors.borderPrimary,
-                              iconColor: colors.backgroundContentPrimary,
-                              titleColor: colors.backgroundContentPrimary,
-                              descriptionColor: colors.backgroundContentTertiary,
-                              icon: WnIcons.information,
-                            ),
-                            Gap(16.h),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                if (state.loadingState != EditProfileLoadingState.loading && state.error == null)
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: WnSlate(
+            showTopScrollEffect: true,
+            showBottomScrollEffect: true,
+            header: WnSlateNavigationHeader(
+              title: context.l10n.editProfile,
+              type: WnSlateNavigationType.back,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            footer: state.loadingState != EditProfileLoadingState.loading && state.error == null
+                ? Padding(
+                    padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                     child: Column(
                       spacing: 8.h,
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         if (state.hasUnsavedChanges)
                           WnButton(
-                            text: context.l10n.discardChanges,
+                            text: context.l10n.discard,
                             type: WnButtonType.outline,
+                            size: WnButtonSize.medium,
                             onPressed: () {
                               discardChanges();
                             },
@@ -142,6 +95,7 @@ class EditProfileScreen extends HookConsumerWidget {
                           ),
                         WnButton(
                           text: context.l10n.save,
+                          size: WnButtonSize.medium,
                           onPressed:
                               state.hasUnsavedChanges &&
                                   state.loadingState != EditProfileLoadingState.saving
@@ -161,9 +115,67 @@ class EditProfileScreen extends HookConsumerWidget {
                         ),
                       ],
                     ),
+                  )
+                : null,
+            child: state.error != null
+                ? Builder(
+                    builder: (context) {
+                      _logger.warning('Profile error: ${state.error}');
+                      final message = state.currentMetadata == null
+                          ? context.l10n.profileLoadError
+                          : context.l10n.profileSaveError;
+                      return Center(
+                        child: Text(
+                          message,
+                          style: TextStyle(color: colors.fillDestructive),
+                        ),
+                      );
+                    },
+                  )
+                : SingleChildScrollView(
+                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Gap(16.h),
+                        Center(
+                          child: WnAvatar(
+                            pictureUrl: state.pictureUrl,
+                            displayName: state.displayName ?? '',
+                            size: WnAvatarSize.large,
+                            color: avatarColorFromPubkey(pubkey),
+                            onEditTap: state.loadingState == EditProfileLoadingState.saving
+                                ? null
+                                : pickImage,
+                          ),
+                        ),
+                        Gap(36.h),
+                        WnInput(
+                          label: context.l10n.profileName,
+                          placeholder: context.l10n.enterYourName,
+                          controller: displayNameController,
+                        ),
+                        Gap(36.h),
+                        WnInput(
+                          label: context.l10n.nostrAddress,
+                          placeholder: 'example@whitenoise.chat',
+                          controller: nip05Controller,
+                        ),
+                        Gap(36.h),
+                        WnInputTextArea(
+                          label: context.l10n.aboutYou,
+                          placeholder: context.l10n.writeSomethingAboutYourself,
+                          controller: aboutController,
+                        ),
+                        Gap(36.h),
+                        WnCallout(
+                          title: context.l10n.profileIsPublic,
+                          description: context.l10n.profilePublicDescription,
+                        ),
+                        Gap(16.h),
+                      ],
+                    ),
                   ),
-              ],
-            ),
           ),
         ),
       ),

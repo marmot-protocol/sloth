@@ -33,15 +33,46 @@ class MockAppSettings implements rust_api.AppSettings {
 
 class MockWnApi implements RustLibApi {
   String currentThemeMode = 'system';
-  String currentLanguage = 'en';
+  String currentLanguage = 'system';
   bool shouldFailUpdateLanguage = false;
   bool shouldFailNpubConversion = false;
   List<Account> accounts = [];
   Completer<List<Account>>? getAccountsCompleter;
 
+  List<User> follows = [];
+  bool userHasKeyPackage = true;
+
+  @override
+  Future<bool> crateApiUsersUserHasKeyPackage({
+    required String pubkey,
+    required bool blockingDataSync,
+  }) async {
+    return userHasKeyPackage;
+  }
+
   @override
   Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
-    return [];
+    return follows;
+  }
+
+  @override
+  Future<void> crateApiAccountsFollowUser({
+    required String accountPubkey,
+    required String userToFollowPubkey,
+  }) async {}
+
+  @override
+  Future<void> crateApiAccountsUnfollowUser({
+    required String accountPubkey,
+    required String userToUnfollowPubkey,
+  }) async {}
+
+  @override
+  Future<bool> crateApiAccountsIsFollowingUser({
+    required String accountPubkey,
+    required String userPubkey,
+  }) async {
+    return follows.any((user) => user.pubkey == userPubkey);
   }
 
   @override
@@ -202,6 +233,9 @@ class MockWnApi implements RustLibApi {
   rust_api.Language crateApiUtilsLanguageTurkish() => const MockLanguage('tr');
 
   @override
+  rust_api.Language crateApiUtilsLanguageSystem() => const MockLanguage('system');
+
+  @override
   String crateApiUtilsLanguageToString({required rust_api.Language language}) {
     if (language is MockLanguage) {
       return language.code;
@@ -230,11 +264,13 @@ class MockWnApi implements RustLibApi {
 
   void reset() {
     currentThemeMode = 'system';
-    currentLanguage = 'en';
+    currentLanguage = 'system';
     shouldFailUpdateLanguage = false;
     shouldFailNpubConversion = false;
     accounts = [];
+    follows = [];
     getAccountsCompleter = null;
+    userHasKeyPackage = true;
   }
 
   @override

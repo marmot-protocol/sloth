@@ -53,7 +53,9 @@ jobs:
           ${{ runner.os }}-cargo-
 
     - name: Install Flutter dependencies
-      run: flutter pub get
+      run: |
+        flutter pub get
+        cd widgetbook && flutter pub get
 
     - name: Install Rust dependencies
       run: cd rust && cargo fetch
@@ -62,13 +64,16 @@ jobs:
       run: cd rust && cargo fmt --check
 
     - name: Check Dart formatting
-      run: dart format --set-exit-if-changed lib/ test/
+      run: dart format --set-exit-if-changed lib/ test/ widgetbook/lib/
 
     - name: Rust linting (Clippy)
       run: cd rust && cargo clippy --package rust_lib_whitenoise -- -D warnings
 
     - name: Flutter analyze
       run: flutter analyze --fatal-infos
+
+    - name: Flutter analyze (widgetbook)
+      run: cd widgetbook && flutter analyze --fatal-infos
 
     - name: Run Flutter tests
       run: flutter test --coverage

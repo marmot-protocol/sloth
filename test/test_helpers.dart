@@ -9,6 +9,17 @@ import 'package:sloth/routes.dart';
 
 const testDesignSize = Size(390, 844);
 
+const testPubkeyA = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
+const testNpubA = 'npub1a1b2c311111111111111111111111111111111111111111111111111';
+const testPubkeyB = 'b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5';
+const testNpubB = 'npub1b2c3d422222222222222222222222222222222222222222222222222';
+const testPubkeyC = 'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6';
+const testNpubC = 'npub1c3d4e533333333333333333333333333333333333333333333333333';
+const testPubkeyD = 'd4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1';
+const testNpubD = 'npub1d4e5f644444444444444444444444444444444444444444444444444';
+const testGroupId = 'abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234';
+const testNostrGroupId = 'dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321';
+
 void setUpTestView(WidgetTester tester) {
   tester.view.physicalSize = testDesignSize;
   tester.view.devicePixelRatio = 1.0;
@@ -76,6 +87,7 @@ class _HookTestWidget<T> extends HookWidget {
 }
 
 Future<void> mountWidget(Widget child, WidgetTester tester) async {
+  setUpTestView(tester);
   final widget = ProviderScope(
     child: ScreenUtilInit(
       designSize: testDesignSize,
@@ -93,6 +105,7 @@ Future<void> mountWidget(Widget child, WidgetTester tester) async {
 }
 
 Future<void> mountStackedWidget(Widget child, WidgetTester tester) async {
+  setUpTestView(tester);
   final widget = ScreenUtilInit(
     designSize: testDesignSize,
     builder: (_, _) {

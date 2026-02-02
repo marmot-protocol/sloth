@@ -10,17 +10,19 @@ import 'package:sloth/src/rust/api/account_groups.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/utils/avatar_color.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_pubkey';
-const _testGroupId = 'test_group_id';
+const _testPubkey = testPubkeyA;
+const _testGroupId = testGroupId;
 
 ChatMessage _message(String id, {bool isDeleted = false}) => ChatMessage(
   id: id,
-  pubkey: 'other',
+  pubkey: testPubkeyB,
   content: 'Message $id',
   createdAt: DateTime(2024),
   tags: const [],
@@ -151,6 +153,16 @@ void main() {
       await pumpInviteScreen(tester);
 
       expect(find.text('Decline'), findsOneWidget);
+    });
+
+    testWidgets('displays avatars with color derived from mlsGroupId', (tester) async {
+      await pumpInviteScreen(tester);
+
+      final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+      expect(avatars.length, 2);
+      for (final avatar in avatars) {
+        expect(avatar.color, avatarColorFromPubkey(_testGroupId));
+      }
     });
 
     group('with no messages', () {

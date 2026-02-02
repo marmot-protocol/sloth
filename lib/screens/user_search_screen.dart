@@ -9,20 +9,17 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/users.dart' show User;
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart' show formatPublicKey, npubFromHex;
 import 'package:sloth/utils/metadata.dart' show presentName;
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_fade_overlay.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
 import 'package:sloth/widgets/wn_search_field.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class UserSearchScreen extends HookConsumerWidget {
   const UserSearchScreen({super.key});
-
-  static void _handleUserTap(BuildContext context, String pubkey) {
-    Routes.pushToWip(context);
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -31,61 +28,69 @@ class UserSearchScreen extends HookConsumerWidget {
     final searchController = useTextEditingController();
     final searchQuery = useState('');
 
-    final state = useUserSearch(accountPubkey, searchQuery.value);
+    final state = useUserSearch(
+      accountPubkey: accountPubkey,
+      searchQuery: searchQuery.value,
+    );
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            padding: EdgeInsets.only(left: 14.w, right: 14.w, top: 14.w),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.startNewChat),
-                Gap(16.h),
-                WnSearchField(
-                  placeholder: 'npub1...',
-                  controller: searchController,
-                  onChanged: (value) => searchQuery.value = value,
-                ),
-                Expanded(
-                  child: state.isLoading
-                      ? Center(
-                          child: CircularProgressIndicator(
-                            color: colors.backgroundContentPrimary,
-                            strokeCap: StrokeCap.round,
-                          ),
-                        )
-                      : state.users.isEmpty
-                      ? Center(
-                          child: Text(
-                            state.hasSearchQuery
-                                ? context.l10n.noResults
-                                : context.l10n.noFollowsYet,
-                            style: TextStyle(color: colors.backgroundContentTertiary),
-                          ),
-                        )
-                      : Stack(
-                          children: [
-                            ListView.builder(
-                              padding: EdgeInsets.symmetric(vertical: 12.h),
-                              itemCount: state.users.length,
-                              itemBuilder: (context, index) {
-                                final user = state.users[index];
-                                return _UserListTile(
-                                  user: user,
-                                  onTap: () => _handleUserTap(context, user.pubkey),
-                                );
-                              },
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.startNewChat,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Gap(16.h),
+                  WnSearchField(
+                    placeholder: 'npub1...',
+                    controller: searchController,
+                    onChanged: (value) => searchQuery.value = value,
+                  ),
+                  Expanded(
+                    child: state.isLoading
+                        ? Center(
+                            child: CircularProgressIndicator(
+                              color: colors.backgroundContentPrimary,
+                              strokeCap: StrokeCap.round,
                             ),
-                            WnFadeOverlay.top(color: colors.backgroundTertiary),
-                            WnFadeOverlay.bottom(color: colors.backgroundTertiary),
-                          ],
-                        ),
-                ),
-              ],
+                          )
+                        : state.users.isEmpty
+                        ? Center(
+                            child: Text(
+                              state.hasSearchQuery
+                                  ? context.l10n.noResults
+                                  : context.l10n.noFollowsYet,
+                              style: TextStyle(color: colors.backgroundContentTertiary),
+                            ),
+                          )
+                        : Stack(
+                            children: [
+                              ListView.builder(
+                                padding: EdgeInsets.symmetric(vertical: 12.h),
+                                itemCount: state.users.length,
+                                itemBuilder: (context, index) {
+                                  final user = state.users[index];
+                                  return _UserListTile(
+                                    user: user,
+                                    onTap: () => Routes.pushToStartChat(context, user.pubkey),
+                                  );
+                                },
+                              ),
+                              WnFadeOverlay.top(color: colors.backgroundSecondary),
+                              WnFadeOverlay.bottom(color: colors.backgroundSecondary),
+                            ],
+                          ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -116,7 +121,7 @@ class _UserListTile extends StatelessWidget {
       leading: WnAvatar(
         pictureUrl: user.metadata.picture,
         displayName: displayName,
-        animated: true,
+        color: avatarColorFromPubkey(user.pubkey),
       ),
       title: hasDisplayName
           ? Text(

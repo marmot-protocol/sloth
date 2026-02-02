@@ -7,10 +7,14 @@ class _BaseColors {
 }
 
 class _BlackAlphaColors {
+  static const Color blackAlpha200 = Color(0x33000000);
+  static const Color blackAlpha300 = Color(0x4D000000);
+  static const Color blackAlpha500 = Color(0x80000000);
   static const Color blackAlpha600 = Color(0x99000000);
 }
 
 class _WhiteAlphaColors {
+  static const Color whiteAlpha500 = Color(0x80FFFFFF);
   static const Color whiteAlpha600 = Color(0x99FFFFFF);
   static const Color whiteAlpha800 = Color(0xCCFFFFFF);
   static const Color whiteAlpha900 = Color(0xE6FFFFFF);
@@ -409,6 +413,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color fillDestructiveActive;
   final Color fillContentPrimary;
   final Color fillContentSecondary;
+  final Color fillContentTertiary;
   final Color fillContentDestructive;
   final Color borderPrimary;
   final Color borderSecondary;
@@ -424,6 +429,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color intentionErrorBackground;
   final Color intentionErrorContent;
   final Color shadow;
+  final Color overlayPrimary;
   final SemanticAccentColors accent;
 
   const SemanticColors({
@@ -453,6 +459,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.fillDestructiveActive,
     required this.fillContentPrimary,
     required this.fillContentSecondary,
+    required this.fillContentTertiary,
     required this.fillContentDestructive,
     required this.borderPrimary,
     required this.borderSecondary,
@@ -468,6 +475,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.intentionErrorBackground,
     required this.intentionErrorContent,
     required this.shadow,
+    required this.overlayPrimary,
     required this.accent,
   });
 
@@ -488,8 +496,8 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     fillSecondaryHover: _NeutralColors.neutral150,
     fillSecondaryActive: _NeutralColors.neutral150,
     fillTertiary: _BaseColors.transparent,
-    fillTertiaryHover: _NeutralColors.neutral100,
-    fillTertiaryActive: _NeutralColors.neutral100,
+    fillTertiaryHover: _NeutralColors.neutral150,
+    fillTertiaryActive: _NeutralColors.neutral150,
     fillQuaternary: _WhiteAlphaColors.whiteAlpha900,
     fillQuaternaryHover: _WhiteAlphaColors.whiteAlpha800,
     fillQuaternaryActive: _WhiteAlphaColors.whiteAlpha800,
@@ -498,6 +506,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     fillDestructiveActive: _RedColors.red500,
     fillContentPrimary: _BaseColors.white,
     fillContentSecondary: _NeutralColors.neutral950,
+    fillContentTertiary: _NeutralColors.neutral500,
     fillContentDestructive: _BaseColors.white,
     borderPrimary: _NeutralColors.neutral950,
     borderSecondary: _NeutralColors.neutral500,
@@ -513,6 +522,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorBackground: _RedColors.red50,
     intentionErrorContent: _RedColors.red600,
     shadow: _BaseColors.black,
+    overlayPrimary: _WhiteAlphaColors.whiteAlpha500,
     accent: _lightAccentColors,
   );
 
@@ -533,16 +543,17 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     fillSecondaryHover: _NeutralColors.neutral850,
     fillSecondaryActive: _NeutralColors.neutral850,
     fillTertiary: _BaseColors.transparent,
-    fillTertiaryHover: _NeutralColors.neutral900,
-    fillTertiaryActive: _NeutralColors.neutral900,
-    fillQuaternary: _WhiteAlphaColors.whiteAlpha900,
-    fillQuaternaryHover: _WhiteAlphaColors.whiteAlpha800,
-    fillQuaternaryActive: _WhiteAlphaColors.whiteAlpha800,
+    fillTertiaryHover: _NeutralColors.neutral850,
+    fillTertiaryActive: _NeutralColors.neutral850,
+    fillQuaternary: _BlackAlphaColors.blackAlpha300,
+    fillQuaternaryHover: _BlackAlphaColors.blackAlpha200,
+    fillQuaternaryActive: _BlackAlphaColors.blackAlpha200,
     fillDestructive: _RedColors.red600,
     fillDestructiveHover: _RedColors.red500,
     fillDestructiveActive: _RedColors.red500,
     fillContentPrimary: _NeutralColors.neutral950,
     fillContentSecondary: _BaseColors.white,
+    fillContentTertiary: _NeutralColors.neutral400,
     fillContentDestructive: _BaseColors.white,
     borderPrimary: _BaseColors.white,
     borderSecondary: _NeutralColors.neutral400,
@@ -558,6 +569,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorBackground: _RedColors.red950,
     intentionErrorContent: _RedColors.red500,
     shadow: _BaseColors.black,
+    overlayPrimary: _BlackAlphaColors.blackAlpha500,
     accent: _darkAccentColors,
   );
 
@@ -589,6 +601,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? fillDestructiveActive,
     Color? fillContentPrimary,
     Color? fillContentSecondary,
+    Color? fillContentTertiary,
     Color? fillContentDestructive,
     Color? borderPrimary,
     Color? borderSecondary,
@@ -604,6 +617,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? intentionErrorBackground,
     Color? intentionErrorContent,
     Color? shadow,
+    Color? overlayPrimary,
     SemanticAccentColors? accent,
   }) {
     return SemanticColors(
@@ -635,6 +649,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       fillDestructiveActive: fillDestructiveActive ?? this.fillDestructiveActive,
       fillContentPrimary: fillContentPrimary ?? this.fillContentPrimary,
       fillContentSecondary: fillContentSecondary ?? this.fillContentSecondary,
+      fillContentTertiary: fillContentTertiary ?? this.fillContentTertiary,
       fillContentDestructive: fillContentDestructive ?? this.fillContentDestructive,
       borderPrimary: borderPrimary ?? this.borderPrimary,
       borderSecondary: borderSecondary ?? this.borderSecondary,
@@ -650,6 +665,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       intentionErrorBackground: intentionErrorBackground ?? this.intentionErrorBackground,
       intentionErrorContent: intentionErrorContent ?? this.intentionErrorContent,
       shadow: shadow ?? this.shadow,
+      overlayPrimary: overlayPrimary ?? this.overlayPrimary,
       accent: accent ?? this.accent,
     );
   }
@@ -708,6 +724,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       fillDestructiveActive: Color.lerp(fillDestructiveActive, other.fillDestructiveActive, t)!,
       fillContentPrimary: Color.lerp(fillContentPrimary, other.fillContentPrimary, t)!,
       fillContentSecondary: Color.lerp(fillContentSecondary, other.fillContentSecondary, t)!,
+      fillContentTertiary: Color.lerp(fillContentTertiary, other.fillContentTertiary, t)!,
       fillContentDestructive: Color.lerp(fillContentDestructive, other.fillContentDestructive, t)!,
       borderPrimary: Color.lerp(borderPrimary, other.borderPrimary, t)!,
       borderSecondary: Color.lerp(borderSecondary, other.borderSecondary, t)!,
@@ -755,6 +772,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       )!,
       intentionErrorContent: Color.lerp(intentionErrorContent, other.intentionErrorContent, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
+      overlayPrimary: Color.lerp(overlayPrimary, other.overlayPrimary, t)!,
       accent: SemanticAccentColors.lerp(accent, other.accent, t),
     );
   }
@@ -762,4 +780,36 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
 
 extension SemanticColorsExtension on BuildContext {
   SemanticColors get colors => Theme.of(this).extension<SemanticColors>() ?? SemanticColors.light;
+}
+
+enum AccentColor {
+  blue,
+  cyan,
+  emerald,
+  fuchsia,
+  indigo,
+  lime,
+  orange,
+  rose,
+  sky,
+  teal,
+  violet,
+  amber,
+}
+
+AccentColorSet getAccentColorSet(AccentColor color, SemanticAccentColors accent) {
+  return switch (color) {
+    AccentColor.blue => accent.blue,
+    AccentColor.cyan => accent.cyan,
+    AccentColor.emerald => accent.emerald,
+    AccentColor.fuchsia => accent.fuchsia,
+    AccentColor.indigo => accent.indigo,
+    AccentColor.lime => accent.lime,
+    AccentColor.orange => accent.orange,
+    AccentColor.rose => accent.rose,
+    AccentColor.sky => accent.sky,
+    AccentColor.teal => accent.teal,
+    AccentColor.violet => accent.violet,
+    AccentColor.amber => accent.amber,
+  };
 }

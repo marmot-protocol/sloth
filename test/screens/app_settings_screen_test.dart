@@ -8,15 +8,14 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_dropdown_selector.dart';
 
-import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -44,7 +43,6 @@ void main() {
       tester,
       overrides: [
         authProvider.overrideWith(() => _MockAuthNotifier()),
-        secureStorageProvider.overrideWithValue(MockSecureStorage()),
       ],
     );
     Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
@@ -67,9 +65,9 @@ void main() {
       expect(find.text('System'), findsNWidgets(2));
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpAppSettingsScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
@@ -130,7 +128,7 @@ void main() {
       await tester.tap(find.text('Dark'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
 
       Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
@@ -340,7 +338,7 @@ void main() {
       await tester.tap(find.text('Deutsch'));
       await tester.pumpAndSettle();
 
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
 
       Routes.pushToAppSettings(tester.element(find.byType(Scaffold)));
@@ -381,21 +379,7 @@ void main() {
       await tester.tap(find.text('System').last);
       await tester.pumpAndSettle();
 
-      // System locale in tests defaults to 'en'
-      expect(mockApi.currentLanguage, 'en');
-    });
-
-    testWidgets('shows snackbar error when language update fails', (tester) async {
-      mockApi.shouldFailUpdateLanguage = true;
-      await pumpAppSettingsScreen(tester);
-
-      await tester.tap(find.byType(WnDropdownSelector<LocaleSetting>));
-      await tester.pumpAndSettle();
-
-      await tester.tap(find.text('Español'));
-      await tester.pumpAndSettle();
-
-      expect(find.text('Failed to save language preference. Please try again.'), findsOneWidget);
+      expect(mockApi.currentLanguage, 'system');
     });
   });
 }

@@ -18,17 +18,26 @@ typedef UserSearchState = ({
   bool hasSearchQuery,
 });
 
-UserSearchState useUserSearch(String accountPubkey, String searchQuery) {
+UserSearchState useUserSearch({
+  required String accountPubkey,
+  required String searchQuery,
+}) {
+  final followsRef = useRef(<User>[]);
+  final trimmedSearchQuery = searchQuery.trim().toLowerCase();
+  final hexPubkeyFromQuery = hexFromNpub(trimmedSearchQuery);
+
   final followsFuture = useMemoized(
     () => accounts_api.accountFollows(pubkey: accountPubkey),
     [accountPubkey],
   );
   final followsSnapshot = useFuture(followsFuture);
-  final follows = followsSnapshot.data ?? [];
   final isLoadingFollows = followsSnapshot.connectionState == ConnectionState.waiting;
 
-  final trimmedSearchQuery = searchQuery.trim().toLowerCase();
-  final hexPubkeyFromQuery = hexFromNpub(trimmedSearchQuery);
+  if (followsSnapshot.hasData) {
+    followsRef.value = followsSnapshot.data!;
+  }
+
+  final follows = followsRef.value;
 
   final followNpubs = useMemoized(() {
     final Map<String, String?> npubMap = {};
@@ -36,7 +45,7 @@ UserSearchState useUserSearch(String accountPubkey, String searchQuery) {
       npubMap[user.pubkey] = npubFromHex(user.pubkey);
     }
     return npubMap;
-  }, [followsSnapshot.data]);
+  }, [follows]);
 
   final searchFuture = useMemoized(
     () => hexPubkeyFromQuery != null ? UserService(hexPubkeyFromQuery).fetchUser() : null,

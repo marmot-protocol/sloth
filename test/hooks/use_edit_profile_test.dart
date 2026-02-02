@@ -10,6 +10,7 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
 import '../mocks/mock_account_pubkey_notifier.dart';
+import '../test_helpers.dart';
 
 class _MockApi implements RustLibApi {
   FlutterMetadata? updatedMetadata;
@@ -343,7 +344,7 @@ void main() {
 
       expect(result.state.loadingState, EditProfileLoadingState.idle);
       expect(result.state.error, isNull);
-      expect(mockApi.updatedPubkey, 'test_pubkey');
+      expect(mockApi.updatedPubkey, testPubkeyA);
       expect(mockApi.updatedMetadata?.displayName, 'New Name');
       expect(mockApi.updatedMetadata?.about, 'New About');
       expect(result.state.displayName, 'New Name');

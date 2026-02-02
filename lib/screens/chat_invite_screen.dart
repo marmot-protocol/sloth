@@ -9,11 +9,12 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/account_groups.dart' as account_groups_api;
 import 'package:sloth/src/rust/api/messages.dart' as messages_api;
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
 
 class ChatInviteScreen extends HookConsumerWidget {
   final String mlsGroupId;
@@ -93,6 +94,7 @@ class ChatInviteScreen extends HookConsumerWidget {
             Column(
               children: [
                 WnChatHeader(
+                  mlsGroupId: mlsGroupId,
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   onBack: () => Routes.goToChatList(context),
@@ -102,7 +104,8 @@ class ChatInviteScreen extends HookConsumerWidget {
                 WnAvatar(
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
                   displayName: groupAvatarSnapshot.data?.displayName,
-                  size: 96.w,
+                  size: WnAvatarSize.large,
+                  color: avatarColorFromPubkey(mlsGroupId),
                 ),
                 SizedBox(height: 16.h),
                 Text(
@@ -148,25 +151,28 @@ class ChatInviteScreen extends HookConsumerWidget {
                       },
                     ),
             ),
-            WnSlateContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                spacing: 12.h,
-                children: [
-                  WnButton(
-                    text: context.l10n.decline,
-                    type: WnButtonType.outline,
-                    loading: isDeclining.value,
-                    disabled: isProcessing,
-                    onPressed: handleDecline,
-                  ),
-                  WnButton(
-                    text: context.l10n.accept,
-                    loading: isAccepting.value,
-                    disabled: isProcessing,
-                    onPressed: handleAccept,
-                  ),
-                ],
+            WnSlate(
+              child: Padding(
+                padding: EdgeInsets.all(14.w),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  spacing: 12.h,
+                  children: [
+                    WnButton(
+                      text: context.l10n.decline,
+                      type: WnButtonType.outline,
+                      loading: isDeclining.value,
+                      disabled: isProcessing,
+                      onPressed: handleDecline,
+                    ),
+                    WnButton(
+                      text: context.l10n.accept,
+                      loading: isAccepting.value,
+                      disabled: isProcessing,
+                      onPressed: handleAccept,
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

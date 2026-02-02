@@ -6,8 +6,11 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/theme/semantic_colors.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -21,7 +24,6 @@ User _userFactory(String pubkey, {String? displayName}) => User(
 );
 
 class _MockApi extends MockWnApi {
-  List<User> follows = [];
   final Map<String, User> userByPubkey = {};
   final Map<String, String> npubToPubkey = {};
   final Map<String, String> pubkeyToNpub = {};
@@ -61,8 +63,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -92,12 +94,12 @@ void main() {
   group('UserSearchScreen', () {
     testWidgets('displays slate container', (tester) async {
       await pumpUserSearchScreen(tester);
-      expect(find.byType(WnSlateContainer), findsOneWidget);
+      expect(find.byType(WnSlate), findsOneWidget);
     });
 
     testWidgets('displays screen header with title', (tester) async {
       await pumpUserSearchScreen(tester);
-      expect(find.byType(WnScreenHeader), findsOneWidget);
+      expect(find.byType(WnSlateNavigationHeader), findsOneWidget);
       expect(find.text('Start new chat'), findsOneWidget);
     });
 
@@ -119,13 +121,11 @@ void main() {
     group('with follows', () {
       setUp(() {
         _api.follows = [
-          _userFactory('pubkey1', displayName: 'Alice'),
-          _userFactory('pubkey2', displayName: 'Bob'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
         ];
-        _api.pubkeyToNpub['pubkey1'] =
-            'npub1pubkey11111111111111111111111111111111111111111111111111';
-        _api.pubkeyToNpub['pubkey2'] =
-            'npub1pubkey22222222222222222222222222222222222222222222222222';
+        _api.pubkeyToNpub[testPubkeyA] = testNpubA;
+        _api.pubkeyToNpub[testPubkeyB] = testNpubB;
       });
 
       testWidgets('shows follows list', (tester) async {
@@ -141,22 +141,30 @@ void main() {
 
       testWidgets('shows formatted npub as subtitle', (tester) async {
         await pumpUserSearchScreen(tester);
-        expect(find.textContaining('npub1 pubke y1111'), findsOneWidget);
-        expect(find.textContaining('npub1 pubke y2222'), findsOneWidget);
+        expect(find.textContaining('npub1 a1b2c 31111'), findsOneWidget);
+        expect(find.textContaining('npub1 b2c3d 42222'), findsOneWidget);
+      });
+
+      testWidgets('passes color derived from pubkey to each avatar', (tester) async {
+        await pumpUserSearchScreen(tester);
+
+        final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+        expect(avatars.length, 2);
+        expect(avatars[0].color, AccentColor.violet);
+        expect(avatars[1].color, AccentColor.amber);
       });
     });
 
     group('npub search', () {
       const validNpub = 'npub1abc123';
-      const hexPubkey = 'searchedpubkey12345678901234567890';
+      const hexPubkey = testPubkeyC;
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
         _api.pubkeyToNpub[hexPubkey] = validNpub;
         _api.userByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Searched User');
-        _api.follows = [_userFactory('follow1', displayName: 'Follow')];
-        _api.pubkeyToNpub['follow1'] =
-            'npub1follow1111111111111111111111111111111111111111111111111';
+        _api.follows = [_userFactory(testPubkeyC, displayName: 'Follow')];
+        _api.pubkeyToNpub[testPubkeyC] = testNpubC;
       });
 
       testWidgets('shows search result when valid npub entered', (tester) async {
@@ -170,7 +178,7 @@ void main() {
 
       testWidgets('shows filtered follows for invalid npub format', (tester) async {
         await pumpUserSearchScreen(tester);
-        await tester.enterText(find.byType(TextField), 'npub1fol');
+        await tester.enterText(find.byType(TextField), testNpubC.substring(0, 10));
         await tester.pumpAndSettle();
 
         expect(find.text('Follow'), findsOneWidget);
@@ -192,14 +200,13 @@ void main() {
       setUp(() {
         _api.follows = [
           User(
-            pubkey: 'longpubkey12345678901234567890',
+            pubkey: testPubkeyC,
             metadata: _emptyMetadata,
             createdAt: DateTime(2024),
             updatedAt: DateTime(2024),
           ),
         ];
-        _api.pubkeyToNpub['longpubkey12345678901234567890'] =
-            'npub1longp12345678901234567890123456789012345678901234567890';
+        _api.pubkeyToNpub[testPubkeyC] = testNpubC;
       });
 
       testWidgets('shows formatted npub as title with no subtitle', (tester) async {
@@ -207,7 +214,7 @@ void main() {
 
         final listTile = tester.widget<ListTile>(find.byType(ListTile));
         expect(listTile.subtitle, isNull);
-        expect(find.textContaining('npub1 longp'), findsOneWidget);
+        expect(find.textContaining('npub1 c3d4e'), findsOneWidget);
       });
     });
 
@@ -215,37 +222,36 @@ void main() {
       setUp(() {
         _api.follows = [
           User(
-            pubkey: 'emptydisplaypubkey12345678901234',
+            pubkey: testPubkeyC,
             metadata: const FlutterMetadata(displayName: '', name: 'ValidName', custom: {}),
             createdAt: DateTime(2024),
             updatedAt: DateTime(2024),
           ),
         ];
-        _api.pubkeyToNpub['emptydisplaypubkey12345678901234'] =
-            'npub1empty12345678901234567890123456789012345678901234567890';
+        _api.pubkeyToNpub[testPubkeyC] = testNpubC;
       });
 
       testWidgets('falls back to name when displayName is empty', (tester) async {
         await pumpUserSearchScreen(tester);
 
         expect(find.text('ValidName'), findsOneWidget);
-        expect(find.textContaining('npub1 empty'), findsOneWidget);
+        expect(find.textContaining('npub1 c3d4e'), findsOneWidget);
       });
     });
 
     group('partial npub search', () {
       setUp(() {
         _api.follows = [
-          _userFactory('pub1', displayName: 'Alice'),
-          _userFactory('pub2', displayName: 'Bob'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
         ];
-        _api.pubkeyToNpub['pub1'] = 'npub1alice111111111111111111111111111111111111111111111111111';
-        _api.pubkeyToNpub['pub2'] = 'npub1bob22222222222222222222222222222222222222222222222222222';
+        _api.pubkeyToNpub[testPubkeyA] = testNpubA;
+        _api.pubkeyToNpub[testPubkeyB] = testNpubB;
       });
 
       testWidgets('shows filtered follows for partial npub', (tester) async {
         await pumpUserSearchScreen(tester);
-        await tester.enterText(find.byType(TextField), 'npub1ali');
+        await tester.enterText(find.byType(TextField), 'npub1a1b');
         await tester.pumpAndSettle();
 
         expect(find.text('Alice'), findsOneWidget);
@@ -273,7 +279,7 @@ void main() {
 
     group('user not found', () {
       const validNpub = 'npub1notfound';
-      const hexPubkey = 'notfoundpubkey123456789012345678901';
+      const hexPubkey = testPubkeyD;
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
@@ -289,25 +295,33 @@ void main() {
       });
     });
 
-    group('user tap navigation', () {
+    group('user tap navigates to start chat screen', () {
       setUp(() {
-        _api.follows = [_userFactory('pubkey1', displayName: 'Alice')];
-        _api.pubkeyToNpub['pubkey1'] =
-            'npub1pubkey11111111111111111111111111111111111111111111111111';
+        _api.follows = [_userFactory(testPubkeyA, displayName: 'Alice')];
+        _api.pubkeyToNpub[testPubkeyA] = testNpubA;
       });
 
-      testWidgets('navigates to wip when tapping follow', (tester) async {
+      testWidgets('navigates to start chat screen when tapping user', (tester) async {
         await pumpUserSearchScreen(tester);
         await tester.tap(find.text('Alice'));
         await tester.pumpAndSettle();
 
-        expect(find.text('Sloths working'), findsOneWidget);
+        expect(find.text('Start new chat'), findsOneWidget);
+        expect(find.byKey(const Key('start_chat_button')), findsOneWidget);
+      });
+
+      testWidgets('shows follow button on start chat screen', (tester) async {
+        await pumpUserSearchScreen(tester);
+        await tester.tap(find.text('Alice'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('follow_button')), findsOneWidget);
       });
     });
 
-    group('search result tap navigation', () {
+    group('search result tap navigates to start chat screen', () {
       const validNpub = 'npub1searched';
-      const hexPubkey = 'searchedpubkey12345678901234567890';
+      const hexPubkey = testGroupId;
 
       setUp(() {
         _api.npubToPubkey[validNpub] = hexPubkey;
@@ -315,14 +329,15 @@ void main() {
         _api.userByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Found User');
       });
 
-      testWidgets('navigates to wip when tapping search result', (tester) async {
+      testWidgets('navigates to start chat screen when tapping search result', (tester) async {
         await pumpUserSearchScreen(tester);
         await tester.enterText(find.byType(TextField), validNpub);
         await tester.pumpAndSettle();
         await tester.tap(find.text('Found User'));
         await tester.pumpAndSettle();
 
-        expect(find.text('Sloths working'), findsOneWidget);
+        expect(find.text('Start new chat'), findsOneWidget);
+        expect(find.byKey(const Key('start_chat_button')), findsOneWidget);
       });
     });
   });

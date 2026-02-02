@@ -42,6 +42,9 @@ pub struct ChatSummary {
     /// - `None` = not pinned (appears after pinned chats)
     /// - `Some(n)` = pinned, lower values appear first
     pub pin_order: Option<i64>,
+    /// For DMs: the public key (hex) of the other participant.
+    /// `None` for Group chats.
+    pub dm_peer_pubkey: Option<String>,
 }
 
 impl From<WhitenoiseChatListItem> for ChatSummary {
@@ -60,6 +63,7 @@ impl From<WhitenoiseChatListItem> for ChatSummary {
             welcomer_pubkey: item.welcomer_pubkey.map(|pk| pk.to_hex()),
             unread_count: item.unread_count as u64,
             pin_order: item.pin_order,
+            dm_peer_pubkey: item.dm_peer_pubkey.map(|pk| pk.to_hex()),
         }
     }
 }

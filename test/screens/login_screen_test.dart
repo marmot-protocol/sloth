@@ -39,7 +39,7 @@ class _MockAuthNotifier extends AuthNotifier {
     loginCalled = true;
     lastNsec = nsec;
     if (errorToThrow != null) throw errorToThrow!;
-    state = const AsyncData('test_pubkey');
+    state = const AsyncData(testPubkeyA);
   }
 }
 
@@ -66,7 +66,7 @@ void main() {
     group('navigation', () {
       testWidgets('tapping back button returns to home screen', (tester) async {
         await pumpLoginScreen(tester);
-        await tester.tap(find.byKey(const Key('back_button')));
+        await tester.tap(find.byKey(const Key('slate_back_button')));
         await tester.pumpAndSettle();
         expect(find.byType(HomeScreen), findsOneWidget);
       });
@@ -83,7 +83,7 @@ void main() {
       testWidgets('calls login method with entered nsec', (tester) async {
         await pumpLoginScreen(tester);
         await tester.enterText(find.byType(TextField), 'nsec1test');
-        await tester.tap(find.text('Login'));
+        await tester.tap(find.byKey(const Key('login_button')));
         await tester.pump();
         expect(mockAuth.lastNsec, 'nsec1test');
         expect(mockAuth.loginCalled, isTrue);
@@ -93,7 +93,7 @@ void main() {
         testWidgets('redirects to chat list screen on success', (tester) async {
           await pumpLoginScreen(tester);
           await tester.enterText(find.byType(TextField), 'nsec1test');
-          await tester.tap(find.text('Login'));
+          await tester.tap(find.byKey(const Key('login_button')));
           await tester.pumpAndSettle();
           expect(find.byType(ChatListScreen), findsOneWidget);
         });
@@ -104,7 +104,7 @@ void main() {
           await pumpLoginScreen(tester);
           mockAuth.errorToThrow = Exception('Invalid key');
           await tester.enterText(find.byType(TextField), 'nsec1test');
-          await tester.tap(find.text('Login'));
+          await tester.tap(find.byKey(const Key('login_button')));
           await tester.pumpAndSettle();
           expect(find.byType(ChatListScreen), findsNothing);
         });
@@ -113,7 +113,7 @@ void main() {
           await pumpLoginScreen(tester);
           mockAuth.errorToThrow = Exception('Invalid key');
           await tester.enterText(find.byType(TextField), 'nsec1test');
-          await tester.tap(find.text('Login'));
+          await tester.tap(find.byKey(const Key('login_button')));
           await tester.pumpAndSettle();
           expect(
             find.textContaining('Oh no! An error occurred, please try again.'),

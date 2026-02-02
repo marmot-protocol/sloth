@@ -24,7 +24,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signUp => 'Registrarse';
 
   @override
-  String get loginTitle => 'Iniciar sesión en White Noise';
+  String get loginTitle => 'Iniciar sesión';
 
   @override
   String get enterPrivateKey => 'Introduce tu llave privada';
@@ -71,6 +71,9 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get switchProfile => 'Cambiar perfil';
+
+  @override
+  String get addNewProfile => 'Añadir un nuevo perfil';
 
   @override
   String get editProfile => 'Editar perfil';
@@ -159,6 +162,9 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get profilePublicDescription =>
       'La información de tu perfil será visible para todos en la red.';
+
+  @override
+  String get discard => 'Descartar';
 
   @override
   String get discardChanges => 'Descartar cambios';
@@ -317,6 +323,18 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noKeyPackagesFound => 'No se encontraron paquetes de llaves';
 
   @override
+  String get keyPackagePublished => 'Paquete de llaves publicado';
+
+  @override
+  String get keyPackagesRefreshed => 'Paquetes de llaves actualizados';
+
+  @override
+  String get keyPackagesDeleted => 'Todos los paquetes de llaves eliminados';
+
+  @override
+  String get keyPackageDeleted => 'Paquete de llaves eliminado';
+
+  @override
   String packageNumber(int number) {
     return 'Paquete $number';
   }
@@ -441,4 +459,26 @@ class AppLocalizationsEs extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Perfil';
+
+  @override
+  String get follow => 'Seguir';
+
+  @override
+  String get unfollow => 'Dejar de seguir';
+
+  @override
+  String get failedToStartChat => 'Error al iniciar el chat. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get userNotOnWhiteNoise => 'Este usuario aún no está en White Noise.';
+
+  @override
+  String get failedToUpdateFollow =>
+      'Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get imagePickerError => 'Error al seleccionar imagen. Por favor, inténtalo de nuevo.';
 }

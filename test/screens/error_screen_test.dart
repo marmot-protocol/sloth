@@ -84,7 +84,7 @@ void main() {
 
       testWidgets('close button navigates back', (tester) async {
         await pumpErrorScreen(tester);
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
         expect(find.text('Home'), findsOneWidget);
       });

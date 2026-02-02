@@ -141,7 +141,7 @@ abstract class AppLocalizations {
   /// Title on login screen
   ///
   /// In en, this message translates to:
-  /// **'Login to White Noise'**
+  /// **'Login'**
   String get loginTitle;
 
   /// Label for private key input field
@@ -233,6 +233,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Switch profile'**
   String get switchProfile;
+
+  /// Title for add profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new profile'**
+  String get addNewProfile;
 
   /// Settings menu item
   ///
@@ -327,13 +333,13 @@ abstract class AppLocalizations {
   /// Description of public key
   ///
   /// In en, this message translates to:
-  /// **'Your public key (npub) can be shared with others. It\'s used to identify you on the network.'**
+  /// **'Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.'**
   String get publicKeyDescription;
 
   /// Private key label
   ///
   /// In en, this message translates to:
-  /// **'Private key'**
+  /// **'Private Key'**
   String get privateKey;
 
   /// Snackbar message when private key is copied
@@ -345,13 +351,13 @@ abstract class AppLocalizations {
   /// Description of private key
   ///
   /// In en, this message translates to:
-  /// **'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.'**
+  /// **'Your private key works like a secret password that grants access to your Nostr identity.'**
   String get privateKeyDescription;
 
   /// Warning box title for private key
   ///
   /// In en, this message translates to:
-  /// **'Keep your private key secure'**
+  /// **'Keep your private key safe!'**
   String get keepPrivateKeySecure;
 
   /// Warning message about private key
@@ -401,6 +407,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your profile information will be visible to everyone on the network.'**
   String get profilePublicDescription;
+
+  /// Discard button text
+  ///
+  /// In en, this message translates to:
+  /// **'Discard'**
+  String get discard;
 
   /// Discard changes button text
   ///
@@ -684,6 +696,30 @@ abstract class AppLocalizations {
   /// **'No key packages found'**
   String get noKeyPackagesFound;
 
+  /// Success message when key package is published
+  ///
+  /// In en, this message translates to:
+  /// **'Key package published'**
+  String get keyPackagePublished;
+
+  /// Success message when key packages are refreshed
+  ///
+  /// In en, this message translates to:
+  /// **'Key packages refreshed'**
+  String get keyPackagesRefreshed;
+
+  /// Success message when all key packages are deleted
+  ///
+  /// In en, this message translates to:
+  /// **'All key packages deleted'**
+  String get keyPackagesDeleted;
+
+  /// Success message when a key package is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Key package deleted'**
+  String get keyPackageDeleted;
+
   /// Key package item title
   ///
   /// In en, this message translates to:
@@ -869,6 +905,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =1{yesterday} other{{count} days ago}}'**
   String timeDaysAgo(int count);
+
+  /// Profile screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// Follow button text
+  ///
+  /// In en, this message translates to:
+  /// **'Follow'**
+  String get follow;
+
+  /// Unfollow button text
+  ///
+  /// In en, this message translates to:
+  /// **'Unfollow'**
+  String get unfollow;
+
+  /// Error when starting chat fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to start chat. Please try again.'**
+  String get failedToStartChat;
+
+  /// Message shown when user has no key packages
+  ///
+  /// In en, this message translates to:
+  /// **'This user is not on White Noise yet.'**
+  String get userNotOnWhiteNoise;
+
+  /// Error when follow or unfollow action fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update follow status. Please try again.'**
+  String get failedToUpdateFollow;
+
+  /// Error message when image picker fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to pick image. Please try again.'**
+  String get imagePickerError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

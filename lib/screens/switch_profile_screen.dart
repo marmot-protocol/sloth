@@ -7,12 +7,13 @@ import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class SwitchProfileScreen extends HookConsumerWidget {
   const SwitchProfileScreen({super.key});
@@ -29,19 +30,25 @@ class SwitchProfileScreen extends HookConsumerWidget {
         body: SafeArea(
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 16.h),
-            child: WnSlateContainer(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const WnScreenHeader(title: 'Profiles'),
-                  Expanded(
-                    child: Center(
-                      child: CircularProgressIndicator(
-                        color: colors.backgroundContentPrimary,
+            child: WnSlate(
+              header: WnSlateNavigationHeader(
+                title: 'Profiles',
+                onNavigate: () => Routes.goBack(context),
+              ),
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Center(
+                        child: CircularProgressIndicator(
+                          color: colors.backgroundContentPrimary,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
@@ -56,61 +63,67 @@ class SwitchProfileScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const WnScreenHeader(title: 'Profiles'),
-                if (state.error != null) ...[
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 16.w),
-                    child: Text(
-                      state.error!,
-                      style: TextStyle(
-                        color: colors.fillDestructive,
-                        fontSize: 14.sp,
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: 'Profiles',
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (state.error != null) ...[
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Text(
+                        state.error!,
+                        style: TextStyle(
+                          color: colors.fillDestructive,
+                          fontSize: 14.sp,
+                        ),
                       ),
                     ),
-                  ),
-                  Gap(12.h),
-                ],
-                Expanded(
-                  child: accountsList.isEmpty
-                      ? Center(
-                          child: Text(
-                            'No accounts available',
-                            style: TextStyle(
-                              fontSize: 16.sp,
-                              fontWeight: FontWeight.w500,
-                              color: colors.backgroundContentSecondary,
+                    Gap(12.h),
+                  ],
+                  Expanded(
+                    child: accountsList.isEmpty
+                        ? Center(
+                            child: Text(
+                              'No accounts available',
+                              style: TextStyle(
+                                fontSize: 16.sp,
+                                fontWeight: FontWeight.w500,
+                                color: colors.backgroundContentSecondary,
+                              ),
                             ),
-                          ),
-                        )
-                      : ListView.builder(
-                          padding: EdgeInsets.symmetric(horizontal: 16.w),
-                          itemCount: accountsList.length,
-                          itemBuilder: (context, index) {
-                            final account = accountsList[index];
-                            final isCurrentAccount = account.pubkey == currentPubkey;
+                          )
+                        : ListView.builder(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            itemCount: accountsList.length,
+                            itemBuilder: (context, index) {
+                              final account = accountsList[index];
+                              final isCurrentAccount = account.pubkey == currentPubkey;
 
-                            return _AccountTile(
-                              pubkey: account.pubkey,
-                              isCurrent: isCurrentAccount,
-                              isSwitching: state.isSwitching,
-                              onTap: () => switchTo(account.pubkey),
-                            );
-                          },
-                        ),
-                ),
-                Gap(16.h),
-                SizedBox(
-                  width: double.infinity,
-                  child: WnButton(
-                    text: 'Connect Another Profile',
-                    onPressed: () => Routes.pushToAddProfile(context),
+                              return _AccountTile(
+                                pubkey: account.pubkey,
+                                isCurrent: isCurrentAccount,
+                                isSwitching: state.isSwitching,
+                                onTap: () => switchTo(account.pubkey),
+                              );
+                            },
+                          ),
                   ),
-                ),
-              ],
+                  Gap(16.h),
+                  SizedBox(
+                    width: double.infinity,
+                    child: WnButton(
+                      text: 'Connect Another Profile',
+                      onPressed: () => Routes.pushToAddProfile(context),
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
@@ -149,7 +162,7 @@ class _AccountTile extends HookConsumerWidget {
             WnAvatar(
               pictureUrl: metadata?.picture,
               displayName: displayName,
-              size: 48.w,
+              color: avatarColorFromPubkey(pubkey),
             ),
             SizedBox(width: 12.w),
             Expanded(

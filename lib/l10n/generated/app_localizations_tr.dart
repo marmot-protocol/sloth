@@ -24,7 +24,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get signUp => 'Kayıt Ol';
 
   @override
-  String get loginTitle => 'White Noise\'a Giriş Yap';
+  String get loginTitle => 'Giriş Yap';
 
   @override
   String get enterPrivateKey => 'Özel anahtarınızı girin';
@@ -71,6 +71,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get switchProfile => 'Profil değiştir';
+
+  @override
+  String get addNewProfile => 'Yeni profil ekle';
 
   @override
   String get editProfile => 'Profili düzenle';
@@ -159,6 +162,9 @@ class AppLocalizationsTr extends AppLocalizations {
   @override
   String get profilePublicDescription =>
       'Profil bilgileriniz ağdaki herkes tarafından görülebilir.';
+
+  @override
+  String get discard => 'At';
 
   @override
   String get discardChanges => 'Değişiklikleri at';
@@ -317,6 +323,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noKeyPackagesFound => 'Anahtar paketi bulunamadı';
 
   @override
+  String get keyPackagePublished => 'Anahtar paketi yayınlandı';
+
+  @override
+  String get keyPackagesRefreshed => 'Anahtar paketleri yenilendi';
+
+  @override
+  String get keyPackagesDeleted => 'Tüm anahtar paketleri silindi';
+
+  @override
+  String get keyPackageDeleted => 'Anahtar paketi silindi';
+
+  @override
   String packageNumber(int number) {
     return 'Paket $number';
   }
@@ -438,4 +456,25 @@ class AppLocalizationsTr extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Profil';
+
+  @override
+  String get follow => 'Takip et';
+
+  @override
+  String get unfollow => 'Takibi bırak';
+
+  @override
+  String get failedToStartChat => 'Sohbet başlatılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get userNotOnWhiteNoise => 'Bu kullanıcı henüz White Noise\'da değil.';
+
+  @override
+  String get failedToUpdateFollow => 'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get imagePickerError => 'Görsel seçilemedi. Lütfen tekrar deneyin.';
 }

@@ -24,7 +24,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signUp => 'Sign Up';
 
   @override
-  String get loginTitle => 'Login to White Noise';
+  String get loginTitle => 'Login';
 
   @override
   String get enterPrivateKey => 'Enter your private key';
@@ -73,6 +73,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get switchProfile => 'Switch profile';
 
   @override
+  String get addNewProfile => 'Add a new profile';
+
+  @override
   String get editProfile => 'Edit profile';
 
   @override
@@ -119,20 +122,20 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get publicKeyDescription =>
-      'Your public key (npub) can be shared with others. It\'s used to identify you on the network.';
+      'Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.';
 
   @override
-  String get privateKey => 'Private key';
+  String get privateKey => 'Private Key';
 
   @override
   String get privateKeyCopied => 'Private key copied to clipboard';
 
   @override
   String get privateKeyDescription =>
-      'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.';
+      'Your private key works like a secret password that grants access to your Nostr identity.';
 
   @override
-  String get keepPrivateKeySecure => 'Keep your private key secure';
+  String get keepPrivateKeySecure => 'Keep your private key safe!';
 
   @override
   String get privateKeyWarning =>
@@ -159,6 +162,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get profilePublicDescription =>
       'Your profile information will be visible to everyone on the network.';
+
+  @override
+  String get discard => 'Discard';
 
   @override
   String get discardChanges => 'Discard changes';
@@ -317,6 +323,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get noKeyPackagesFound => 'No key packages found';
 
   @override
+  String get keyPackagePublished => 'Key package published';
+
+  @override
+  String get keyPackagesRefreshed => 'Key packages refreshed';
+
+  @override
+  String get keyPackagesDeleted => 'All key packages deleted';
+
+  @override
+  String get keyPackageDeleted => 'Key package deleted';
+
+  @override
   String packageNumber(int number) {
     return 'Package $number';
   }
@@ -438,4 +456,25 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get follow => 'Follow';
+
+  @override
+  String get unfollow => 'Unfollow';
+
+  @override
+  String get failedToStartChat => 'Failed to start chat. Please try again.';
+
+  @override
+  String get userNotOnWhiteNoise => 'This user is not on White Noise yet.';
+
+  @override
+  String get failedToUpdateFollow => 'Failed to update follow status. Please try again.';
+
+  @override
+  String get imagePickerError => 'Failed to pick image. Please try again.';
 }

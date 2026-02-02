@@ -11,10 +11,10 @@ import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/android_signer_service.dart' show AndroidSignerException;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_input_password.dart' show WnInputPassword;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
-import 'package:sloth/widgets/wn_slate_container.dart' show WnSlateContainer;
-import 'package:sloth/widgets/wn_text_form_field.dart' show WnTextFormField;
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class LoginScreen extends HookConsumerWidget {
   const LoginScreen({super.key});
@@ -79,75 +79,60 @@ class LoginScreen extends HookConsumerWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
-                WnSlateContainer(
-                  child: Column(
-                    spacing: 8.h,
-                    mainAxisSize: MainAxisSize.min,
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        spacing: 4.w,
-                        children: [
-                          IconButton(
-                            key: const Key('back_button'),
-                            onPressed: () => Routes.goBack(context),
-                            icon: WnIcon(
-                              WnIcons.chevronLeft,
-                              size: 24.sp,
-                              color: context.colors.backgroundContentTertiary,
-                            ),
+                WnSlate(
+                  header: WnSlateNavigationHeader(
+                    title: context.l10n.loginTitle,
+                    type: WnSlateNavigationType.back,
+                    onNavigate: () => Routes.goBack(context),
+                  ),
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+                    child: Column(
+                      spacing: 8.h,
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
+                      children: [
+                        WnInputPassword(
+                          label: context.l10n.enterPrivateKey,
+                          placeholder: context.l10n.nsecPlaceholder,
+                          controller: controller,
+                          autofocus: true,
+                          errorText: state.error,
+                          onChanged: (_) => clearError(),
+                          onPaste: paste,
+                        ),
+                        WnButton(
+                          key: const Key('login_button'),
+                          text: context.l10n.login,
+                          onPressed: onSubmit,
+                          loading: state.isLoading,
+                          disabled: isSignerLoading.value,
+                          size: WnButtonSize.medium,
+                        ),
+                        if (androidSigner.isAvailable) ...[
+                          WnButton(
+                            key: const Key('android_signer_login_button'),
+                            text: 'Login with Signer',
+                            type: WnButtonType.outline,
+                            onPressed: onAndroidSignerLogin,
+                            loading: isSignerLoading.value,
+                            disabled: state.isLoading,
+                            size: WnButtonSize.medium,
                           ),
-                          Expanded(
-                            child: Text(
-                              context.l10n.loginTitle,
+                          if (signerError.value != null) ...[
+                            Gap(4.h),
+                            Text(
+                              signerError.value!,
+                              textAlign: TextAlign.center,
                               style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: context.colors.backgroundContentTertiary,
+                                fontSize: 12.sp,
+                                color: colors.backgroundContentDestructive,
                               ),
                             ),
-                          ),
-                        ],
-                      ),
-                      Gap(8.h),
-                      WnTextFormField(
-                        label: context.l10n.enterPrivateKey,
-                        placeholder: context.l10n.nsecPlaceholder,
-                        controller: controller,
-                        autofocus: true,
-                        obscureText: true,
-                        errorText: state.error,
-                        onChanged: (_) => clearError(),
-                        onPaste: paste,
-                      ),
-                      WnButton(
-                        text: context.l10n.login,
-                        onPressed: onSubmit,
-                        loading: state.isLoading,
-                        disabled: isSignerLoading.value,
-                      ),
-                      if (androidSigner.isAvailable) ...[
-                        WnButton(
-                          key: const Key('android_signer_login_button'),
-                          text: 'Login with Signer',
-                          type: WnButtonType.outline,
-                          onPressed: onAndroidSignerLogin,
-                          loading: isSignerLoading.value,
-                          disabled: state.isLoading,
-                        ),
-                        if (signerError.value != null) ...[
-                          Gap(4.h),
-                          Text(
-                            signerError.value!,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: colors.backgroundContentDestructive,
-                            ),
-                          ),
+                          ],
                         ],
                       ],
-                    ],
+                    ),
                   ),
                 ),
                 Gap(16.h),

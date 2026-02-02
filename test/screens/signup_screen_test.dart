@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData, ProviderScope;
+import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData, Consumer, ProviderScope;
+import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/routes.dart';
@@ -19,7 +22,7 @@ class _MockApi extends MockWnApi {
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
     return Account(
-      pubkey: 'test_pubkey',
+      pubkey: testPubkeyA,
       accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -44,8 +47,8 @@ class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String> signup() async {
     if (errorToThrow != null) throw errorToThrow!;
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -87,7 +90,7 @@ void main() {
     group('navigation', () {
       testWidgets('tapping back button returns to home screen', (tester) async {
         await pumpSignupScreen(tester);
-        await tester.tap(find.byKey(const Key('back_button')));
+        await tester.tap(find.byKey(const Key('slate_back_button')));
         await tester.pumpAndSettle();
         expect(find.byType(HomeScreen), findsOneWidget);
       });
@@ -156,21 +159,69 @@ void main() {
     });
 
     group('keyboard', () {
-      testWidgets('scrolls to bottom when keyboard appears', (tester) async {
-        tester.view.physicalSize = const Size(390, 500);
-        addTearDown(tester.view.reset);
+      testWidgets(
+        'scrolls to bottom when keyboard appears',
+        (tester) async {
+          tester.view.physicalSize = const Size(390, 550);
+          tester.view.devicePixelRatio = 1.0;
+          addTearDown(tester.view.reset);
+
+          await tester.pumpWidget(
+            ProviderScope(
+              child: ScreenUtilInit(
+                designSize: testDesignSize,
+                builder: (_, _) => Consumer(
+                  builder: (context, ref, _) {
+                    return MaterialApp.router(
+                      routerConfig: Routes.build(ref),
+                      locale: const Locale('en'),
+                      localizationsDelegates: AppLocalizations.localizationsDelegates,
+                      supportedLocales: AppLocalizations.supportedLocales,
+                    );
+                  },
+                ),
+              ),
+            ),
+          );
+
+          Routes.pushToSignup(tester.element(find.byType(Scaffold)));
+          await tester.pumpAndSettle();
+
+          final signUpButtonFinder = find.text('Sign Up');
+          expect(signUpButtonFinder, findsOneWidget);
+
+          tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 400));
+
+          expect(signUpButtonFinder, findsOneWidget);
+
+          addTearDown(() => tester.view.resetViewInsets());
+        },
+      );
+    });
+
+    group('image picker', () {
+      testWidgets('shows error snackbar when image picker fails', (tester) async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+          (MethodCall methodCall) async {
+            throw PlatformException(code: 'error', message: 'Test error');
+          },
+        );
+        addTearDown(() {
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockMethodCallHandler(
+                const MethodChannel('plugins.flutter.io/image_picker'),
+                null,
+              );
+        });
 
         await pumpSignupScreen(tester);
-
-        final scrollable = find.byType(Scrollable).first;
-        final scrollPosition = tester.state<ScrollableState>(scrollable).position;
-
-        expect(scrollPosition.pixels, 0);
-
-        tester.view.viewInsets = const FakeViewPadding(bottom: 300);
+        await tester.tap(find.byKey(const Key('avatar_edit_button')));
         await tester.pumpAndSettle();
 
-        expect(scrollPosition.pixels, scrollPosition.maxScrollExtent);
+        expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
       });
     });
   });

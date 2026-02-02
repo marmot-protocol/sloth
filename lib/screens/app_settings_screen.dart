@@ -4,10 +4,11 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/locale_provider.dart';
 import 'package:sloth/providers/theme_provider.dart';
+import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_dropdown_selector.dart';
-import 'package:sloth/widgets/wn_screen_header.dart';
-import 'package:sloth/widgets/wn_slate_container.dart';
+import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class AppSettingsScreen extends ConsumerWidget {
   const AppSettingsScreen({super.key});
@@ -42,35 +43,32 @@ class AppSettingsScreen extends ConsumerWidget {
       body: SafeArea(
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 16.h),
-          child: WnSlateContainer(
-            child: Column(
-              spacing: 24.h,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                WnScreenHeader(title: context.l10n.appSettingsTitle),
-                WnDropdownSelector<ThemeMode>(
-                  label: context.l10n.theme,
-                  options: themeOptions,
-                  value: currentThemeMode,
-                  onChanged: (mode) => ref.read(themeProvider.notifier).setThemeMode(mode),
-                ),
-                WnDropdownSelector<LocaleSetting>(
-                  label: context.l10n.language,
-                  options: languageOptions,
-                  value: currentLocaleSetting,
-                  onChanged: (setting) async {
-                    try {
-                      await ref.read(localeProvider.notifier).setLocale(setting);
-                    } on LocalePersistenceException {
-                      if (context.mounted) {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text(context.l10n.languageUpdateFailed)),
-                        );
-                      }
-                    }
-                  },
-                ),
-              ],
+          child: WnSlate(
+            header: WnSlateNavigationHeader(
+              title: context.l10n.appSettingsTitle,
+              type: WnSlateNavigationType.back,
+              onNavigate: () => Routes.goBack(context),
+            ),
+            child: Padding(
+              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              child: Column(
+                spacing: 24.h,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  WnDropdownSelector<ThemeMode>(
+                    label: context.l10n.theme,
+                    options: themeOptions,
+                    value: currentThemeMode,
+                    onChanged: (mode) => ref.read(themeProvider.notifier).setThemeMode(mode),
+                  ),
+                  WnDropdownSelector<LocaleSetting>(
+                    label: context.l10n.language,
+                    options: languageOptions,
+                    value: currentLocaleSetting,
+                    onChanged: (setting) => ref.read(localeProvider.notifier).setLocale(setting),
+                  ),
+                ],
+              ),
             ),
           ),
         ),

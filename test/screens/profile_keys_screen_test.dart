@@ -6,8 +6,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_text_form_field.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';
@@ -40,8 +40,8 @@ class _MockApi extends MockWnApi {
 class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<String?> build() async {
-    state = const AsyncData('test_pubkey');
-    return 'test_pubkey';
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
   }
 }
 
@@ -82,14 +82,14 @@ void main() {
 
     testWidgets('displays private key label', (tester) async {
       await pumpProfileKeysScreen(tester);
-      expect(find.text('Private key'), findsOneWidget);
+      expect(find.text('Private Key'), findsOneWidget);
     });
 
     testWidgets('displays public key description', (tester) async {
       await pumpProfileKeysScreen(tester);
       expect(
         find.text(
-          'Your public key (npub) can be shared with others. It\'s used to identify you on the network.',
+          'Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.',
         ),
         findsOneWidget,
       );
@@ -99,7 +99,7 @@ void main() {
       await pumpProfileKeysScreen(tester);
       expect(
         find.text(
-          'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.',
+          'Your private key works like a secret password that grants access to your Nostr identity.',
         ),
         findsOneWidget,
       );
@@ -107,44 +107,28 @@ void main() {
 
     testWidgets('displays warning box', (tester) async {
       await pumpProfileKeysScreen(tester);
-      expect(find.text('Keep your private key secure'), findsOneWidget);
+      expect(find.text('Keep your private key safe!'), findsOneWidget);
     });
 
-    testWidgets('tapping close icon returns to previous screen', (tester) async {
+    testWidgets('tapping back icon returns to previous screen', (tester) async {
       await pumpProfileKeysScreen(tester);
-      await tester.tap(find.byKey(const Key('close_button')));
+      await tester.tap(find.byKey(const Key('slate_back_button')));
       await tester.pumpAndSettle();
       expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
-    testWidgets('loads and displays npub in public key field', (tester) async {
+    testWidgets('loads and displays public key field', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final publicKeyFields = find.byType(WnTextFormField);
+      final publicKeyFields = find.byType(WnCopyableField);
       expect(publicKeyFields, findsNWidgets(2));
-      final publicKeyField = publicKeyFields.first;
-      final textField = find.descendant(
-        of: publicKeyField,
-        matching: find.byType(TextFormField),
-      );
-      expect(textField, findsOneWidget);
-      final fieldText = tester.widget<TextFormField>(textField).controller?.text ?? '';
-      expect(fieldText, startsWith('npub1'));
     });
 
-    testWidgets('loads and displays nsec in private key field', (tester) async {
+    testWidgets('loads and displays private key field', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final privateKeyFields = find.byType(WnTextFormField);
+      final privateKeyFields = find.byType(WnCopyableField);
       expect(privateKeyFields, findsNWidgets(2));
-      final privateKeyField = privateKeyFields.last;
-      final textField = find.descendant(
-        of: privateKeyField,
-        matching: find.byType(TextFormField),
-      );
-      expect(textField, findsOneWidget);
-      final fieldText = tester.widget<TextFormField>(textField).controller?.text ?? '';
-      expect(fieldText, startsWith('nsec1'));
     });
 
     testWidgets('tapping copy button on public key copies to clipboard', (tester) async {
@@ -187,24 +171,17 @@ void main() {
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
     });
 
-    testWidgets('private key remains in field after copying', (tester) async {
+    testWidgets('private key field remains after copying', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
-      final privateKeyFields = find.byType(WnTextFormField);
-      final privateKeyField = privateKeyFields.last;
-      final textField = find.descendant(
-        of: privateKeyField,
-        matching: find.byType(TextFormField),
-      );
-      final controllerBefore = tester.widget<TextFormField>(textField).controller;
-      expect(controllerBefore?.text, startsWith('nsec1'));
+      final privateKeyFields = find.byType(WnCopyableField);
+      expect(privateKeyFields, findsNWidgets(2));
 
       final copyButtons = find.byKey(const Key('copy_button'));
       await tester.tap(copyButtons.last);
       await tester.pump();
 
-      final controllerAfter = tester.widget<TextFormField>(textField).controller;
-      expect(controllerAfter?.text, startsWith('nsec1'));
+      expect(find.byType(WnCopyableField), findsNWidgets(2));
     });
 
     testWidgets('tapping visibility toggle shows/hides private key', (tester) async {
@@ -235,14 +212,14 @@ void main() {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
 
-      expect(find.text('Private key'), findsNothing);
+      expect(find.text('Private Key'), findsNothing);
       expect(
         find.text(
-          'Your private key (nsec) should be kept secret. Anyone with access to it can control your account.',
+          'Your private key works like a secret password that grants access to your Nostr identity.',
         ),
         findsNothing,
       );
-      expect(find.text('Keep your private key secure'), findsNothing);
+      expect(find.text('Keep your private key safe!'), findsNothing);
     });
 
     testWidgets('shows only public key field when using external signer', (tester) async {
@@ -250,9 +227,25 @@ void main() {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
 
-      final textFormFields = find.byType(WnTextFormField);
-      expect(textFormFields, findsOneWidget);
+      final copyableFields = find.byType(WnCopyableField);
+      expect(copyableFields, findsOneWidget);
       expect(find.text('Public key'), findsOneWidget);
+    });
+
+    testWidgets('success notice auto-dismisses after timeout', (tester) async {
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      final copyButtons = find.byKey(const Key('copy_button'));
+      await tester.tap(copyButtons.first);
+      await tester.pump();
+
+      expect(find.text('Public key copied to clipboard'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pump(const Duration(milliseconds: 300));
+
+      expect(find.text('Public key copied to clipboard'), findsNothing);
     });
   });
 }

@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 
 ### Added
+
 - Theme setup [PR #1](https://github.com/marmot-protocol/sloth/pull/1)
 - CI github action [PR #2](https://github.com/marmot-protocol/sloth/pull/2)
 - Dependabot action [PR #3](https://github.com/marmot-protocol/sloth/pull/3)
@@ -26,17 +27,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Reactions [PR #60](https://github.com/marmot-protocol/sloth/pull/60)
 - Add multi-account support [PR #78](https://github.com/marmot-protocol/sloth/pull/78)
 - Emoji picker for reactions [PR #81](https://github.com/marmot-protocol/sloth/pull/81)
+- Setup Widgetbook [PR #82](https://github.com/marmot-protocol/sloth/pull/82)
 - Delete reactions [PR #95](https://github.com/marmot-protocol/sloth/pull/95)
+- Add start chat and chat info screens with follow/unfollow [PR #96](https://github.com/marmot-protocol/sloth/pull/96)
+- Avatar colors [PR #108](https://github.com/marmot-protocol/sloth/pull/108)
 
 ### Changed
+
 - Change hooks that received refs to receive data [PR #27](https://github.com/marmot-protocol/sloth/pull/27)
 - Update chat list using streams [PR #36](https://github.com/marmot-protocol/sloth/pull/36)
+- Use Rust as source of truth for locale settings, properly persist "System" language preference [PR #109](https://github.com/marmot-protocol/sloth/pull/109)
+- Implement isFollowingUser method [PR #132](https://github.com/marmot-protocol/sloth/pull/132)
 
 ### Deprecated
 
 ### Removed
 
 ### Fixed
+
 - Adds internet permission in android manifest [PR #7](https://github.com/marmot-protocol/sloth/pull/7)
 - Fixes logout not working after app reinstall [PR #31](https://github.com/marmot-protocol/sloth/pull/31)
 - Fixes sign out exception and adds dedicated sign out screen with private key backup [PR #45](https://github.com/marmot-protocol/sloth/pull/45)

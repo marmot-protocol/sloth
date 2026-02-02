@@ -111,6 +111,9 @@ just precommit-verbose
 
 # Regenerate flutter_rust_bridge code
 just generate
+
+# Rebuild Android native libraries (after Rust code/dependency changes)
+just build-android-quiet
 ```
 
 ## Quiet Commands for Agents
@@ -121,6 +124,7 @@ just generate
 # Quiet test commands - USE THESE for verification
 just test-flutter-quiet    # Output: "+1093: All tests passed!" or error details
 just test-rust-quiet       # Output: "....... test result: ok" or error details
+just build-android-quiet   # Output: "✅ Android build complete" or error details
 
 # Quiet pre-commit - USE THIS before committing
 just precommit             # Shows step names + ✓/✗, errors only on failure
@@ -176,6 +180,15 @@ rust tests...       ✓
 
 - DO NOT add comments except for code that is really complex or hard to understand.
 
+### Responsive Sizing with flutter_screenutil
+
+- Use `flutter_screenutil` for all size values to ensure responsive layouts across devices
+- Use `.w` for width-based values: `20.w`, `100.w`
+- Use `.h` for height-based values: `16.h`, `40.h`
+- Use `.sp` for font sizes: `14.sp`, `16.sp`
+- Use `.r` for radius values: `8.r`, `12.r`
+- Apply to: padding, margins, gaps, icon sizes, font sizes, border radius, container dimensions
+
 ### Avoid StatefulWidget
 
 - In line with rules number 6 & 7 below in the [Sloth Mode Philosphy](#sloth-mode-philosophy), we should avoid the use of StatefulWidgets. Prefer to use providers (shared app-wide state) or hooks (widget-local state) instead.
@@ -193,7 +206,9 @@ rust tests...       ✓
   - `mountWidget(child, tester)` - Mount single widget
   - `mountStackedWidget(child, tester)` - Mount widget in Stack
 - Mock Rust API using `RustLib.initMock(api: mockApi)`
+- Always extend `MockWnApi` from `test/mocks/mock_wn_api.dart` instead of implementing `RustLibApi` directly - this ensures consistent mock behavior and reuses common mock implementations
 - Prefer `find.byKey()` over `find.byIcon()` - add keys to icons in widgets and use `find.byKey(const Key('icon_name'))` in tests
+- Use valid 64-char hex strings for pubkeys in tests (see `test_helpers.dart` for examples), not dummy values like `'abc'` or `'test-pubkey'`
 
 ## Sloth Mode Philosophy
 
@@ -240,3 +255,7 @@ Screen (watches providers)
 4. Follow existing code patterns and naming conventions
 
 The precommit command runs all checks: formatting, linting, and tests. If it passes, you're good to commit. If it fails, fix the issues before committing.
+
+## Fixing Bugs
+
+When I report a bug, don't start by trying to fix it. Instead, start by writing a test that reproduces the bug. Then, have subagents try to fix the bug and prove it with a passing test.

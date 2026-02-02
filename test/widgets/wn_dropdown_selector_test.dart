@@ -466,6 +466,7 @@ void main() {
     });
 
     testWidgets('closes dropdown when isDisabled changes to true while open', (tester) async {
+      setUpTestView(tester);
       bool isDisabled = false;
 
       await tester.pumpWidget(
@@ -512,6 +513,7 @@ void main() {
     });
 
     testWidgets('does not call onChanged when selecting while disabled', (tester) async {
+      setUpTestView(tester);
       bool isDisabled = false;
       String? selectedValue;
 
@@ -579,6 +581,156 @@ void main() {
     test('has small and large variants', () {
       expect(WnDropdownSize.values, contains(WnDropdownSize.small));
       expect(WnDropdownSize.values, contains(WnDropdownSize.large));
+    });
+  });
+
+  group('WnDropdownSelector press states', () {
+    testWidgets('shows pressed border color on tap down', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      final gesture = await tester.startGesture(tester.getCenter(find.text('Option A')));
+      await tester.pump();
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+
+      await gesture.up();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('resets border color on tap cancel', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      final gesture = await tester.startGesture(tester.getCenter(find.text('Option A')));
+      await tester.pump();
+
+      await gesture.cancel();
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+    });
+
+    testWidgets('shows error border when isError and pressed', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isError: true,
+        ),
+        tester,
+      );
+
+      final gesture = await tester.startGesture(tester.getCenter(find.text('Option A')));
+      await tester.pump();
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+
+      await gesture.up();
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('does not show pressed state when disabled', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+          isDisabled: true,
+        ),
+        tester,
+      );
+
+      final gesture = await tester.startGesture(tester.getCenter(find.text('Option A')));
+      await tester.pump();
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+
+      await gesture.up();
+      await tester.pumpAndSettle();
+    });
+  });
+
+  group('WnDropdownSelector animation', () {
+    testWidgets('animates open and close', (tester) async {
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (_) {},
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pump(const Duration(milliseconds: 60));
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('dropdown_icon')));
+      await tester.pump(const Duration(milliseconds: 60));
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+
+      await tester.pumpAndSettle();
+    });
+
+    testWidgets('closes animation when option selected', (tester) async {
+      String? selected;
+      await mountWidget(
+        WnDropdownSelector<String>(
+          label: 'Test',
+          options: const [
+            WnDropdownOption(value: 'a', label: 'Option A'),
+            WnDropdownOption(value: 'b', label: 'Option B'),
+          ],
+          value: 'a',
+          onChanged: (v) => selected = v,
+        ),
+        tester,
+      );
+
+      await tester.tap(find.text('Option A'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Option B'));
+      await tester.pump(const Duration(milliseconds: 60));
+
+      expect(find.byType(WnDropdownSelector<String>), findsOneWidget);
+      expect(selected, 'b');
+
+      await tester.pumpAndSettle();
     });
   });
 }

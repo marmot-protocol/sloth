@@ -26,7 +26,7 @@
     "description": "Sign up button text"
   },
 
-  "loginTitle": "Login to White Noise",
+  "loginTitle": "Login",
   "@loginTitle": {
     "description": "Title on login screen"
   },
@@ -106,6 +106,11 @@
     "description": "Button to switch between profiles"
   },
 
+  "addNewProfile": "Add a new profile",
+  "@addNewProfile": {
+    "description": "Title for add profile screen"
+  },
+
   "editProfile": "Edit profile",
   "@editProfile": {
     "description": "Settings menu item"
@@ -181,12 +186,12 @@
     "description": "Snackbar message when public key is copied"
   },
 
-  "publicKeyDescription": "Your public key (npub) can be shared with others. It's used to identify you on the network.",
+  "publicKeyDescription": "Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.",
   "@publicKeyDescription": {
     "description": "Description of public key"
   },
 
-  "privateKey": "Private key",
+  "privateKey": "Private Key",
   "@privateKey": {
     "description": "Private key label"
   },
@@ -196,12 +201,12 @@
     "description": "Snackbar message when private key is copied"
   },
 
-  "privateKeyDescription": "Your private key (nsec) should be kept secret. Anyone with access to it can control your account.",
+  "privateKeyDescription": "Your private key works like a secret password that grants access to your Nostr identity.",
   "@privateKeyDescription": {
     "description": "Description of private key"
   },
 
-  "keepPrivateKeySecure": "Keep your private key secure",
+  "keepPrivateKeySecure": "Keep your private key safe!",
   "@keepPrivateKeySecure": {
     "description": "Warning box title for private key"
   },
@@ -244,6 +249,11 @@
   "profilePublicDescription": "Your profile information will be visible to everyone on the network.",
   "@profilePublicDescription": {
     "description": "Description about public profile visibility"
+  },
+
+  "discard": "Discard",
+  "@discard": {
+    "description": "Discard button text"
   },
 
   "discardChanges": "Discard changes",
@@ -506,6 +516,26 @@
     "description": "Message when no key packages exist"
   },
 
+  "keyPackagePublished": "Key package published",
+  "@keyPackagePublished": {
+    "description": "Success message when key package is published"
+  },
+
+  "keyPackagesRefreshed": "Key packages refreshed",
+  "@keyPackagesRefreshed": {
+    "description": "Success message when key packages are refreshed"
+  },
+
+  "keyPackagesDeleted": "All key packages deleted",
+  "@keyPackagesDeleted": {
+    "description": "Success message when all key packages are deleted"
+  },
+
+  "keyPackageDeleted": "Key package deleted",
+  "@keyPackageDeleted": {
+    "description": "Success message when a key package is deleted"
+  },
+
   "packageNumber": "Package {number}",
   "@packageNumber": {
     "description": "Key package item title",
@@ -684,5 +714,40 @@
         "type": "int"
       }
     }
+  },
+
+  "profile": "Profile",
+  "@profile": {
+    "description": "Profile screen title"
+  },
+
+  "follow": "Follow",
+  "@follow": {
+    "description": "Follow button text"
+  },
+
+  "unfollow": "Unfollow",
+  "@unfollow": {
+    "description": "Unfollow button text"
+  },
+
+  "failedToStartChat": "Failed to start chat. Please try again.",
+  "@failedToStartChat": {
+    "description": "Error when starting chat fails"
+  },
+
+  "userNotOnWhiteNoise": "This user is not on White Noise yet.",
+  "@userNotOnWhiteNoise": {
+    "description": "Message shown when user has no key packages"
+  },
+
+  "failedToUpdateFollow": "Failed to update follow status. Please try again.",
+  "@failedToUpdateFollow": {
+    "description": "Error when follow or unfollow action fails"
+  },
+
+  "imagePickerError": "Failed to pick image. Please try again.",
+  "@imagePickerError": {
+    "description": "Error message when image picker fails"
   }
 }

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/screens/chat_info_screen.dart';
 import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/screens/message_actions_screen.dart';
 import 'package:sloth/screens/wip_screen.dart';
@@ -15,8 +16,8 @@ import 'package:sloth/widgets/wn_message_bubble.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _testPubkey = 'test_pubkey';
-const _testGroupId = 'test_group_id';
+const _testPubkey = testPubkeyA;
+const _testGroupId = testGroupId;
 
 class _MockTag implements Tag {
   final List<String> vec;
@@ -32,7 +33,7 @@ class _MockTag implements Tag {
 ChatMessage _message(
   String id,
   DateTime createdAt, {
-  String pubkey = 'other',
+  String pubkey = testPubkeyB,
   bool isDeleted = false,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
@@ -60,6 +61,9 @@ class _MockApi extends MockWnApi {
   Exception? deleteError;
   Exception? reactionError;
   int _sendCallCount = 0;
+  bool isDm = false;
+  List<String> groupMembers = [];
+  final Map<String, String> pubkeyToNpub = {};
 
   @override
   void reset() {
@@ -74,6 +78,9 @@ class _MockApi extends MockWnApi {
     deleteError = null;
     reactionError = null;
     _sendCallCount = 0;
+    isDm = false;
+    groupMembers = [];
+    pubkeyToNpub.clear();
   }
 
   @override
@@ -157,6 +164,29 @@ class _MockApi extends MockWnApi {
     required String groupId,
   }) {
     return Future.value('https://example.com/group.jpg');
+  }
+
+  @override
+  Future<bool> crateApiGroupsGroupIsDirectMessageType({
+    required Group that,
+    required String accountPubkey,
+  }) {
+    return Future.value(isDm);
+  }
+
+  @override
+  Future<List<String>> crateApiGroupsGroupMembers({
+    required String pubkey,
+    required String groupId,
+  }) {
+    return Future.value(groupMembers);
+  }
+
+  @override
+  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
+    final npub = pubkeyToNpub[hexPubkey];
+    if (npub == null) throw Exception('Unknown pubkey: $hexPubkey');
+    return npub;
   }
 }
 
@@ -264,11 +294,21 @@ void main() {
         expect(find.byType(ChatListScreen), findsOneWidget);
       });
 
-      testWidgets('menu button navigates to wip screen', (tester) async {
+      testWidgets('menu button navigates to wip screen for group chat', (tester) async {
         await pumpChatScreen(tester);
         await tester.tap(find.byKey(const Key('menu_button')));
         await tester.pumpAndSettle();
         expect(find.byType(WipScreen), findsOneWidget);
+      });
+
+      testWidgets('menu button navigates to chat info screen for DM', (tester) async {
+        _api.isDm = true;
+        _api.groupMembers = [_testPubkey, testPubkeyC];
+        _api.pubkeyToNpub[testPubkeyC] = 'npub1othermember';
+        await pumpChatScreen(tester);
+        await tester.tap(find.byKey(const Key('menu_button')));
+        await tester.pumpAndSettle();
+        expect(find.byType(ChatInfoScreen), findsOneWidget);
       });
     });
 
@@ -474,7 +514,7 @@ void main() {
 
         await longPressMessage(tester, 'm1');
 
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(find.byType(MessageActionsScreen), findsNothing);
@@ -510,7 +550,7 @@ void main() {
         await longPressMessage(tester, 'm1');
         expect(textField.focusNode!.hasFocus, isFalse);
 
-        await tester.tap(find.byKey(const Key('close_button')));
+        await tester.tap(find.byKey(const Key('slate_close_button')));
         await tester.pumpAndSettle();
 
         expect(find.byType(MessageActionsScreen), findsNothing);
