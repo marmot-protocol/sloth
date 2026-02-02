@@ -25,49 +25,51 @@ class HomeScreen extends StatelessWidget {
               children: [
                 Expanded(
                   child: Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Gap(60.h),
-                        SvgPicture.asset(
-                          'assets/svgs/whitenoise.svg',
-                          colorFilter: ColorFilter.mode(
-                            colors.backgroundContentPrimary,
-                            BlendMode.srcIn,
+                    child: SingleChildScrollView(
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Gap(60.h),
+                          SvgPicture.asset(
+                            'assets/svgs/whitenoise.svg',
+                            colorFilter: ColorFilter.mode(
+                              colors.backgroundContentPrimary,
+                              BlendMode.srcIn,
+                            ),
                           ),
-                        ),
-                        Gap(16.h),
-                        Text(
-                          context.l10n.appTitle,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w700,
-                            fontSize: 48.sp,
-                            letterSpacing: -0.6.sp,
-                            color: context.colors.backgroundContentPrimary,
+                          Gap(16.h),
+                          Text(
+                            context.l10n.appTitle,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w700,
+                              fontSize: 48.sp,
+                              letterSpacing: -0.6.sp,
+                              color: context.colors.backgroundContentPrimary,
+                            ),
                           ),
-                        ),
-                        Text(
-                          context.l10n.tagline1,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18.sp,
-                            letterSpacing: 0.1.sp,
-                            color: context.colors.backgroundContentTertiary,
+                          Text(
+                            context.l10n.tagline1,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18.sp,
+                              letterSpacing: 0.1.sp,
+                              color: context.colors.backgroundContentTertiary,
+                            ),
                           ),
-                        ),
-                        Text(
-                          context.l10n.tagline2,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontWeight: FontWeight.w600,
-                            fontSize: 18.sp,
-                            letterSpacing: 0.1.sp,
-                            color: context.colors.backgroundContentTertiary,
+                          Text(
+                            context.l10n.tagline2,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              fontWeight: FontWeight.w600,
+                              fontSize: 18.sp,
+                              letterSpacing: 0.1.sp,
+                              color: context.colors.backgroundContentTertiary,
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),

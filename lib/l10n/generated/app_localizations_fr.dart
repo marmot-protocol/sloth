@@ -324,6 +324,18 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noKeyPackagesFound => 'Aucun paquet de clés trouvé';
 
   @override
+  String get keyPackagePublished => 'Paquet de clés publié';
+
+  @override
+  String get keyPackagesRefreshed => 'Paquets de clés actualisés';
+
+  @override
+  String get keyPackagesDeleted => 'Tous les paquets de clés supprimés';
+
+  @override
+  String get keyPackageDeleted => 'Paquet de clés supprimé';
+
+  @override
   String packageNumber(int number) {
     return 'Paquet $number';
   }

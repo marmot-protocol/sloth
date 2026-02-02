@@ -323,6 +323,18 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noKeyPackagesFound => 'Пакеты ключей не найдены';
 
   @override
+  String get keyPackagePublished => 'Пакет ключей опубликован';
+
+  @override
+  String get keyPackagesRefreshed => 'Пакеты ключей обновлены';
+
+  @override
+  String get keyPackagesDeleted => 'Все пакеты ключей удалены';
+
+  @override
+  String get keyPackageDeleted => 'Пакет ключей удалён';
+
+  @override
   String packageNumber(int number) {
     return 'Пакет $number';
   }

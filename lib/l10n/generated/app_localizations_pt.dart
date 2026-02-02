@@ -323,6 +323,18 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noKeyPackagesFound => 'Nenhum pacote de chaves encontrado';
 
   @override
+  String get keyPackagePublished => 'Pacote de chaves publicado';
+
+  @override
+  String get keyPackagesRefreshed => 'Pacotes de chaves atualizados';
+
+  @override
+  String get keyPackagesDeleted => 'Todos os pacotes de chaves excluídos';
+
+  @override
+  String get keyPackageDeleted => 'Pacote de chaves excluído';
+
+  @override
   String packageNumber(int number) {
     return 'Pacote $number';
   }

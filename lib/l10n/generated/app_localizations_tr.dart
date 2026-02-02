@@ -323,6 +323,18 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noKeyPackagesFound => 'Anahtar paketi bulunamadı';
 
   @override
+  String get keyPackagePublished => 'Anahtar paketi yayınlandı';
+
+  @override
+  String get keyPackagesRefreshed => 'Anahtar paketleri yenilendi';
+
+  @override
+  String get keyPackagesDeleted => 'Tüm anahtar paketleri silindi';
+
+  @override
+  String get keyPackageDeleted => 'Anahtar paketi silindi';
+
+  @override
   String packageNumber(int number) {
     return 'Paket $number';
   }

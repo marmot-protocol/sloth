@@ -696,6 +696,30 @@ abstract class AppLocalizations {
   /// **'No key packages found'**
   String get noKeyPackagesFound;
 
+  /// Success message when key package is published
+  ///
+  /// In en, this message translates to:
+  /// **'Key package published'**
+  String get keyPackagePublished;
+
+  /// Success message when key packages are refreshed
+  ///
+  /// In en, this message translates to:
+  /// **'Key packages refreshed'**
+  String get keyPackagesRefreshed;
+
+  /// Success message when all key packages are deleted
+  ///
+  /// In en, this message translates to:
+  /// **'All key packages deleted'**
+  String get keyPackagesDeleted;
+
+  /// Success message when a key package is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'Key package deleted'**
+  String get keyPackageDeleted;
+
   /// Key package item title
   ///
   /// In en, this message translates to:

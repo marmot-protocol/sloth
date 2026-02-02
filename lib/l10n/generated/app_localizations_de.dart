@@ -326,6 +326,18 @@ class AppLocalizationsDe extends AppLocalizations {
   String get noKeyPackagesFound => 'Keine Schlüsselpakete gefunden';
 
   @override
+  String get keyPackagePublished => 'Schlüsselpaket veröffentlicht';
+
+  @override
+  String get keyPackagesRefreshed => 'Schlüsselpakete aktualisiert';
+
+  @override
+  String get keyPackagesDeleted => 'Alle Schlüsselpakete gelöscht';
+
+  @override
+  String get keyPackageDeleted => 'Schlüsselpaket gelöscht';
+
+  @override
   String packageNumber(int number) {
     return 'Paket $number';
   }

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' show useEffect;
+import 'package:flutter_hooks/flutter_hooks.dart' show useEffect, useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
@@ -12,6 +12,7 @@ import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class DeveloperSettingsScreen extends HookConsumerWidget {
   const DeveloperSettingsScreen({super.key});
@@ -21,6 +22,43 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
     final colors = context.colors;
     final pubkey = ref.watch(accountPubkeyProvider);
     final (:state, :fetch, :publish, :delete, :deleteAll) = useKeyPackages(pubkey);
+
+    final noticeMessage = useState<String?>(null);
+    final noticeType = useState<WnSystemNoticeType>(WnSystemNoticeType.success);
+
+    void showNotice(String message, {bool isError = false}) {
+      noticeMessage.value = message;
+      noticeType.value = isError ? WnSystemNoticeType.error : WnSystemNoticeType.success;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
+
+    String getSuccessMessage(KeyPackageAction action) {
+      return switch (action) {
+        KeyPackageAction.fetch => context.l10n.keyPackagesRefreshed,
+        KeyPackageAction.publish => context.l10n.keyPackagePublished,
+        KeyPackageAction.delete => context.l10n.keyPackageDeleted,
+        KeyPackageAction.deleteAll => context.l10n.keyPackagesDeleted,
+      };
+    }
+
+    Future<void> handleAction(Future<KeyPackageResult> Function() action) async {
+      final result = await action();
+      if (context.mounted) {
+        if (result.success) {
+          showNotice(getSuccessMessage(result.action));
+        }
+      }
+    }
+
+    Future<void> handleDelete(String id) async {
+      final result = await delete(id);
+      if (context.mounted && result.success) {
+        showNotice(getSuccessMessage(result.action));
+      }
+    }
 
     useEffect(() {
       fetch();
@@ -38,6 +76,14 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    type: noticeType.value,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
             child: Padding(
               padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(
@@ -46,9 +92,9 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
                   SizedBox(height: 16.h),
                   _ActionButtons(
                     isLoading: state.isLoading,
-                    onPublish: publish,
-                    onFetch: fetch,
-                    onDeleteAll: deleteAll,
+                    onPublish: () => handleAction(publish),
+                    onFetch: () => handleAction(fetch),
+                    onDeleteAll: () => handleAction(deleteAll),
                   ),
                   if (state.error != null) ...[
                     SizedBox(height: 12.h),
@@ -77,7 +123,7 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
                           )
                         : _KeyPackagesList(
                             packages: state.packages,
-                            onDelete: delete,
+                            onDelete: handleDelete,
                             disabled: state.isLoading,
                           ),
                   ),
@@ -114,16 +160,19 @@ class _ActionButtons extends StatelessWidget {
           text: context.l10n.publishNewKeyPackage,
           onPressed: onPublish,
           disabled: isLoading,
+          size: WnButtonSize.medium,
         ),
         WnButton(
           text: context.l10n.refreshKeyPackages,
           onPressed: onFetch,
           disabled: isLoading,
+          size: WnButtonSize.medium,
         ),
         WnButton(
           text: context.l10n.deleteAllKeyPackages,
           onPressed: onDeleteAll,
           disabled: isLoading,
+          size: WnButtonSize.medium,
         ),
       ],
     );

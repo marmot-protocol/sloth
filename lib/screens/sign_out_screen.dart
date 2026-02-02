@@ -87,56 +87,54 @@ class SignOutScreen extends HookConsumerWidget {
                 children: [
                   Expanded(
                     child: SingleChildScrollView(
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 16.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Gap(24.h),
-                            WnCallout(
-                              title: context.l10n.signOutConfirmation,
-                              description: context.l10n.signOutWarning,
-                              type: CalloutType.warning,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Gap(24.h),
+                          WnCallout(
+                            title: context.l10n.signOutConfirmation,
+                            description: context.l10n.signOutWarning,
+                            type: CalloutType.warning,
+                          ),
+                          Gap(24.h),
+                          Text(
+                            context.l10n.backUpPrivateKey,
+                            style: TextStyle(
+                              fontSize: 16.sp,
+                              fontWeight: FontWeight.w600,
+                              color: colors.backgroundContentPrimary,
                             ),
-                            Gap(24.h),
-                            Text(
-                              context.l10n.backUpPrivateKey,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
-                                color: colors.backgroundContentPrimary,
-                              ),
+                          ),
+                          Gap(8.h),
+                          Text(
+                            context.l10n.copyPrivateKeyHint,
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              fontWeight: FontWeight.w500,
+                              color: colors.backgroundContentSecondary,
                             ),
-                            Gap(8.h),
-                            Text(
-                              context.l10n.copyPrivateKeyHint,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
-                                color: colors.backgroundContentSecondary,
-                              ),
+                          ),
+                          Gap(16.h),
+                          WnCopyableField(
+                            label: context.l10n.privateKey,
+                            value: state.nsec ?? '',
+                            obscurable: true,
+                            obscured: obscurePrivateKey.value,
+                            onToggleVisibility: togglePrivateKeyVisibility,
+                            onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
+                          ),
+                          Gap(32.h),
+                          SizedBox(
+                            width: double.infinity,
+                            child: WnButton(
+                              text: context.l10n.signOut,
+                              onPressed: signOut,
+                              loading: isLoggingOut.value,
+                              size: WnButtonSize.medium,
                             ),
-                            Gap(16.h),
-                            WnCopyableField(
-                              label: context.l10n.privateKey,
-                              value: state.nsec ?? '',
-                              obscurable: true,
-                              obscured: obscurePrivateKey.value,
-                              onToggleVisibility: togglePrivateKeyVisibility,
-                              onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
-                            ),
-                            Gap(32.h),
-                            SizedBox(
-                              width: double.infinity,
-                              child: WnButton(
-                                text: context.l10n.signOut,
-                                onPressed: signOut,
-                                loading: isLoggingOut.value,
-                              ),
-                            ),
-                            Gap(24.h),
-                          ],
-                        ),
+                          ),
+                          Gap(24.h),
+                        ],
                       ),
                     ),
                   ),

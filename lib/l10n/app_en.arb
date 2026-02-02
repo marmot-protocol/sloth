@@ -516,6 +516,26 @@
     "description": "Message when no key packages exist"
   },
 
+  "keyPackagePublished": "Key package published",
+  "@keyPackagePublished": {
+    "description": "Success message when key package is published"
+  },
+
+  "keyPackagesRefreshed": "Key packages refreshed",
+  "@keyPackagesRefreshed": {
+    "description": "Success message when key packages are refreshed"
+  },
+
+  "keyPackagesDeleted": "All key packages deleted",
+  "@keyPackagesDeleted": {
+    "description": "Success message when all key packages are deleted"
+  },
+
+  "keyPackageDeleted": "Key package deleted",
+  "@keyPackageDeleted": {
+    "description": "Success message when a key package is deleted"
+  },
+
   "packageNumber": "Package {number}",
   "@packageNumber": {
     "description": "Key package item title",

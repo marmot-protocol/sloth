@@ -56,12 +56,14 @@ class OnboardingScreen extends ConsumerWidget {
                         onPressed: () {
                           Routes.pushToWip(context);
                         },
+                        size: WnButtonSize.medium,
                       ),
                       WnButton(
                         text: context.l10n.startChat,
                         onPressed: () {
                           Routes.pushToWip(context);
                         },
+                        size: WnButtonSize.medium,
                       ),
                     ],
                   ),
