@@ -32,6 +32,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add start chat and chat info screens with follow/unfollow [PR #96](https://github.com/marmot-protocol/sloth/pull/96)
 - Avatar colors [PR #108](https://github.com/marmot-protocol/sloth/pull/108), [PR #137](https://github.com/marmot-protocol/sloth/pull/137)
 - Scan QR for nsec [PR #164](https://github.com/marmot-protocol/sloth/pull/164)
+- Copy card [PR #157](https://github.com/marmot-protocol/sloth/pull/157)
 
 ### Changed
 
