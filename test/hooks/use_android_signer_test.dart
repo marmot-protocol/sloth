@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/hooks/use_android_signer.dart';
 import 'package:sloth/services/android_signer_service.dart';
@@ -82,98 +80,47 @@ class MockAndroidSignerService implements AndroidSignerService {
   Future<void> setSignerPackageName(String packageName) async {}
 }
 
-class _TestWidget extends HookWidget {
-  const _TestWidget({
-    required this.service,
-    required this.onBuild,
-  });
-
-  final AndroidSignerService service;
-  final void Function(
-    bool isAvailable,
-    bool isConnecting,
-    String? error,
-    Future<String> Function() connect,
-    Future<void> Function() disconnect,
-  )
-  onBuild;
-
-  @override
-  Widget build(BuildContext context) {
-    final result = useAndroidSigner(service: service);
-    onBuild(
-      result.isAvailable,
-      result.isConnecting,
-      result.error,
-      result.connect,
-      result.disconnect,
-    );
-    return const SizedBox();
-  }
-}
-
 void main() {
   group('useAndroidSigner', () {
     testWidgets('initially has isAvailable false', (tester) async {
       final mockService = MockAndroidSignerService();
-      late bool capturedIsAvailable;
 
       setUpTestView(tester);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: _TestWidget(
-            service: mockService,
-            onBuild: (isAvailable, isConnecting, error, connect, disconnect) {
-              capturedIsAvailable = isAvailable;
-            },
-          ),
-        ),
+      final getResult = await mountHook(
+        tester,
+        () => useAndroidSigner(service: mockService),
       );
 
-      expect(capturedIsAvailable, isFalse);
+      expect(getResult().isAvailable, isFalse);
     });
 
     testWidgets('sets isAvailable true when signer is available', (tester) async {
       final mockService = MockAndroidSignerService();
       mockService.setAvailable(true);
-      late bool capturedIsAvailable;
 
       setUpTestView(tester);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: _TestWidget(
-            service: mockService,
-            onBuild: (isAvailable, isConnecting, error, connect, disconnect) {
-              capturedIsAvailable = isAvailable;
-            },
-          ),
-        ),
+      final getResult = await mountHook(
+        tester,
+        () => useAndroidSigner(service: mockService),
       );
       await tester.pumpAndSettle();
 
-      expect(capturedIsAvailable, isTrue);
+      expect(getResult().isAvailable, isTrue);
     });
 
     testWidgets('connect calls getPublicKey on service', (tester) async {
       final mockService = MockAndroidSignerService();
       mockService.setAvailable(true);
       mockService.setPubkeyToReturn(testPubkeyA);
-      late Future<String> Function() capturedConnect;
 
       setUpTestView(tester);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: _TestWidget(
-            service: mockService,
-            onBuild: (isAvailable, isConnecting, error, connect, disconnect) {
-              capturedConnect = connect;
-            },
-          ),
-        ),
+      final getResult = await mountHook(
+        tester,
+        () => useAndroidSigner(service: mockService),
       );
       await tester.pumpAndSettle();
 
-      final pubkey = await capturedConnect();
+      final pubkey = await getResult().connect();
 
       expect(mockService.getPublicKeyCalled, isTrue);
       expect(pubkey, testPubkeyA);
@@ -185,23 +132,16 @@ void main() {
       mockService.setErrorToThrow(
         const AndroidSignerException('USER_REJECTED', 'User rejected'),
       );
-      late Future<String> Function() capturedConnect;
 
       setUpTestView(tester);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: _TestWidget(
-            service: mockService,
-            onBuild: (isAvailable, isConnecting, error, connect, disconnect) {
-              capturedConnect = connect;
-            },
-          ),
-        ),
+      final getResult = await mountHook(
+        tester,
+        () => useAndroidSigner(service: mockService),
       );
       await tester.pumpAndSettle();
 
       expect(
-        () => capturedConnect(),
+        () => getResult().connect(),
         throwsA(isA<AndroidSignerException>()),
       );
     });
@@ -210,29 +150,45 @@ void main() {
       final mockService = MockAndroidSignerService();
       mockService.setAvailable(true);
       mockService.setErrorToThrow(Exception('Generic error'));
-      late Future<String> Function() capturedConnect;
-      late String? capturedError;
 
       setUpTestView(tester);
-      await tester.pumpWidget(
-        MaterialApp(
-          home: _TestWidget(
-            service: mockService,
-            onBuild: (isAvailable, isConnecting, error, connect, disconnect) {
-              capturedConnect = connect;
-              capturedError = error;
-            },
-          ),
-        ),
+      final getResult = await mountHook(
+        tester,
+        () => useAndroidSigner(service: mockService),
       );
       await tester.pumpAndSettle();
 
       try {
-        await capturedConnect();
+        await getResult().connect();
       } catch (_) {}
       await tester.pumpAndSettle();
 
-      expect(capturedError, 'Unable to connect to signer. Please try again.');
+      expect(getResult().error, 'Unable to connect to signer. Please try again.');
+    });
+
+    testWidgets('disconnect resets error state', (tester) async {
+      final mockService = MockAndroidSignerService();
+      mockService.setAvailable(true);
+      mockService.setErrorToThrow(Exception('Generic error'));
+
+      setUpTestView(tester);
+      final getResult = await mountHook(
+        tester,
+        () => useAndroidSigner(service: mockService),
+      );
+      await tester.pumpAndSettle();
+
+      try {
+        await getResult().connect();
+      } catch (_) {}
+      await tester.pumpAndSettle();
+
+      expect(getResult().error, isNotNull);
+
+      await getResult().disconnect();
+      await tester.pumpAndSettle();
+
+      expect(getResult().error, isNull);
     });
   });
 }
