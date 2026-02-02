@@ -70,6 +70,7 @@ class LoginScreen extends HookConsumerWidget {
                           onPaste: paste,
                         ),
                         WnButton(
+                          key: const Key('login_button'),
                           text: context.l10n.login,
                           onPressed: onSubmit,
                           loading: state.isLoading,

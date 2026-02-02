@@ -4,7 +4,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_account_bar.dart';
+
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
@@ -25,10 +25,6 @@ class OnboardingScreen extends ConsumerWidget {
         child: SafeArea(
           child: Column(
             children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 14.w),
-                child: const WnAccountBar(),
-              ),
               const Spacer(),
               WnSlate(
                 header: WnSlateNavigationHeader(
@@ -54,14 +50,14 @@ class OnboardingScreen extends ConsumerWidget {
                         text: context.l10n.shareYourProfile,
                         type: WnButtonType.outline,
                         onPressed: () {
-                          Routes.pushToWip(context);
+                          Routes.pushToShareProfile(context);
                         },
                         size: WnButtonSize.medium,
                       ),
                       WnButton(
                         text: context.l10n.startChat,
                         onPressed: () {
-                          Routes.pushToWip(context);
+                          Routes.pushToUserSearch(context);
                         },
                         size: WnButtonSize.medium,
                       ),

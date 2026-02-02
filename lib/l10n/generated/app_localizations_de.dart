@@ -24,7 +24,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get signUp => 'Registrieren';
 
   @override
-  String get loginTitle => 'Bei White Noise anmelden';
+  String get loginTitle => 'Anmelden';
 
   @override
   String get enterPrivateKey => 'Privaten Schlüssel eingeben';

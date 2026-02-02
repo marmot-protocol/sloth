@@ -24,7 +24,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get signUp => 'Kayıt Ol';
 
   @override
-  String get loginTitle => 'White Noise\'a Giriş Yap';
+  String get loginTitle => 'Giriş Yap';
 
   @override
   String get enterPrivateKey => 'Özel anahtarınızı girin';

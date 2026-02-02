@@ -96,6 +96,7 @@ class ChatScreen extends HookConsumerWidget {
           child: Column(
             children: [
               WnSlate(
+                padding: EdgeInsets.symmetric(vertical: 14.h),
                 header: WnChatHeader(
                   mlsGroupId: groupId,
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',

@@ -26,7 +26,7 @@
     "description": "Sign up button text"
   },
 
-  "loginTitle": "Login to White Noise",
+  "loginTitle": "Login",
   "@loginTitle": {
     "description": "Title on login screen"
   },

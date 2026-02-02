@@ -141,7 +141,7 @@ abstract class AppLocalizations {
   /// Title on login screen
   ///
   /// In en, this message translates to:
-  /// **'Login to White Noise'**
+  /// **'Login'**
   String get loginTitle;
 
   /// Label for private key input field

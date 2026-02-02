@@ -24,7 +24,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signUp => 'Registrarse';
 
   @override
-  String get loginTitle => 'Iniciar sesión en White Noise';
+  String get loginTitle => 'Iniciar sesión';
 
   @override
   String get enterPrivateKey => 'Introduce tu llave privada';

@@ -24,7 +24,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get signUp => 'Регистрация';
 
   @override
-  String get loginTitle => 'Вход в White Noise';
+  String get loginTitle => 'Войти';
 
   @override
   String get enterPrivateKey => 'Введите ваш приватный ключ';
