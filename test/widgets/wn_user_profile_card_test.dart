@@ -3,17 +3,20 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_copy_card.dart';
 import 'package:sloth/widgets/wn_user_profile_card.dart';
+import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mockClipboardFailing;
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _userPubkey = testPubkeyA;
+const Map<String, String> pubkeyToNpub = {testPubkeyA: testNpubA};
 
 class _MockApi extends MockWnApi {
   @override
   String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1$hexPubkey';
+    final npub = pubkeyToNpub[hexPubkey];
+    if (npub == null) throw Exception('Unknown pubkey');
+    return npub;
   }
 }
 
@@ -30,7 +33,7 @@ void main() {
     await mountWidget(
       SingleChildScrollView(
         child: WnUserProfileCard(
-          userPubkey: _userPubkey,
+          userPubkey: testPubkeyA,
           metadata: metadata,
         ),
       ),
@@ -44,10 +47,59 @@ void main() {
       expect(find.byType(WnAvatar), findsOneWidget);
     });
 
-    testWidgets('displays public key field', (tester) async {
+    testWidgets('displays public key copy card', (tester) async {
       await pumpCard(tester);
-      expect(find.byType(WnCopyableField), findsOneWidget);
-      expect(find.text('Public key'), findsOneWidget);
+      expect(find.byType(WnCopyCard), findsOneWidget);
+    });
+
+    testWidgets('npub is displayed formatted', (tester) async {
+      await pumpCard(tester);
+      final copyCard = tester.widget<WnCopyCard>(find.byType(WnCopyCard));
+      expect(copyCard.textToDisplay, testNpubAFormatted);
+    });
+
+    group('copy to clipboard', () {
+      tearDown(clearClipboardMock);
+      testWidgets('npub can be copied', (tester) async {
+        final getClipboard = mockClipboard();
+        await pumpCard(tester);
+        await tester.tap(find.byKey(const Key('copy_button')));
+        expect(getClipboard(), testNpubA);
+      });
+    });
+
+    testWidgets('invokes onPublicKeyCopied when public key is copied', (tester) async {
+      mockClipboard();
+      var copied = false;
+      await mountWidget(
+        SingleChildScrollView(
+          child: WnUserProfileCard(
+            userPubkey: testPubkeyA,
+            onPublicKeyCopied: () => copied = true,
+          ),
+        ),
+        tester,
+      );
+      await tester.tap(find.byKey(const Key('copy_button')));
+      expect(copied, isTrue);
+    });
+
+    testWidgets('invokes onPublicKeyCopyError when copy fails', (tester) async {
+      mockClipboardFailing();
+      addTearDown(clearClipboardMock);
+      var onCopyErrorCalled = false;
+      await mountWidget(
+        SingleChildScrollView(
+          child: WnUserProfileCard(
+            userPubkey: testPubkeyA,
+            onPublicKeyCopyError: () => onCopyErrorCalled = true,
+          ),
+        ),
+        tester,
+      );
+      await tester.tap(find.byKey(const Key('copy_button')));
+      await tester.pumpAndSettle();
+      expect(onCopyErrorCalled, isTrue);
     });
 
     testWidgets('passes color derived from pubkey to avatar', (tester) async {

@@ -11,6 +11,8 @@ const testDesignSize = Size(390, 844);
 
 const testPubkeyA = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
 const testNpubA = 'npub1a1b2c311111111111111111111111111111111111111111111111111';
+const testNpubAFormatted =
+    'npub1 a1b2c 31111 11111 11111 11111 11111 11111 11111 11111 11111 11111 1';
 const testPubkeyB = 'b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5';
 const testNpubB = 'npub1b2c3d422222222222222222222222222222222222222222222222222';
 const testPubkeyC = 'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6';

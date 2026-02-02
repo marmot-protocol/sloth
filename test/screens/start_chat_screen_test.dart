@@ -10,8 +10,9 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_copyable_field.dart';
+import 'package:sloth/widgets/wn_copy_card.dart';
 import 'package:sloth/widgets/wn_slate.dart';
+import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mockClipboardFailing;
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -145,7 +146,8 @@ void main() {
     required String userPubkey,
   }) async {
     setUpTestView(tester);
-    _api.pubkeyToNpub[userPubkey] = 'npub1$userPubkey';
+    _api.pubkeyToNpub[testPubkeyA] = testNpubA;
+    _api.pubkeyToNpub[testPubkeyB] = testNpubB;
     await mountTestApp(
       tester,
       overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
@@ -176,10 +178,11 @@ void main() {
       expect(find.byType(WnAvatar), findsOneWidget);
     });
 
-    testWidgets('displays public key field', (tester) async {
-      await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
-      expect(find.byType(WnCopyableField), findsOneWidget);
-      expect(find.text('Public key'), findsOneWidget);
+    testWidgets('shows pubkey copy card', (tester) async {
+      await pumpStartChatScreen(tester, userPubkey: testPubkeyA);
+      final copyCard = tester.widget<WnCopyCard>(find.byType(WnCopyCard));
+      expect(copyCard.textToDisplay, testNpubAFormatted);
+      expect(copyCard.textToCopy, testNpubA);
     });
 
     testWidgets('displays follow button', (tester) async {
@@ -356,13 +359,24 @@ void main() {
 
     group('system notice', () {
       testWidgets('shows notice when public key is copied', (tester) async {
+        mockClipboard();
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
 
         await tester.tap(find.byKey(const Key('copy_button')));
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300));
 
         expect(find.text('Public key copied to clipboard'), findsOneWidget);
+      });
+
+      testWidgets('shows error notice when public key copy fails', (tester) async {
+        mockClipboardFailing();
+        addTearDown(clearClipboardMock);
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Failed to copy public key. Please try again.'), findsOneWidget);
       });
     });
   });

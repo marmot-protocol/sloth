@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_follow_actions.dart';
+import 'package:sloth/hooks/use_system_notice.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
@@ -12,7 +12,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:sloth/widgets/wn_system_notice.dart' show WnSystemNotice;
 import 'package:sloth/widgets/wn_user_profile_card.dart';
 
 class ChatInfoScreen extends HookConsumerWidget {
@@ -30,16 +30,8 @@ class ChatInfoScreen extends HookConsumerWidget {
       accountPubkey: accountPubkey,
       userPubkey: userPubkey,
     );
-
-    final noticeMessage = useState<String?>(null);
-
-    void showCopiedNotice(String message) {
-      noticeMessage.value = message;
-    }
-
-    void dismissNotice() {
-      noticeMessage.value = null;
-    }
+    final (:noticeMessage, :noticeType, :showErrorNotice, :showSuccessNotice, :dismissNotice) =
+        useSystemNotice();
 
     final metadata = metadataSnapshot.data;
     final isLoading =
@@ -52,7 +44,7 @@ class ChatInfoScreen extends HookConsumerWidget {
         await followState.toggleFollow();
       } catch (_) {
         if (context.mounted) {
-          noticeMessage.value = context.l10n.failedToUpdateFollow;
+          showErrorNotice(context.l10n.failedToUpdateFollow);
         }
       }
     }
@@ -68,10 +60,11 @@ class ChatInfoScreen extends HookConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
-            systemNotice: noticeMessage.value != null
+            systemNotice: noticeMessage != null
                 ? WnSystemNotice(
-                    key: ValueKey(noticeMessage.value),
-                    title: noticeMessage.value!,
+                    key: ValueKey(noticeMessage),
+                    title: noticeMessage,
+                    type: noticeType,
                     onDismiss: dismissNotice,
                   )
                 : null,
@@ -99,7 +92,9 @@ class ChatInfoScreen extends HookConsumerWidget {
                               userPubkey: userPubkey,
                               metadata: metadata,
                               onPublicKeyCopied: () =>
-                                  showCopiedNotice(context.l10n.publicKeyCopied),
+                                  showSuccessNotice(context.l10n.publicKeyCopied),
+                              onPublicKeyCopyError: () =>
+                                  showErrorNotice(context.l10n.publicKeyCopyError),
                             ),
                             if (!isOwnProfile) ...[
                               Gap(24.h),

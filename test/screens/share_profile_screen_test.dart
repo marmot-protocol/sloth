@@ -8,8 +8,9 @@ import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_copy_card.dart';
 
-import '../mocks/mock_clipboard.dart' show mockClipboard;
+import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mockClipboardFailing;
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -112,16 +113,24 @@ void main() {
       expect(find.text('Public key copied to clipboard'), findsOneWidget);
     });
 
-    testWidgets('disables copy button when npub conversion fails', (tester) async {
+    testWidgets('shows error notice when public key copy fails', (tester) async {
+      mockClipboardFailing();
+      addTearDown(clearClipboardMock);
+      await pumpShareProfileScreen(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('copy_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Failed to copy public key. Please try again.'), findsOneWidget);
+    });
+
+    testWidgets('hides copy card when npub conversion fails', (tester) async {
       _mockApi.shouldFailNpubConversion = true;
       await pumpShareProfileScreen(tester);
       await tester.pumpAndSettle();
 
-      final copyButton = find.byKey(const Key('copy_button'));
-      expect(copyButton, findsOneWidget);
-
-      final iconButton = tester.widget<IconButton>(copyButton);
-      expect(iconButton.onPressed, isNull);
+      expect(find.byType(WnCopyCard), findsNothing);
     });
 
     testWidgets('passes color derived from pubkey to avatar', (tester) async {
