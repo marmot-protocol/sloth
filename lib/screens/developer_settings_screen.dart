@@ -45,10 +45,18 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
     }
 
     Future<void> handleAction(Future<KeyPackageResult> Function() action) async {
-      final result = await action();
-      if (context.mounted) {
-        if (result.success) {
-          showNotice(getSuccessMessage(result.action));
+      try {
+        final result = await action();
+        if (context.mounted) {
+          if (result.success) {
+            showNotice(getSuccessMessage(result.action));
+          } else if (state.error != null) {
+            showNotice(state.error!, isError: true);
+          }
+        }
+      } catch (e) {
+        if (context.mounted) {
+          showNotice(context.l10n.error(e.toString()), isError: true);
         }
       }
     }

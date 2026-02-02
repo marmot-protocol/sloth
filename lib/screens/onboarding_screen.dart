@@ -32,7 +32,7 @@ class OnboardingScreen extends ConsumerWidget {
                   onNavigate: () => Routes.goToChatList(context),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.w),
+                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.stretch,

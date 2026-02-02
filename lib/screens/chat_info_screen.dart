@@ -65,6 +65,7 @@ class ChatInfoScreen extends HookConsumerWidget {
           child: WnSlate(
             header: WnSlateNavigationHeader(
               title: context.l10n.profile,
+              type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
             systemNotice: noticeMessage.value != null

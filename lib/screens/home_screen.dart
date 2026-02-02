@@ -75,7 +75,7 @@ class HomeScreen extends StatelessWidget {
                 ),
                 WnSlate(
                   child: Padding(
-                    padding: EdgeInsets.all(14.w),
+                    padding: EdgeInsets.symmetric(vertical: 14.h, horizontal: 14.w),
                     child: const WnAuthButtonsContainer(),
                   ),
                 ),

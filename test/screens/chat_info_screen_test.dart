@@ -338,10 +338,10 @@ void main() {
     });
 
     group('navigation', () {
-      testWidgets('navigates back when close button is pressed', (tester) async {
+      testWidgets('navigates back when back button is pressed', (tester) async {
         await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
 
-        await tester.tap(find.byKey(const Key('slate_close_button')));
+        await tester.tap(find.byKey(const Key('slate_back_button')));
         await tester.pumpAndSettle();
 
         expect(find.text('Profile'), findsNothing);

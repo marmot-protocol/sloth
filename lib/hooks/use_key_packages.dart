@@ -44,6 +44,9 @@ useKeyPackages(String pubkey) {
   final state = useState(const KeyPackagesState());
 
   Future<KeyPackageResult> fetch() async {
+    if (state.value.isLoading) {
+      return (success: false, action: KeyPackageAction.fetch);
+    }
     state.value = state.value.copyWith(isLoading: true, clearError: true);
     try {
       final packages = await accounts_api.accountKeyPackages(accountPubkey: pubkey);
@@ -57,6 +60,9 @@ useKeyPackages(String pubkey) {
   }
 
   Future<KeyPackageResult> publish() async {
+    if (state.value.isLoading) {
+      return (success: false, action: KeyPackageAction.publish);
+    }
     state.value = state.value.copyWith(isLoading: true, clearError: true);
     try {
       await accounts_api.publishAccountKeyPackage(accountPubkey: pubkey);
@@ -88,6 +94,9 @@ useKeyPackages(String pubkey) {
   }
 
   Future<KeyPackageResult> deleteAll() async {
+    if (state.value.isLoading) {
+      return (success: false, action: KeyPackageAction.deleteAll);
+    }
     state.value = state.value.copyWith(isLoading: true, clearError: true);
     try {
       await accounts_api.deleteAccountKeyPackages(accountPubkey: pubkey);
