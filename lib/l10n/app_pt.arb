@@ -79,6 +79,7 @@
   "signOutWarning": "Quando você sair do White Noise, suas conversas serão excluídas deste dispositivo e não poderão ser restauradas em outro dispositivo.\n\nSe você não fez backup da sua chave privada, não poderá usar este perfil em nenhum outro serviço Nostr.",
   "backUpPrivateKey": "Faça backup da sua chave privada",
   "copyPrivateKeyHint": "Copie sua chave privada para restaurar sua conta em outro dispositivo.",
+  "publicKeyCopyError": "Falha ao copiar a chave pública. Por favor, tente novamente.",
   "noChatsYet": "Ainda não há conversas",
   "startConversation": "Inicie uma conversa",
   "noMessagesYet": "Ainda não há mensagens",

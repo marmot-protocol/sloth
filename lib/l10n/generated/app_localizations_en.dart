@@ -260,6 +260,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Copy your private key to restore your account on another device.';
 
   @override
+  String get publicKeyCopyError => 'Failed to copy public key. Please try again.';
+
+  @override
   String get noChatsYet => 'No chats yet';
 
   @override

@@ -261,6 +261,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Copiez votre clé privée pour restaurer votre compte sur un autre appareil.';
 
   @override
+  String get publicKeyCopyError => 'Échec de la copie de la clé publique. Veuillez réessayer.';
+
+  @override
   String get noChatsYet => 'Pas encore de discussions';
 
   @override

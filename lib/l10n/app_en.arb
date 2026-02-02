@@ -406,6 +406,11 @@
     "description": "Hint for copying private key"
   },
 
+  "publicKeyCopyError": "Failed to copy public key. Please try again.",
+  "@publicKeyCopyError": {
+    "description": "Error message when copying public key (npub) to clipboard fails"
+  },
+
   "noChatsYet": "No chats yet",
   "@noChatsYet": {
     "description": "Empty state title for chat list"
