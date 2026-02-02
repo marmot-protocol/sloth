@@ -44,10 +44,16 @@ class ChatInfoScreen extends HookConsumerWidget {
     final isOwnProfile = userPubkey == accountPubkey;
 
     Future<void> handleFollowAction() async {
-      if (isFollowing) {
-        await followsState.unfollow(userPubkey);
-      } else {
-        await followsState.follow(userPubkey);
+      try {
+        if (isFollowing) {
+          await followsState.unfollow(userPubkey);
+        } else {
+          await followsState.follow(userPubkey);
+        }
+      } catch (_) {
+        if (context.mounted) {
+          noticeMessage.value = context.l10n.failedToUpdateFollow;
+        }
       }
     }
 

@@ -189,7 +189,6 @@ void main() {
         );
         await tester.tap(find.byKey(const Key('copy_button')));
         await tester.pump();
-        // Should not throw
       });
     });
 

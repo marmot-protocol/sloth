@@ -288,7 +288,7 @@ void main() {
       Routes.pushToEditProfile(tester.element(find.byType(Scaffold)));
       await tester.pump();
       expect(find.text('Save'), findsNothing);
-      expect(find.text('Discard changes'), findsNothing);
+      expect(find.text('Discard'), findsNothing);
       await tester.pumpAndSettle();
       expect(find.text('Save'), findsOneWidget);
     });

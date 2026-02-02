@@ -73,6 +73,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get switchProfile => 'Сменить профиль';
 
   @override
+  String get addNewProfile => 'Добавить новый профиль';
+
+  @override
   String get editProfile => 'Редактировать профиль';
 
   @override

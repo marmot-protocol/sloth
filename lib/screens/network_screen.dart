@@ -72,7 +72,7 @@ class NetworkScreen extends HookConsumerWidget {
                     boxShadow: [
                       BoxShadow(
                         color: colors.shadow.withValues(alpha: 0.2),
-                        blurRadius: 8,
+                        blurRadius: 8.r,
                         offset: const Offset(0, 4),
                       ),
                     ],

@@ -40,9 +40,9 @@ void main() {
   }
 
   group('AddProfileScreen', () {
-    testWidgets('displays Add a New Profile title', (tester) async {
+    testWidgets('displays Add a new profile title', (tester) async {
       await pumpAddProfileScreen(tester);
-      expect(find.text('Add a New Profile'), findsOneWidget);
+      expect(find.text('Add a new profile'), findsOneWidget);
     });
 
     testWidgets('displays Login button', (tester) async {

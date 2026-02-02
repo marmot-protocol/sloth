@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/is_adding_account_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
@@ -32,7 +33,7 @@ class AddProfileScreen extends ConsumerWidget {
           padding: EdgeInsets.symmetric(vertical: 16.h),
           child: WnSlate(
             header: WnSlateNavigationHeader(
-              title: 'Add a New Profile',
+              title: context.l10n.addNewProfile,
               onNavigate: () => Routes.goBack(context),
             ),
             child: Padding(

@@ -73,6 +73,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get switchProfile => 'Profil wechseln';
 
   @override
+  String get addNewProfile => 'Neues Profil hinzufügen';
+
+  @override
   String get editProfile => 'Profil bearbeiten';
 
   @override

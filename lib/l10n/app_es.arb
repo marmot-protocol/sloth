@@ -21,6 +21,7 @@
   "settings": "Configuración",
   "shareAndConnect": "Compartir y conectar",
   "switchProfile": "Cambiar perfil",
+  "addNewProfile": "Añadir un nuevo perfil",
   "editProfile": "Editar perfil",
   "profileKeys": "Llaves del perfil",
   "networkRelays": "Relés de red",

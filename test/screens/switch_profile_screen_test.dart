@@ -129,7 +129,7 @@ void main() {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
       await tester.tap(find.text('Connect Another Profile'));
       await tester.pumpAndSettle();
-      expect(find.text('Add a New Profile'), findsOneWidget);
+      expect(find.text('Add a new profile'), findsOneWidget);
     });
 
     testWidgets('shows no accounts message when empty', (tester) async {

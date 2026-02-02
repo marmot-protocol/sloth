@@ -234,6 +234,12 @@ abstract class AppLocalizations {
   /// **'Switch profile'**
   String get switchProfile;
 
+  /// Title for add profile screen
+  ///
+  /// In en, this message translates to:
+  /// **'Add a new profile'**
+  String get addNewProfile;
+
   /// Settings menu item
   ///
   /// In en, this message translates to:

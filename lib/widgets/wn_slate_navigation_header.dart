@@ -38,8 +38,8 @@ class WnSlateNavigationHeader extends StatelessWidget {
           Expanded(
             child: Padding(
               padding: EdgeInsets.only(
-                left: hasTrailingAction ? 80.w : 0,
-                right: hasLeadingAction ? 80.w : 0,
+                left: hasTrailingAction ? 54.w : 0,
+                right: hasLeadingAction ? 54.w : 0,
               ),
               child: Center(
                 child: Text(
@@ -81,7 +81,7 @@ class _SlateHeaderAction extends StatelessWidget {
   WnIcons get _icon => isBack ? WnIcons.chevronLeft : WnIcons.closeLarge;
 
   EdgeInsetsGeometry get _padding =>
-      isBack ? EdgeInsets.only(left: 24.w, right: 32.w) : EdgeInsets.only(left: 32.w, right: 24.w);
+      isBack ? EdgeInsets.only(left: 14.w, right: 16.w) : EdgeInsets.only(left: 16.w, right: 14.w);
 
   @override
   Widget build(BuildContext context) {

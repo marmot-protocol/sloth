@@ -47,7 +47,7 @@ class UserSearchScreen extends HookConsumerWidget {
               onNavigate: () => Routes.goBack(context),
             ),
             child: Padding(
-              padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+              padding: EdgeInsets.symmetric(horizontal: 14.w),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -87,8 +87,8 @@ class UserSearchScreen extends HookConsumerWidget {
                                   );
                                 },
                               ),
-                              WnFadeOverlay.top(color: colors.backgroundTertiary),
-                              WnFadeOverlay.bottom(color: colors.backgroundTertiary),
+                              WnFadeOverlay.top(color: colors.backgroundSecondary),
+                              WnFadeOverlay.bottom(color: colors.backgroundSecondary),
                             ],
                           ),
                   ),
