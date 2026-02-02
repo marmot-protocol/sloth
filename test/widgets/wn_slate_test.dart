@@ -385,6 +385,52 @@ void main() {
       });
     });
 
+    group('WnScrollEdgeEffect constructors', () {
+      testWidgets('canvasTop creates canvas type with top position', (tester) async {
+        await mountStackedWidget(
+          const WnScrollEdgeEffect.canvasTop(color: Colors.black),
+          tester,
+        );
+
+        final effect = tester.widget<WnScrollEdgeEffect>(find.byType(WnScrollEdgeEffect));
+        expect(effect.type, ScrollEdgeEffectType.canvas);
+        expect(effect.position, ScrollEdgePosition.top);
+      });
+
+      testWidgets('canvasBottom creates canvas type with bottom position', (tester) async {
+        await mountStackedWidget(
+          const WnScrollEdgeEffect.canvasBottom(color: Colors.black),
+          tester,
+        );
+
+        final effect = tester.widget<WnScrollEdgeEffect>(find.byType(WnScrollEdgeEffect));
+        expect(effect.type, ScrollEdgeEffectType.canvas);
+        expect(effect.position, ScrollEdgePosition.bottom);
+      });
+
+      testWidgets('dropdownTop creates dropdown type with top position', (tester) async {
+        await mountStackedWidget(
+          const WnScrollEdgeEffect.dropdownTop(color: Colors.black),
+          tester,
+        );
+
+        final effect = tester.widget<WnScrollEdgeEffect>(find.byType(WnScrollEdgeEffect));
+        expect(effect.type, ScrollEdgeEffectType.dropdown);
+        expect(effect.position, ScrollEdgePosition.top);
+      });
+
+      testWidgets('dropdownBottom creates dropdown type with bottom position', (tester) async {
+        await mountStackedWidget(
+          const WnScrollEdgeEffect.dropdownBottom(color: Colors.black),
+          tester,
+        );
+
+        final effect = tester.widget<WnScrollEdgeEffect>(find.byType(WnScrollEdgeEffect));
+        expect(effect.type, ScrollEdgeEffectType.dropdown);
+        expect(effect.position, ScrollEdgePosition.bottom);
+      });
+    });
+
     group('content transition', () {
       testWidgets('wraps content in WnSlateContentTransition', (tester) async {
         await mountWidget(
