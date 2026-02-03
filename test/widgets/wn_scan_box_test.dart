@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show BuildContext, Key, Locale, MaterialApp, Widget;
+import 'package:flutter/material.dart' show Key, Locale, MaterialApp, Widget;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:sloth/l10n/l10n.dart';
@@ -81,7 +81,7 @@ void main() {
 
         final errorWidget = scanner.errorBuilder!(context, error);
         await tester.pumpWidget(
-          _wrapWithLocalization(errorWidget, context),
+          _wrapWithLocalization(errorWidget),
         );
 
         expect(find.text('Camera permission denied'), findsOneWidget);
@@ -101,7 +101,7 @@ void main() {
 
         final errorWidget = scanner.errorBuilder!(context, error);
         await tester.pumpWidget(
-          _wrapWithLocalization(errorWidget, context),
+          _wrapWithLocalization(errorWidget),
         );
 
         expect(find.text('Something went wrong'), findsOneWidget);
@@ -110,7 +110,7 @@ void main() {
   });
 }
 
-MaterialApp _wrapWithLocalization(Widget child, BuildContext context) {
+MaterialApp _wrapWithLocalization(Widget child) {
   return MaterialApp(
     localizationsDelegates: AppLocalizations.localizationsDelegates,
     supportedLocales: AppLocalizations.supportedLocales,

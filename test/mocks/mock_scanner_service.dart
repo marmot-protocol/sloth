@@ -20,13 +20,15 @@ class MockScannerService implements ScannerService {
   Stream<BarcodeCapture> get barcodeStream => _barcodeController.stream;
 
   @override
-  Future<void> start() async {
+  Future<bool> start() async {
     startCalled = true;
+    return true;
   }
 
   @override
-  Future<void> stop() async {
+  Future<bool> stop() async {
     stopCalled = true;
+    return true;
   }
 
   @override

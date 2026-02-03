@@ -58,7 +58,7 @@ dependencies:
   mime: ^2.0.0
   qr_flutter: ^4.1.0
   cached_network_image: ^3.4.1
-  mobile_scanner: ^7.0.1
+  mobile_scanner: ^7.1.4
 
 dev_dependencies:
   flutter_test:

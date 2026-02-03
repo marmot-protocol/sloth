@@ -21,20 +21,22 @@ void main() {
       expect(service.barcodeStream, mockController.barcodes);
     });
 
-    test('start calls controller start', () async {
+    test('start calls controller start and returns true', () async {
       expect(mockController.startCalled, isFalse);
 
-      await service.start();
+      final result = await service.start();
 
       expect(mockController.startCalled, isTrue);
+      expect(result, isTrue);
     });
 
-    test('stop calls controller stop', () async {
+    test('stop calls controller stop and returns true', () async {
       expect(mockController.stopCalled, isFalse);
 
-      await service.stop();
+      final result = await service.stop();
 
       expect(mockController.stopCalled, isTrue);
+      expect(result, isTrue);
     });
 
     test('dispose calls controller dispose', () {
@@ -81,18 +83,22 @@ void main() {
   });
 
   group('MobileScannerService error handling', () {
-    test('start catches exceptions', () async {
+    test('start returns false on exception', () async {
       final throwingController = _ThrowingMobileScannerController();
       final service = MobileScannerService(controller: throwingController);
 
-      await expectLater(service.start(), completes);
+      final result = await service.start();
+
+      expect(result, isFalse);
     });
 
-    test('stop catches exceptions', () async {
+    test('stop returns false on exception', () async {
       final throwingController = _ThrowingMobileScannerController();
       final service = MobileScannerService(controller: throwingController);
 
-      await expectLater(service.stop(), completes);
+      final result = await service.stop();
+
+      expect(result, isFalse);
     });
   });
 }

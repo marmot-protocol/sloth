@@ -5,8 +5,8 @@ import 'package:mobile_scanner/mobile_scanner.dart';
 abstract class ScannerService {
   MobileScannerController get controller;
   Stream<BarcodeCapture> get barcodeStream;
-  Future<void> start();
-  Future<void> stop();
+  Future<bool> start();
+  Future<bool> stop();
   void dispose();
 }
 
@@ -23,17 +23,23 @@ class MobileScannerService implements ScannerService {
   Stream<BarcodeCapture> get barcodeStream => _controller.barcodes;
 
   @override
-  Future<void> start() async {
+  Future<bool> start() async {
     try {
       await _controller.start();
-    } catch (_) {}
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 
   @override
-  Future<void> stop() async {
+  Future<bool> stop() async {
     try {
       await _controller.stop();
-    } catch (_) {}
+      return true;
+    } on Exception {
+      return false;
+    }
   }
 
   @override
