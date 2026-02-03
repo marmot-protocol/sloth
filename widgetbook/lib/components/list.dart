@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_list.dart';
+import 'package:sloth/widgets/wn_list_item.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
@@ -52,7 +53,7 @@ Widget wnListShowcase(BuildContext context) {
           _ListExample(
             label: 'Titles Only',
             child: WnList(
-              items: const [
+              children: const [
                 WnListItem(title: 'First Item'),
                 WnListItem(title: 'Second Item'),
                 WnListItem(title: 'Third Item'),
@@ -63,56 +64,32 @@ Widget wnListShowcase(BuildContext context) {
         const SizedBox(height: 32),
         _buildSection(
           context,
-          'With Subtitles',
-          'List items can have subtitles.',
-          [
-            _ListExample(
-              label: 'With Subtitles',
-              child: WnList(
-                items: const [
-                  WnListItem(title: 'Messages', subtitle: 'View your messages'),
-                  WnListItem(
-                    title: 'Notifications',
-                    subtitle: 'Manage notification settings',
-                  ),
-                  WnListItem(
-                    title: 'Privacy',
-                    subtitle: 'Control your privacy options',
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        _buildSection(
-          context,
           'With Icons',
           'List items can have leading and trailing widgets.',
           [
             _ListExample(
               label: 'Leading Icons',
               child: WnList(
-                items: [
+                children: [
                   WnListItem(
                     title: 'Profile',
                     leading: WnIcon(
                       WnIcons.user,
-                      color: context.colors.backgroundContentPrimary,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                   WnListItem(
                     title: 'Settings',
                     leading: WnIcon(
                       WnIcons.settings,
-                      color: context.colors.backgroundContentPrimary,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                   WnListItem(
                     title: 'Help',
                     leading: WnIcon(
                       WnIcons.information,
-                      color: context.colors.backgroundContentPrimary,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                 ],
@@ -121,26 +98,26 @@ Widget wnListShowcase(BuildContext context) {
             _ListExample(
               label: 'Trailing Icons',
               child: WnList(
-                items: [
+                children: [
                   WnListItem(
                     title: 'Account',
                     trailing: WnIcon(
-                      WnIcons.chevronRight,
-                      color: context.colors.backgroundContentPrimary,
+                      WnIcons.more,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                   WnListItem(
                     title: 'Security',
                     trailing: WnIcon(
-                      WnIcons.chevronRight,
-                      color: context.colors.backgroundContentPrimary,
+                      WnIcons.more,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                   WnListItem(
                     title: 'About',
                     trailing: WnIcon(
-                      WnIcons.chevronRight,
-                      color: context.colors.backgroundContentPrimary,
+                      WnIcons.more,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                 ],
@@ -149,95 +126,29 @@ Widget wnListShowcase(BuildContext context) {
             _ListExample(
               label: 'Both Icons',
               child: WnList(
-                items: [
+                children: [
                   WnListItem(
                     title: 'Edit Profile',
-                    subtitle: 'Update your information',
                     leading: WnIcon(
                       WnIcons.user,
-                      color: context.colors.backgroundContentPrimary,
+                      color: context.colors.fillContentSecondary,
                     ),
                     trailing: WnIcon(
-                      WnIcons.chevronRight,
-                      color: context.colors.backgroundContentPrimary,
+                      WnIcons.more,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
                   WnListItem(
                     title: 'Preferences',
-                    subtitle: 'Customize your experience',
                     leading: WnIcon(
                       WnIcons.settings,
-                      color: context.colors.backgroundContentPrimary,
+                      color: context.colors.fillContentSecondary,
                     ),
                     trailing: WnIcon(
-                      WnIcons.chevronRight,
-                      color: context.colors.backgroundContentPrimary,
+                      WnIcons.more,
+                      color: context.colors.fillContentSecondary,
                     ),
                   ),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        _buildSection(
-          context,
-          'Separators',
-          'Lists can show or hide separators between items.',
-          [
-            _ListExample(
-              label: 'With Separators',
-              child: WnList(
-                items: const [
-                  WnListItem(title: 'Item One'),
-                  WnListItem(title: 'Item Two'),
-                  WnListItem(title: 'Item Three'),
-                ],
-              ),
-            ),
-            _ListExample(
-              label: 'Without Separators',
-              child: WnList(
-                showSeparators: false,
-                items: const [
-                  WnListItem(title: 'Item One'),
-                  WnListItem(title: 'Item Two'),
-                  WnListItem(title: 'Item Three'),
-                ],
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        _buildSection(
-          context,
-          'Selection State',
-          'List items can show selection state.',
-          [
-            _ListExample(
-              label: 'Selected Item',
-              child: WnList(
-                items: [
-                  const WnListItem(title: 'Not Selected'),
-                  const WnListItem(title: 'Selected', isSelected: true),
-                  const WnListItem(title: 'Not Selected'),
-                ],
-              ),
-            ),
-            _ListExample(
-              label: 'With Checkmarks',
-              child: WnList(
-                items: [
-                  WnListItem(
-                    title: 'Option A',
-                    trailing: WnIcon(
-                      WnIcons.checkmarkFilled,
-                      color: context.colors.intentionSuccessContent,
-                    ),
-                    isSelected: true,
-                  ),
-                  const WnListItem(title: 'Option B'),
-                  const WnListItem(title: 'Option C'),
                 ],
               ),
             ),
@@ -288,7 +199,7 @@ class _ListExample extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 320,
+      width: 368,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -301,14 +212,7 @@ class _ListExample extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          Container(
-            decoration: BoxDecoration(
-              border: Border.all(color: context.colors.borderTertiary),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: child,
-          ),
+          child,
         ],
       ),
     );
@@ -322,11 +226,6 @@ class _InteractiveList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showSeparators = this.context.knobs.boolean(
-      label: 'Show Separators',
-      initialValue: true,
-    );
-
     final itemCount = this.context.knobs.int.slider(
       label: 'Number of Items',
       initialValue: 3,
@@ -334,53 +233,31 @@ class _InteractiveList extends StatelessWidget {
       max: 10,
     );
 
-    final showSubtitles = this.context.knobs.boolean(
-      label: 'Show Subtitles',
-      initialValue: false,
-    );
-
     final showLeading = this.context.knobs.boolean(
       label: 'Show Leading Icons',
-      initialValue: false,
+      initialValue: true,
     );
 
     final showTrailing = this.context.knobs.boolean(
       label: 'Show Trailing Icons',
-      initialValue: false,
+      initialValue: true,
     );
 
-    final showSelection = this.context.knobs.boolean(
-      label: 'Show Selection (first item)',
-      initialValue: false,
-    );
-
-    final items = List.generate(itemCount, (index) {
+    final children = List.generate(itemCount, (index) {
       return WnListItem(
-        title: 'Item ${index + 1}',
-        subtitle: showSubtitles ? 'Subtitle for item ${index + 1}' : null,
+        title: 'List Item ${index + 1}',
         leading: showLeading
             ? WnIcon(
-                WnIcons.user,
-                color: context.colors.backgroundContentPrimary,
+                WnIcons.placeholder,
+                color: context.colors.fillContentSecondary,
               )
             : null,
         trailing: showTrailing
-            ? WnIcon(
-                WnIcons.chevronRight,
-                color: context.colors.backgroundContentPrimary,
-              )
+            ? WnIcon(WnIcons.more, color: context.colors.fillContentSecondary)
             : null,
-        isSelected: showSelection && index == 0,
       );
     });
 
-    return Container(
-      decoration: BoxDecoration(
-        border: Border.all(color: context.colors.borderTertiary),
-        borderRadius: BorderRadius.circular(8),
-      ),
-      clipBehavior: Clip.antiAlias,
-      child: WnList(items: items, showSeparators: showSeparators),
-    );
+    return WnList(children: children);
   }
 }
