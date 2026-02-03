@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/theme.dart';
+import 'package:whitenoise/theme.dart';
 
 enum WnTooltipPosition { top, bottom, left, right }
 

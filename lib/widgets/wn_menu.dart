@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/widgets/wn_menu_item.dart';
+import 'package:whitenoise/widgets/wn_menu_item.dart';
 
 class WnMenu extends StatelessWidget {
   const WnMenu({

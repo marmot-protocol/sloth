@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart' show EditableText, Key, TextField;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_input.dart' show WnInputSize;
-import 'package:sloth/widgets/wn_input_password.dart';
+import 'package:whitenoise/widgets/wn_input.dart' show WnInputSize;
+import 'package:whitenoise/widgets/wn_input_password.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

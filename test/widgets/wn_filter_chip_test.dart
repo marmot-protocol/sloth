@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart'
     show AnimatedContainer, BoxDecoration, Key, MainAxisSize, Row;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_filter_chip.dart';
+import 'package:whitenoise/widgets/wn_filter_chip.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

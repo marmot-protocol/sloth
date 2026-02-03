@@ -1,4 +1,4 @@
-import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/providers/account_pubkey_provider.dart';
 
 import '../test_helpers.dart';
 

@@ -356,11 +356,11 @@ class AppLocalizationsDe extends AppLocalizations {
   String get reportError => 'Fehler melden';
 
   @override
-  String get slothsWorking => 'Faultiere arbeiten';
+  String get workInProgress => 'In Arbeit';
 
   @override
   String get wipMessage =>
-      'Faultiere arbeiten an dieser Funktion. Wenn du möchtest, dass die Faultiere schneller sind, spende bitte an White Noise';
+      'Wir arbeiten an dieser Funktion. Wenn du möchtest, dass wir schneller sind, spende bitte an White Noise';
 
   @override
   String get donate => 'Spenden';

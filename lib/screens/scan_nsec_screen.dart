@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:go_router/go_router.dart' show GoRouter;
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/routes.dart' show Routes;
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
-import 'package:sloth/widgets/wn_scan_box.dart' show WnScanBox;
-import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/routes.dart' show Routes;
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
+import 'package:whitenoise/widgets/wn_scan_box.dart' show WnScanBox;
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
 class ScanNsecScreen extends StatelessWidget {
   const ScanNsecScreen({super.key});

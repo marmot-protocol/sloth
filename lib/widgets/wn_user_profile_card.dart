@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/formatting.dart';
-import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_copy_card.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/formatting.dart';
+import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_copy_card.dart';
 
 class WnUserProfileCard extends StatelessWidget {
   const WnUserProfileCard({

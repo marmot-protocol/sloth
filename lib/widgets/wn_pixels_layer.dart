@@ -3,8 +3,8 @@ import 'package:flutter_hooks/flutter_hooks.dart'
     show HookWidget, useAnimationController, useEffect;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_animated_pixel_overlay.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_animated_pixel_overlay.dart';
 
 class WnPixelsLayer extends HookWidget {
   const WnPixelsLayer({super.key, this.isAnimating = false});

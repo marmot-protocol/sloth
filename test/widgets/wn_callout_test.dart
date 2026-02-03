@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_callout.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_callout.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

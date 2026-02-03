@@ -352,11 +352,11 @@ class AppLocalizationsPt extends AppLocalizations {
   String get reportError => 'Reportar erro';
 
   @override
-  String get slothsWorking => 'Preguiças trabalhando';
+  String get workInProgress => 'Em progresso';
 
   @override
   String get wipMessage =>
-      'As preguiças estão trabalhando nesta funcionalidade. Se você quer que as preguiças sejam mais rápidas, por favor doe para o White Noise';
+      'Estamos trabalhando nesta funcionalidade. Se você quer que a gente vá mais rápido, por favor doe para o White Noise';
 
   @override
   String get donate => 'Doar';

@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
-import 'package:sloth/widgets/wn_slate_content_transition.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart';
+import 'package:whitenoise/widgets/wn_slate_content_transition.dart';
 
 class WnSlate extends HookWidget {
   const WnSlate({

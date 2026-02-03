@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_user_metadata.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:whitenoise/hooks/use_user_metadata.dart';
+import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
 
 class WnAccountBar extends HookConsumerWidget {
   const WnAccountBar({

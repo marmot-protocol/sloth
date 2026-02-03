@@ -4,8 +4,8 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show Consumer, ProviderScope;
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart' show WidgetTester, addTearDown;
-import 'package:sloth/l10n/generated/app_localizations.dart';
-import 'package:sloth/routes.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
+import 'package:whitenoise/routes.dart';
 
 const testDesignSize = Size(390, 844);
 

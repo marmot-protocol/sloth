@@ -4,12 +4,12 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/avatar_color.dart';
-import 'package:sloth/utils/formatting.dart' show formatInitials;
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/avatar_color.dart';
+import 'package:whitenoise/utils/formatting.dart' show formatInitials;
+import 'package:whitenoise/widgets/wn_icon.dart';
 
-export 'package:sloth/utils/avatar_color.dart';
+export 'package:whitenoise/utils/avatar_color.dart';
 
 enum WnAvatarSize { small, medium, large }
 

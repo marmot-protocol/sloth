@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
-import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_content_transition.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_content_transition.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 import '../test_helpers.dart';
 
 void main() {

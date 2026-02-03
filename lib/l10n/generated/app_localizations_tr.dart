@@ -352,11 +352,11 @@ class AppLocalizationsTr extends AppLocalizations {
   String get reportError => 'Hata bildir';
 
   @override
-  String get slothsWorking => 'Tembel hayvanlar çalışıyor';
+  String get workInProgress => 'Üzerinde çalışılıyor';
 
   @override
   String get wipMessage =>
-      'Tembel hayvanlar bu özellik üzerinde çalışıyor. Tembel hayvanların daha hızlı gitmesini istiyorsanız, lütfen White Noise\'a bağış yapın';
+      'Bu özellik üzerinde çalışıyoruz. Daha hızlı ilerlememizi istiyorsanız, lütfen White Noise\'a bağış yapın';
 
   @override
   String get donate => 'Bağış yap';

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_copyable_field.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_copyable_field.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 import '../mocks/mock_clipboard.dart';
 import '../test_helpers.dart';
 

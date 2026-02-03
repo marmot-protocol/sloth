@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_slate_avatar_header.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_slate_avatar_header.dart';
 import '../test_helpers.dart';
 
 void main() {

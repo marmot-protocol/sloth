@@ -353,11 +353,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get reportError => 'Segnala errore';
 
   @override
-  String get slothsWorking => 'Bradipi al lavoro';
+  String get workInProgress => 'Lavoro in corso';
 
   @override
   String get wipMessage =>
-      'I bradipi stanno lavorando su questa funzionalità. Se vuoi che i bradipi vadano più veloci, dona a White Noise';
+      'Stiamo lavorando su questa funzionalità. Se vuoi che procediamo più velocemente, dona a White Noise';
 
   @override
   String get donate => 'Dona';

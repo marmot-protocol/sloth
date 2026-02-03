@@ -352,11 +352,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get reportError => 'Сообщить об ошибке';
 
   @override
-  String get slothsWorking => 'Ленивцы работают';
+  String get workInProgress => 'В разработке';
 
   @override
   String get wipMessage =>
-      'Ленивцы работают над этой функцией. Если хотите, чтобы ленивцы работали быстрее, пожертвуйте White Noise';
+      'Мы работаем над этой функцией. Если хотите, чтобы мы работали быстрее, пожертвуйте White Noise';
 
   @override
   String get donate => 'Пожертвовать';

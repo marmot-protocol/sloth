@@ -1,6 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
+import 'package:whitenoise/src/rust/api/accounts.dart' as accounts_api;
 
 final _logger = Logger('useKeyPackages');
 

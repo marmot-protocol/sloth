@@ -353,11 +353,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reportError => 'Reportar error';
 
   @override
-  String get slothsWorking => 'Perezosos trabajando';
+  String get workInProgress => 'En progreso';
 
   @override
   String get wipMessage =>
-      'Los perezosos están trabajando en esta función. Si quieres que los perezosos vayan más rápido, por favor dona a White Noise';
+      'Estamos trabajando en esta función. Si quieres que vayamos más rápido, por favor dona a White Noise';
 
   @override
   String get donate => 'Donar';

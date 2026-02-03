@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/services/android_signer_service.dart';
+import 'package:whitenoise/services/android_signer_service.dart';
 
 import '../mocks/mock_android_signer_channel.dart';
 import '../test_helpers.dart';

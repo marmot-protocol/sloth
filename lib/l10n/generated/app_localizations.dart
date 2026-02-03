@@ -753,13 +753,13 @@ abstract class AppLocalizations {
   /// WIP screen title
   ///
   /// In en, this message translates to:
-  /// **'Sloths working'**
-  String get slothsWorking;
+  /// **'Work in progess'**
+  String get workInProgress;
 
   /// WIP screen message
   ///
   /// In en, this message translates to:
-  /// **'Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise'**
+  /// **'We are working on this feature. If you want us to go faster, please donate to White Noise'**
   String get wipMessage;
 
   /// Donate button text

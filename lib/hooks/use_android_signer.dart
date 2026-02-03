@@ -2,7 +2,7 @@ import 'dart:math' show min;
 
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/services/android_signer_service.dart';
+import 'package:whitenoise/services/android_signer_service.dart';
 
 final _logger = Logger('useAndroidSigner');
 
@@ -60,7 +60,6 @@ useAndroidSigner(AndroidSignerService service) {
 
     try {
       // Request public key from signer (this opens the signer app)
-      // Request all permissions Sloth needs upfront so signer doesn't prompt repeatedly
       final pubkey = await service.getPublicKey(
         permissions: [
           // MLS event kinds (NIP-104)

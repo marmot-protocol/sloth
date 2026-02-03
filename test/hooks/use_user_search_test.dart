@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/hooks/use_user_search.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/users.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/hooks/use_user_search.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/users.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 

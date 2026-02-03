@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_emoji_picker.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_emoji_picker.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 class MessageActionsScreen extends HookWidget {
   const MessageActionsScreen({

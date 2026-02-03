@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/screens/chat_list_screen.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/chat_list_screen.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 import '../mocks/mock_clipboard.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';

@@ -1,6 +1,6 @@
 import 'package:logging/logging.dart';
-import 'package:sloth/src/rust/api/messages.dart' as messages_api;
-import 'package:sloth/src/rust/api/utils.dart' as utils_api;
+import 'package:whitenoise/src/rust/api/messages.dart' as messages_api;
+import 'package:whitenoise/src/rust/api/utils.dart' as utils_api;
 
 final _logger = Logger('MessageService');
 

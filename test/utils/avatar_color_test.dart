@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/theme/semantic_colors.dart' show SemanticColors;
-import 'package:sloth/utils/avatar_color.dart';
+import 'package:whitenoise/theme/semantic_colors.dart' show SemanticColors;
+import 'package:whitenoise/utils/avatar_color.dart';
 
 void main() {
   group('AvatarColor.fromPubkey', () {

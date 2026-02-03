@@ -352,11 +352,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get reportError => 'Report error';
 
   @override
-  String get slothsWorking => 'Sloths working';
+  String get workInProgress => 'Work in progess';
 
   @override
   String get wipMessage =>
-      'Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise';
+      'We are working on this feature. If you want us to go faster, please donate to White Noise';
 
   @override
   String get donate => 'Donate';

@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/utils/formatting.dart';
+import 'package:whitenoise/utils/formatting.dart';
 
 void main() {
   group('formatPublicKey', () {

@@ -1,4 +1,4 @@
-import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
 
 String? presentName(FlutterMetadata? metadata) {
   if (metadata == null) return null;

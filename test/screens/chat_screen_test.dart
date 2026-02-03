@@ -2,17 +2,17 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/screens/chat_info_screen.dart';
-import 'package:sloth/screens/chat_list_screen.dart';
-import 'package:sloth/screens/message_actions_screen.dart';
-import 'package:sloth/screens/wip_screen.dart';
-import 'package:sloth/src/rust/api/groups.dart';
-import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/chat_info_screen.dart';
+import 'package:whitenoise/screens/chat_list_screen.dart';
+import 'package:whitenoise/screens/message_actions_screen.dart';
+import 'package:whitenoise/screens/wip_screen.dart';
+import 'package:whitenoise/src/rust/api/groups.dart';
+import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';

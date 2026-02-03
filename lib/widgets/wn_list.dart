@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/widgets/wn_list_item.dart';
+import 'package:whitenoise/widgets/wn_list_item.dart';
 
 class WnList extends StatelessWidget {
   const WnList({

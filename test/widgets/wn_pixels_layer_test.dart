@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart' show Key;
 import 'package:flutter_svg/flutter_svg.dart' show SvgAssetLoader, SvgPicture;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
+import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import '../test_helpers.dart' show mountStackedWidget;
 
 void main() {

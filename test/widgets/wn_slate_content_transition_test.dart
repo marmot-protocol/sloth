@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_slate_content_transition.dart';
+import 'package:whitenoise/widgets/wn_slate_content_transition.dart';
 import '../test_helpers.dart';
 
 void main() {

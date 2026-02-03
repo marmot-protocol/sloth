@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
+import 'package:whitenoise/theme.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 class TypographyStory extends StatelessWidget {

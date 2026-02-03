@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/widgets/wn_button.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
 
 class WnAuthButtonsContainer extends StatelessWidget {
   const WnAuthButtonsContainer({

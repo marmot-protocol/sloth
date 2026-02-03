@@ -7,14 +7,14 @@ import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:hooks_riverpod/hooks_riverpod.dart'
     show ConsumerStatefulWidget, ConsumerState, ProviderContainer, UncontrolledProviderScope;
 import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDirectory;
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/auth_provider.dart' show authProvider;
-import 'package:sloth/providers/locale_provider.dart';
-import 'package:sloth/providers/theme_provider.dart' show themeProvider;
-import 'package:sloth/routes.dart' show Routes;
-import 'package:sloth/src/rust/api.dart' as rust_api;
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/theme.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/auth_provider.dart' show authProvider;
+import 'package:whitenoise/providers/locale_provider.dart';
+import 'package:whitenoise/providers/theme_provider.dart' show themeProvider;
+import 'package:whitenoise/routes.dart' show Routes;
+import 'package:whitenoise/src/rust/api.dart' as rust_api;
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/theme.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -63,7 +63,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       designSize: const Size(390, 844),
       builder: (context, child) {
         return MaterialApp.router(
-          title: 'Sloth',
+          title: 'WhiteNoise',
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeMode,

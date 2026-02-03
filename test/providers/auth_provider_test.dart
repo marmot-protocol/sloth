@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/providers/is_adding_account_provider.dart';
-import 'package:sloth/services/android_signer_service.dart';
-import 'package:sloth/src/rust/api/accounts.dart';
-import 'package:sloth/src/rust/api/error.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/providers/is_adding_account_provider.dart';
+import 'package:whitenoise/services/android_signer_service.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
+import 'package:whitenoise/src/rust/api/error.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 import '../mocks/mock_android_signer_channel.dart';
 import '../mocks/mock_secure_storage.dart';

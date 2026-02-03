@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:sloth/services/user_service.dart';
-import 'package:sloth/src/rust/api/accounts.dart' as accounts_api;
-import 'package:sloth/src/rust/api/users.dart' show User;
-import 'package:sloth/utils/encoding.dart';
+import 'package:whitenoise/services/user_service.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart' as accounts_api;
+import 'package:whitenoise/src/rust/api/users.dart' show User;
+import 'package:whitenoise/utils/encoding.dart';
 
 bool _isPartialNpubQuery(String searchQuery, String? hexPubkeyFromQuery) {
   final trimmedSearchQuery = searchQuery.trim().toLowerCase();
