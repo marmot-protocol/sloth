@@ -63,7 +63,7 @@ class _MyAppState extends ConsumerState<MyApp> {
       designSize: const Size(390, 844),
       builder: (context, child) {
         return MaterialApp.router(
-          title: 'WhiteNoise',
+          title: 'White Noise',
           theme: lightTheme,
           darkTheme: darkTheme,
           themeMode: themeMode,

@@ -366,7 +366,7 @@
     "description": "Bitcoin silent payment label"
   },
 
-  "copiedToClipboardThankYou": "Copied to clipboard. Thank you! 🦥",
+  "copiedToClipboardThankYou": "Copied to clipboard. Thank you!",
   "@copiedToClipboardThankYou": {
     "description": "System notice message when donation address is copied"
   },
@@ -566,12 +566,12 @@
     "description": "Report error button text"
   },
 
-  "workInProgress": "Work in progess",
+  "workInProgress": "We're working on this",
   "@workInProgress": {
     "description": "WIP screen title"
   },
 
-  "wipMessage": "We are working on this feature. If you want us to go faster, please donate to White Noise",
+  "wipMessage": "We're working on this feature. To support development, please donate to White Noise",
   "@wipMessage": {
     "description": "WIP screen message"
   },

@@ -33,13 +33,6 @@ class WipScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    '🦥',
-                    style: typography.semiBold60.copyWith(
-                      color: colors.backgroundContentPrimary,
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                  Text(
                     context.l10n.wipMessage,
                     style: typography.medium14.copyWith(
                       color: colors.backgroundContentTertiary,

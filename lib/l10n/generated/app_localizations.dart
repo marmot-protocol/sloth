@@ -537,7 +537,7 @@ abstract class AppLocalizations {
   /// System notice message when donation address is copied
   ///
   /// In en, this message translates to:
-  /// **'Copied to clipboard. Thank you! 🦥'**
+  /// **'Copied to clipboard. Thank you!'**
   String get copiedToClipboardThankYou;
 
   /// Share profile screen title
@@ -753,13 +753,13 @@ abstract class AppLocalizations {
   /// WIP screen title
   ///
   /// In en, this message translates to:
-  /// **'Work in progess'**
+  /// **'We\'re working on this'**
   String get workInProgress;
 
   /// WIP screen message
   ///
   /// In en, this message translates to:
-  /// **'We are working on this feature. If you want us to go faster, please donate to White Noise'**
+  /// **'We\'re working on this feature. To support development, please donate to White Noise'**
   String get wipMessage;
 
   /// Donate button text

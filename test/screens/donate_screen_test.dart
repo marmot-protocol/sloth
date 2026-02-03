@@ -72,7 +72,7 @@ void main() {
         await tester.tap(find.byKey(const Key('copy_button')).first);
         await tester.pump();
 
-        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
+        expect(find.text('Copied to clipboard. Thank you!'), findsOneWidget);
       });
 
       testWidgets('saves lightning address to clipboard', (tester) async {
@@ -93,7 +93,7 @@ void main() {
         await tester.tap(find.byKey(const Key('copy_button')).last);
         await tester.pump();
 
-        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
+        expect(find.text('Copied to clipboard. Thank you!'), findsOneWidget);
       });
 
       testWidgets('saves bitcoin address to clipboard', (tester) async {
@@ -118,12 +118,12 @@ void main() {
         await tester.pump();
         await tester.pump(const Duration(milliseconds: 300));
 
-        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsOneWidget);
+        expect(find.text('Copied to clipboard. Thank you!'), findsOneWidget);
 
         await tester.pump(const Duration(seconds: 4));
         await tester.pumpAndSettle();
 
-        expect(find.text('Copied to clipboard. Thank you! 🦥'), findsNothing);
+        expect(find.text('Copied to clipboard. Thank you!'), findsNothing);
       });
     });
   });

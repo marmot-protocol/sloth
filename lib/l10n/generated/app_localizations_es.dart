@@ -234,7 +234,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get bitcoinSilentPayment => 'Pago Silencioso de Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou => 'Copiado al portapapeles. ¡Gracias! 🦥';
+  String get copiedToClipboardThankYou => 'Copiado al portapapeles. ¡Gracias!';
 
   @override
   String get shareProfileTitle => 'Compartir perfil';
@@ -353,11 +353,11 @@ class AppLocalizationsEs extends AppLocalizations {
   String get reportError => 'Reportar error';
 
   @override
-  String get workInProgress => 'En progreso';
+  String get workInProgress => 'Estamos trabajando en esto';
 
   @override
   String get wipMessage =>
-      'Estamos trabajando en esta función. Si quieres que vayamos más rápido, por favor dona a White Noise';
+      'Estamos trabajando en esta función. Para apoyar el desarrollo, dona a White Noise';
 
   @override
   String get donate => 'Donar';

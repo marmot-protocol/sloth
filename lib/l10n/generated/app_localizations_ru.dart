@@ -234,7 +234,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bitcoinSilentPayment => 'Тихий Платёж Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou => 'Скопировано в буфер обмена. Спасибо! 🦥';
+  String get copiedToClipboardThankYou => 'Скопировано в буфер обмена. Спасибо!';
 
   @override
   String get shareProfileTitle => 'Поделиться профилем';
@@ -352,11 +352,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get reportError => 'Сообщить об ошибке';
 
   @override
-  String get workInProgress => 'В разработке';
+  String get workInProgress => 'Мы работаем над этим';
 
   @override
   String get wipMessage =>
-      'Мы работаем над этой функцией. Если хотите, чтобы мы работали быстрее, пожертвуйте White Noise';
+      'Мы работаем над этой функцией. Чтобы поддержать разработку, пожертвуйте на проект White Noise';
 
   @override
   String get donate => 'Пожертвовать';
