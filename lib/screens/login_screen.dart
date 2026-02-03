@@ -83,7 +83,6 @@ class LoginScreen extends HookConsumerWidget {
                           text: context.l10n.login,
                           onPressed: onSubmit,
                           loading: state.isLoading,
-                          size: WnButtonSize.medium,
                         ),
                       ],
                     ),
