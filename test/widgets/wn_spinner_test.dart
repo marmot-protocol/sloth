@@ -7,7 +7,7 @@ import 'package:flutter/material.dart'
         Key,
         MainAxisSize,
         Matrix4,
-        SizedBox,
+        RenderBox,
         StatefulBuilder,
         Text,
         TextButton,
@@ -41,24 +41,16 @@ void main() {
       });
 
       testWidgets('has fixed 16px dimension', (WidgetTester tester) async {
-        final widget = const WnSpinner();
+        final widget = const WnSpinner(key: Key('test_spinner'));
         await mountWidget(widget, tester);
-        final sizedBox = tester.widget<SizedBox>(
-          find.byType(SizedBox).first,
-        );
-        expect(sizedBox.width, 16);
-        expect(sizedBox.height, 16);
+        final renderBox = tester.renderObject(find.byKey(const Key('test_spinner'))) as RenderBox;
+        expect(renderBox.size.width, 16);
+        expect(renderBox.size.height, 16);
       });
     });
 
     group('types', () {
       testWidgets('renders primary type by default', (WidgetTester tester) async {
-        final widget = const WnSpinner();
-        await mountWidget(widget, tester);
-        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
-      });
-
-      testWidgets('renders primary type', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);

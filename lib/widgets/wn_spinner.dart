@@ -109,6 +109,8 @@ class _SpinnerPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(_SpinnerPainter oldDelegate) {
-    return oldDelegate.trackColor != trackColor;
+    return oldDelegate.trackColor != trackColor ||
+        oldDelegate.arcColor != arcColor ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }
