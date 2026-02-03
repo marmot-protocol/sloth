@@ -25,7 +25,7 @@ class LoginScreen extends HookConsumerWidget {
     final (:controller, :state, :paste, :submit, :clearError) = useLogin(
       (nsec) => ref.read(authProvider.notifier).login(nsec),
     );
-    final androidSigner = useAndroidSigner();
+    final androidSigner = useAndroidSigner(ref);
     final signerError = useState<String?>(null);
     final isSignerLoading = useState(false);
 
