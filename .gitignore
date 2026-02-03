@@ -77,4 +77,5 @@ devtools_options.yaml
 /widgetbook/macos/Pods/
 
 
+# .so files
 *.so
