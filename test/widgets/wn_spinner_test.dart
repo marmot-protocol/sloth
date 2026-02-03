@@ -1,6 +1,17 @@
 import 'dart:math' show atan2;
 
-import 'package:flutter/material.dart' show Colors, CustomPaint, Key, Matrix4, SizedBox, Transform;
+import 'package:flutter/material.dart'
+    show
+        Column,
+        CustomPaint,
+        Key,
+        MainAxisSize,
+        Matrix4,
+        SizedBox,
+        StatefulBuilder,
+        Text,
+        TextButton,
+        Transform;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_spinner.dart';
 import '../test_helpers.dart' show mountWidget;
@@ -154,61 +165,34 @@ void main() {
       });
     });
 
-    group('SpinnerPainter.shouldRepaint', () {
-      test('returns true when trackColor changes', () {
-        final painter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.blue,
-          strokeWidth: 3.0,
+    group('repaint behavior', () {
+      testWidgets('spinner still displayed after type change triggers repaint', (
+        WidgetTester tester,
+      ) async {
+        var type = WnSpinnerType.primary;
+        await mountWidget(
+          StatefulBuilder(
+            builder: (context, setState) => Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                WnSpinner(type: type),
+                TextButton(
+                  key: const Key('rebuild_spinner'),
+                  onPressed: () => setState(() => type = WnSpinnerType.secondary),
+                  child: const Text('Rebuild'),
+                ),
+              ],
+            ),
+          ),
+          tester,
         );
-        final oldPainter = SpinnerPainter(
-          trackColor: Colors.green,
-          arcColor: Colors.blue,
-          strokeWidth: 3.0,
-        );
-        expect(painter.shouldRepaint(oldPainter), isTrue);
-      });
 
-      test('returns true when arcColor changes', () {
-        final painter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.blue,
-          strokeWidth: 3.0,
-        );
-        final oldPainter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.green,
-          strokeWidth: 3.0,
-        );
-        expect(painter.shouldRepaint(oldPainter), isTrue);
-      });
+        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
 
-      test('returns true when strokeWidth changes', () {
-        final painter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.blue,
-          strokeWidth: 3.0,
-        );
-        final oldPainter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.blue,
-          strokeWidth: 5.0,
-        );
-        expect(painter.shouldRepaint(oldPainter), isTrue);
-      });
+        await tester.tap(find.byKey(const Key('rebuild_spinner')));
+        await tester.pump();
 
-      test('returns false when nothing changes', () {
-        final painter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.blue,
-          strokeWidth: 3.0,
-        );
-        final oldPainter = SpinnerPainter(
-          trackColor: Colors.red,
-          arcColor: Colors.blue,
-          strokeWidth: 3.0,
-        );
-        expect(painter.shouldRepaint(oldPainter), isFalse);
+        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
     });
   });

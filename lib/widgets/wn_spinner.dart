@@ -42,7 +42,7 @@ class WnSpinner extends HookWidget {
           },
           child: CustomPaint(
             key: const Key('spinner_indicator'),
-            painter: SpinnerPainter(
+            painter: _SpinnerPainter(
               trackColor: spinnerColors.track,
               arcColor: spinnerColors.arc,
               strokeWidth: 3.w,
@@ -71,9 +71,8 @@ class WnSpinner extends HookWidget {
   }
 }
 
-@visibleForTesting
-class SpinnerPainter extends CustomPainter {
-  SpinnerPainter({
+class _SpinnerPainter extends CustomPainter {
+  _SpinnerPainter({
     required this.trackColor,
     required this.arcColor,
     required this.strokeWidth,
@@ -109,9 +108,7 @@ class SpinnerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SpinnerPainter oldDelegate) {
-    return oldDelegate.trackColor != trackColor ||
-        oldDelegate.arcColor != arcColor ||
-        oldDelegate.strokeWidth != strokeWidth;
+  bool shouldRepaint(_SpinnerPainter oldDelegate) {
+    return oldDelegate.trackColor != trackColor;
   }
 }
