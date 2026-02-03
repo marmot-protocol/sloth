@@ -67,8 +67,7 @@ void main() {
         expect(receivedError, error);
       });
 
-      testWidgets('shows permission denied message when permission denied',
-          (tester) async {
+      testWidgets('shows permission denied message when permission denied', (tester) async {
         await mountWidget(
           WnScanBox(onBarcodeDetected: (_) {}),
           tester,
@@ -119,4 +118,3 @@ MaterialApp _wrapWithLocalization(Widget child, BuildContext context) {
     home: child,
   );
 }
-

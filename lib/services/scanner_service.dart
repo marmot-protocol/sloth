@@ -12,7 +12,7 @@ abstract class ScannerService {
 
 class MobileScannerService implements ScannerService {
   MobileScannerService({MobileScannerController? controller})
-      : _controller = controller ?? MobileScannerController(formats: [BarcodeFormat.qrCode]);
+    : _controller = controller ?? MobileScannerController(formats: [BarcodeFormat.qrCode]);
 
   final MobileScannerController _controller;
 
