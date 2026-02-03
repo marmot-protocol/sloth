@@ -26,7 +26,7 @@ class WnSpinner extends HookWidget {
       return null;
     }, const []);
 
-    final indicatorColor = _getColor(colors, type);
+    final spinnerColors = _getColors(colors, type);
 
     return SizedBox.square(
       dimension: 16.w,
@@ -38,22 +38,76 @@ class WnSpinner extends HookWidget {
             child: child,
           );
         },
-        child: CircularProgressIndicator(
+        child: CustomPaint(
           key: const Key('spinner_indicator'),
-          strokeWidth: 2.w,
-          strokeCap: StrokeCap.round,
-          color: indicatorColor,
-          value: 0.75,
+          painter: _SpinnerPainter(
+            trackColor: spinnerColors.track,
+            arcColor: spinnerColors.arc,
+            strokeWidth: 3.w,
+          ),
         ),
       ),
     );
   }
 
-  Color _getColor(SemanticColors colors, WnSpinnerType type) {
+  ({Color track, Color arc}) _getColors(SemanticColors colors, WnSpinnerType type) {
     return switch (type) {
-      WnSpinnerType.primary => colors.fillContentPrimary,
-      WnSpinnerType.secondary => colors.fillContentSecondary,
-      WnSpinnerType.destructive => colors.fillContentDestructive,
+      WnSpinnerType.primary => (
+        track: colors.borderSecondary,
+        arc: colors.borderTertiary,
+      ),
+      WnSpinnerType.secondary => (
+        track: colors.borderTertiary,
+        arc: colors.borderSecondary,
+      ),
+      WnSpinnerType.destructive => (
+        track: colors.borderDestructivePrimary,
+        arc: colors.borderTertiary,
+      ),
     };
+  }
+}
+
+class _SpinnerPainter extends CustomPainter {
+  _SpinnerPainter({
+    required this.trackColor,
+    required this.arcColor,
+    required this.strokeWidth,
+  });
+
+  final Color trackColor;
+  final Color arcColor;
+  final double strokeWidth;
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+
+    final trackPaint = Paint()
+      ..color = trackColor
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    final arcPaint = Paint()
+      ..color = arcColor
+      ..strokeWidth = strokeWidth
+      ..style = PaintingStyle.stroke
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawCircle(center, radius, trackPaint);
+
+    final rect = Rect.fromCircle(center: center, radius: radius);
+    const startAngle = -pi / 2;
+    const sweepAngle = 0.625 * 2 * pi;
+    canvas.drawArc(rect, startAngle, sweepAngle, false, arcPaint);
+  }
+
+  @override
+  bool shouldRepaint(_SpinnerPainter oldDelegate) {
+    return oldDelegate.trackColor != trackColor ||
+        oldDelegate.arcColor != arcColor ||
+        oldDelegate.strokeWidth != strokeWidth;
   }
 }

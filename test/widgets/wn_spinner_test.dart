@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show CircularProgressIndicator, Key, SizedBox, Transform;
+import 'package:flutter/material.dart' show CustomPaint, Key, SizedBox, Transform;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_spinner.dart';
 import '../test_helpers.dart' show mountWidget;
@@ -12,10 +12,13 @@ void main() {
         expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
 
-      testWidgets('renders CircularProgressIndicator', (WidgetTester tester) async {
+      testWidgets('renders CustomPaint for spinner', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        final customPaint = tester.widget<CustomPaint>(
+          find.byKey(const Key('spinner_indicator')),
+        );
+        expect(customPaint, isNotNull);
       });
 
       testWidgets('has fixed 16px dimension', (WidgetTester tester) async {
@@ -54,31 +57,31 @@ void main() {
         expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
 
-      testWidgets('primary type uses correct color', (WidgetTester tester) async {
+      testWidgets('primary type renders custom paint', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        final indicator = tester.widget<CircularProgressIndicator>(
-          find.byType(CircularProgressIndicator),
+        final customPaint = tester.widget<CustomPaint>(
+          find.byKey(const Key('spinner_indicator')),
         );
-        expect(indicator.color, isNotNull);
+        expect(customPaint, isNotNull);
       });
 
-      testWidgets('secondary type uses correct color', (WidgetTester tester) async {
+      testWidgets('secondary type renders custom paint', (WidgetTester tester) async {
         final widget = const WnSpinner(type: WnSpinnerType.secondary);
         await mountWidget(widget, tester);
-        final indicator = tester.widget<CircularProgressIndicator>(
-          find.byType(CircularProgressIndicator),
+        final customPaint = tester.widget<CustomPaint>(
+          find.byKey(const Key('spinner_indicator')),
         );
-        expect(indicator.color, isNotNull);
+        expect(customPaint, isNotNull);
       });
 
-      testWidgets('destructive type uses correct color', (WidgetTester tester) async {
+      testWidgets('destructive type renders custom paint', (WidgetTester tester) async {
         final widget = const WnSpinner(type: WnSpinnerType.destructive);
         await mountWidget(widget, tester);
-        final indicator = tester.widget<CircularProgressIndicator>(
-          find.byType(CircularProgressIndicator),
+        final customPaint = tester.widget<CustomPaint>(
+          find.byKey(const Key('spinner_indicator')),
         );
-        expect(indicator.color, isNotNull);
+        expect(customPaint, isNotNull);
       });
     });
 
@@ -101,7 +104,10 @@ void main() {
       testWidgets('uses linear easing', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+        final customPaint = tester.widget<CustomPaint>(
+          find.byKey(const Key('spinner_indicator')),
+        );
+        expect(customPaint, isNotNull);
       });
     });
 
