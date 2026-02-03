@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_android_signer.dart';
-import 'package:sloth/providers/android_signer_service_provider.dart';
 import 'package:sloth/services/android_signer_service.dart';
 
 import '../test_helpers.dart';
@@ -11,14 +10,19 @@ class MockAndroidSignerService implements AndroidSignerService {
   bool _isAvailable = false;
   String? _pubkeyToReturn;
   Exception? _errorToThrow;
+  Exception? _isAvailableError;
   bool getPublicKeyCalled = false;
 
   void setAvailable(bool value) => _isAvailable = value;
   void setPubkeyToReturn(String value) => _pubkeyToReturn = value;
   void setErrorToThrow(Exception? value) => _errorToThrow = value;
+  void setIsAvailableError(Exception? value) => _isAvailableError = value;
 
   @override
-  Future<bool> isAvailable() async => _isAvailable;
+  Future<bool> isAvailable() async {
+    if (_isAvailableError != null) throw _isAvailableError!;
+    return _isAvailable;
+  }
 
   @override
   Future<String> getPublicKey({List<SignerPermission>? permissions}) async {
@@ -91,14 +95,15 @@ typedef AndroidSignerHookResult = ({
   Future<void> Function() disconnect,
 });
 
-class _TestHookWidget extends HookConsumerWidget {
-  const _TestHookWidget({required this.onBuild});
+class _TestHookWidget extends HookWidget {
+  const _TestHookWidget({required this.service, required this.onBuild});
 
+  final AndroidSignerService service;
   final void Function(AndroidSignerHookResult) onBuild;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final result = useAndroidSigner(ref);
+  Widget build(BuildContext context) {
+    final result = useAndroidSigner(service);
     onBuild(result);
     return const SizedBox();
   }
@@ -118,12 +123,10 @@ void main() {
       late AndroidSignerHookResult result;
       setUpTestView(tester);
       await tester.pumpWidget(
-        ProviderScope(
-          overrides: [
-            androidSignerServiceProvider.overrideWithValue(mockService),
-          ],
-          child: MaterialApp(
-            home: _TestHookWidget(onBuild: (r) => result = r),
+        MaterialApp(
+          home: _TestHookWidget(
+            service: mockService,
+            onBuild: (r) => result = r,
           ),
         ),
       );
@@ -140,6 +143,13 @@ void main() {
       final getResult = await mountAndroidSignerHook(tester);
       await tester.pumpAndSettle();
       expect(getResult().isAvailable, isTrue);
+    });
+
+    testWidgets('sets isAvailable false when isAvailable throws', (tester) async {
+      mockService.setIsAvailableError(Exception('Platform error'));
+      final getResult = await mountAndroidSignerHook(tester);
+      await tester.pumpAndSettle();
+      expect(getResult().isAvailable, isFalse);
     });
 
     testWidgets('connect calls getPublicKey on service', (tester) async {

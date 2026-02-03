@@ -1,7 +1,7 @@
+import 'dart:math' show min;
+
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/providers/android_signer_service_provider.dart';
 import 'package:sloth/services/android_signer_service.dart';
 
 final _logger = Logger('useAndroidSigner');
@@ -11,8 +11,8 @@ final _logger = Logger('useAndroidSigner');
 /// Provides ephemeral state for signer availability, connection status,
 /// and methods to connect/disconnect from the Android signer.
 ///
-/// [service] can be provided for testing purposes. If not provided,
-/// the service will be read from [androidSignerServiceProvider].
+/// [service] is the [AndroidSignerService] instance to use. Callers should
+/// resolve this from [androidSignerServiceProvider] in their widget.
 ({
   bool isAvailable,
   bool isConnecting,
@@ -20,9 +20,7 @@ final _logger = Logger('useAndroidSigner');
   Future<String> Function() connect,
   Future<void> Function() disconnect,
 })
-useAndroidSigner(WidgetRef ref, {AndroidSignerService? service}) {
-  final AndroidSignerService signerService = service ?? ref.read(androidSignerServiceProvider);
-
+useAndroidSigner(AndroidSignerService service) {
   final isAvailable = useState(false);
   final isConnecting = useState(false);
   final error = useState<String?>(null);
@@ -33,7 +31,7 @@ useAndroidSigner(WidgetRef ref, {AndroidSignerService? service}) {
 
     Future<void> checkAvailability() async {
       try {
-        final available = await signerService.isAvailable();
+        final available = await service.isAvailable();
         if (!disposed) {
           isAvailable.value = available;
         }
@@ -63,7 +61,7 @@ useAndroidSigner(WidgetRef ref, {AndroidSignerService? service}) {
     try {
       // Request public key from signer (this opens the signer app)
       // Request all permissions Sloth needs upfront so signer doesn't prompt repeatedly
-      final pubkey = await signerService.getPublicKey(
+      final pubkey = await service.getPublicKey(
         permissions: [
           // MLS event kinds (NIP-104)
           const SignerPermission(type: 'sign_event', kind: 443), // MLS Key Package
@@ -81,7 +79,8 @@ useAndroidSigner(WidgetRef ref, {AndroidSignerService? service}) {
         ],
       );
 
-      _logger.info('Connected to signer successfully: ${pubkey.substring(0, 8)}...');
+      final preview = pubkey.substring(0, min(8, pubkey.length));
+      _logger.info('Connected to signer successfully: $preview...');
       return pubkey;
     } catch (e) {
       _logger.warning('Failed to connect to signer: $e');
