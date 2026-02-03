@@ -185,7 +185,7 @@ rust tests...       ✓
 - Use `flutter_screenutil` for all size values to ensure responsive layouts across devices
 - Use `.w` for width values, e.g. `20.w`
 - Use `.h` for height values, e.g. `16.h`
-- Use `.sp` for font sizes, e.g. `14.sp`
+- Use `.sp` for font size and letter spacing, e.g. `14.sp`
 - Use `.r` for radius values, e.g. `8.r`
 - Apply to: padding, margins, gaps, icon sizes, font sizes, border radius, container dimensions
 

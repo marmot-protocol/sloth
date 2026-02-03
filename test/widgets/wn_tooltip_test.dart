@@ -1,7 +1,7 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
-import 'package:flutter/material.dart' show Key, Scaffold, SizedBox, Text;
+import 'package:flutter/material.dart' show Center, Colors, Key, Scaffold, SizedBox, Text;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_tooltip.dart';
+import 'package:sloth/widgets/wn_tooltip.dart' show ArrowPainter, WnTooltip, WnTooltipPosition;
 import '../test_helpers.dart' show mountWidget, setUpTestView;
 
 void main() {
@@ -217,6 +217,127 @@ void main() {
         await tester.pump(const Duration(milliseconds: 150));
         await tester.pump();
         expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+    });
+
+    group('mouse exit behavior', () {
+      testWidgets('hides tooltip when mouse exits', (WidgetTester tester) async {
+        setUpTestView(tester);
+        final widget = const SizedBox(
+          width: 300,
+          height: 300,
+          child: Center(
+            child: WnTooltip(
+              message: 'Tooltip message',
+              waitDuration: Duration(milliseconds: 100),
+              child: SizedBox(width: 100, height: 50, child: Text('Hover me')),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+
+        await gesture.moveTo(tester.getCenter(find.text('Hover me')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 150));
+        await tester.pump();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+
+        await gesture.moveTo(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsNothing);
+      });
+
+      testWidgets('resets wasDismissed flag when mouse exits', (WidgetTester tester) async {
+        setUpTestView(tester);
+        final widget = const SizedBox(
+          width: 300,
+          height: 300,
+          child: Center(
+            child: WnTooltip(
+              message: 'Tooltip message',
+              waitDuration: Duration(milliseconds: 100),
+              child: SizedBox(width: 100, height: 50, child: Text('Hover me')),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
+        await gesture.addPointer(location: Offset.zero);
+        addTearDown(gesture.removePointer);
+
+        await gesture.moveTo(tester.getCenter(find.text('Hover me')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 150));
+        await tester.pump();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsNothing);
+
+        await gesture.moveTo(const Offset(10, 10));
+        await tester.pumpAndSettle();
+
+        await gesture.moveTo(tester.getCenter(find.text('Hover me')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 150));
+        await tester.pump();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+    });
+
+    group('arrow painter', () {
+      testWidgets('renders arrow for top position tooltip', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'Tooltip',
+          child: Text('Trigger'),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      testWidgets('renders arrow for bottom position tooltip', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'Tooltip',
+          position: WnTooltipPosition.bottom,
+          child: Text('Trigger'),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      test('shouldRepaint returns true when position changes', () {
+        final painter1 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
+        final painter2 = ArrowPainter(position: WnTooltipPosition.bottom, color: Colors.black);
+
+        expect(painter2.shouldRepaint(painter1), isTrue);
+      });
+
+      test('shouldRepaint returns true when color changes', () {
+        final painter1 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
+        final painter2 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.white);
+
+        expect(painter2.shouldRepaint(painter1), isTrue);
+      });
+
+      test('shouldRepaint returns false when nothing changes', () {
+        final painter1 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
+        final painter2 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
+
+        expect(painter2.shouldRepaint(painter1), isFalse);
       });
     });
   });

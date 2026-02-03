@@ -213,7 +213,7 @@ class _TooltipContent extends StatelessWidget {
             fontSize: 14.sp,
             fontWeight: FontWeight.w500,
             height: 18 / 14,
-            letterSpacing: 0.4,
+            letterSpacing: 0.4.sp,
           ),
           child: child,
         ),
@@ -236,13 +236,14 @@ class _TooltipArrow extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomPaint(
       size: Size(13.w, 6.h),
-      painter: _ArrowPainter(position: position, color: color),
+      painter: ArrowPainter(position: position, color: color),
     );
   }
 }
 
-class _ArrowPainter extends CustomPainter {
-  _ArrowPainter({required this.position, required this.color});
+@visibleForTesting
+class ArrowPainter extends CustomPainter {
+  ArrowPainter({required this.position, required this.color});
 
   final WnTooltipPosition position;
   final Color color;
@@ -273,7 +274,7 @@ class _ArrowPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant _ArrowPainter oldDelegate) {
+  bool shouldRepaint(covariant ArrowPainter oldDelegate) {
     return oldDelegate.position != position || oldDelegate.color != color;
   }
 }
