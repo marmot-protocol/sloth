@@ -102,12 +102,6 @@ build-rust-debug:
     @echo "🔨 Building Rust library (debug)..."
     cd rust && cargo build
 
-build-android:
-    ./scripts/build_android.sh
-
-build-android-quiet:
-    @./scripts/build_android.sh > /dev/null 2>&1 && echo "✅ Android build complete" || { echo "❌ Android build failed"; false; }
-
 # Test Rust code
 test-rust:
     @echo "🧪 Testing Rust code..."
@@ -252,6 +246,25 @@ fix:
     cd rust && cargo fix --allow-dirty
     dart fix --apply
 
+# ==============================================================================
+# BUILDING
+# ==============================================================================
+build-android:
+    ./scripts/build_android.sh
+
+build-android-quiet:
+    @./scripts/build_android.sh > /dev/null 2>&1 && echo "✅ Android build complete" || { echo "❌ Android build failed"; false; }
+
+build-android-apk flavor:
+    ./scripts/build_android.sh && flutter build apk --flavor {{flavor}}
+
+build-production-apk:
+    ./scripts/build_android.sh && flutter build apk --flavor production
+
+build-staging-apk:
+    ./scripts/build_android.sh && flutter build apk --flavor staging
+
+when-apk: build-staging-apk
 # ==============================================================================
 # HELPER RECIPES
 # ==============================================================================
