@@ -1,7 +1,15 @@
-import 'package:flutter/material.dart' show CustomPaint, Key, SizedBox, Transform;
+import 'dart:math' show atan2;
+
+import 'package:flutter/material.dart' show Colors, CustomPaint, Key, Matrix4, SizedBox, Transform;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_spinner.dart';
 import '../test_helpers.dart' show mountWidget;
+
+double _extractRotationAngle(Matrix4 matrix) {
+  final sinAngle = matrix.storage[1];
+  final cosAngle = matrix.storage[0];
+  return atan2(sinAngle, cosAngle);
+}
 
 void main() {
   group('WnSpinner tests', () {
@@ -90,24 +98,50 @@ void main() {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
 
-        final initialTransform = tester.firstWidget(find.byType(Transform));
-        await tester.pump(const Duration(milliseconds: 450));
-        final midTransform = tester.firstWidget(find.byType(Transform));
-        await tester.pump(const Duration(milliseconds: 450));
-        final finalTransform = tester.firstWidget(find.byType(Transform));
+        final initialTransform = tester.firstWidget<Transform>(find.byType(Transform));
+        final initialMatrix = initialTransform.transform;
 
-        expect(initialTransform, isNotNull);
-        expect(midTransform, isNotNull);
-        expect(finalTransform, isNotNull);
+        await tester.pump(const Duration(milliseconds: 450));
+        final midTransform = tester.firstWidget<Transform>(find.byType(Transform));
+        final midMatrix = midTransform.transform;
+
+        await tester.pump(const Duration(milliseconds: 450));
+        final finalTransform = tester.firstWidget<Transform>(find.byType(Transform));
+        final finalMatrix = finalTransform.transform;
+
+        final initialAngle = _extractRotationAngle(initialMatrix);
+        final midAngle = _extractRotationAngle(midMatrix);
+        final finalAngle = _extractRotationAngle(finalMatrix);
+
+        expect(midAngle, isNot(equals(initialAngle)));
+        expect(finalAngle, isNot(equals(midAngle)));
+        expect(
+          (midAngle - initialAngle).abs(),
+          closeTo((finalAngle - midAngle).abs(), 0.01),
+        );
       });
 
-      testWidgets('uses linear easing', (WidgetTester tester) async {
+      testWidgets('uses linear easing with consistent rotation delta', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        final customPaint = tester.widget<CustomPaint>(
-          find.byKey(const Key('spinner_indicator')),
-        );
-        expect(customPaint, isNotNull);
+
+        final angles = <double>[];
+        const pumpDuration = Duration(milliseconds: 100);
+
+        for (var i = 0; i < 5; i++) {
+          final transform = tester.firstWidget<Transform>(find.byType(Transform));
+          angles.add(_extractRotationAngle(transform.transform));
+          await tester.pump(pumpDuration);
+        }
+
+        final deltas = <double>[];
+        for (var i = 1; i < angles.length; i++) {
+          deltas.add((angles[i] - angles[i - 1]).abs());
+        }
+
+        for (var i = 1; i < deltas.length; i++) {
+          expect(deltas[i], closeTo(deltas[0], 0.01));
+        }
       });
     });
 
@@ -115,7 +149,66 @@ void main() {
       testWidgets('spinner has semantic label for accessibility', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
+
+        expect(find.bySemanticsLabel('Loading'), findsOneWidget);
+      });
+    });
+
+    group('SpinnerPainter.shouldRepaint', () {
+      test('returns true when trackColor changes', () {
+        final painter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.blue,
+          strokeWidth: 3.0,
+        );
+        final oldPainter = SpinnerPainter(
+          trackColor: Colors.green,
+          arcColor: Colors.blue,
+          strokeWidth: 3.0,
+        );
+        expect(painter.shouldRepaint(oldPainter), isTrue);
+      });
+
+      test('returns true when arcColor changes', () {
+        final painter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.blue,
+          strokeWidth: 3.0,
+        );
+        final oldPainter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.green,
+          strokeWidth: 3.0,
+        );
+        expect(painter.shouldRepaint(oldPainter), isTrue);
+      });
+
+      test('returns true when strokeWidth changes', () {
+        final painter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.blue,
+          strokeWidth: 3.0,
+        );
+        final oldPainter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.blue,
+          strokeWidth: 5.0,
+        );
+        expect(painter.shouldRepaint(oldPainter), isTrue);
+      });
+
+      test('returns false when nothing changes', () {
+        final painter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.blue,
+          strokeWidth: 3.0,
+        );
+        final oldPainter = SpinnerPainter(
+          trackColor: Colors.red,
+          arcColor: Colors.blue,
+          strokeWidth: 3.0,
+        );
+        expect(painter.shouldRepaint(oldPainter), isFalse);
       });
     });
   });

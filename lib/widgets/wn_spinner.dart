@@ -28,22 +28,25 @@ class WnSpinner extends HookWidget {
 
     final spinnerColors = _getColors(colors, type);
 
-    return SizedBox.square(
-      dimension: 16.w,
-      child: AnimatedBuilder(
-        animation: controller,
-        builder: (context, child) {
-          return Transform.rotate(
-            angle: controller.value * 2 * pi,
-            child: child,
-          );
-        },
-        child: CustomPaint(
-          key: const Key('spinner_indicator'),
-          painter: _SpinnerPainter(
-            trackColor: spinnerColors.track,
-            arcColor: spinnerColors.arc,
-            strokeWidth: 3.w,
+    return Semantics(
+      label: 'Loading',
+      child: SizedBox.square(
+        dimension: 16.w,
+        child: AnimatedBuilder(
+          animation: controller,
+          builder: (context, child) {
+            return Transform.rotate(
+              angle: controller.value * 2 * pi,
+              child: child,
+            );
+          },
+          child: CustomPaint(
+            key: const Key('spinner_indicator'),
+            painter: SpinnerPainter(
+              trackColor: spinnerColors.track,
+              arcColor: spinnerColors.arc,
+              strokeWidth: 3.w,
+            ),
           ),
         ),
       ),
@@ -68,8 +71,9 @@ class WnSpinner extends HookWidget {
   }
 }
 
-class _SpinnerPainter extends CustomPainter {
-  _SpinnerPainter({
+@visibleForTesting
+class SpinnerPainter extends CustomPainter {
+  SpinnerPainter({
     required this.trackColor,
     required this.arcColor,
     required this.strokeWidth,
@@ -105,7 +109,7 @@ class _SpinnerPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(_SpinnerPainter oldDelegate) {
+  bool shouldRepaint(SpinnerPainter oldDelegate) {
     return oldDelegate.trackColor != trackColor ||
         oldDelegate.arcColor != arcColor ||
         oldDelegate.strokeWidth != strokeWidth;
