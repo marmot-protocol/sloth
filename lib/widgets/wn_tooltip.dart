@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 
-enum WnTooltipPosition { top, bottom, left, right }
+enum WnTooltipPosition { top, bottom }
 
 class WnTooltip extends HookWidget {
   const WnTooltip({
@@ -14,7 +14,6 @@ class WnTooltip extends HookWidget {
     required this.message,
     this.content,
     this.position = WnTooltipPosition.top,
-    this.showArrow = true,
     this.waitDuration = const Duration(milliseconds: 400),
   });
 
@@ -22,7 +21,6 @@ class WnTooltip extends HookWidget {
   final String message;
   final Widget? content;
   final WnTooltipPosition position;
-  final bool showArrow;
   final Duration waitDuration;
 
   @override
@@ -55,7 +53,6 @@ class WnTooltip extends HookWidget {
         builder: (context) => _TooltipOverlay(
           layerLink: layerLink,
           position: position,
-          showArrow: showArrow,
           targetSize: size,
           colors: colors,
           onDismiss: () => hideTooltip(dismissed: true),
@@ -109,7 +106,6 @@ class _TooltipOverlay extends StatelessWidget {
   const _TooltipOverlay({
     required this.layerLink,
     required this.position,
-    required this.showArrow,
     required this.targetSize,
     required this.colors,
     required this.onDismiss,
@@ -118,7 +114,6 @@ class _TooltipOverlay extends StatelessWidget {
 
   final LayerLink layerLink;
   final WnTooltipPosition position;
-  final bool showArrow;
   final Size targetSize;
   final SemanticColors colors;
   final VoidCallback onDismiss;
@@ -126,26 +121,12 @@ class _TooltipOverlay extends StatelessWidget {
 
   Offset _getOffset() {
     final arrowHeight = 6.h;
-    final arrowWidth = 6.w;
-    final verticalPadding = 4.h;
-    final horizontalPadding = 4.w;
 
     return switch (position) {
-      WnTooltipPosition.top => Offset(
-        targetSize.width / 2,
-        -(arrowHeight + verticalPadding),
-      ),
+      WnTooltipPosition.top => Offset(targetSize.width / 2, -arrowHeight),
       WnTooltipPosition.bottom => Offset(
         targetSize.width / 2,
-        targetSize.height + arrowHeight + verticalPadding,
-      ),
-      WnTooltipPosition.left => Offset(
-        -(arrowWidth + horizontalPadding),
-        targetSize.height / 2,
-      ),
-      WnTooltipPosition.right => Offset(
-        targetSize.width + arrowWidth + horizontalPadding,
-        targetSize.height / 2,
+        targetSize.height + arrowHeight,
       ),
     };
   }
@@ -154,8 +135,6 @@ class _TooltipOverlay extends StatelessWidget {
     return switch (position) {
       WnTooltipPosition.top => Alignment.bottomCenter,
       WnTooltipPosition.bottom => Alignment.topCenter,
-      WnTooltipPosition.left => Alignment.centerRight,
-      WnTooltipPosition.right => Alignment.centerLeft,
     };
   }
 
@@ -177,7 +156,6 @@ class _TooltipOverlay extends StatelessWidget {
             color: Colors.transparent,
             child: _TooltipContent(
               position: position,
-              showArrow: showArrow,
               colors: colors,
               child: child,
             ),
@@ -191,54 +169,30 @@ class _TooltipOverlay extends StatelessWidget {
 class _TooltipContent extends StatelessWidget {
   const _TooltipContent({
     required this.position,
-    required this.showArrow,
     required this.colors,
     required this.child,
   });
 
   final WnTooltipPosition position;
-  final bool showArrow;
   final SemanticColors colors;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
-    final arrowWidget = showArrow
-        ? _TooltipArrow(
-            key: const Key('tooltip_arrow'),
-            position: position,
-            color: colors.backgroundTertiary,
-          )
-        : null;
+    final arrowWidget = _TooltipArrow(
+      key: const Key('tooltip_arrow'),
+      position: position,
+      color: colors.fillPrimary,
+    );
 
     return switch (position) {
       WnTooltipPosition.top => Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildContentBox(),
-          if (arrowWidget != null) arrowWidget,
-        ],
+        children: [_buildContentBox(), arrowWidget],
       ),
       WnTooltipPosition.bottom => Column(
         mainAxisSize: MainAxisSize.min,
-        children: [
-          if (arrowWidget != null) arrowWidget,
-          _buildContentBox(),
-        ],
-      ),
-      WnTooltipPosition.left => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          _buildContentBox(),
-          if (arrowWidget != null) arrowWidget,
-        ],
-      ),
-      WnTooltipPosition.right => Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          if (arrowWidget != null) arrowWidget,
-          _buildContentBox(),
-        ],
+        children: [arrowWidget, _buildContentBox()],
       ),
     };
   }
@@ -246,26 +200,23 @@ class _TooltipContent extends StatelessWidget {
   Widget _buildContentBox() {
     return Container(
       key: const Key('tooltip_content'),
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      padding: EdgeInsets.all(8.w),
       decoration: BoxDecoration(
-        color: colors.backgroundTertiary,
+        color: colors.fillPrimary,
         borderRadius: BorderRadius.circular(8.r),
-        boxShadow: [
-          BoxShadow(
-            color: colors.shadow.withValues(alpha: 0.1),
-            blurRadius: 8.r,
-            offset: Offset(0, 2.h),
-          ),
-        ],
       ),
-      child: DefaultTextStyle(
-        style: TextStyle(
-          color: colors.backgroundContentPrimary,
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          letterSpacing: 0.4.sp,
+      child: Padding(
+        padding: EdgeInsets.all(8.w),
+        child: DefaultTextStyle(
+          style: TextStyle(
+            color: colors.fillContentPrimary,
+            fontSize: 14.sp,
+            fontWeight: FontWeight.w500,
+            height: 18 / 14,
+            letterSpacing: 0.4,
+          ),
+          child: child,
         ),
-        child: child,
       ),
     );
   }
@@ -284,17 +235,14 @@ class _TooltipArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomPaint(
-      size: Size(12.w, 6.w),
+      size: Size(13.w, 6.h),
       painter: _ArrowPainter(position: position, color: color),
     );
   }
 }
 
 class _ArrowPainter extends CustomPainter {
-  _ArrowPainter({
-    required this.position,
-    required this.color,
-  });
+  _ArrowPainter({required this.position, required this.color});
 
   final WnTooltipPosition position;
   final Color color;
@@ -316,16 +264,6 @@ class _ArrowPainter extends CustomPainter {
       case WnTooltipPosition.bottom:
         path.moveTo(0, size.height);
         path.lineTo(size.width / 2, 0);
-        path.lineTo(size.width, size.height);
-        break;
-      case WnTooltipPosition.left:
-        path.moveTo(0, 0);
-        path.lineTo(size.width, size.height / 2);
-        path.lineTo(0, size.height);
-        break;
-      case WnTooltipPosition.right:
-        path.moveTo(size.width, 0);
-        path.lineTo(0, size.height / 2);
         path.lineTo(size.width, size.height);
         break;
     }

@@ -9,30 +9,21 @@ void main() {
     group('basic functionality', () {
       testWidgets('displays child widget', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Tooltip message',
-          child: Text('Hover me'),
-        );
+        const widget = WnTooltip(message: 'Tooltip message', child: Text('Hover me'));
         await mountWidget(widget, tester);
         expect(find.text('Hover me'), findsOneWidget);
       });
 
       testWidgets('does not show tooltip initially', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Tooltip message',
-          child: Text('Hover me'),
-        );
+        const widget = WnTooltip(message: 'Tooltip message', child: Text('Hover me'));
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('tooltip_content')), findsNothing);
       });
 
       testWidgets('shows tooltip on long press', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Tooltip message',
-          child: Text('Hover me'),
-        );
+        const widget = WnTooltip(message: 'Tooltip message', child: Text('Hover me'));
         await mountWidget(widget, tester);
         await tester.longPress(find.text('Hover me'));
         await tester.pumpAndSettle();
@@ -42,7 +33,7 @@ void main() {
 
       testWidgets('shows tooltip on mouse hover', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
+        const widget = WnTooltip(
           message: 'Tooltip message',
           waitDuration: Duration(milliseconds: 100),
           child: Text('Hover me'),
@@ -63,7 +54,7 @@ void main() {
 
       testWidgets('hides tooltip when tapping outside after hover', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const SizedBox(
+        const widget = SizedBox(
           width: 300,
           height: 300,
           child: WnTooltip(
@@ -93,10 +84,7 @@ void main() {
     group('positions', () {
       testWidgets('renders tooltip at top position by default', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Top tooltip',
-          child: Text('Trigger'),
-        );
+        const widget = WnTooltip(message: 'Top tooltip', child: Text('Trigger'));
         await mountWidget(widget, tester);
         await tester.longPress(find.text('Trigger'));
         await tester.pumpAndSettle();
@@ -105,7 +93,7 @@ void main() {
 
       testWidgets('renders tooltip at bottom position', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
+        const widget = WnTooltip(
           message: 'Bottom tooltip',
           position: WnTooltipPosition.bottom,
           child: Text('Trigger'),
@@ -115,39 +103,23 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Bottom tooltip'), findsOneWidget);
       });
-
-      testWidgets('renders tooltip at left position', (WidgetTester tester) async {
-        setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Left tooltip',
-          position: WnTooltipPosition.left,
-          child: Text('Trigger'),
-        );
-        await mountWidget(widget, tester);
-        await tester.longPress(find.text('Trigger'));
-        await tester.pumpAndSettle();
-        expect(find.text('Left tooltip'), findsOneWidget);
-      });
-
-      testWidgets('renders tooltip at right position', (WidgetTester tester) async {
-        setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Right tooltip',
-          position: WnTooltipPosition.right,
-          child: Text('Trigger'),
-        );
-        await mountWidget(widget, tester);
-        await tester.longPress(find.text('Trigger'));
-        await tester.pumpAndSettle();
-        expect(find.text('Right tooltip'), findsOneWidget);
-      });
     });
 
     group('arrow', () {
-      testWidgets('shows arrow by default', (WidgetTester tester) async {
+      testWidgets('always shows arrow for top position', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
+        const widget = WnTooltip(message: 'With arrow', child: Text('Trigger'));
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      testWidgets('always shows arrow for bottom position', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
           message: 'With arrow',
+          position: WnTooltipPosition.bottom,
           child: Text('Trigger'),
         );
         await mountWidget(widget, tester);
@@ -155,28 +127,12 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
       });
-
-      testWidgets('hides arrow when showArrow is false', (WidgetTester tester) async {
-        setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'No arrow',
-          showArrow: false,
-          child: Text('Trigger'),
-        );
-        await mountWidget(widget, tester);
-        await tester.longPress(find.text('Trigger'));
-        await tester.pumpAndSettle();
-        expect(find.byKey(const Key('tooltip_arrow')), findsNothing);
-      });
     });
 
     group('custom content', () {
       testWidgets('displays message text', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
-          message: 'Custom message',
-          child: Text('Trigger'),
-        );
+        const widget = WnTooltip(message: 'Custom message', child: Text('Trigger'));
         await mountWidget(widget, tester);
         await tester.longPress(find.text('Trigger'));
         await tester.pumpAndSettle();
@@ -185,7 +141,7 @@ void main() {
 
       testWidgets('displays custom content widget', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
+        const widget = WnTooltip(
           message: '',
           content: SizedBox(
             key: Key('custom_content_widget'),
@@ -204,7 +160,7 @@ void main() {
 
       testWidgets('content widget takes precedence over message', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
+        const widget = WnTooltip(
           message: 'Message text',
           content: Text('Content widget', key: Key('content_text')),
           child: Text('Trigger'),
@@ -220,14 +176,11 @@ void main() {
     group('trigger behavior', () {
       testWidgets('tapping outside hides tooltip', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const Scaffold(
+        const widget = Scaffold(
           body: SizedBox(
             width: 300,
             height: 300,
-            child: WnTooltip(
-              message: 'Tooltip',
-              child: Text('Trigger'),
-            ),
+            child: WnTooltip(message: 'Tooltip', child: Text('Trigger')),
           ),
         );
         await mountWidget(widget, tester);
@@ -244,7 +197,7 @@ void main() {
     group('wait duration', () {
       testWidgets('respects custom wait duration', (WidgetTester tester) async {
         setUpTestView(tester);
-        final widget = const WnTooltip(
+        const widget = WnTooltip(
           message: 'Delayed tooltip',
           waitDuration: Duration(milliseconds: 200),
           child: Text('Hover me'),

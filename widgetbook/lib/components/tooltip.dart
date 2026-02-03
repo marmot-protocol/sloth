@@ -56,10 +56,10 @@ Widget wnTooltipShowcase(BuildContext context) {
         _buildSection(
           context,
           'Positions',
-          'Tooltips can appear in 4 positions: top, bottom, left, right.',
+          'Tooltips can appear in 2 positions: top (preferred) and bottom (fallback).',
           [
             _TooltipExample(
-              label: 'Top',
+              label: 'Top (Default)',
               child: WnTooltip(
                 message: 'Tooltip on top',
                 position: WnTooltipPosition.top,
@@ -72,46 +72,6 @@ Widget wnTooltipShowcase(BuildContext context) {
                 message: 'Tooltip on bottom',
                 position: WnTooltipPosition.bottom,
                 child: WnButton(text: 'Bottom', onPressed: () {}),
-              ),
-            ),
-            _TooltipExample(
-              label: 'Left',
-              child: WnTooltip(
-                message: 'Tooltip on left',
-                position: WnTooltipPosition.left,
-                child: WnButton(text: 'Left', onPressed: () {}),
-              ),
-            ),
-            _TooltipExample(
-              label: 'Right',
-              child: WnTooltip(
-                message: 'Tooltip on right',
-                position: WnTooltipPosition.right,
-                child: WnButton(text: 'Right', onPressed: () {}),
-              ),
-            ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        _buildSection(
-          context,
-          'Arrow',
-          'Tooltips can show or hide the arrow.',
-          [
-            _TooltipExample(
-              label: 'With Arrow',
-              child: WnTooltip(
-                message: 'Has an arrow',
-                showArrow: true,
-                child: WnButton(text: 'With Arrow', onPressed: () {}),
-              ),
-            ),
-            _TooltipExample(
-              label: 'Without Arrow',
-              child: WnTooltip(
-                message: 'No arrow',
-                showArrow: false,
-                child: WnButton(text: 'Without Arrow', onPressed: () {}),
               ),
             ),
           ],
@@ -230,15 +190,9 @@ class _InteractiveTooltip extends StatelessWidget {
       initialValue: 'Tooltip message',
     );
 
-    final showArrow = this.context.knobs.boolean(
-      label: 'Show Arrow',
-      initialValue: true,
-    );
-
     return WnTooltip(
       message: message,
       position: position,
-      showArrow: showArrow,
       child: WnButton(text: 'Hover me', onPressed: () {}),
     );
   }
