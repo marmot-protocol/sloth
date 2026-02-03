@@ -31,16 +31,21 @@ class WnTooltip extends HookWidget {
     final overlayEntryRef = useRef<OverlayEntry?>(null);
     final isHovering = useState(false);
     final isVisible = useState(false);
+    final wasDismissed = useState(false);
     final layerLink = useMemoized(() => LayerLink());
 
-    void hideTooltip() {
+    void hideTooltip({bool dismissed = false}) {
       overlayEntryRef.value?.remove();
       overlayEntryRef.value = null;
       isVisible.value = false;
+      if (dismissed) {
+        wasDismissed.value = true;
+      }
     }
 
     void showTooltip() {
       if (overlayEntryRef.value != null) return;
+      if (wasDismissed.value) return;
 
       final overlay = Overlay.of(context);
       final renderBox = context.findRenderObject() as RenderBox;
@@ -53,8 +58,8 @@ class WnTooltip extends HookWidget {
           showArrow: showArrow,
           targetSize: size,
           colors: colors,
-          onDismiss: hideTooltip,
-          child: content ?? Text(message, style: TextStyle(fontSize: 12.sp)),
+          onDismiss: () => hideTooltip(dismissed: true),
+          child: content ?? Text(message, style: TextStyle(fontSize: 14.sp)),
         ),
       );
 
@@ -71,16 +76,16 @@ class WnTooltip extends HookWidget {
     }, const []);
 
     useEffect(() {
-      if (isHovering.value && !isVisible.value) {
+      if (isHovering.value && !isVisible.value && !wasDismissed.value) {
         final timer = Timer(waitDuration, () {
-          if (isHovering.value && !isVisible.value) {
+          if (isHovering.value && !isVisible.value && !wasDismissed.value) {
             showTooltip();
           }
         });
         return timer.cancel;
       }
       return null;
-    }, [isHovering.value, isVisible.value]);
+    }, [isHovering.value, isVisible.value, wasDismissed.value]);
 
     return CompositedTransformTarget(
       link: layerLink,
@@ -88,6 +93,7 @@ class WnTooltip extends HookWidget {
         onEnter: (_) => isHovering.value = true,
         onExit: (_) {
           isHovering.value = false;
+          wasDismissed.value = false;
           hideTooltip();
         },
         child: GestureDetector(
@@ -119,24 +125,26 @@ class _TooltipOverlay extends StatelessWidget {
   final Widget child;
 
   Offset _getOffset() {
-    final arrowSize = 6.w;
-    final padding = 4.w;
+    final arrowHeight = 6.h;
+    final arrowWidth = 6.w;
+    final verticalPadding = 4.h;
+    final horizontalPadding = 4.w;
 
     return switch (position) {
       WnTooltipPosition.top => Offset(
         targetSize.width / 2,
-        -(arrowSize + padding),
+        -(arrowHeight + verticalPadding),
       ),
       WnTooltipPosition.bottom => Offset(
         targetSize.width / 2,
-        targetSize.height + arrowSize + padding,
+        targetSize.height + arrowHeight + verticalPadding,
       ),
       WnTooltipPosition.left => Offset(
-        -(arrowSize + padding),
+        -(arrowWidth + horizontalPadding),
         targetSize.height / 2,
       ),
       WnTooltipPosition.right => Offset(
-        targetSize.width + arrowSize + padding,
+        targetSize.width + arrowWidth + horizontalPadding,
         targetSize.height / 2,
       ),
     };
@@ -253,8 +261,9 @@ class _TooltipContent extends StatelessWidget {
       child: DefaultTextStyle(
         style: TextStyle(
           color: colors.backgroundContentPrimary,
-          fontSize: 12.sp,
+          fontSize: 14.sp,
           fontWeight: FontWeight.w500,
+          letterSpacing: 0.4.sp,
         ),
         child: child,
       ),

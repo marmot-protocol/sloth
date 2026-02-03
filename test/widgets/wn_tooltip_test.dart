@@ -2,12 +2,13 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart' show Key, Scaffold, SizedBox, Text;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_tooltip.dart';
-import '../test_helpers.dart' show mountWidget;
+import '../test_helpers.dart' show mountWidget, setUpTestView;
 
 void main() {
   group('WnTooltip tests', () {
     group('basic functionality', () {
       testWidgets('displays child widget', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Tooltip message',
           child: Text('Hover me'),
@@ -17,6 +18,7 @@ void main() {
       });
 
       testWidgets('does not show tooltip initially', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Tooltip message',
           child: Text('Hover me'),
@@ -26,6 +28,7 @@ void main() {
       });
 
       testWidgets('shows tooltip on long press', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Tooltip message',
           child: Text('Hover me'),
@@ -38,6 +41,7 @@ void main() {
       });
 
       testWidgets('shows tooltip on mouse hover', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Tooltip message',
           waitDuration: Duration(milliseconds: 100),
@@ -58,6 +62,7 @@ void main() {
       });
 
       testWidgets('hides tooltip when tapping outside after hover', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const SizedBox(
           width: 300,
           height: 300,
@@ -87,6 +92,7 @@ void main() {
 
     group('positions', () {
       testWidgets('renders tooltip at top position by default', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Top tooltip',
           child: Text('Trigger'),
@@ -98,6 +104,7 @@ void main() {
       });
 
       testWidgets('renders tooltip at bottom position', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Bottom tooltip',
           position: WnTooltipPosition.bottom,
@@ -110,6 +117,7 @@ void main() {
       });
 
       testWidgets('renders tooltip at left position', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Left tooltip',
           position: WnTooltipPosition.left,
@@ -122,6 +130,7 @@ void main() {
       });
 
       testWidgets('renders tooltip at right position', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Right tooltip',
           position: WnTooltipPosition.right,
@@ -136,6 +145,7 @@ void main() {
 
     group('arrow', () {
       testWidgets('shows arrow by default', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'With arrow',
           child: Text('Trigger'),
@@ -147,6 +157,7 @@ void main() {
       });
 
       testWidgets('hides arrow when showArrow is false', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'No arrow',
           showArrow: false,
@@ -161,6 +172,7 @@ void main() {
 
     group('custom content', () {
       testWidgets('displays message text', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Custom message',
           child: Text('Trigger'),
@@ -172,6 +184,7 @@ void main() {
       });
 
       testWidgets('displays custom content widget', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: '',
           content: SizedBox(
@@ -190,6 +203,7 @@ void main() {
       });
 
       testWidgets('content widget takes precedence over message', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Message text',
           content: Text('Content widget', key: Key('content_text')),
@@ -205,6 +219,7 @@ void main() {
 
     group('trigger behavior', () {
       testWidgets('tapping outside hides tooltip', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const Scaffold(
           body: SizedBox(
             width: 300,
@@ -228,6 +243,7 @@ void main() {
 
     group('wait duration', () {
       testWidgets('respects custom wait duration', (WidgetTester tester) async {
+        setUpTestView(tester);
         final widget = const WnTooltip(
           message: 'Delayed tooltip',
           waitDuration: Duration(milliseconds: 200),
