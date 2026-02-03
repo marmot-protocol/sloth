@@ -483,4 +483,16 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Не удалось выбрать изображение. Попробуйте снова.';
+
+  @override
+  String get scanNsec => 'Сканировать QR-код';
+
+  @override
+  String get scanNsecHint => 'Отсканируйте QR-код вашего приватного ключа для входа.';
+
+  @override
+  String get cameraPermissionDenied => 'Доступ к камере запрещён';
+
+  @override
+  String get somethingWentWrong => 'Что-то пошло не так';
 }

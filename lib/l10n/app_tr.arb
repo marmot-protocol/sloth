@@ -139,5 +139,9 @@
   "failedToStartChat": "Sohbet başlatılamadı. Lütfen tekrar deneyin.",
   "userNotOnWhiteNoise": "Bu kullanıcı henüz White Noise'da değil.",
   "failedToUpdateFollow": "Takip durumu güncellenemedi. Lütfen tekrar deneyin.",
-  "imagePickerError": "Görsel seçilemedi. Lütfen tekrar deneyin."
+  "imagePickerError": "Görsel seçilemedi. Lütfen tekrar deneyin.",
+  "scanNsec": "QR kodu tara",
+  "scanNsecHint": "Giriş yapmak için özel anahtar QR kodunuzu tarayın.",
+  "cameraPermissionDenied": "Kamera izni reddedildi",
+  "somethingWentWrong": "Bir şeyler yanlış gitti"
 }

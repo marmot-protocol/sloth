@@ -481,4 +481,16 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Échec de la sélection de l\'image. Veuillez réessayer.';
+
+  @override
+  String get scanNsec => 'Scanner le code QR';
+
+  @override
+  String get scanNsecHint => 'Scannez le code QR de votre clé privée pour vous connecter.';
+
+  @override
+  String get cameraPermissionDenied => 'Autorisation caméra refusée';
+
+  @override
+  String get somethingWentWrong => 'Une erreur s\'est produite';
 }
