@@ -81,9 +81,9 @@ class _MockRustLibApi implements RustLibApi {
 
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
-    existingAccounts.add('created_pubkey');
+    existingAccounts.add(testPubkeyC);
     return Account(
-      pubkey: 'created_pubkey',
+      pubkey: testPubkeyC,
       accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -92,9 +92,9 @@ class _MockRustLibApi implements RustLibApi {
 
   @override
   Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey}) async {
-    existingAccounts.add('logged_in_pubkey');
+    existingAccounts.add(testPubkeyB);
     return Account(
-      pubkey: 'logged_in_pubkey',
+      pubkey: testPubkeyB,
       accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
@@ -221,12 +221,12 @@ void main() {
     group('login', () {
       test('sets state to pubkey', () async {
         await container.read(authProvider.notifier).login('nsec123');
-        expect(container.read(authProvider).value, 'logged_in_pubkey');
+        expect(container.read(authProvider).value, testPubkeyB);
       });
 
       test('fetches account metadata without awaiting', () async {
         await container.read(authProvider.notifier).login('nsec123');
-        expect(mockApi.metadataCalledWithPubkey, 'logged_in_pubkey');
+        expect(mockApi.metadataCalledWithPubkey, testPubkeyB);
         expect(mockApi.metadataCompleter.isCompleted, isFalse);
       });
 
@@ -241,7 +241,7 @@ void main() {
     group('signup', () {
       test('returns created pubkey', () async {
         final pubkey = await container.read(authProvider.notifier).signup();
-        expect(pubkey, 'created_pubkey');
+        expect(pubkey, testPubkeyC);
       });
 
       test('resets isAddingAccountProvider to false', () async {
@@ -268,7 +268,7 @@ void main() {
       test('calls Rust API logout', () async {
         await container.read(authProvider.notifier).login('nsec123');
         await container.read(authProvider.notifier).logout();
-        expect(mockApi.logoutCalledWithPubkey, 'logged_in_pubkey');
+        expect(mockApi.logoutCalledWithPubkey, testPubkeyB);
       });
 
       test('does nothing when not authenticated', () async {
@@ -297,24 +297,24 @@ void main() {
 
       test('filters out logged-out account when switching', () async {
         await container.read(authProvider.notifier).login('nsec123');
-        mockApi.existingAccounts.add('other_pubkey');
+        mockApi.existingAccounts.add(testPubkeyD);
         mockApi.allAccounts = [
           Account(
             accountType: AccountType.local,
-            pubkey: 'logged_in_pubkey',
+            pubkey: testPubkeyB,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           ),
           Account(
             accountType: AccountType.local,
-            pubkey: 'other_pubkey',
+            pubkey: testPubkeyD,
             createdAt: DateTime.now(),
             updatedAt: DateTime.now(),
           ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
-        expect(nextPubkey, 'other_pubkey');
-        expect(container.read(authProvider).value, 'other_pubkey');
+        expect(nextPubkey, testPubkeyD);
+        expect(container.read(authProvider).value, testPubkeyD);
       });
 
       test('returns null when no other accounts', () async {

@@ -6,6 +6,8 @@ import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, Wid
 import 'package:sloth/hooks/use_android_signer.dart' show useAndroidSigner;
 import 'package:sloth/hooks/use_login.dart' show useLogin;
 import 'package:sloth/l10n/l10n.dart';
+import 'package:sloth/providers/android_signer_service_provider.dart'
+    show androidSignerServiceProvider;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/android_signer_service.dart' show AndroidSignerException;
@@ -25,7 +27,8 @@ class LoginScreen extends HookConsumerWidget {
     final (:controller, :state, :paste, :submit, :clearError) = useLogin(
       (nsec) => ref.read(authProvider.notifier).login(nsec),
     );
-    final androidSigner = useAndroidSigner(ref);
+    final signerService = ref.watch(androidSignerServiceProvider);
+    final androidSigner = useAndroidSigner(signerService);
     final signerError = useState<String?>(null);
     final isSignerLoading = useState(false);
 

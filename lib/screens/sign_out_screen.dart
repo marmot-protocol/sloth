@@ -6,6 +6,7 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_android_signer.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
+import 'package:sloth/providers/android_signer_service_provider.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
@@ -24,7 +25,8 @@ class SignOutScreen extends HookConsumerWidget {
     final colors = context.colors;
     final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
-    final androidSigner = useAndroidSigner(ref);
+    final signerService = ref.watch(androidSignerServiceProvider);
+    final androidSigner = useAndroidSigner(signerService);
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
     final isUsingExternalSigner = useState<bool?>(null);
