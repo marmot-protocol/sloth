@@ -132,9 +132,6 @@ class WnInputPassword extends HookWidget {
     TextEditingController effectiveController,
   ) {
     final fieldHeight = size.height.h;
-    final inlineActionWidth = size == WnInputSize.size44 ? 36.w : 48.w;
-    final inlineActionHeight = size == WnInputSize.size44 ? 36.h : 48.h;
-
     final borderColor = _hasError ? colors.borderDestructivePrimary : colors.borderTertiary;
 
     return Container(
@@ -187,11 +184,7 @@ class WnInputPassword extends HookWidget {
               ),
             ),
           ),
-          SizedBox(
-            width: inlineActionWidth,
-            height: inlineActionHeight,
-            child: _buildInlineAction(colors, isVisible, isEmpty),
-          ),
+          _buildInlineAction(colors, isVisible, isEmpty),
           Gap(4.w),
         ],
       ),
@@ -209,52 +202,55 @@ class WnInputPassword extends HookWidget {
     final iconWrapperHeight = 36.h;
     final iconSize = 16.w;
 
-    if (isEmpty && onScan != null) {
-      return GestureDetector(
-        key: const Key('scan_button'),
-        onTap: enabled ? onScan : null,
-        child: Container(
-          width: buttonWidth,
-          height: buttonHeight,
-          color: Colors.transparent,
-          child: Center(
-            child: SizedBox(
-              width: iconWrapperWidth,
-              height: iconWrapperHeight,
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (onScan != null)
+          GestureDetector(
+            key: const Key('scan_button'),
+            onTap: enabled ? onScan : null,
+            child: Container(
+              width: buttonWidth,
+              height: buttonHeight,
+              color: Colors.transparent,
               child: Center(
-                child: WnIcon(
-                  WnIcons.scan,
-                  size: iconSize,
-                  color: colors.backgroundContentPrimary,
+                child: SizedBox(
+                  width: iconWrapperWidth,
+                  height: iconWrapperHeight,
+                  child: Center(
+                    child: WnIcon(
+                      WnIcons.scan,
+                      size: iconSize,
+                      color: colors.backgroundContentPrimary,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+        GestureDetector(
+          key: const Key('visibility_toggle'),
+          onTap: enabled ? () => isVisible.value = !isVisible.value : null,
+          child: Container(
+            width: buttonWidth,
+            height: buttonHeight,
+            color: Colors.transparent,
+            child: Center(
+              child: SizedBox(
+                width: iconWrapperWidth,
+                height: iconWrapperHeight,
+                child: Center(
+                  child: WnIcon(
+                    isVisible.value ? WnIcons.viewOff : WnIcons.view,
+                    size: iconSize,
+                    color: colors.backgroundContentPrimary,
+                  ),
                 ),
               ),
             ),
           ),
         ),
-      );
-    }
-
-    return GestureDetector(
-      key: const Key('visibility_toggle'),
-      onTap: enabled ? () => isVisible.value = !isVisible.value : null,
-      child: Container(
-        width: buttonWidth,
-        height: buttonHeight,
-        color: Colors.transparent,
-        child: Center(
-          child: SizedBox(
-            width: iconWrapperWidth,
-            height: iconWrapperHeight,
-            child: Center(
-              child: WnIcon(
-                isVisible.value ? WnIcons.viewOff : WnIcons.view,
-                size: iconSize,
-                color: colors.backgroundContentPrimary,
-              ),
-            ),
-          ),
-        ),
-      ),
+      ],
     );
   }
 
