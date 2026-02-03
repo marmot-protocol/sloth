@@ -756,7 +756,7 @@
     "description": "Title for scan nsec screen"
   },
 
-  "scanNsecHint": "Scan your private key",
+  "scanNsecHint": "Scan your private key QR code to login.",
   "@scanNsecHint": {
     "description": "Hint text on scan nsec screen"
   },

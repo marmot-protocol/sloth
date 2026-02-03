@@ -141,7 +141,7 @@
   "failedToUpdateFollow": "Takip durumu güncellenemedi. Lütfen tekrar deneyin.",
   "imagePickerError": "Görsel seçilemedi. Lütfen tekrar deneyin.",
   "scanNsec": "QR kodu tara",
-  "scanNsecHint": "Özel anahtarınızı tarayın",
+  "scanNsecHint": "Giriş yapmak için özel anahtar QR kodunuzu tarayın.",
   "cameraPermissionDenied": "Kamera izni reddedildi",
   "somethingWentWrong": "Bir şeyler yanlış gitti"
 }

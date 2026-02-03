@@ -11,39 +11,38 @@ class WnScanBox extends HookWidget {
     super.key,
     required this.onBarcodeDetected,
     this.onError,
-    this.size,
+    this.width,
+    this.height,
   });
 
   final void Function(String value) onBarcodeDetected;
   final void Function(MobileScannerException error)? onError;
-  final double? size;
+  final double? width;
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final boxSize = size ?? 240.w;
     final (:controller, isProcessing: _) = useScan(onBarcodeDetected: onBarcodeDetected);
 
-    return Center(
-      child: Container(
-        width: boxSize,
-        height: boxSize,
-        decoration: BoxDecoration(
-          border: Border.all(color: colors.borderPrimary, width: 1.w),
-          borderRadius: BorderRadius.circular(8.r),
-        ),
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular(7.r),
-          child: MobileScanner(
-            controller: controller,
-            errorBuilder: (context, error) {
-              onError?.call(error);
-              if (error.errorCode == MobileScannerErrorCode.permissionDenied) {
-                return _CameraPermissionDenied(colors: colors);
-              }
-              return _ScannerError(colors: colors);
-            },
-          ),
+    return Container(
+      width: width,
+      height: height,
+      decoration: BoxDecoration(
+        border: Border.all(color: colors.borderTertiary, width: 1.w),
+        borderRadius: BorderRadius.circular(8.r),
+      ),
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(7.r),
+        child: MobileScanner(
+          controller: controller,
+          errorBuilder: (context, error) {
+            onError?.call(error);
+            if (error.errorCode == MobileScannerErrorCode.permissionDenied) {
+              return _CameraPermissionDenied(colors: colors);
+            }
+            return _ScannerError(colors: colors);
+          },
         ),
       ),
     );

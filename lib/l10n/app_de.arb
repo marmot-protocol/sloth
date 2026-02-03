@@ -141,7 +141,7 @@
   "failedToUpdateFollow": "Folgestatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
   "imagePickerError": "Bild konnte nicht ausgewählt werden. Bitte versuchen Sie es erneut.",
   "scanNsec": "QR-Code scannen",
-  "scanNsecHint": "Scannen Sie Ihren privaten Schlüssel",
+  "scanNsecHint": "Scannen Sie den QR-Code Ihres privaten Schlüssels zum Anmelden.",
   "cameraPermissionDenied": "Kamerazugriff verweigert",
   "somethingWentWrong": "Etwas ist schiefgelaufen"
 }

@@ -957,7 +957,7 @@ abstract class AppLocalizations {
   /// Hint text on scan nsec screen
   ///
   /// In en, this message translates to:
-  /// **'Scan your private key'**
+  /// **'Scan your private key QR code to login.'**
   String get scanNsecHint;
 
   /// Error message when camera permission is denied

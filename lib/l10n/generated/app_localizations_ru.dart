@@ -488,7 +488,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get scanNsec => 'Сканировать QR-код';
 
   @override
-  String get scanNsecHint => 'Отсканируйте ваш приватный ключ';
+  String get scanNsecHint => 'Отсканируйте QR-код вашего приватного ключа для входа.';
 
   @override
   String get cameraPermissionDenied => 'Доступ к камере запрещён';

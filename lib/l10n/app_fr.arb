@@ -141,7 +141,7 @@
   "failedToUpdateFollow": "Échec de la mise à jour du statut de suivi. Veuillez réessayer.",
   "imagePickerError": "Échec de la sélection de l'image. Veuillez réessayer.",
   "scanNsec": "Scanner le code QR",
-  "scanNsecHint": "Scannez votre clé privée",
+  "scanNsecHint": "Scannez le code QR de votre clé privée pour vous connecter.",
   "cameraPermissionDenied": "Autorisation caméra refusée",
   "somethingWentWrong": "Une erreur s'est produite"
 }

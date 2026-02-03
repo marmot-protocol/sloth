@@ -24,16 +24,18 @@ void main() {
       expect(find.byType(MobileScanner), findsOneWidget);
     });
 
-    testWidgets('uses custom size when provided', (tester) async {
+    testWidgets('uses custom dimensions when provided', (tester) async {
       await mountWidget(
         WnScanBox(
           onBarcodeDetected: (_) {},
-          size: 200,
+          width: 200,
+          height: 300,
         ),
         tester,
       );
       final container = tester.getSize(find.byType(MobileScanner).first);
       expect(container.width, lessThanOrEqualTo(200));
+      expect(container.height, lessThanOrEqualTo(300));
     });
 
     testWidgets('does not show scan button key by default', (tester) async {

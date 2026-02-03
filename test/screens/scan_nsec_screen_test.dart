@@ -72,7 +72,7 @@ void main() {
 
       testWidgets('displays hint text', (tester) async {
         await pumpScanNsecScreen(tester);
-        expect(find.text('Scan your private key'), findsOneWidget);
+        expect(find.text('Scan your private key QR code to login.'), findsOneWidget);
       });
 
       testWidgets('displays title', (tester) async {
@@ -91,7 +91,7 @@ void main() {
 
       testWidgets('tapping outside slate returns to login screen', (tester) async {
         await pumpScanNsecScreen(tester);
-        await tester.tapAt(const Offset(195, 50));
+        await tester.tapAt(const Offset(5, 400));
         await tester.pumpAndSettle();
         expect(find.byType(LoginScreen), findsOneWidget);
       });

@@ -141,7 +141,7 @@
   "failedToUpdateFollow": "Impossibile aggiornare lo stato del seguito. Riprova.",
   "imagePickerError": "Impossibile selezionare l'immagine. Riprova.",
   "scanNsec": "Scansiona codice QR",
-  "scanNsecHint": "Scansiona la tua chiave privata",
+  "scanNsecHint": "Scansiona il codice QR della tua chiave privata per accedere.",
   "cameraPermissionDenied": "Permesso fotocamera negato",
   "somethingWentWrong": "Qualcosa è andato storto"
 }

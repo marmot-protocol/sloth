@@ -484,7 +484,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get scanNsec => 'Escanear código QR';
 
   @override
-  String get scanNsecHint => 'Escaneie sua chave privada';
+  String get scanNsecHint => 'Escaneie o código QR da sua chave privada para fazer login.';
 
   @override
   String get cameraPermissionDenied => 'Permissão de câmera negada';

@@ -35,40 +35,37 @@ class ScanNsecScreen extends StatelessWidget {
             ),
           ),
           SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                WnSlate(
-                  header: WnSlateNavigationHeader(
-                    title: context.l10n.scanNsec,
-                    type: WnSlateNavigationType.back,
-                    onNavigate: () => Routes.goBack(context),
-                  ),
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Gap(8.h),
-                        WnScanBox(onBarcodeDetected: onBarcodeDetected),
-                        Gap(16.h),
-                        Text(
-                          context.l10n.scanNsecHint,
-                          textAlign: TextAlign.center,
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            fontWeight: FontWeight.w500,
-                            color: colors.backgroundContentSecondary,
-                          ),
+            child: Padding(
+              padding: EdgeInsets.only(top: 8.h, bottom: 34.h),
+              child: WnSlate(
+                header: WnSlateNavigationHeader(
+                  title: context.l10n.scanNsec,
+                  type: WnSlateNavigationType.back,
+                  onNavigate: () => Routes.goBack(context),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(16.w, 0, 16.w, 16.h),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: WnScanBox(onBarcodeDetected: onBarcodeDetected),
+                      ),
+                      Gap(12.h),
+                      Text(
+                        context.l10n.scanNsecHint,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.w500,
+                          color: colors.backgroundContentSecondary,
                         ),
-                        Gap(8.h),
-                      ],
-                    ),
+                      ),
+                      Gap(12.h),
+                    ],
                   ),
                 ),
-                Gap(16.h),
-              ],
+              ),
             ),
           ),
         ],

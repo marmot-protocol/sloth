@@ -482,7 +482,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get scanNsec => 'QR kodu tara';
 
   @override
-  String get scanNsecHint => 'Özel anahtarınızı tarayın';
+  String get scanNsecHint => 'Giriş yapmak için özel anahtar QR kodunuzu tarayın.';
 
   @override
   String get cameraPermissionDenied => 'Kamera izni reddedildi';
