@@ -1,3 +1,5 @@
+import 'dart:math' show pi;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'
     show HookWidget, useAnimationController, useEffect;
@@ -32,7 +34,7 @@ class WnSpinner extends HookWidget {
         animation: controller,
         builder: (context, child) {
           return Transform.rotate(
-            angle: controller.value * 2 * 3.14159265359,
+            angle: controller.value * 2 * pi,
             child: child,
           );
         },
