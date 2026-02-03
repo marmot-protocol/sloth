@@ -25,7 +25,7 @@ class SignOutScreen extends HookConsumerWidget {
     final typography = context.typographyScaled;
     final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
-    final androidSigner = useAndroidSigner();
+    final androidSigner = useAndroidSigner(ref);
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
     final noticeMessage = useState<String?>(null);

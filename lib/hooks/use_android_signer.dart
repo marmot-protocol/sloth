@@ -1,5 +1,7 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:sloth/providers/android_signer_service_provider.dart';
 import 'package:sloth/services/android_signer_service.dart';
 
 final _logger = Logger('useAndroidSigner');
@@ -10,7 +12,7 @@ final _logger = Logger('useAndroidSigner');
 /// and methods to connect/disconnect from the Android signer.
 ///
 /// [service] can be provided for testing purposes. If not provided,
-/// a default [AndroidSignerService] will be created.
+/// the service will be read from [androidSignerServiceProvider].
 ({
   bool isAvailable,
   bool isConnecting,
@@ -18,8 +20,8 @@ final _logger = Logger('useAndroidSigner');
   Future<String> Function() connect,
   Future<void> Function() disconnect,
 })
-useAndroidSigner({AndroidSignerService? service}) {
-  final signerService = useMemoized(() => service ?? const AndroidSignerService());
+useAndroidSigner(WidgetRef ref, {AndroidSignerService? service}) {
+  final AndroidSignerService signerService = service ?? ref.read(androidSignerServiceProvider);
 
   final isAvailable = useState(false);
   final isConnecting = useState(false);
