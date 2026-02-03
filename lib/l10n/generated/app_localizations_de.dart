@@ -347,9 +347,6 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get ohNo => 'Oh nein!';
-
-  @override
   String get goBack => 'Zurück';
 
   @override

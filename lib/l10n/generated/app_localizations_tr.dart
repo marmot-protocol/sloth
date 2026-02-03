@@ -343,9 +343,6 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get ohNo => 'Ah hayır!';
-
-  @override
   String get goBack => 'Geri dön';
 
   @override

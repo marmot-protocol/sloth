@@ -104,7 +104,6 @@
   "keyPackagesDeleted": "Tous les paquets de clés supprimés",
   "keyPackageDeleted": "Paquet de clés supprimé",
   "packageNumber": "Paquet {number}",
-  "ohNo": "Oh non !",
   "goBack": "Retour",
   "reportError": "Signaler une erreur",
   "workInProgress": "Nous y travaillons",

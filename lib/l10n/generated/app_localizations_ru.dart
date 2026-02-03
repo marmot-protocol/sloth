@@ -343,9 +343,6 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get ohNo => 'О нет!';
-
-  @override
   String get goBack => 'Назад';
 
   @override

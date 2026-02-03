@@ -344,9 +344,6 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get ohNo => 'Oh non !';
-
-  @override
   String get goBack => 'Retour';
 
   @override

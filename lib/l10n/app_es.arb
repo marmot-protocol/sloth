@@ -104,7 +104,6 @@
   "keyPackagesDeleted": "Todos los paquetes de llaves eliminados",
   "keyPackageDeleted": "Paquete de llaves eliminado",
   "packageNumber": "Paquete {number}",
-  "ohNo": "¡Oh no!",
   "goBack": "Volver",
   "reportError": "Reportar error",
   "workInProgress": "Estamos trabajando en esto",

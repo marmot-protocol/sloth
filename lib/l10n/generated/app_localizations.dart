@@ -732,12 +732,6 @@ abstract class AppLocalizations {
   /// **'Package {number}'**
   String packageNumber(int number);
 
-  /// Error screen exclamation
-  ///
-  /// In en, this message translates to:
-  /// **'Oh no!'**
-  String get ohNo;
-
   /// Go back button text
   ///
   /// In en, this message translates to:

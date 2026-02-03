@@ -104,7 +104,6 @@
   "keyPackagesDeleted": "Все пакеты ключей удалены",
   "keyPackageDeleted": "Пакет ключей удалён",
   "packageNumber": "Пакет {number}",
-  "ohNo": "О нет!",
   "goBack": "Назад",
   "reportError": "Сообщить об ошибке",
   "workInProgress": "Мы работаем над этим",

@@ -551,11 +551,6 @@
     }
   },
 
-  "ohNo": "Oh no!",
-  "@ohNo": {
-    "description": "Error screen exclamation"
-  },
-
   "goBack": "Go back",
   "@goBack": {
     "description": "Go back button text"
