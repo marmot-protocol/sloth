@@ -139,5 +139,9 @@
   "failedToStartChat": "Chat konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
   "userNotOnWhiteNoise": "Dieser Benutzer ist noch nicht bei White Noise.",
   "failedToUpdateFollow": "Folgestatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
-  "imagePickerError": "Bild konnte nicht ausgewählt werden. Bitte versuchen Sie es erneut."
+  "imagePickerError": "Bild konnte nicht ausgewählt werden. Bitte versuchen Sie es erneut.",
+  "scanNsec": "QR-Code scannen",
+  "scanNsecHint": "Scannen Sie Ihren privaten Schlüssel",
+  "cameraPermissionDenied": "Kamerazugriff verweigert",
+  "somethingWentWrong": "Etwas ist schiefgelaufen"
 }
