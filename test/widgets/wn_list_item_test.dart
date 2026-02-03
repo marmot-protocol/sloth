@@ -117,6 +117,32 @@ void main() {
         await tester.tap(find.byType(WnListItem));
         expect(tapped, isTrue);
       });
+
+      testWidgets('shows pressed state on tap down', (WidgetTester tester) async {
+        final widget = const WnListItem(title: 'Pressable Item');
+        await mountWidget(widget, tester);
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnListItem)));
+        await tester.pump();
+
+        expect(find.byType(WnListItem), findsOneWidget);
+
+        await gesture.up();
+        await tester.pump();
+      });
+
+      testWidgets('resets pressed state on tap cancel', (WidgetTester tester) async {
+        final widget = const WnListItem(title: 'Cancellable Item');
+        await mountWidget(widget, tester);
+
+        final gesture = await tester.startGesture(tester.getCenter(find.byType(WnListItem)));
+        await tester.pump();
+
+        await gesture.cancel();
+        await tester.pump();
+
+        expect(find.byType(WnListItem), findsOneWidget);
+      });
     });
 
     group('expanded state with actions', () {

@@ -140,7 +140,7 @@ class _WnListItemState extends State<WnListItem> {
                 padding: EdgeInsets.only(right: 8.w),
                 child: SizedBox(
                   width: 20.w,
-                  height: 20.w,
+                  height: 20.h,
                   child: leadingIcon,
                 ),
               ),
@@ -172,7 +172,7 @@ class _WnListItemState extends State<WnListItem> {
                   padding: EdgeInsets.only(right: 8.w),
                   child: SizedBox(
                     width: 18.w,
-                    height: 18.w,
+                    height: 18.h,
                     child: Icon(
                       Icons.more_vert,
                       key: const Key('list_item_menu_icon'),
