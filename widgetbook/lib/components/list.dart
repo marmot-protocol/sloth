@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_list.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -64,90 +63,124 @@ Widget wnListShowcase(BuildContext context) {
         const SizedBox(height: 32),
         _buildSection(
           context,
-          'With Icons',
-          'List items can have leading and trailing widgets.',
+          'With Type Icons',
+          'List items can show different type icons.',
           [
             _ListExample(
-              label: 'Leading Icons',
+              label: 'All Types',
               child: WnList(
-                children: [
+                children: const [
                   WnListItem(
-                    title: 'Profile',
-                    leading: WnIcon(
-                      WnIcons.user,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Neutral Item',
+                    type: WnListItemType.neutral,
+                    showIcon: true,
                   ),
                   WnListItem(
-                    title: 'Settings',
-                    leading: WnIcon(
-                      WnIcons.settings,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Success Item',
+                    type: WnListItemType.success,
+                    showIcon: true,
                   ),
                   WnListItem(
-                    title: 'Help',
-                    leading: WnIcon(
-                      WnIcons.information,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Warning Item',
+                    type: WnListItemType.warning,
+                    showIcon: true,
+                  ),
+                  WnListItem(
+                    title: 'Error Item',
+                    type: WnListItemType.error,
+                    showIcon: true,
                   ),
                 ],
               ),
             ),
             _ListExample(
-              label: 'Trailing Icons',
+              label: 'Without Icons',
               child: WnList(
-                children: [
+                children: const [
                   WnListItem(
-                    title: 'Account',
-                    trailing: WnIcon(
-                      WnIcons.more,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Item without icon',
+                    type: WnListItemType.success,
+                    showIcon: false,
                   ),
                   WnListItem(
-                    title: 'Security',
-                    trailing: WnIcon(
-                      WnIcons.more,
-                      color: context.colors.fillContentSecondary,
-                    ),
-                  ),
-                  WnListItem(
-                    title: 'About',
-                    trailing: WnIcon(
-                      WnIcons.more,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Another item',
+                    type: WnListItemType.warning,
+                    showIcon: false,
                   ),
                 ],
               ),
             ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        _buildSection(
+          context,
+          'With Actions',
+          'List items can have expandable action buttons.',
+          [
             _ListExample(
-              label: 'Both Icons',
+              label: 'With Actions Menu',
               child: WnList(
                 children: [
                   WnListItem(
-                    title: 'Edit Profile',
-                    leading: WnIcon(
-                      WnIcons.user,
-                      color: context.colors.fillContentSecondary,
-                    ),
-                    trailing: WnIcon(
-                      WnIcons.more,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Editable Item',
+                    type: WnListItemType.neutral,
+                    showIcon: true,
+                    actions: [
+                      WnListItemAction(label: 'Edit', onTap: () {}),
+                      WnListItemAction(label: 'Duplicate', onTap: () {}),
+                      WnListItemAction(
+                        label: 'Delete',
+                        onTap: () {},
+                        isDestructive: true,
+                      ),
+                    ],
                   ),
                   WnListItem(
-                    title: 'Preferences',
-                    leading: WnIcon(
-                      WnIcons.settings,
-                      color: context.colors.fillContentSecondary,
-                    ),
-                    trailing: WnIcon(
-                      WnIcons.more,
-                      color: context.colors.fillContentSecondary,
-                    ),
+                    title: 'Another Item',
+                    type: WnListItemType.success,
+                    showIcon: true,
+                    actions: [
+                      WnListItemAction(label: 'Edit', onTap: () {}),
+                      WnListItemAction(
+                        label: 'Delete',
+                        onTap: () {},
+                        isDestructive: true,
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        _buildSection(
+          context,
+          'Interactive States',
+          'List items respond to tap/press interactions.',
+          [
+            _ListExample(
+              label: 'Tap to see pressed state',
+              child: WnList(
+                children: [
+                  const WnListItem(
+                    title: 'Tap and hold me',
+                    type: WnListItemType.success,
+                    showIcon: true,
+                  ),
+                  WnListItem(
+                    title: 'Tap the menu to expand',
+                    type: WnListItemType.neutral,
+                    showIcon: true,
+                    actions: [
+                      WnListItemAction(label: 'Edit', onTap: () {}),
+                      WnListItemAction(
+                        label: 'Delete',
+                        onTap: () {},
+                        isDestructive: true,
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -233,27 +266,39 @@ class _InteractiveList extends StatelessWidget {
       max: 10,
     );
 
-    final showLeading = this.context.knobs.boolean(
-      label: 'Show Leading Icons',
+    final showIcon = this.context.knobs.boolean(
+      label: 'Show Type Icons',
       initialValue: true,
     );
 
-    final showTrailing = this.context.knobs.boolean(
-      label: 'Show Trailing Icons',
+    final typeIndex = this.context.knobs.int.slider(
+      label: 'Item Type (0=neutral, 1=success, 2=warning, 3=error)',
+      initialValue: 0,
+      min: 0,
+      max: 3,
+    );
+
+    final showActions = this.context.knobs.boolean(
+      label: 'Show Actions Menu',
       initialValue: true,
     );
+
+    final type = WnListItemType.values[typeIndex];
 
     final children = List.generate(itemCount, (index) {
       return WnListItem(
         title: 'List Item ${index + 1}',
-        leading: showLeading
-            ? WnIcon(
-                WnIcons.placeholder,
-                color: context.colors.fillContentSecondary,
-              )
-            : null,
-        trailing: showTrailing
-            ? WnIcon(WnIcons.more, color: context.colors.fillContentSecondary)
+        type: type,
+        showIcon: showIcon,
+        actions: showActions
+            ? [
+                WnListItemAction(label: 'Edit', onTap: () {}),
+                WnListItemAction(
+                  label: 'Delete',
+                  onTap: () {},
+                  isDestructive: true,
+                ),
+              ]
             : null,
       );
     });

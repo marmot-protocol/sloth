@@ -6,16 +6,18 @@ class WnList extends StatelessWidget {
   const WnList({
     super.key,
     required this.children,
+    this.spacing,
   });
 
   final List<WnListItem> children;
+  final double? spacing;
 
   @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
-      spacing: 4.h,
+      spacing: spacing ?? 4.h,
       children: children,
     );
   }

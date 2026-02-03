@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Icon, Icons, Key;
+import 'package:flutter/material.dart' show Column, CrossAxisAlignment, Icons;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_list.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
@@ -64,58 +64,95 @@ void main() {
       });
     });
 
-    group('list items with icons', () {
-      testWidgets('renders list items with leading icons', (WidgetTester tester) async {
+    group('list items with type icons', () {
+      testWidgets('renders list items with type icons', (WidgetTester tester) async {
         final widget = const WnList(
           children: [
             WnListItem(
-              title: 'Settings',
-              leading: Icon(Icons.settings, key: Key('settings_icon')),
+              title: 'Success',
+              type: WnListItemType.success,
+              showIcon: true,
             ),
             WnListItem(
-              title: 'Notifications',
-              leading: Icon(Icons.notifications, key: Key('notifications_icon')),
+              title: 'Warning',
+              type: WnListItemType.warning,
+              showIcon: true,
             ),
           ],
         );
         await mountWidget(widget, tester);
-        expect(find.text('Settings'), findsOneWidget);
-        expect(find.text('Notifications'), findsOneWidget);
-        expect(find.byKey(const Key('settings_icon')), findsOneWidget);
-        expect(find.byKey(const Key('notifications_icon')), findsOneWidget);
+        expect(find.text('Success'), findsOneWidget);
+        expect(find.text('Warning'), findsOneWidget);
+        expect(find.byIcon(Icons.check_circle), findsOneWidget);
+        expect(find.byIcon(Icons.warning), findsOneWidget);
+      });
+    });
+
+    group('configurable spacing', () {
+      testWidgets('uses default spacing when not specified', (WidgetTester tester) async {
+        final widget = const WnList(
+          children: [
+            WnListItem(title: 'Item 1'),
+            WnListItem(title: 'Item 2'),
+          ],
+        );
+        await mountWidget(widget, tester);
+        expect(find.byType(WnList), findsOneWidget);
       });
 
-      testWidgets('renders list items with trailing icons', (WidgetTester tester) async {
+      testWidgets('applies custom spacing when specified', (WidgetTester tester) async {
         final widget = const WnList(
+          spacing: 12.0,
           children: [
-            WnListItem(
-              title: 'Item 1',
-              trailing: Icon(Icons.chevron_right, key: Key('chevron_1')),
-            ),
-            WnListItem(
-              title: 'Item 2',
-              trailing: Icon(Icons.chevron_right, key: Key('chevron_2')),
-            ),
+            WnListItem(title: 'Item 1'),
+            WnListItem(title: 'Item 2'),
           ],
         );
         await mountWidget(widget, tester);
-        expect(find.byKey(const Key('chevron_1')), findsOneWidget);
-        expect(find.byKey(const Key('chevron_2')), findsOneWidget);
+
+        final columnFinder = find.byWidgetPredicate(
+          (widget) =>
+              widget is Column &&
+              widget.spacing == 12.0 &&
+              widget.crossAxisAlignment == CrossAxisAlignment.stretch,
+        );
+        expect(columnFinder, findsOneWidget);
       });
 
-      testWidgets('renders list items with both icons', (WidgetTester tester) async {
+      testWidgets('applies zero spacing when specified', (WidgetTester tester) async {
         final widget = const WnList(
+          spacing: 0,
           children: [
-            WnListItem(
-              title: 'Full Item',
-              leading: Icon(Icons.star, key: Key('star_icon')),
-              trailing: Icon(Icons.more_vert, key: Key('more_icon')),
-            ),
+            WnListItem(title: 'Item 1'),
+            WnListItem(title: 'Item 2'),
           ],
         );
         await mountWidget(widget, tester);
-        expect(find.byKey(const Key('star_icon')), findsOneWidget);
-        expect(find.byKey(const Key('more_icon')), findsOneWidget);
+
+        final columnFinder = find.byWidgetPredicate(
+          (widget) =>
+              widget is Column &&
+              widget.spacing == 0 &&
+              widget.crossAxisAlignment == CrossAxisAlignment.stretch,
+        );
+        expect(columnFinder, findsOneWidget);
+      });
+    });
+
+    group('list items with actions', () {
+      testWidgets('renders list with items that have actions', (WidgetTester tester) async {
+        final widget = WnList(
+          children: [
+            WnListItem(
+              title: 'With Actions',
+              actions: [WnListItemAction(label: 'Edit', onTap: () {})],
+            ),
+            const WnListItem(title: 'Without Actions'),
+          ],
+        );
+        await mountWidget(widget, tester);
+        expect(find.text('With Actions'), findsOneWidget);
+        expect(find.text('Without Actions'), findsOneWidget);
       });
     });
   });
