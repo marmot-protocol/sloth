@@ -2,79 +2,66 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 
-enum WnSpinnerSize { small, medium, large }
+enum WnSpinnerType { primary, secondary, destructive }
 
-class WnSpinner extends StatelessWidget {
-  const WnSpinner({
-    super.key,
-    this.size = WnSpinnerSize.medium,
-    this.color,
-    this.label,
-  });
+class WnSpinner extends StatefulWidget {
+  const WnSpinner({super.key, this.type = WnSpinnerType.primary});
 
-  final WnSpinnerSize size;
-  final Color? color;
-  final String? label;
+  final WnSpinnerType type;
+
+  @override
+  State<WnSpinner> createState() => _WnSpinnerState();
+}
+
+class _WnSpinnerState extends State<WnSpinner> with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 900),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final indicatorColor = color ?? colors.backgroundContentPrimary;
-    final dimension = _getDimension();
-    final strokeWidth = _getStrokeWidth();
+    final indicatorColor = _getColor(colors);
 
-    final indicator = SizedBox.square(
-      dimension: dimension,
-      child: CircularProgressIndicator(
-        key: const Key('spinner_indicator'),
-        strokeWidth: strokeWidth,
-        strokeCap: StrokeCap.round,
-        color: indicatorColor,
+    return SizedBox.square(
+      dimension: 16.w,
+      child: AnimatedBuilder(
+        animation: _controller,
+        builder: (context, child) {
+          return Transform.rotate(
+            angle: _controller.value * 2 * 3.14159265359,
+            child: child,
+          );
+        },
+        child: CircularProgressIndicator(
+          key: const Key('spinner_indicator'),
+          strokeWidth: 2.w,
+          strokeCap: StrokeCap.round,
+          color: indicatorColor,
+          value: 0.75,
+        ),
       ),
     );
-
-    if (label == null) {
-      return indicator;
-    }
-
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        indicator,
-        SizedBox(height: 8.h),
-        Text(
-          label!,
-          style: TextStyle(
-            fontSize: _getLabelFontSize(),
-            color: colors.backgroundContentSecondary,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ],
-    );
   }
 
-  double _getDimension() {
-    return switch (size) {
-      WnSpinnerSize.small => 16.w,
-      WnSpinnerSize.medium => 24.w,
-      WnSpinnerSize.large => 32.w,
-    };
-  }
-
-  double _getStrokeWidth() {
-    return switch (size) {
-      WnSpinnerSize.small => 2.w,
-      WnSpinnerSize.medium => 2.5.w,
-      WnSpinnerSize.large => 3.w,
-    };
-  }
-
-  double _getLabelFontSize() {
-    return switch (size) {
-      WnSpinnerSize.small => 12.sp,
-      WnSpinnerSize.medium => 14.sp,
-      WnSpinnerSize.large => 16.sp,
+  Color _getColor(SemanticColors colors) {
+    return switch (widget.type) {
+      WnSpinnerType.primary => colors.fillContentPrimary,
+      WnSpinnerType.secondary => colors.fillContentSecondary,
+      WnSpinnerType.destructive => colors.fillContentDestructive,
     };
   }
 }

@@ -39,65 +39,57 @@ Widget wnSpinnerShowcase(BuildContext context) {
         const SizedBox(height: 16),
         Align(
           alignment: Alignment.centerLeft,
-          child: _InteractiveSpinner(context: context),
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 375),
+            child: _InteractiveSpinner(context: context),
+          ),
         ),
         const SizedBox(height: 32),
         Divider(color: context.colors.borderTertiary),
         const SizedBox(height: 24),
         _buildSection(
           context,
-          'Size Variants',
-          'WnSpinner comes in 3 sizes: small, medium (default), and large.',
+          'Type Variants',
+          'WnSpinner comes in 3 types: primary (on primary buttons), secondary (on outline buttons), and destructive (on destructive buttons).',
           [
             _SpinnerExample(
-              label: 'Small',
-              child: WnSpinner(size: WnSpinnerSize.small),
+              label: 'Primary',
+              description: 'Use on primary buttons',
+              child: WnSpinner(type: WnSpinnerType.primary),
             ),
             _SpinnerExample(
-              label: 'Medium',
-              child: WnSpinner(size: WnSpinnerSize.medium),
+              label: 'Secondary',
+              description: 'Use on outline buttons',
+              child: WnSpinner(type: WnSpinnerType.secondary),
             ),
             _SpinnerExample(
-              label: 'Large',
-              child: WnSpinner(size: WnSpinnerSize.large),
+              label: 'Destructive',
+              description: 'Use on destructive buttons',
+              child: WnSpinner(type: WnSpinnerType.destructive),
             ),
           ],
         ),
         const SizedBox(height: 32),
         _buildSection(
           context,
-          'With Label',
-          'Spinners can have an optional label displayed below.',
+          'Usage Context',
+          'Spinners are designed to show loading state within buttons. Each type matches its corresponding button style.',
           [
-            _SpinnerExample(label: 'No Label', child: WnSpinner()),
-            _SpinnerExample(
-              label: 'With Label',
-              child: WnSpinner(label: 'Loading...'),
+            _SpinnerContextExample(
+              label: 'Primary Button',
+              backgroundColor: context.colors.fillPrimary,
+              child: WnSpinner(type: WnSpinnerType.primary),
             ),
-            _SpinnerExample(
-              label: 'Large + Label',
-              child: WnSpinner(size: WnSpinnerSize.large, label: 'Please wait'),
+            _SpinnerContextExample(
+              label: 'Outline Button',
+              backgroundColor: context.colors.backgroundPrimary,
+              borderColor: context.colors.borderPrimary,
+              child: WnSpinner(type: WnSpinnerType.secondary),
             ),
-          ],
-        ),
-        const SizedBox(height: 32),
-        _buildSection(
-          context,
-          'Custom Colors',
-          'Spinners can use custom colors to match different contexts.',
-          [
-            _SpinnerExample(label: 'Default', child: WnSpinner()),
-            _SpinnerExample(
-              label: 'Info',
-              child: WnSpinner(color: context.colors.intentionInfoContent),
-            ),
-            _SpinnerExample(
-              label: 'Error',
-              child: WnSpinner(color: context.colors.intentionErrorContent),
-            ),
-            _SpinnerExample(
-              label: 'Success',
-              child: WnSpinner(color: context.colors.intentionSuccessContent),
+            _SpinnerContextExample(
+              label: 'Destructive Button',
+              backgroundColor: context.colors.fillDestructive,
+              child: WnSpinner(type: WnSpinnerType.destructive),
             ),
           ],
         ),
@@ -138,15 +130,64 @@ Widget _buildSection(
 }
 
 class _SpinnerExample extends StatelessWidget {
-  const _SpinnerExample({required this.label, required this.child});
+  const _SpinnerExample({
+    required this.label,
+    required this.description,
+    required this.child,
+  });
 
   final String label;
+  final String description;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: 120,
+      width: 140,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 12,
+              fontWeight: FontWeight.w600,
+              color: context.colors.backgroundContentPrimary,
+            ),
+          ),
+          const SizedBox(height: 2),
+          Text(
+            description,
+            style: TextStyle(
+              fontSize: 11,
+              color: context.colors.backgroundContentSecondary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          child,
+        ],
+      ),
+    );
+  }
+}
+
+class _SpinnerContextExample extends StatelessWidget {
+  const _SpinnerContextExample({
+    required this.label,
+    required this.backgroundColor,
+    required this.child,
+    this.borderColor,
+  });
+
+  final String label;
+  final Color backgroundColor;
+  final Color? borderColor;
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      width: 140,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -159,7 +200,17 @@ class _SpinnerExample extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 8),
-          child,
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: backgroundColor,
+              borderRadius: BorderRadius.circular(8),
+              border: borderColor != null
+                  ? Border.all(color: borderColor!)
+                  : null,
+            ),
+            child: Center(child: child),
+          ),
         ],
       ),
     );
@@ -173,60 +224,17 @@ class _InteractiveSpinner extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final size = this.context.knobs.object.dropdown<WnSpinnerSize>(
-      label: 'Size',
-      options: WnSpinnerSize.values,
-      initialOption: WnSpinnerSize.medium,
+    final type = this.context.knobs.object.dropdown<WnSpinnerType>(
+      label: 'Type',
+      options: WnSpinnerType.values,
+      initialOption: WnSpinnerType.primary,
       labelBuilder: (value) => value.name,
     );
 
-    final labelText = this.context.knobs.string(
-      label: 'Label',
-      initialValue: '',
-    );
-
-    final useCustomColor = this.context.knobs.boolean(
-      label: 'Use Custom Color',
-      initialValue: false,
-    );
-
-    final customColor = useCustomColor
-        ? this.context.knobs.object.dropdown<_ColorOption>(
-            label: 'Color',
-            options: _ColorOption.values,
-            initialOption: _ColorOption.info,
-            labelBuilder: (value) => value.name,
-          )
-        : null;
-
-    return WnSpinner(
-      size: size,
-      label: labelText.isEmpty ? null : labelText,
-      color: customColor?.toColor(this.context),
-    );
+    return WnSpinner(type: type);
   }
 }
 
-enum _ColorOption {
-  info,
-  error,
-  success,
-  warning;
-
-  Color toColor(BuildContext context) {
-    return switch (this) {
-      _ColorOption.info => context.colors.intentionInfoContent,
-      _ColorOption.error => context.colors.intentionErrorContent,
-      _ColorOption.success => context.colors.intentionSuccessContent,
-      _ColorOption.warning => context.colors.intentionWarningContent,
-    };
-  }
-}
-
-extension on WnSpinnerSize {
-  String get name => toString().split('.').last;
-}
-
-extension on _ColorOption {
+extension on WnSpinnerType {
   String get name => toString().split('.').last;
 }

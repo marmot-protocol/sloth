@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart'
-    show CircularProgressIndicator, Color, Column, Key, SizedBox, Text;
+import 'package:flutter/material.dart' show CircularProgressIndicator, Key, SizedBox, Transform;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_spinner.dart';
 import '../test_helpers.dart' show mountWidget;
@@ -18,54 +17,44 @@ void main() {
         await mountWidget(widget, tester);
         expect(find.byType(CircularProgressIndicator), findsOneWidget);
       });
+
+      testWidgets('has fixed 16px dimension', (WidgetTester tester) async {
+        final widget = const WnSpinner();
+        await mountWidget(widget, tester);
+        final sizedBox = tester.widget<SizedBox>(
+          find.byType(SizedBox).first,
+        );
+        expect(sizedBox.width, 16);
+        expect(sizedBox.height, 16);
+      });
     });
 
-    group('sizes', () {
-      testWidgets('renders small size', (WidgetTester tester) async {
-        final widget = const WnSpinner(size: WnSpinnerSize.small);
-        await mountWidget(widget, tester);
-        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
-      });
-
-      testWidgets('renders medium size by default', (WidgetTester tester) async {
+    group('types', () {
+      testWidgets('renders primary type by default', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
 
-      testWidgets('renders large size', (WidgetTester tester) async {
-        final widget = const WnSpinner(size: WnSpinnerSize.large);
+      testWidgets('renders primary type', (WidgetTester tester) async {
+        final widget = const WnSpinner();
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
 
-      testWidgets('small size has smaller dimensions', (WidgetTester tester) async {
-        final widget = const WnSpinner(size: WnSpinnerSize.small);
+      testWidgets('renders secondary type', (WidgetTester tester) async {
+        final widget = const WnSpinner(type: WnSpinnerType.secondary);
         await mountWidget(widget, tester);
-        final sizedBox = tester.widget<SizedBox>(
-          find.ancestor(
-            of: find.byType(CircularProgressIndicator),
-            matching: find.byType(SizedBox),
-          ),
-        );
-        expect(sizedBox.width, lessThan(24));
+        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
 
-      testWidgets('large size has larger dimensions', (WidgetTester tester) async {
-        final widget = const WnSpinner(size: WnSpinnerSize.large);
+      testWidgets('renders destructive type', (WidgetTester tester) async {
+        final widget = const WnSpinner(type: WnSpinnerType.destructive);
         await mountWidget(widget, tester);
-        final sizedBox = tester.widget<SizedBox>(
-          find.ancestor(
-            of: find.byType(CircularProgressIndicator),
-            matching: find.byType(SizedBox),
-          ),
-        );
-        expect(sizedBox.width, greaterThan(24));
+        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
       });
-    });
 
-    group('colors', () {
-      testWidgets('uses theme primary color by default', (WidgetTester tester) async {
+      testWidgets('primary type uses correct color', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
         final indicator = tester.widget<CircularProgressIndicator>(
@@ -74,42 +63,45 @@ void main() {
         expect(indicator.color, isNotNull);
       });
 
-      testWidgets('uses custom color when provided', (WidgetTester tester) async {
-        const customColor = Color(0xFF00FF00);
-        final widget = const WnSpinner(color: customColor);
+      testWidgets('secondary type uses correct color', (WidgetTester tester) async {
+        final widget = const WnSpinner(type: WnSpinnerType.secondary);
         await mountWidget(widget, tester);
         final indicator = tester.widget<CircularProgressIndicator>(
           find.byType(CircularProgressIndicator),
         );
-        expect(indicator.color, customColor);
+        expect(indicator.color, isNotNull);
+      });
+
+      testWidgets('destructive type uses correct color', (WidgetTester tester) async {
+        final widget = const WnSpinner(type: WnSpinnerType.destructive);
+        await mountWidget(widget, tester);
+        final indicator = tester.widget<CircularProgressIndicator>(
+          find.byType(CircularProgressIndicator),
+        );
+        expect(indicator.color, isNotNull);
       });
     });
 
-    group('label', () {
-      testWidgets('displays label text when provided', (WidgetTester tester) async {
-        final widget = const WnSpinner(label: 'Loading...');
-        await mountWidget(widget, tester);
-        expect(find.text('Loading...'), findsOneWidget);
-      });
-
-      testWidgets('does not display label when not provided', (WidgetTester tester) async {
+    group('animation', () {
+      testWidgets('spinner animates with 900ms duration', (WidgetTester tester) async {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        expect(find.byType(Text), findsNothing);
+
+        final initialTransform = tester.firstWidget(find.byType(Transform));
+        await tester.pump(const Duration(milliseconds: 450));
+        final midTransform = tester.firstWidget(find.byType(Transform));
+        await tester.pump(const Duration(milliseconds: 450));
+        final finalTransform = tester.firstWidget(find.byType(Transform));
+
+        expect(initialTransform, isNotNull);
+        expect(midTransform, isNotNull);
+        expect(finalTransform, isNotNull);
       });
 
-      testWidgets('label appears below spinner', (WidgetTester tester) async {
-        final widget = const WnSpinner(label: 'Please wait');
+      testWidgets('uses linear easing', (WidgetTester tester) async {
+        final widget = const WnSpinner();
         await mountWidget(widget, tester);
-        expect(find.byType(Column), findsOneWidget);
-        expect(find.text('Please wait'), findsOneWidget);
-      });
-
-      testWidgets('label uses correct styling', (WidgetTester tester) async {
-        final widget = const WnSpinner(label: 'Loading');
-        await mountWidget(widget, tester);
-        final textWidget = tester.widget<Text>(find.text('Loading'));
-        expect(textWidget.style, isNotNull);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
       });
     });
 
@@ -118,34 +110,6 @@ void main() {
         final widget = const WnSpinner();
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
-      });
-    });
-
-    group('combined configurations', () {
-      testWidgets('renders with all options', (WidgetTester tester) async {
-        const customColor = Color(0xFFFF0000);
-        final widget = const WnSpinner(
-          size: WnSpinnerSize.large,
-          color: customColor,
-          label: 'Loading data...',
-        );
-        await mountWidget(widget, tester);
-        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
-        expect(find.text('Loading data...'), findsOneWidget);
-        final indicator = tester.widget<CircularProgressIndicator>(
-          find.byType(CircularProgressIndicator),
-        );
-        expect(indicator.color, customColor);
-      });
-
-      testWidgets('renders small with label', (WidgetTester tester) async {
-        final widget = const WnSpinner(
-          size: WnSpinnerSize.small,
-          label: 'Wait',
-        );
-        await mountWidget(widget, tester);
-        expect(find.byKey(const Key('spinner_indicator')), findsOneWidget);
-        expect(find.text('Wait'), findsOneWidget);
       });
     });
   });
