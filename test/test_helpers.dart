@@ -10,15 +10,31 @@ import 'package:sloth/routes.dart';
 const testDesignSize = Size(390, 844);
 
 const testPubkeyA = 'a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4';
-const testNpubA = 'npub1a1b2c311111111111111111111111111111111111111111111111111';
+const testNpubA = 'npub1a1b2c31111111111111111111111111111111111111111111111111111';
 const testNpubAFormatted =
-    'npub1 a1b2c 31111 11111 11111 11111 11111 11111 11111 11111 11111 11111 1';
+    'npub 1a1b 2c31 1111 1111 1111 1111 1111 1111 1111 1111 1111 1111 1111 1111 111';
 const testPubkeyB = 'b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5';
 const testNpubB = 'npub1b2c3d422222222222222222222222222222222222222222222222222';
+const testNpubBFormatted =
+    'npub 1b2c 3d42 2222 2222 2222 2222 2222 2222 2222 2222 2222 2222 2222 2222';
 const testPubkeyC = 'c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6';
 const testNpubC = 'npub1c3d4e533333333333333333333333333333333333333333333333333';
+const testNpubCFormatted =
+    'npub 1c3d 4e53 3333 3333 3333 3333 3333 3333 3333 3333 3333 3333 3333 3333 333';
 const testPubkeyD = 'd4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1';
 const testNpubD = 'npub1d4e5f644444444444444444444444444444444444444444444444444';
+const testHexToNpub = <String, String>{
+  testPubkeyA: testNpubA,
+  testPubkeyB: testNpubB,
+  testPubkeyC: testNpubC,
+  testPubkeyD: testNpubD,
+};
+const testNpubToHex = <String, String>{
+  testNpubA: testPubkeyA,
+  testNpubB: testPubkeyB,
+  testNpubC: testPubkeyC,
+  testNpubD: testPubkeyD,
+};
 const testGroupId = 'abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234';
 const testNostrGroupId = 'dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321';
 

@@ -9,18 +9,7 @@ import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mo
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const Map<String, String> pubkeyToNpub = {testPubkeyA: testNpubA};
-
-class _MockApi extends MockWnApi {
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    final npub = pubkeyToNpub[hexPubkey];
-    if (npub == null) throw Exception('Unknown pubkey');
-    return npub;
-  }
-}
-
-final _api = _MockApi();
+final _api = MockWnApi();
 
 void main() {
   setUpAll(() => RustLib.initMock(api: _api));

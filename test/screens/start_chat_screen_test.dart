@@ -36,7 +36,6 @@ class _MockApi extends MockWnApi {
   final unfollowCalls = <({String account, String target})>[];
   Completer<void>? followCompleter;
   Exception? followError;
-  final Map<String, String> pubkeyToNpub = {};
   final Set<String> followingPubkeys = {};
 
   @override
@@ -104,13 +103,6 @@ class _MockApi extends MockWnApi {
   }
 
   @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    final npub = pubkeyToNpub[hexPubkey];
-    if (npub == null) throw Exception('Unknown pubkey');
-    return npub;
-  }
-
-  @override
   void reset() {
     super.reset();
     metadata = const FlutterMetadata(custom: {});
@@ -122,7 +114,6 @@ class _MockApi extends MockWnApi {
     unfollowCalls.clear();
     followCompleter = null;
     followError = null;
-    pubkeyToNpub.clear();
     followingPubkeys.clear();
   }
 }
@@ -146,8 +137,6 @@ void main() {
     required String userPubkey,
   }) async {
     setUpTestView(tester);
-    _api.pubkeyToNpub[testPubkeyA] = testNpubA;
-    _api.pubkeyToNpub[testPubkeyB] = testNpubB;
     await mountTestApp(
       tester,
       overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],

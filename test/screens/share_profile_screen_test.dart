@@ -154,5 +154,11 @@ void main() {
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
       expect(avatar.color, AvatarColor.cyan);
     });
+
+    testWidgets('displays npub formatted in copy card', (tester) async {
+      await pumpShareProfileScreen(tester);
+      final copyCard = tester.widget<WnCopyCard>(find.byType(WnCopyCard));
+      expect(copyCard.textToDisplay, testNpubAFormatted);
+    });
   });
 }
