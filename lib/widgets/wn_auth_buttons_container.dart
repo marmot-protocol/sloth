@@ -24,13 +24,11 @@ class WnAuthButtonsContainer extends StatelessWidget {
           text: context.l10n.login,
           type: WnButtonType.outline,
           onPressed: onLogin ?? () => Routes.pushToLogin(context),
-          size: WnButtonSize.medium,
         ),
         Gap(8.h),
         WnButton(
           text: context.l10n.signUp,
           onPressed: onSignup ?? () => Routes.pushToSignup(context),
-          size: WnButtonSize.medium,
         ),
       ],
     );
