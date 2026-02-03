@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 
@@ -21,7 +22,7 @@ class WnListItemAction {
   final bool isDestructive;
 }
 
-class WnListItem extends StatefulWidget {
+class WnListItem extends HookWidget {
   const WnListItem({
     super.key,
     required this.title,
@@ -38,96 +39,90 @@ class WnListItem extends StatefulWidget {
   final List<WnListItemAction>? actions;
 
   @override
-  State<WnListItem> createState() => _WnListItemState();
-}
+  Widget build(BuildContext context) {
+    final isExpanded = useState(false);
+    final isPressed = useState(false);
+    final colors = context.colors;
+    final hasActions = actions != null && actions!.isNotEmpty;
 
-class _WnListItemState extends State<WnListItem> {
-  bool _isExpanded = false;
-  bool _isPressed = false;
-
-  Color _getBackgroundColor(SemanticColors colors) {
-    if (_isExpanded) {
-      return colors.fillSecondaryActive;
+    Color getBackgroundColor() {
+      if (isExpanded.value) {
+        return colors.fillSecondaryActive;
+      }
+      if (isPressed.value) {
+        return colors.fillSecondaryHover;
+      }
+      return colors.fillSecondary;
     }
-    if (_isPressed) {
-      return colors.fillSecondaryHover;
+
+    Widget? buildLeadingIcon() {
+      if (!showIcon) return null;
+
+      final (IconData icon, Color color) = switch (type) {
+        WnListItemType.neutral => (Icons.circle_outlined, colors.fillContentTertiary),
+        WnListItemType.success => (Icons.check_circle, colors.intentionSuccessContent),
+        WnListItemType.warning => (Icons.warning, colors.intentionWarningContent),
+        WnListItemType.error => (Icons.error, colors.intentionErrorContent),
+      };
+
+      return Icon(
+        icon,
+        key: const Key('list_item_type_icon'),
+        size: 20.w,
+        color: color,
+      );
     }
-    return colors.fillSecondary;
-  }
 
-  Widget? _buildLeadingIcon(SemanticColors colors) {
-    if (!widget.showIcon) return null;
-
-    final (IconData icon, Color color) = switch (widget.type) {
-      WnListItemType.neutral => (Icons.circle_outlined, colors.fillContentTertiary),
-      WnListItemType.success => (Icons.check_circle, colors.intentionSuccessContent),
-      WnListItemType.warning => (Icons.warning, colors.intentionWarningContent),
-      WnListItemType.error => (Icons.error, colors.intentionErrorContent),
-    };
-
-    return Icon(
-      icon,
-      key: const Key('list_item_type_icon'),
-      size: 20.w,
-      color: color,
-    );
-  }
-
-  Widget _buildExpandedActions(SemanticColors colors) {
-    final actions = widget.actions ?? [];
-    return Row(
-      key: const Key('list_item_expanded_actions'),
-      mainAxisSize: MainAxisSize.min,
-      spacing: 4.w,
-      children: actions.map((action) {
-        return GestureDetector(
-          onTap: () {
-            action.onTap();
-            setState(() => _isExpanded = false);
-          },
-          behavior: HitTestBehavior.opaque,
-          child: Container(
-            height: 32.h,
-            padding: EdgeInsets.symmetric(horizontal: 12.w),
-            decoration: BoxDecoration(
-              color: action.isDestructive ? colors.fillDestructive : colors.fillPrimary,
-              borderRadius: BorderRadius.circular(6.r),
-            ),
-            alignment: Alignment.center,
-            child: Text(
-              action.label,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: action.isDestructive
-                    ? colors.fillContentDestructive
-                    : colors.fillContentPrimary,
-                height: 18 / 14,
-                letterSpacing: 0.4.sp,
+    Widget buildExpandedActions() {
+      return Row(
+        key: const Key('list_item_expanded_actions'),
+        mainAxisSize: MainAxisSize.min,
+        spacing: 4.w,
+        children: actions!.map((action) {
+          return GestureDetector(
+            onTap: () {
+              action.onTap();
+              isExpanded.value = false;
+            },
+            behavior: HitTestBehavior.opaque,
+            child: Container(
+              height: 32.h,
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              decoration: BoxDecoration(
+                color: action.isDestructive ? colors.fillDestructive : colors.fillPrimary,
+                borderRadius: BorderRadius.circular(6.r),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                action.label,
+                style: TextStyle(
+                  fontSize: 14.sp,
+                  fontWeight: FontWeight.w500,
+                  color: action.isDestructive
+                      ? colors.fillContentDestructive
+                      : colors.fillContentPrimary,
+                  height: 18 / 14,
+                  letterSpacing: 0.4.sp,
+                ),
               ),
             ),
-          ),
-        );
-      }).toList(),
-    );
-  }
+          );
+        }).toList(),
+      );
+    }
 
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final leadingIcon = _buildLeadingIcon(colors);
-    final hasActions = widget.actions != null && widget.actions!.isNotEmpty;
+    final leadingIcon = buildLeadingIcon();
 
     return GestureDetector(
-      onTap: widget.onTap,
-      onTapDown: (_) => setState(() => _isPressed = true),
-      onTapUp: (_) => setState(() => _isPressed = false),
-      onTapCancel: () => setState(() => _isPressed = false),
+      onTap: onTap,
+      onTapDown: (_) => isPressed.value = true,
+      onTapUp: (_) => isPressed.value = false,
+      onTapCancel: () => isPressed.value = false,
       behavior: HitTestBehavior.opaque,
       child: Container(
         height: 44.h,
         decoration: BoxDecoration(
-          color: _getBackgroundColor(colors),
+          color: getBackgroundColor(),
           borderRadius: BorderRadius.circular(8.r),
         ),
         clipBehavior: Clip.antiAlias,
@@ -148,7 +143,7 @@ class _WnListItemState extends State<WnListItem> {
               child: Padding(
                 padding: EdgeInsets.only(right: 16.w),
                 child: Text(
-                  widget.title,
+                  title,
                   style: TextStyle(
                     fontSize: 14.sp,
                     fontWeight: FontWeight.w500,
@@ -161,12 +156,12 @@ class _WnListItemState extends State<WnListItem> {
                 ),
               ),
             ),
-            if (_isExpanded && hasActions)
-              _buildExpandedActions(colors)
+            if (isExpanded.value && hasActions)
+              buildExpandedActions()
             else if (hasActions)
               GestureDetector(
                 key: const Key('list_item_menu_button'),
-                onTap: () => setState(() => _isExpanded = true),
+                onTap: () => isExpanded.value = true,
                 behavior: HitTestBehavior.opaque,
                 child: Padding(
                   padding: EdgeInsets.only(right: 8.w),

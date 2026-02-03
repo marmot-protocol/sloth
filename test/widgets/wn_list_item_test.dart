@@ -161,7 +161,7 @@ void main() {
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('list_item_menu_button')), findsOneWidget);
-        expect(find.byIcon(Icons.more_vert), findsOneWidget);
+        expect(find.byKey(const Key('list_item_menu_icon')), findsOneWidget);
       });
 
       testWidgets('expands to show actions when menu tapped', (WidgetTester tester) async {
