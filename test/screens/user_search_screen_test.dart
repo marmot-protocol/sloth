@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
+import 'package:sloth/screens/chat_list_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
@@ -106,6 +107,13 @@ void main() {
       await pumpUserSearchScreen(tester);
       expect(find.text('npub1...'), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
+    });
+
+    testWidgets('tapping close icon goes back', (tester) async {
+      await pumpUserSearchScreen(tester);
+      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.pumpAndSettle();
+      expect(find.byType(ChatListScreen), findsOneWidget);
     });
 
     group('without follows', () {
