@@ -200,13 +200,13 @@ class _TooltipContent extends StatelessWidget {
   Widget _buildContentBox() {
     return Container(
       key: const Key('tooltip_content'),
-      padding: EdgeInsets.all(8.w),
+      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
       decoration: BoxDecoration(
         color: colors.fillPrimary,
         borderRadius: BorderRadius.circular(8.r),
       ),
       child: Padding(
-        padding: EdgeInsets.all(8.w),
+        padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
         child: DefaultTextStyle(
           style: TextStyle(
             color: colors.fillContentPrimary,
