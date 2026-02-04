@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart' show BoxDecoration, Column, Container, Key;
+import 'package:flutter/material.dart'
+    show BoxDecoration, Column, Container, GlobalKey, Key, UniqueKey;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
@@ -318,7 +319,9 @@ void main() {
         controller.dispose();
       });
 
-      testWidgets('uses widget Key value when itemKey not provided', (WidgetTester tester) async {
+      testWidgets('uses widget ValueKey value when itemKey not provided', (
+        WidgetTester tester,
+      ) async {
         final controller = WnListItemController();
 
         final widget = WnListItemScope(
@@ -337,6 +340,85 @@ void main() {
         await tester.pump();
 
         expect(controller.expandedItemKey, 'my-unique-key');
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+
+        controller.dispose();
+      });
+
+      testWidgets('uses widget GlobalKey.toString() when itemKey not provided', (
+        WidgetTester tester,
+      ) async {
+        final controller = WnListItemController();
+        final globalKey = GlobalKey(debugLabel: 'test-global-key');
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: WnListItem(
+            key: globalKey,
+            title: 'Same Title',
+            actions: [
+              WnListItemAction(label: 'Edit', onTap: () {}),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(controller.expandedItemKey, globalKey.toString());
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+
+        controller.dispose();
+      });
+
+      testWidgets('throws assertion error when using UniqueKey without itemKey', (
+        WidgetTester tester,
+      ) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: WnListItem(
+            key: UniqueKey(),
+            title: 'Unstable Item',
+            actions: [
+              WnListItemAction(label: 'Edit', onTap: () {}),
+            ],
+          ),
+        );
+
+        await mountWidget(widget, tester);
+
+        final exception = tester.takeException();
+        expect(exception, isNotNull);
+        expect(exception.toString(), contains('UniqueKey'));
+
+        controller.dispose();
+      });
+
+      testWidgets('allows UniqueKey when explicit itemKey is provided', (
+        WidgetTester tester,
+      ) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: WnListItem(
+            key: UniqueKey(),
+            title: 'Stable Item',
+            itemKey: 'stable-item-key',
+            actions: [
+              WnListItemAction(label: 'Edit', onTap: () {}),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(controller.expandedItemKey, 'stable-item-key');
         expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
 
         controller.dispose();

@@ -85,7 +85,35 @@ class WnListItem extends HookWidget {
 
     final controller = WnListItemScope.maybeOf(context);
     final widgetKey = key;
-    final effectiveKey = itemKey ?? (widgetKey is ValueKey ? widgetKey.value.toString() : title);
+
+    String computeEffectiveKey() {
+      if (itemKey != null) return itemKey!;
+      if (widgetKey != null) {
+        if (widgetKey is ValueKey) {
+          return widgetKey.value.toString();
+        }
+        return widgetKey.toString();
+      }
+      return title;
+    }
+
+    final effectiveKey = computeEffectiveKey();
+
+    assert(
+      () {
+        if (widgetKey is UniqueKey && itemKey == null) {
+          throw FlutterError.fromParts([
+            ErrorSummary('WnListItem with UniqueKey requires an explicit itemKey.'),
+            ErrorDescription(
+              'UniqueKey generates a new identity on each build, which causes '
+              'expansion state to be lost. Provide an explicit itemKey parameter '
+              'to ensure stable identity.',
+            ),
+          ]);
+        }
+        return true;
+      }(),
+    );
 
     final isExpanded = controller != null
         ? controller.isExpanded(effectiveKey)
@@ -147,21 +175,24 @@ class WnListItem extends HookWidget {
     }
 
     Widget buildExpandedActions() {
-      return Row(
+      return Padding(
         key: const Key('list_item_expanded_actions'),
-        mainAxisSize: MainAxisSize.min,
-        spacing: 4.w,
-        children: actions!.map((action) {
-          return WnButton(
-            text: action.label,
-            type: action.isDestructive ? WnButtonType.destructive : WnButtonType.primary,
-            size: WnButtonSize.xsmall,
-            onPressed: () {
-              action.onTap();
-              setExpanded(false);
-            },
-          );
-        }).toList(),
+        padding: EdgeInsets.symmetric(vertical: 6.h),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          spacing: 4.w,
+          children: actions!.map((action) {
+            return WnButton(
+              text: action.label,
+              type: action.isDestructive ? WnButtonType.destructive : WnButtonType.primary,
+              size: WnButtonSize.xsmall,
+              onPressed: () {
+                action.onTap();
+                setExpanded(false);
+              },
+            );
+          }).toList(),
+        ),
       );
     }
 
