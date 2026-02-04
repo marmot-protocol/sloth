@@ -146,5 +146,6 @@
   "cameraPermissionDenied": "Kamera izni reddedildi",
   "somethingWentWrong": "Bir şeyler yanlış gitti",
   "scanNpub": "QR kodu tara",
-  "scanNpubHint": "Bir kişinin QR kodunu tarayın."
+  "scanNpubHint": "Bir kişinin QR kodunu tarayın.",
+  "invalidNpub": "Geçersiz açık anahtar. Lütfen tekrar deneyin."
 }

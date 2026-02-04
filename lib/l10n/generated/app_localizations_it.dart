@@ -499,4 +499,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get scanNpubHint => 'Scansiona il codice QR di un contatto.';
+
+  @override
+  String get invalidNpub => 'Chiave pubblica non valida. Riprova.';
 }

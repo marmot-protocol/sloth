@@ -498,4 +498,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get scanNpubHint => 'Scan a contact\'s QR code.';
+
+  @override
+  String get invalidNpub => 'Invalid public key. Please try again.';
 }

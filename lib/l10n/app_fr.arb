@@ -146,5 +146,6 @@
   "cameraPermissionDenied": "Autorisation caméra refusée",
   "somethingWentWrong": "Une erreur s'est produite",
   "scanNpub": "Scanner le code QR",
-  "scanNpubHint": "Scannez le code QR d'un contact."
+  "scanNpubHint": "Scannez le code QR d'un contact.",
+  "invalidNpub": "Clé publique invalide. Veuillez réessayer."
 }

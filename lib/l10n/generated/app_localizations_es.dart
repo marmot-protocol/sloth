@@ -503,4 +503,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get scanNpubHint => 'Escanea el código QR de un contacto.';
+
+  @override
+  String get invalidNpub => 'Clave pública inválida. Por favor, inténtalo de nuevo.';
 }

@@ -146,5 +146,6 @@
   "cameraPermissionDenied": "Permissão de câmera negada",
   "somethingWentWrong": "Algo deu errado",
   "scanNpub": "Escanear código QR",
-  "scanNpubHint": "Escaneie o código QR de um contato."
+  "scanNpubHint": "Escaneie o código QR de um contato.",
+  "invalidNpub": "Chave pública inválida. Por favor, tente novamente."
 }

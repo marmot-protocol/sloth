@@ -109,14 +109,26 @@ void main() {
         expect(find.byType(StartChatScreen), findsOneWidget);
       });
 
-      testWidgets('calling onBarcodeDetected with invalid npub does nothing', (tester) async {
+      testWidgets('calling onBarcodeDetected with non-npub value does nothing', (tester) async {
         await pumpScanNpubScreen(tester);
 
         final scanBox = tester.widget<WnScanBox>(find.byType(WnScanBox));
-        scanBox.onBarcodeDetected('invalid_npub');
+        scanBox.onBarcodeDetected('https://example.com');
         await tester.pumpAndSettle();
 
         expect(find.byType(WnScanBox), findsOneWidget);
+        expect(find.text("Scan a contact's QR code."), findsOneWidget);
+      });
+
+      testWidgets('calling onBarcodeDetected with invalid npub shows error', (tester) async {
+        await pumpScanNpubScreen(tester);
+
+        final scanBox = tester.widget<WnScanBox>(find.byType(WnScanBox));
+        scanBox.onBarcodeDetected('npub1invalidkey');
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnScanBox), findsOneWidget);
+        expect(find.text('Invalid public key. Please try again.'), findsOneWidget);
       });
     });
   });

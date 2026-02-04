@@ -509,4 +509,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get scanNpubHint => 'Scannen Sie den QR-Code eines Kontakts.';
+
+  @override
+  String get invalidNpub => 'Ungültiger öffentlicher Schlüssel. Bitte versuchen Sie es erneut.';
 }

@@ -146,5 +146,6 @@
   "cameraPermissionDenied": "Доступ к камере запрещён",
   "somethingWentWrong": "Что-то пошло не так",
   "scanNpub": "Сканировать QR-код",
-  "scanNpubHint": "Отсканируйте QR-код контакта."
+  "scanNpubHint": "Отсканируйте QR-код контакта.",
+  "invalidNpub": "Недействительный публичный ключ. Попробуйте снова."
 }

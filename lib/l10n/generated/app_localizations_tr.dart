@@ -498,4 +498,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get scanNpubHint => 'Bir kişinin QR kodunu tarayın.';
+
+  @override
+  String get invalidNpub => 'Geçersiz açık anahtar. Lütfen tekrar deneyin.';
 }
