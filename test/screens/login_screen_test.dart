@@ -60,6 +60,9 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 class _MockAndroidSignerService implements AndroidSignerService {
+  @override
+  bool get platformIsAndroid => false;
+
   bool _isAvailable = false;
   String? _pubkeyToReturn;
   Exception? _getPublicKeyError;

@@ -34,6 +34,9 @@ void main() {
 
 class _MockAndroidSignerService implements AndroidSignerService {
   @override
+  bool get platformIsAndroid => false;
+
+  @override
   Future<bool> isAvailable() async => true;
 
   @override

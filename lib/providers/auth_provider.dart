@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logging/logging.dart';
@@ -102,7 +104,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
   ///
   /// This is called on app startup to restore the signer for external accounts.
   void _registerExternalSignerCallbacks(String pubkey) {
-    const signerService = AndroidSignerService();
+    final signerService = AndroidSignerService(platformIsAndroid: Platform.isAndroid);
     _logger.info('Re-registering external signer for account $pubkey');
 
     final callbacks = _createSignerCallbacks(pubkey, signerService);
@@ -146,7 +148,7 @@ class AuthNotifier extends AsyncNotifier<String?> {
   }) async {
     _logger.info('Android signer login attempt started');
     final storage = ref.read(secureStorageProvider);
-    const signerService = AndroidSignerService();
+    final signerService = AndroidSignerService(platformIsAndroid: Platform.isAndroid);
 
     Future<void> safeDisconnect() async {
       try {

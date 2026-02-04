@@ -7,6 +7,9 @@ import 'package:sloth/services/android_signer_service.dart';
 import '../test_helpers.dart';
 
 class MockAndroidSignerService implements AndroidSignerService {
+  @override
+  bool get platformIsAndroid => false;
+
   bool _isAvailable = false;
   String? _pubkeyToReturn;
   Exception? _errorToThrow;
