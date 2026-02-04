@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_timestamp.dart';
+import 'package:sloth_widgetbook/knobs/custom_datetime_knob.dart';
+import 'package:sloth_widgetbook/utils/format_datetime_for_display.dart';
+import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 
 class WnTimestampStory extends StatelessWidget {
@@ -14,6 +17,12 @@ class WnTimestampStory extends StatelessWidget {
 
 @widgetbook.UseCase(name: 'Timestamp', type: WnTimestampStory)
 Widget wnTimestampShowcase(BuildContext context) {
+  final now = DateTime.now();
+  final timestamp = context.knobs.customDateTime(
+    label: 'Timestamp',
+    initialValue: now,
+  );
+
   return Scaffold(
     backgroundColor: context.colors.backgroundPrimary,
     body: ListView(
@@ -40,7 +49,34 @@ Widget wnTimestampShowcase(BuildContext context) {
           alignment: Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 375),
-            child: const _InteractiveTimestamp(),
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              decoration: BoxDecoration(
+                color: context.colors.backgroundSecondary,
+                borderRadius: BorderRadius.circular(8),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Last activity: ',
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: context.colors.backgroundContentPrimary,
+                    ),
+                  ),
+                  WnTimestamp(timestamp: timestamp),
+                ],
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          'Selected: ${formatDateTimeForDisplay(timestamp)}',
+          style: TextStyle(
+            fontSize: 12,
+            color: context.colors.backgroundContentSecondary,
           ),
         ),
         const SizedBox(height: 32),
@@ -201,201 +237,6 @@ class _TimestampExample extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _InteractiveTimestamp extends StatefulWidget {
-  const _InteractiveTimestamp();
-
-  @override
-  State<_InteractiveTimestamp> createState() => _InteractiveTimestampState();
-}
-
-class _InteractiveTimestampState extends State<_InteractiveTimestamp> {
-  late DateTime _selectedDateTime;
-
-  @override
-  void initState() {
-    super.initState();
-    _selectedDateTime = DateTime.now().subtract(const Duration(hours: 2));
-  }
-
-  Future<void> _pickDate() async {
-    final date = await showDatePicker(
-      context: context,
-      initialDate: _selectedDateTime,
-      firstDate: DateTime(2000),
-      lastDate: DateTime.now(),
-    );
-    if (date != null) {
-      setState(() {
-        _selectedDateTime = DateTime(
-          date.year,
-          date.month,
-          date.day,
-          _selectedDateTime.hour,
-          _selectedDateTime.minute,
-        );
-      });
-    }
-  }
-
-  Future<void> _pickTime() async {
-    final time = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.fromDateTime(_selectedDateTime),
-    );
-    if (time != null) {
-      setState(() {
-        _selectedDateTime = DateTime(
-          _selectedDateTime.year,
-          _selectedDateTime.month,
-          _selectedDateTime.day,
-          time.hour,
-          time.minute,
-        );
-      });
-    }
-  }
-
-  String _formatDateTime(DateTime dt) {
-    final date =
-        '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')}';
-    final time =
-        '${dt.hour.toString().padLeft(2, '0')}:${dt.minute.toString().padLeft(2, '0')}';
-    return '$date $time';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Container(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-          decoration: BoxDecoration(
-            color: context.colors.backgroundSecondary,
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Last activity: ',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: context.colors.backgroundContentPrimary,
-                ),
-              ),
-              WnTimestamp(timestamp: _selectedDateTime),
-            ],
-          ),
-        ),
-        const SizedBox(height: 16),
-        Text(
-          'Selected: ${_formatDateTime(_selectedDateTime)}',
-          style: TextStyle(
-            fontSize: 12,
-            color: context.colors.backgroundContentSecondary,
-          ),
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            ElevatedButton.icon(
-              onPressed: _pickDate,
-              icon: const Icon(Icons.calendar_today, size: 16),
-              label: const Text('Pick Date'),
-            ),
-            const SizedBox(width: 8),
-            ElevatedButton.icon(
-              onPressed: _pickTime,
-              icon: const Icon(Icons.access_time, size: 16),
-              label: const Text('Pick Time'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Wrap(
-          spacing: 8,
-          runSpacing: 8,
-          children: [
-            _QuickButton(
-              label: 'Now',
-              onPressed: () =>
-                  setState(() => _selectedDateTime = DateTime.now()),
-            ),
-            _QuickButton(
-              label: '30 min ago',
-              onPressed: () => setState(
-                () => _selectedDateTime = DateTime.now().subtract(
-                  const Duration(minutes: 30),
-                ),
-              ),
-            ),
-            _QuickButton(
-              label: '5 hours ago',
-              onPressed: () => setState(
-                () => _selectedDateTime = DateTime.now().subtract(
-                  const Duration(hours: 5),
-                ),
-              ),
-            ),
-            _QuickButton(
-              label: 'Yesterday',
-              onPressed: () => setState(
-                () => _selectedDateTime = DateTime.now().subtract(
-                  const Duration(days: 1, hours: 14),
-                ),
-              ),
-            ),
-            _QuickButton(
-              label: '3 days ago',
-              onPressed: () => setState(
-                () => _selectedDateTime = DateTime.now().subtract(
-                  const Duration(days: 3),
-                ),
-              ),
-            ),
-            _QuickButton(
-              label: '2 weeks ago',
-              onPressed: () => setState(
-                () => _selectedDateTime = DateTime.now().subtract(
-                  const Duration(days: 14),
-                ),
-              ),
-            ),
-            _QuickButton(
-              label: '2 years ago',
-              onPressed: () => setState(
-                () => _selectedDateTime = DateTime.now().subtract(
-                  const Duration(days: 730),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ],
-    );
-  }
-}
-
-class _QuickButton extends StatelessWidget {
-  const _QuickButton({required this.label, required this.onPressed});
-
-  final String label;
-  final VoidCallback onPressed;
-
-  @override
-  Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onPressed,
-      style: OutlinedButton.styleFrom(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        textStyle: const TextStyle(fontSize: 12),
-      ),
-      child: Text(label),
     );
   }
 }
