@@ -503,4 +503,10 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Etwas ist schiefgelaufen';
+
+  @override
+  String get scanNpub => 'QR-Code scannen';
+
+  @override
+  String get scanNpubHint => 'Scannen Sie den QR-Code eines Kontakts.';
 }

@@ -492,4 +492,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Bir şeyler yanlış gitti';
+
+  @override
+  String get scanNpub => 'QR kodu tara';
+
+  @override
+  String get scanNpubHint => 'Bir kişinin QR kodunu tarayın.';
 }

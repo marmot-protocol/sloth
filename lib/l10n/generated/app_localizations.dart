@@ -977,6 +977,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong'**
   String get somethingWentWrong;
+
+  /// Title for scan npub screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get scanNpub;
+
+  /// Hint text on scan npub screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a contact\'s QR code.'**
+  String get scanNpubHint;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

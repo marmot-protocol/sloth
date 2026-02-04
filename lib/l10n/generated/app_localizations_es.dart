@@ -497,4 +497,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Algo salió mal';
+
+  @override
+  String get scanNpub => 'Escanear código QR';
+
+  @override
+  String get scanNpubHint => 'Escanea el código QR de un contacto.';
 }

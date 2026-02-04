@@ -144,5 +144,7 @@
   "scanNsec": "Сканировать QR-код",
   "scanNsecHint": "Отсканируйте QR-код вашего приватного ключа для входа.",
   "cameraPermissionDenied": "Доступ к камере запрещён",
-  "somethingWentWrong": "Что-то пошло не так"
+  "somethingWentWrong": "Что-то пошло не так",
+  "scanNpub": "Сканировать QR-код",
+  "scanNpubHint": "Отсканируйте QR-код контакта."
 }

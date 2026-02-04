@@ -144,5 +144,7 @@
   "scanNsec": "Scanner le code QR",
   "scanNsecHint": "Scannez le code QR de votre clé privée pour vous connecter.",
   "cameraPermissionDenied": "Autorisation caméra refusée",
-  "somethingWentWrong": "Une erreur s'est produite"
+  "somethingWentWrong": "Une erreur s'est produite",
+  "scanNpub": "Scanner le code QR",
+  "scanNpubHint": "Scannez le code QR d'un contact."
 }

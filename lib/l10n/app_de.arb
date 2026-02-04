@@ -144,5 +144,7 @@
   "scanNsec": "QR-Code scannen",
   "scanNsecHint": "Scannen Sie den QR-Code Ihres privaten Schlüssels zum Anmelden.",
   "cameraPermissionDenied": "Kamerazugriff verweigert",
-  "somethingWentWrong": "Etwas ist schiefgelaufen"
+  "somethingWentWrong": "Etwas ist schiefgelaufen",
+  "scanNpub": "QR-Code scannen",
+  "scanNpubHint": "Scannen Sie den QR-Code eines Kontakts."
 }

@@ -774,5 +774,15 @@
   "somethingWentWrong": "Something went wrong",
   "@somethingWentWrong": {
     "description": "Generic error message"
+  },
+
+  "scanNpub": "Scan QR code",
+  "@scanNpub": {
+    "description": "Title for scan npub screen"
+  },
+
+  "scanNpubHint": "Scan a contact's QR code.",
+  "@scanNpubHint": {
+    "description": "Hint text on scan npub screen"
   }
 }
