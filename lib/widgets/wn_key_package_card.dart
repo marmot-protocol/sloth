@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_icon.dart';
@@ -89,7 +90,7 @@ class WnKeyPackageCard extends StatelessWidget {
           height: 44.h,
           child: WnButton(
             key: deleteButtonKey ?? const Key('delete_button'),
-            text: 'Delete',
+            text: context.l10n.delete,
             onPressed: onDelete,
             type: WnButtonType.destructive,
             size: WnButtonSize.medium,
