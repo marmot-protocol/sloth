@@ -40,7 +40,7 @@ Widget wnTimestampShowcase(BuildContext context) {
           alignment: Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 375),
-            child: _InteractiveTimestamp(context: context),
+            child: const _InteractiveTimestamp(),
           ),
         ),
         const SizedBox(height: 32),
@@ -206,9 +206,7 @@ class _TimestampExample extends StatelessWidget {
 }
 
 class _InteractiveTimestamp extends StatefulWidget {
-  const _InteractiveTimestamp({required this.context});
-
-  final BuildContext context;
+  const _InteractiveTimestamp();
 
   @override
   State<_InteractiveTimestamp> createState() => _InteractiveTimestampState();
