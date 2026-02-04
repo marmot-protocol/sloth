@@ -173,10 +173,13 @@ class WnInput extends HookWidget {
               Padding(
                 key: const Key('leading_icon_wrapper'),
                 padding: EdgeInsets.only(left: 16.w),
-                child: SizedBox(
-                  width: 16.w,
-                  height: 16.h,
-                  child: leadingIcon,
+                child: IgnorePointer(
+                  ignoring: !enabled,
+                  child: SizedBox(
+                    width: 16.w,
+                    height: 16.h,
+                    child: leadingIcon,
+                  ),
                 ),
               ),
             Expanded(
