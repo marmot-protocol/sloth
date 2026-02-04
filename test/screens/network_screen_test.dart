@@ -6,6 +6,7 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/relays.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_tooltip.dart';
 
 import '../mocks/mock_relay_type.dart';
 import '../mocks/mock_secure_storage.dart';
@@ -158,10 +159,10 @@ void main() {
         await pumpNetworkScreen(tester);
         final tooltipFinder = find.ancestor(
           of: find.byKey(const Key('info_icon_my_relays')),
-          matching: find.byType(Tooltip),
+          matching: find.byType(WnTooltip),
         );
         expect(tooltipFinder, findsOneWidget);
-        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        final tooltip = tester.widget<WnTooltip>(tooltipFinder);
         expect(
           tooltip.message,
           'Relays you have defined for use across all your Nostr applications.',
@@ -172,10 +173,10 @@ void main() {
         await pumpNetworkScreen(tester);
         final tooltipFinder = find.ancestor(
           of: find.byKey(const Key('info_icon_inbox_relays')),
-          matching: find.byType(Tooltip),
+          matching: find.byType(WnTooltip),
         );
         expect(tooltipFinder, findsOneWidget);
-        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        final tooltip = tester.widget<WnTooltip>(tooltipFinder);
         expect(
           tooltip.message,
           'Relays used to receive invitations and start secure conversations with new users.',
@@ -186,29 +187,49 @@ void main() {
         await pumpNetworkScreen(tester);
         final tooltipFinder = find.ancestor(
           of: find.byKey(const Key('info_icon_key_package_relays')),
-          matching: find.byType(Tooltip),
+          matching: find.byType(WnTooltip),
         );
         expect(tooltipFinder, findsOneWidget);
-        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        final tooltip = tester.widget<WnTooltip>(tooltipFinder);
         expect(
           tooltip.message,
           'Relays that store your secure key so others can invite you to encrypted conversations.',
         );
       });
 
-      testWidgets('all tooltips use tap trigger mode', (tester) async {
+      testWidgets('first tooltip uses bottom position, others use top', (tester) async {
         await pumpNetworkScreen(tester);
-        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
-        for (final tooltip in tooltips) {
-          expect(tooltip.triggerMode, TooltipTriggerMode.tap);
-        }
+
+        final myRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_my_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(myRelaysTooltip.position, WnTooltipPosition.bottom);
+
+        final inboxRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_inbox_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(inboxRelaysTooltip.position, WnTooltipPosition.top);
+
+        final keyPackageRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_key_package_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(keyPackageRelaysTooltip.position, WnTooltipPosition.top);
       });
 
-      testWidgets('all tooltips have one minute show duration', (tester) async {
+      testWidgets('all tooltips use tap trigger mode', (tester) async {
         await pumpNetworkScreen(tester);
-        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
+        final tooltips = tester.widgetList<WnTooltip>(find.byType(WnTooltip));
         for (final tooltip in tooltips) {
-          expect(tooltip.showDuration, const Duration(minutes: 1));
+          expect(tooltip.triggerMode, WnTooltipTriggerMode.tap);
         }
       });
     });

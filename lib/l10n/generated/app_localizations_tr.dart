@@ -477,4 +477,16 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Görsel seçilemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get scanNsec => 'QR kodu tara';
+
+  @override
+  String get scanNsecHint => 'Giriş yapmak için özel anahtar QR kodunuzu tarayın.';
+
+  @override
+  String get cameraPermissionDenied => 'Kamera izni reddedildi';
+
+  @override
+  String get somethingWentWrong => 'Bir şeyler yanlış gitti';
 }

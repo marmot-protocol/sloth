@@ -177,7 +177,7 @@ void main() {
     });
 
     group('scan button', () {
-      testWidgets('shows scan button when empty and onScan provided', (tester) async {
+      testWidgets('shows scan button when onScan provided', (tester) async {
         await mountWidget(
           WnInputPassword(
             label: 'Password',
@@ -189,7 +189,22 @@ void main() {
         expect(find.byKey(const Key('scan_button')), findsOneWidget);
       });
 
-      testWidgets('hides scan button when filled', (tester) async {
+      testWidgets('shows scan button alongside visibility toggle when onScan provided', (
+        tester,
+      ) async {
+        await mountWidget(
+          WnInputPassword(
+            label: 'Password',
+            placeholder: 'hint',
+            onScan: () {},
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('scan_button')), findsOneWidget);
+        expect(find.byKey(const Key('visibility_toggle')), findsOneWidget);
+      });
+
+      testWidgets('scan button remains visible when filled', (tester) async {
         await mountWidget(
           WnInputPassword(
             label: 'Password',
@@ -200,7 +215,8 @@ void main() {
         );
         await tester.enterText(find.byKey(const Key('password_field')), 'text');
         await tester.pump();
-        expect(find.byKey(const Key('scan_button')), findsNothing);
+        expect(find.byKey(const Key('scan_button')), findsOneWidget);
+        expect(find.byKey(const Key('visibility_toggle')), findsOneWidget);
       });
 
       testWidgets('calls onScan when tapped', (tester) async {

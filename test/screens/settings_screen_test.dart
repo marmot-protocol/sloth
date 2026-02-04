@@ -14,7 +14,6 @@ import 'package:sloth/screens/share_profile_screen.dart';
 import 'package:sloth/screens/sign_out_screen.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
 import '../mocks/mock_secure_storage.dart';
@@ -183,7 +182,7 @@ void main() {
       await pumpSettingsScreen(tester);
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.violet);
+      expect(avatar.color, AvatarColor.violet);
     });
 
     testWidgets('different pubkey passes different avatar color', (tester) async {
@@ -198,7 +197,7 @@ void main() {
       await tester.pumpAndSettle();
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-      expect(avatar.color, AccentColor.cyan);
+      expect(avatar.color, AvatarColor.cyan);
     });
   });
 }

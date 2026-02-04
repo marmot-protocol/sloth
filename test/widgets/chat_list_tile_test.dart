@@ -10,7 +10,6 @@ import 'package:sloth/src/rust/api/groups.dart' show GroupType;
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/chat_list_tile.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 
@@ -265,7 +264,7 @@ void main() {
         await pumpTile(tester, _chatSummary(name: 'Test'));
 
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
-        expect(avatar.color, avatarColorFromPubkey(testGroupId));
+        expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
       });
     });
 
