@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/theme.dart';
 
@@ -290,6 +291,123 @@ void main() {
       );
 
       expect(colors.backgroundPrimary, SemanticColors.light.backgroundPrimary);
+    });
+  });
+
+  group('AppTypographyExtension', () {
+    testWidgets('provides typography via BuildContext in light theme', (tester) async {
+      late AppTypography typography;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: lightTheme,
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                typography = context.typography;
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(typography, isNotNull);
+      expect(typography.medium14.fontSize, AppTypography.instance.medium14.fontSize);
+    });
+
+    testWidgets('provides typography via BuildContext in dark theme', (tester) async {
+      late AppTypography typography;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: darkTheme,
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                typography = context.typography;
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(typography, isNotNull);
+      expect(typography.medium14.fontSize, AppTypography.instance.medium14.fontSize);
+    });
+
+    testWidgets('falls back to instance when extension missing', (tester) async {
+      late AppTypography typography;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          theme: ThemeData(),
+          home: Scaffold(
+            body: Builder(
+              builder: (context) {
+                typography = context.typography;
+                return const SizedBox();
+              },
+            ),
+          ),
+        ),
+      );
+
+      expect(typography, isNotNull);
+      expect(typography.medium14.fontSize, AppTypography.instance.medium14.fontSize);
+    });
+
+    testWidgets('typographyScaled applies ScreenUtil scaling in light theme', (tester) async {
+      late AppTypography scaled;
+
+      await tester.pumpWidget(
+        ScreenUtilInit(
+          designSize: const Size(390, 844),
+          builder: (context, child) {
+            return MaterialApp(
+              theme: lightTheme,
+              home: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    scaled = context.typographyScaled;
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+      expect(scaled.medium14.fontSize, 14.sp);
+      expect(scaled.bold24.fontSize, 24.sp);
+    });
+
+    testWidgets('typographyScaled applies ScreenUtil scaling in dark theme', (tester) async {
+      late AppTypography scaled;
+
+      await tester.pumpWidget(
+        ScreenUtilInit(
+          designSize: const Size(390, 844),
+          builder: (context, child) {
+            return MaterialApp(
+              theme: darkTheme,
+              home: Scaffold(
+                body: Builder(
+                  builder: (context) {
+                    scaled = context.typographyScaled;
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      );
+
+      expect(scaled.medium14.fontSize, 14.sp);
+      expect(scaled.bold24.fontSize, 24.sp);
     });
   });
 }

@@ -49,6 +49,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medium12;
   final TextStyle semiBold12;
   final TextStyle bold12;
+  final TextStyle medium10;
+  final TextStyle semiBold10;
+  final TextStyle bold10;
 
   const AppTypography({
     required this.medium96,
@@ -93,11 +96,13 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medium12,
     required this.semiBold12,
     required this.bold12,
+    required this.medium10,
+    required this.semiBold10,
+    required this.bold10,
   });
 
   static const instance = AppTypography(
     medium96: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 96,
       height: 104 / 96,
       letterSpacing: -1.5,
@@ -105,7 +110,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold96: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 96,
       height: 104 / 96,
       letterSpacing: -1.5,
@@ -113,7 +117,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold96: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 96,
       height: 104 / 96,
       letterSpacing: -1.5,
@@ -121,7 +124,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium72: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 72,
       height: 80 / 72,
       letterSpacing: -1.2,
@@ -129,7 +131,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold72: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 72,
       height: 80 / 72,
       letterSpacing: -1.2,
@@ -137,7 +138,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold72: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 72,
       height: 80 / 72,
       letterSpacing: -1.2,
@@ -145,7 +145,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium60: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 60,
       height: 68 / 60,
       letterSpacing: -1.0,
@@ -153,7 +152,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold60: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 60,
       height: 68 / 60,
       letterSpacing: -1.0,
@@ -161,7 +159,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold60: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 60,
       height: 68 / 60,
       letterSpacing: -1.0,
@@ -169,7 +166,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium48: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 48,
       height: 56 / 48,
       letterSpacing: -0.6,
@@ -177,7 +173,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold48: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 48,
       height: 56 / 48,
       letterSpacing: -0.6,
@@ -185,7 +180,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold48: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 48,
       height: 56 / 48,
       letterSpacing: -0.6,
@@ -193,7 +187,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium36: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 36,
       height: 44 / 36,
       letterSpacing: -0.4,
@@ -201,7 +194,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold36: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 36,
       height: 44 / 36,
       letterSpacing: -0.4,
@@ -209,7 +201,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold36: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 36,
       height: 44 / 36,
       letterSpacing: -0.4,
@@ -217,7 +208,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium32: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 32,
       height: 38 / 32,
       letterSpacing: -0.3,
@@ -225,7 +215,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold32: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 32,
       height: 38 / 32,
       letterSpacing: -0.3,
@@ -233,7 +222,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold32: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 32,
       height: 38 / 32,
       letterSpacing: -0.3,
@@ -241,7 +229,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium28: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 28,
       height: 34 / 28,
       letterSpacing: -0.2,
@@ -249,7 +236,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold28: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 28,
       height: 34 / 28,
       letterSpacing: -0.2,
@@ -257,7 +243,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold28: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 28,
       height: 34 / 28,
       letterSpacing: -0.2,
@@ -265,7 +250,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium24: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 24,
       height: 30 / 24,
       letterSpacing: -0.1,
@@ -273,7 +257,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold24: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 24,
       height: 30 / 24,
       letterSpacing: -0.1,
@@ -281,7 +264,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold24: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 24,
       height: 30 / 24,
       letterSpacing: -0.1,
@@ -289,7 +271,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium20: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 20,
       height: 26 / 20,
       letterSpacing: 0,
@@ -297,7 +278,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold20: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 20,
       height: 26 / 20,
       letterSpacing: 0,
@@ -305,7 +285,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold20: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 20,
       height: 26 / 20,
       letterSpacing: 0,
@@ -313,7 +292,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium18: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 18,
       height: 24 / 18,
       letterSpacing: 0.1,
@@ -321,7 +299,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold18: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 18,
       height: 24 / 18,
       letterSpacing: 0.1,
@@ -329,7 +306,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold18: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 18,
       height: 24 / 18,
       letterSpacing: 0.1,
@@ -337,7 +313,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium16: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 16,
       height: 22 / 16,
       letterSpacing: 0.2,
@@ -345,7 +320,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold16: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 16,
       height: 22 / 16,
       letterSpacing: 0.2,
@@ -353,7 +327,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold16: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 16,
       height: 22 / 16,
       letterSpacing: 0.2,
@@ -361,7 +334,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium14: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 14,
       height: 18 / 14,
       letterSpacing: 0.4,
@@ -369,7 +341,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold14: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 14,
       height: 18 / 14,
       letterSpacing: 0.4,
@@ -377,7 +348,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold14: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 14,
       height: 18 / 14,
       letterSpacing: 0.4,
@@ -385,7 +355,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium14Compact: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 14,
       height: 16 / 14,
       letterSpacing: 0.4,
@@ -393,7 +362,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold14Compact: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 14,
       height: 16 / 14,
       letterSpacing: 0.4,
@@ -401,7 +369,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold14Compact: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 14,
       height: 16 / 14,
       letterSpacing: 0.4,
@@ -409,7 +376,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     medium12: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 12,
       height: 16 / 12,
       letterSpacing: 0.6,
@@ -417,7 +383,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     semiBold12: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 12,
       height: 16 / 12,
       letterSpacing: 0.6,
@@ -425,10 +390,30 @@ class AppTypography extends ThemeExtension<AppTypography> {
       leadingDistribution: TextLeadingDistribution.even,
     ),
     bold12: TextStyle(
-      fontFamily: 'Manrope',
       fontSize: 12,
       height: 16 / 12,
       letterSpacing: 0.6,
+      fontWeight: FontWeight.w700,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    medium10: TextStyle(
+      fontSize: 10,
+      height: 14 / 10,
+      letterSpacing: 0.8,
+      fontWeight: FontWeight.w500,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    semiBold10: TextStyle(
+      fontSize: 10,
+      height: 14 / 10,
+      letterSpacing: 0.8,
+      fontWeight: FontWeight.w600,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    bold10: TextStyle(
+      fontSize: 10,
+      height: 14 / 10,
+      letterSpacing: 0.8,
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
@@ -478,6 +463,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medium12,
     TextStyle? semiBold12,
     TextStyle? bold12,
+    TextStyle? medium10,
+    TextStyle? semiBold10,
+    TextStyle? bold10,
   }) {
     return AppTypography(
       medium96: medium96 ?? this.medium96,
@@ -522,6 +510,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medium12: medium12 ?? this.medium12,
       semiBold12: semiBold12 ?? this.semiBold12,
       bold12: bold12 ?? this.bold12,
+      medium10: medium10 ?? this.medium10,
+      semiBold10: semiBold10 ?? this.semiBold10,
+      bold10: bold10 ?? this.bold10,
     );
   }
 
@@ -571,6 +562,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medium12: TextStyle.lerp(medium12, other.medium12, t)!,
       semiBold12: TextStyle.lerp(semiBold12, other.semiBold12, t)!,
       bold12: TextStyle.lerp(bold12, other.bold12, t)!,
+      medium10: TextStyle.lerp(medium10, other.medium10, t)!,
+      semiBold10: TextStyle.lerp(semiBold10, other.semiBold10, t)!,
+      bold10: TextStyle.lerp(bold10, other.bold10, t)!,
     );
   }
 }
@@ -624,6 +618,9 @@ extension AppTypographyExtension on BuildContext {
       medium12: _scaleStyle(base.medium12),
       semiBold12: _scaleStyle(base.semiBold12),
       bold12: _scaleStyle(base.bold12),
+      medium10: _scaleStyle(base.medium10),
+      semiBold10: _scaleStyle(base.semiBold10),
+      bold10: _scaleStyle(base.bold10),
     );
   }
 }
