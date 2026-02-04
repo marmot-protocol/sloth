@@ -144,5 +144,8 @@
   "scanNsec": "Escanear código QR",
   "scanNsecHint": "Escaneie o código QR da sua chave privada para fazer login.",
   "cameraPermissionDenied": "Permissão de câmera negada",
-  "somethingWentWrong": "Algo deu errado"
+  "somethingWentWrong": "Algo deu errado",
+  "scanNpub": "Escanear código QR",
+  "scanNpubHint": "Escaneie o código QR de um contato.",
+  "invalidNpub": "Chave pública inválida. Por favor, tente novamente."
 }

@@ -493,4 +493,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Qualcosa è andato storto';
+
+  @override
+  String get scanNpub => 'Scansiona codice QR';
+
+  @override
+  String get scanNpubHint => 'Scansiona il codice QR di un contatto.';
+
+  @override
+  String get invalidNpub => 'Chiave pubblica non valida. Riprova.';
 }

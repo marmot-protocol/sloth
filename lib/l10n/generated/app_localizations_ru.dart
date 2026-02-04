@@ -498,4 +498,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Что-то пошло не так';
+
+  @override
+  String get scanNpub => 'Сканировать QR-код';
+
+  @override
+  String get scanNpubHint => 'Отсканируйте QR-код контакта.';
+
+  @override
+  String get invalidNpub => 'Недействительный публичный ключ. Попробуйте снова.';
 }

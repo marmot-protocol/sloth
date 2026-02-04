@@ -494,4 +494,13 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Algo deu errado';
+
+  @override
+  String get scanNpub => 'Escanear código QR';
+
+  @override
+  String get scanNpubHint => 'Escaneie o código QR de um contato.';
+
+  @override
+  String get invalidNpub => 'Chave pública inválida. Por favor, tente novamente.';
 }

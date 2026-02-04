@@ -977,6 +977,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Something went wrong'**
   String get somethingWentWrong;
+
+  /// Title for scan npub screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get scanNpub;
+
+  /// Hint text on scan npub screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a contact\'s QR code.'**
+  String get scanNpubHint;
+
+  /// Error message when scanned npub is invalid
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid public key. Please try again.'**
+  String get invalidNpub;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
