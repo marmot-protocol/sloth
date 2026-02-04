@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Replace all snackbars with system notice [PR #168](https://github.com/marmot-protocol/sloth/pull/168)
 - Use large size for login and signup buttons [PR #165](https://github.com/marmot-protocol/sloth/pull/165)
 - Change hooks that received refs to receive data [PR #27](https://github.com/marmot-protocol/sloth/pull/27)
 - Update chat list using streams [PR #36](https://github.com/marmot-protocol/sloth/pull/36)
