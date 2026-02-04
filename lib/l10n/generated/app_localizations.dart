@@ -324,7 +324,7 @@ abstract class AppLocalizations {
   /// **'Public key'**
   String get publicKey;
 
-  /// Systtem notice message when public key is copied
+  /// System notice message when public key is copied
   ///
   /// In en, this message translates to:
   /// **'Public key copied to clipboard'**

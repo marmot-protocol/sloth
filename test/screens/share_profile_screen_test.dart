@@ -125,6 +125,20 @@ void main() {
       expect(find.text('Failed to copy public key. Please try again.'), findsOneWidget);
     });
 
+    testWidgets('dismisses notice after auto-hide duration', (tester) async {
+      await pumpShareProfileScreen(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('copy_button')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Public key copied to clipboard'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Public key copied to clipboard'), findsNothing);
+    });
+
     testWidgets('hides copy card when npub conversion fails', (tester) async {
       _mockApi.shouldFailNpubConversion = true;
       await pumpShareProfileScreen(tester);

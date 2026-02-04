@@ -356,6 +356,16 @@ void main() {
           expect(find.byType(WnSystemNotice), findsOneWidget);
           expect(find.text('Failed to send message. Please try again.'), findsOneWidget);
         });
+
+        testWidgets('dismisses notice after auto-hide duration', (tester) async {
+          await attemptSend(tester);
+          expect(find.byType(WnSystemNotice), findsOneWidget);
+
+          await tester.pump(const Duration(seconds: 3));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(WnSystemNotice), findsNothing);
+        });
       });
     });
 

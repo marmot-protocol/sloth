@@ -224,6 +224,32 @@ void main() {
         expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
       });
+
+      testWidgets('dismisses notice after auto-hide duration', (tester) async {
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+          const MethodChannel('plugins.flutter.io/image_picker'),
+          (MethodCall methodCall) async {
+            throw PlatformException(code: 'error', message: 'Test error');
+          },
+        );
+        addTearDown(() {
+          TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger
+              .setMockMethodCallHandler(
+                const MethodChannel('plugins.flutter.io/image_picker'),
+                null,
+              );
+        });
+
+        await pumpSignupScreen(tester);
+        await tester.tap(find.byKey(const Key('avatar_edit_button')));
+        await tester.pumpAndSettle();
+        expect(find.byType(WnSystemNotice), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsNothing);
+      });
     });
   });
 }

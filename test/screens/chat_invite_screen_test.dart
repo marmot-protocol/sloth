@@ -222,6 +222,19 @@ void main() {
         expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.textContaining('Failed to accept'), findsOneWidget);
       });
+
+      testWidgets('dismisses notice after auto-hide duration', (tester) async {
+        _api.errorToThrow = Exception('Network error');
+        await pumpInviteScreen(tester);
+        await tester.tap(find.text('Accept'));
+        await tester.pumpAndSettle();
+        expect(find.byType(WnSystemNotice), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsNothing);
+      });
     });
 
     group('decline action', () {

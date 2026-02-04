@@ -343,6 +343,20 @@ void main() {
 
         expect(find.text('Failed to update follow status. Please try again.'), findsOneWidget);
       });
+
+      testWidgets('dismisses notice after auto-hide duration', (tester) async {
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(find.byType(WnSystemNotice), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsNothing);
+      });
     });
 
     group('navigation', () {

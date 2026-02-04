@@ -355,5 +355,25 @@ void main() {
       expect(find.byType(WnSystemNotice), findsOneWidget);
       expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
     });
+
+    testWidgets('dismisses notice after auto-hide duration', (tester) async {
+      await pumpEditProfileScreen(tester);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
+      await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+      expect(find.byType(WnSystemNotice), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WnSystemNotice), findsNothing);
+    });
   });
 }

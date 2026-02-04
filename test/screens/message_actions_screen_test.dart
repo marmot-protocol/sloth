@@ -812,6 +812,36 @@ void main() {
       expect(find.text('Message actions'), findsOneWidget);
     });
 
+    testWidgets('dismisses notice after auto-hide duration', (tester) async {
+      await mountShowTest(
+        tester,
+        builder: (context) => ElevatedButton(
+          onPressed: () => MessageActionsScreen.show(
+            context,
+            message: _createTestMessage(),
+            pubkey: 'user-pubkey',
+            onAddReaction: (emoji) async {
+              throw Exception('Reaction failed');
+            },
+            onRemoveReaction: (_) async {},
+          ),
+          child: const Text('Show Menu'),
+        ),
+      );
+
+      await tester.tap(find.text('Show Menu'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('❤'));
+      await tester.pumpAndSettle();
+      expect(find.byType(WnSystemNotice), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WnSystemNotice), findsNothing);
+    });
+
     group('emoji picker', () {
       Future<void> openEmojiPicker(
         WidgetTester tester, {
