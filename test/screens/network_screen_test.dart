@@ -197,12 +197,12 @@ void main() {
         );
       });
 
-      testWidgets('all tooltips use bottom position', (tester) async {
+      testWidgets('first tooltip uses bottom position, others use top', (tester) async {
         await pumpNetworkScreen(tester);
-        final tooltips = tester.widgetList<WnTooltip>(find.byType(WnTooltip));
-        for (final tooltip in tooltips) {
-          expect(tooltip.position, WnTooltipPosition.bottom);
-        }
+        final tooltips = tester.widgetList<WnTooltip>(find.byType(WnTooltip)).toList();
+        expect(tooltips[0].position, WnTooltipPosition.bottom);
+        expect(tooltips[1].position, WnTooltipPosition.top);
+        expect(tooltips[2].position, WnTooltipPosition.top);
       });
 
       testWidgets('all tooltips use tap trigger mode', (tester) async {

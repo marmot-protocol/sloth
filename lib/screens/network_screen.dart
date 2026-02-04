@@ -42,6 +42,7 @@ class NetworkScreen extends HookConsumerWidget {
       required Key infoIconKey,
       required Key addIconKey,
       required VoidCallback onAdd,
+      WnTooltipPosition tooltipPosition = WnTooltipPosition.top,
     }) {
       return Row(
         children: [
@@ -62,7 +63,7 @@ class NetworkScreen extends HookConsumerWidget {
                 Gap(8.w),
                 WnTooltip(
                   message: helpMessage,
-                  position: WnTooltipPosition.bottom,
+                  position: tooltipPosition,
                   child: Padding(
                     padding: EdgeInsets.all(4.w),
                     child: WnIcon(
@@ -168,6 +169,7 @@ class NetworkScreen extends HookConsumerWidget {
                                 infoIconKey: const Key('info_icon_my_relays'),
                                 addIconKey: const Key('add_icon_my_relays'),
                                 onAdd: () => showAddRelaySheet(RelayCategory.normal),
+                                tooltipPosition: WnTooltipPosition.bottom,
                               ),
                               Gap(12.h),
                               buildRelayList(state.normalRelays, RelayCategory.normal),
