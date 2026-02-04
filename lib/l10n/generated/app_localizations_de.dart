@@ -505,6 +505,15 @@ class AppLocalizationsDe extends AppLocalizations {
   String get somethingWentWrong => 'Etwas ist schiefgelaufen';
 
   @override
+  String get scanNpub => 'QR-Code scannen';
+
+  @override
+  String get scanNpubHint => 'Scannen Sie den QR-Code eines Kontakts.';
+
+  @override
+  String get invalidNpub => 'Ungültiger öffentlicher Schlüssel. Bitte versuchen Sie es erneut.';
+
+  @override
   String get timestampNow => 'Jetzt';
 
   @override

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/theme.dart';
 
@@ -16,18 +15,13 @@ class WnTimestamp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final l10n = AppLocalizations.of(context);
     final text = _formatTimestamp(l10n);
 
     return Text(
       text,
-      style: TextStyle(
-        fontWeight: FontWeight.w500,
-        fontSize: 12.sp,
-        color: colors.backgroundContentSecondary,
-        letterSpacing: 0.6,
-        height: 16 / 12,
-      ),
+      style: typography.medium12.copyWith(color: colors.backgroundContentSecondary),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
     );

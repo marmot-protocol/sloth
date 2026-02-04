@@ -776,6 +776,21 @@
     "description": "Generic error message"
   },
 
+"scanNpub": "Scan QR code",
+  "@scanNpub": {
+    "description": "Title for scan npub screen"
+  },
+
+  "scanNpubHint": "Scan a contact's QR code.",
+  "@scanNpubHint": {
+    "description": "Hint text on scan npub screen"
+  },
+
+  "invalidNpub": "Invalid public key. Please try again.",
+  "@invalidNpub": {
+    "description": "Error message when scanned npub is invalid"
+  },
+
   "timestampNow": "Now",
   "@timestampNow": {
     "description": "Timestamp for events less than 60 seconds ago"

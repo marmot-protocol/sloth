@@ -500,6 +500,15 @@ class AppLocalizationsRu extends AppLocalizations {
   String get somethingWentWrong => 'Что-то пошло не так';
 
   @override
+  String get scanNpub => 'Сканировать QR-код';
+
+  @override
+  String get scanNpubHint => 'Отсканируйте QR-код контакта.';
+
+  @override
+  String get invalidNpub => 'Недействительный публичный ключ. Попробуйте снова.';
+
+  @override
   String get timestampNow => 'Сейчас';
 
   @override
