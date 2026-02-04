@@ -108,12 +108,10 @@ class WnTooltip extends HookWidget {
                   showTooltip();
                 }
               : null,
-          onLongPress: triggerMode == WnTooltipTriggerMode.longPress
-              ? () {
-                  dismissedWhileHovering.value = false;
-                  showTooltip();
-                }
-              : null,
+          onLongPress: () {
+            dismissedWhileHovering.value = false;
+            showTooltip();
+          },
           child: child,
         ),
       ),
@@ -171,7 +169,8 @@ class _TooltipOverlay extends HookWidget {
 
       final contentSize = contentRenderBox.size;
       final screenSize = MediaQuery.of(context).size;
-      final padding = 16.w;
+      final horizontalPadding = 16.w;
+      final verticalPadding = 16.h;
 
       double newShift = 0;
 
@@ -180,8 +179,8 @@ class _TooltipOverlay extends HookWidget {
         final tooltipLeft = targetCenterX - contentSize.width / 2;
         final tooltipRight = targetCenterX + contentSize.width / 2;
 
-        final wouldOverflowLeft = tooltipLeft < padding;
-        final wouldOverflowRight = tooltipRight > screenSize.width - padding;
+        final wouldOverflowLeft = tooltipLeft < horizontalPadding;
+        final wouldOverflowRight = tooltipRight > screenSize.width - horizontalPadding;
 
         if (wouldOverflowLeft || wouldOverflowRight) {
           final screenCenterX = screenSize.width / 2;
@@ -192,8 +191,8 @@ class _TooltipOverlay extends HookWidget {
         final tooltipTop = targetCenterY - contentSize.height / 2;
         final tooltipBottom = targetCenterY + contentSize.height / 2;
 
-        final wouldOverflowTop = tooltipTop < padding;
-        final wouldOverflowBottom = tooltipBottom > screenSize.height - padding;
+        final wouldOverflowTop = tooltipTop < verticalPadding;
+        final wouldOverflowBottom = tooltipBottom > screenSize.height - verticalPadding;
 
         if (wouldOverflowTop || wouldOverflowBottom) {
           final screenCenterY = screenSize.height / 2;

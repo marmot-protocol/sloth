@@ -400,6 +400,21 @@ void main() {
         expect(find.byKey(const Key('tooltip_content')), findsNothing);
       });
 
+      testWidgets('long press shows tooltip regardless of triggerMode', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'Tooltip via long press',
+          child: Text('Long press me'),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Long press me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+        expect(find.text('Tooltip via long press'), findsOneWidget);
+      });
+
       testWidgets('defaults to tap trigger mode', (WidgetTester tester) async {
         setUpTestView(tester);
         const widget = WnTooltip(message: 'Default tooltip', child: Text('Trigger'));
