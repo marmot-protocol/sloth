@@ -246,6 +246,7 @@ class _KeyPackagesList extends HookWidget {
                   packageId: package.id,
                   createdAt: package.createdAt.toIso8601String(),
                   onDelete: () => onDelete(package.id),
+                  deleteLabel: context.l10n.delete,
                   disabled: disabled,
                   deleteButtonKey: Key('delete_key_package_${package.id}'),
                 );

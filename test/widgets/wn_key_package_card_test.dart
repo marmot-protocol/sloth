@@ -13,6 +13,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.text('Key Package #1'), findsOneWidget);
@@ -24,6 +25,7 @@ void main() {
           packageId: '7fbc6a4207913cf327b00bc66718886b00920',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('package_id_text')), findsOneWidget);
@@ -40,6 +42,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('created_at_text')), findsOneWidget);
@@ -53,6 +56,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('key_package_icon')), findsOneWidget);
@@ -64,6 +68,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('delete_button')), findsOneWidget);
@@ -81,6 +86,7 @@ void main() {
           onDelete: () {
             deleteCalled = true;
           },
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         await tester.tap(find.byKey(const Key('delete_button')));
@@ -96,6 +102,7 @@ void main() {
           onDelete: () {
             deleteCalled = true;
           },
+          deleteLabel: 'Delete',
           disabled: true,
         );
         await mountWidget(widget, tester);
@@ -111,6 +118,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
           disabled: true,
         );
         await mountWidget(widget, tester);
@@ -124,6 +132,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
           disabled: true,
         );
         await mountWidget(widget, tester);
@@ -137,6 +146,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         final button = tester.widget<WnButton>(find.byType(WnButton));
@@ -153,6 +163,7 @@ void main() {
             packageId: '7fbc6a4207913cf327b00bc66718886b009206a4c56c677bf5f2f08a6ff4e3ed',
             createdAt: '2026-01-28T21:00:42.000Z',
             onDelete: () {},
+            deleteLabel: 'Delete',
           ),
         );
         await mountWidget(widget, tester);
@@ -170,6 +181,7 @@ void main() {
             packageId: 'abc123',
             createdAt: '2026-01-28T21:00:42.000Z',
             onDelete: () {},
+            deleteLabel: 'Delete',
           ),
         );
         await mountWidget(widget, tester);
@@ -185,6 +197,7 @@ void main() {
           packageId: 'xyz789',
           createdAt: '2025-12-25T12:00:00.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.text('Key Package #42'), findsOneWidget);
@@ -200,6 +213,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
           deleteButtonKey: const Key('custom_delete_key'),
         );
         await mountWidget(widget, tester);
@@ -213,6 +227,7 @@ void main() {
           packageId: 'abc123',
           createdAt: '2026-01-28T21:00:42.000Z',
           onDelete: () {},
+          deleteLabel: 'Delete',
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('delete_button')), findsOneWidget);
@@ -227,6 +242,7 @@ void main() {
           onDelete: () {
             deleteCalled = true;
           },
+          deleteLabel: 'Delete',
           deleteButtonKey: const Key('custom_delete_key'),
         );
         await mountWidget(widget, tester);
@@ -244,6 +260,7 @@ void main() {
             packageId: 'abc123',
             createdAt: '2026-01-28T21:00:42.000Z',
             onDelete: () {},
+            deleteLabel: 'Delete',
           ),
         );
         await mountWidget(widget, tester);
@@ -258,6 +275,7 @@ void main() {
             packageId: 'abc123',
             createdAt: '2026-01-28T21:00:42.000Z',
             onDelete: () {},
+            deleteLabel: 'Delete',
           ),
         );
         await mountWidget(widget, tester);
@@ -272,6 +290,7 @@ void main() {
             packageId: 'abc123',
             createdAt: '2026-01-28T21:00:42.000Z',
             onDelete: () {},
+            deleteLabel: 'Delete',
           ),
         );
         await mountWidget(widget, tester);

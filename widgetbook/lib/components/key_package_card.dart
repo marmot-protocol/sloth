@@ -63,6 +63,7 @@ Widget wnKeyPackageCardShowcase(BuildContext context) {
                         '7fbc6a4207913cf327b00bc66718886b009206a4c56c677bf5f2f08a6ff4e3ed',
                     createdAt: '2026-01-28T21:00:42.000Z',
                     onDelete: () {},
+                    deleteLabel: 'Delete',
                   ),
                   const SizedBox(height: 8),
                   WnKeyPackageCard(
@@ -71,6 +72,7 @@ Widget wnKeyPackageCardShowcase(BuildContext context) {
                         'abc123def456abc123def456abc123def456abc123def456abc123def456abcd',
                     createdAt: '2026-01-15T10:30:00.000Z',
                     onDelete: () {},
+                    deleteLabel: 'Delete',
                   ),
                   const SizedBox(height: 8),
                   WnKeyPackageCard(
@@ -79,6 +81,7 @@ Widget wnKeyPackageCardShowcase(BuildContext context) {
                         'deadbeef1234567890abcdef1234567890abcdef1234567890abcdef12345678',
                     createdAt: '2026-01-01T00:00:00.000Z',
                     onDelete: () {},
+                    deleteLabel: 'Delete',
                   ),
                 ],
               ),
@@ -143,6 +146,7 @@ class _InteractiveCard extends StatelessWidget {
         initialValue: '2026-01-28T21:00:42.000Z',
       ),
       onDelete: () {},
+      deleteLabel: 'Delete',
     );
   }
 }
