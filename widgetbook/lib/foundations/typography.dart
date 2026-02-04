@@ -189,17 +189,6 @@ Widget allTypography(BuildContext context) {
             _StyleItem('bold12', typography.bold12, 'Bold'),
           ],
         ),
-        _buildSizeSection(
-          'Size 10',
-          fontSize: 10,
-          lineHeight: 14,
-          letterSpacing: 0.8,
-          styles: [
-            _StyleItem('medium10', typography.medium10, 'Medium'),
-            _StyleItem('semiBold10', typography.semiBold10, 'SemiBold'),
-            _StyleItem('bold10', typography.bold10, 'Bold'),
-          ],
-        ),
       ],
     ),
   );

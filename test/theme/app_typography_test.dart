@@ -150,21 +150,10 @@ void main() {
         expect(typography.bold12.fontWeight, FontWeight.w700);
       });
 
-      test('10px styles have correct properties', () {
-        expect(typography.medium10.fontSize, 10);
-        expect(typography.medium10.height, 14 / 10);
-        expect(typography.medium10.letterSpacing, 0.8);
-        expect(typography.medium10.fontWeight, FontWeight.w500);
-
-        expect(typography.semiBold10.fontWeight, FontWeight.w600);
-        expect(typography.bold10.fontWeight, FontWeight.w700);
-      });
-
       test('all styles use vertical trim (even leading distribution)', () {
         expect(typography.medium96.leadingDistribution, TextLeadingDistribution.even);
         expect(typography.medium14.leadingDistribution, TextLeadingDistribution.even);
         expect(typography.medium12.leadingDistribution, TextLeadingDistribution.even);
-        expect(typography.medium10.leadingDistribution, TextLeadingDistribution.even);
         expect(typography.bold24.leadingDistribution, TextLeadingDistribution.even);
       });
     });
@@ -294,7 +283,6 @@ void main() {
       expect(scaled.medium14.fontSize, 14.sp);
       expect(scaled.bold24.fontSize, 24.sp);
       expect(scaled.semiBold96.fontSize, 96.sp);
-      expect(scaled.medium10.fontSize, 10.sp);
     });
   });
 }

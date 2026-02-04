@@ -49,7 +49,7 @@ class WnMessageReactions extends StatelessWidget {
             padding: EdgeInsets.only(left: 2.w),
             child: Text(
               '...',
-              style: typography.medium10.copyWith(color: textColor),
+              style: typography.medium12.copyWith(color: textColor),
             ),
           ),
       ],
@@ -94,7 +94,7 @@ class _ReactionPill extends StatelessWidget {
               SizedBox(width: 2.w),
               Text(
                 count > 99 ? '99+' : count.toString(),
-                style: typography.medium10.copyWith(color: textColor),
+                style: typography.medium12.copyWith(color: textColor),
               ),
             ],
           ],
