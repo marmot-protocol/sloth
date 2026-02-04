@@ -57,6 +57,7 @@ class WnSystemNotice extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final (bgColor, contentColor, icon) = _getStyle(colors);
     final descriptionColor = colors.backgroundContentQuaternary;
     final bool shouldShowDetails =
@@ -154,14 +155,9 @@ class WnSystemNotice extends HookWidget {
                       Gap(8.w),
                     ],
                     Expanded(
-                      child: Builder(
-                        builder: (context) {
-                          final typography = context.typographyScaled;
-                          return Text(
-                            title,
-                            style: typography.bold14.copyWith(color: contentColor),
-                          );
-                        },
+                      child: Text(
+                        title,
+                        style: typography.bold14.copyWith(color: contentColor),
                       ),
                     ),
                     if (shouldShowActionIcon) ...[
@@ -194,16 +190,11 @@ class WnSystemNotice extends HookWidget {
                                 Gap(4.h),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                  child: Builder(
-                                    builder: (context) {
-                                      final typography = context.typographyScaled;
-                                      return Text(
-                                        description!,
-                                        style: typography.medium14.copyWith(
-                                          color: descriptionColor,
-                                        ),
-                                      );
-                                    },
+                                  child: Text(
+                                    description!,
+                                    style: typography.medium14.copyWith(
+                                      color: descriptionColor,
+                                    ),
                                   ),
                                 ),
                               ],
