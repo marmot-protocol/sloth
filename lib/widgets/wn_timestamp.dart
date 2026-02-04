@@ -103,8 +103,8 @@ class WnTimestamp extends StatelessWidget {
     };
   }
 
-  String _formatMonthDay(DateTime date, AppLocalizations l10n) {
-    final month = switch (date.month) {
+  String _monthShortName(int month, AppLocalizations l10n) {
+    return switch (month) {
       1 => l10n.monthJanShort,
       2 => l10n.monthFebShort,
       3 => l10n.monthMarShort,
@@ -119,25 +119,15 @@ class WnTimestamp extends StatelessWidget {
       12 => l10n.monthDecShort,
       _ => '',
     };
+  }
+
+  String _formatMonthDay(DateTime date, AppLocalizations l10n) {
+    final month = _monthShortName(date.month, l10n);
     return '$month ${date.day}';
   }
 
   String _formatFullDate(DateTime date, AppLocalizations l10n) {
-    final month = switch (date.month) {
-      1 => l10n.monthJanShort,
-      2 => l10n.monthFebShort,
-      3 => l10n.monthMarShort,
-      4 => l10n.monthAprShort,
-      5 => l10n.monthMayShort,
-      6 => l10n.monthJunShort,
-      7 => l10n.monthJulShort,
-      8 => l10n.monthAugShort,
-      9 => l10n.monthSepShort,
-      10 => l10n.monthOctShort,
-      11 => l10n.monthNovShort,
-      12 => l10n.monthDecShort,
-      _ => '',
-    };
+    final month = _monthShortName(date.month, l10n);
     return '$month ${date.day}, ${date.year}';
   }
 }
