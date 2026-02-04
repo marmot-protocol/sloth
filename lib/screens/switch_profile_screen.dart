@@ -7,7 +7,6 @@ import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
@@ -162,7 +161,7 @@ class _AccountTile extends HookConsumerWidget {
             WnAvatar(
               pictureUrl: metadata?.picture,
               displayName: displayName,
-              color: avatarColorFromPubkey(pubkey),
+              color: AvatarColor.fromPubkey(pubkey),
             ),
             SizedBox(width: 12.w),
             Expanded(

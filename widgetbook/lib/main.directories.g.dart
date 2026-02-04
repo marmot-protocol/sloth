@@ -20,6 +20,8 @@ import 'package:sloth_widgetbook/components/inputs.dart'
     as _sloth_widgetbook_components_inputs;
 import 'package:sloth_widgetbook/components/menu.dart'
     as _sloth_widgetbook_components_menu;
+import 'package:sloth_widgetbook/components/spinner.dart'
+    as _sloth_widgetbook_components_spinner;
 import 'package:sloth_widgetbook/components/structure.dart'
     as _sloth_widgetbook_components_structure;
 import 'package:sloth_widgetbook/components/tooltip.dart'
@@ -153,6 +155,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Separator',
             builder: _sloth_widgetbook_components_structure.wnSeparatorShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnSpinnerStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Spinner',
+            builder: _sloth_widgetbook_components_spinner.wnSpinnerShowcase,
           ),
         ],
       ),

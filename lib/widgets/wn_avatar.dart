@@ -5,8 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/utils/formatting.dart' show formatInitials;
 import 'package:sloth/widgets/wn_icon.dart';
+
+export 'package:sloth/utils/avatar_color.dart';
 
 enum WnAvatarSize { small, medium, large }
 
@@ -17,7 +20,7 @@ class WnAvatar extends HookWidget {
     this.displayName,
     this.size = WnAvatarSize.small,
     this.imageProvider,
-    this.color,
+    this.color = AvatarColor.neutral,
     this.onEditTap,
   });
 
@@ -25,7 +28,7 @@ class WnAvatar extends HookWidget {
   final String? displayName;
   final WnAvatarSize size;
   final ImageProvider? imageProvider;
-  final AccentColor? color;
+  final AvatarColor color;
   final VoidCallback? onEditTap;
 
   double _getAvatarSize() {
@@ -59,10 +62,7 @@ class WnAvatar extends HookWidget {
     final fontSize = _getFontSize();
     final iconSize = _getIconSize();
 
-    final accentColors = useMemoized(() {
-      if (color == null) return null;
-      return getAccentColorSet(color!, colors.accent);
-    }, [color, colors.accent]);
+    final colorSet = color.toColorSet(colors);
 
     final image = useMemoized(() {
       if (imageProvider != null) return imageProvider;
@@ -81,7 +81,7 @@ class WnAvatar extends HookWidget {
             size: avatarSize,
             fontSize: fontSize,
             iconSize: iconSize,
-            accentColors: accentColors,
+            colorSet: colorSet,
           )
         : _ImageAvatar(
             image: image,
@@ -89,7 +89,7 @@ class WnAvatar extends HookWidget {
             size: avatarSize,
             fontSize: fontSize,
             iconSize: iconSize,
-            accentColors: accentColors,
+            colorSet: colorSet,
           );
 
     final showEditButton = onEditTap != null && size == WnAvatarSize.large;
@@ -184,37 +184,32 @@ class _InitialsAvatar extends StatelessWidget {
     required this.size,
     required this.fontSize,
     required this.iconSize,
-    this.accentColors,
+    required this.colorSet,
   });
 
   final String? displayName;
   final double size;
   final double fontSize;
   final double iconSize;
-  final AccentColorSet? accentColors;
+  final AvatarColorSet colorSet;
 
   @override
   Widget build(BuildContext context) {
-    final colors = context.colors;
-
-    final fillColor = accentColors?.fill ?? colors.fillSecondary;
-    final borderColor = accentColors?.border ?? colors.borderTertiary;
-    final contentColor = accentColors?.contentPrimary ?? colors.fillContentSecondary;
-
     return Container(
+      key: const Key('avatar_container'),
       width: size,
       height: size,
       decoration: BoxDecoration(
         shape: BoxShape.circle,
-        color: fillColor,
-        border: Border.all(color: borderColor),
+        color: colorSet.background,
+        border: Border.all(color: colorSet.border),
       ),
       clipBehavior: Clip.antiAlias,
       child: _InitialsContent(
         displayName: displayName,
         fontSize: fontSize,
         iconSize: iconSize,
-        contentColor: contentColor,
+        contentColor: colorSet.content,
       ),
     );
   }
@@ -253,7 +248,7 @@ class _ImageAvatar extends HookWidget {
     required this.size,
     required this.fontSize,
     required this.iconSize,
-    this.accentColors,
+    required this.colorSet,
   });
 
   final ImageProvider image;
@@ -261,7 +256,7 @@ class _ImageAvatar extends HookWidget {
   final double size;
   final double fontSize;
   final double iconSize;
-  final AccentColorSet? accentColors;
+  final AvatarColorSet colorSet;
 
   @override
   Widget build(BuildContext context) {
@@ -296,7 +291,7 @@ class _ImageAvatar extends HookWidget {
         size: size,
         fontSize: fontSize,
         iconSize: iconSize,
-        accentColors: accentColors,
+        colorSet: colorSet,
       );
     }
 

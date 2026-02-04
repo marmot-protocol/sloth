@@ -3,7 +3,8 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/theme/semantic_colors.dart' show AccentColor;
+import 'package:sloth/theme/semantic_colors.dart' show SemanticColors;
+import 'package:sloth/utils/avatar_color.dart' show AvatarColor;
 import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
 import 'package:sloth/widgets/wn_icon.dart' show WnIcon;
 
@@ -191,16 +192,33 @@ void main() {
     });
 
     group('with color', () {
-      testWidgets('shows initials with blue color', (tester) async {
+      testWidgets('defaults to neutral color', (tester) async {
+        await mountWidget(const WnAvatar(displayName: 'alice'), tester);
+
+        final container = tester.widget<Container>(find.byKey(const Key('avatar_container')));
+        final decoration = container.decoration! as BoxDecoration;
+        final border = decoration.border! as Border;
+        final text = tester.widget<Text>(find.text('A'));
+
+        expect(decoration.color, SemanticColors.light.fillSecondary);
+        expect(border.top.color, SemanticColors.light.borderSecondary);
+        expect(text.style!.color, SemanticColors.light.fillContentSecondary);
+      });
+
+      testWidgets('applies given color', (tester) async {
         await mountWidget(
-          const WnAvatar(
-            displayName: 'alice',
-            color: AccentColor.cyan,
-          ),
+          const WnAvatar(displayName: 'alice', color: AvatarColor.cyan),
           tester,
         );
 
-        expect(find.text('A'), findsOneWidget);
+        final container = tester.widget<Container>(find.byKey(const Key('avatar_container')));
+        final decoration = container.decoration! as BoxDecoration;
+        final border = decoration.border! as Border;
+        final text = tester.widget<Text>(find.text('A'));
+
+        expect(decoration.color, SemanticColors.light.accent.cyan.fill);
+        expect(border.top.color, SemanticColors.light.accent.cyan.border);
+        expect(text.style!.color, SemanticColors.light.accent.cyan.contentPrimary);
       });
     });
 
@@ -288,7 +306,7 @@ void main() {
         await mountWidget(
           WnAvatar(
             displayName: 'alice',
-            color: AccentColor.rose,
+            color: AvatarColor.rose,
             size: WnAvatarSize.large,
             onEditTap: () {},
           ),

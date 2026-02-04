@@ -62,6 +62,7 @@ Future<T Function()> mountHook<T>(
   WidgetTester tester,
   T Function() useHook,
 ) async {
+  setUpTestView(tester);
   late T result;
   await tester.pumpWidget(
     MaterialApp(

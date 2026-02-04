@@ -479,4 +479,16 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get imagePickerError => 'Falha ao selecionar imagem. Por favor, tente novamente.';
+
+  @override
+  String get scanNsec => 'Escanear código QR';
+
+  @override
+  String get scanNsecHint => 'Escaneie o código QR da sua chave privada para fazer login.';
+
+  @override
+  String get cameraPermissionDenied => 'Permissão de câmera negada';
+
+  @override
+  String get somethingWentWrong => 'Algo deu errado';
 }

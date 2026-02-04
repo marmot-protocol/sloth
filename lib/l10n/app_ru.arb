@@ -139,5 +139,9 @@
   "failedToStartChat": "Не удалось начать чат. Попробуйте снова.",
   "userNotOnWhiteNoise": "Этот пользователь ещё не в White Noise.",
   "failedToUpdateFollow": "Не удалось обновить статус подписки. Попробуйте снова.",
-  "imagePickerError": "Не удалось выбрать изображение. Попробуйте снова."
+  "imagePickerError": "Не удалось выбрать изображение. Попробуйте снова.",
+  "scanNsec": "Сканировать QR-код",
+  "scanNsecHint": "Отсканируйте QR-код вашего приватного ключа для входа.",
+  "cameraPermissionDenied": "Доступ к камере запрещён",
+  "somethingWentWrong": "Что-то пошло не так"
 }

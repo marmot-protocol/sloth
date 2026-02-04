@@ -781,35 +781,3 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
 extension SemanticColorsExtension on BuildContext {
   SemanticColors get colors => Theme.of(this).extension<SemanticColors>() ?? SemanticColors.light;
 }
-
-enum AccentColor {
-  blue,
-  cyan,
-  emerald,
-  fuchsia,
-  indigo,
-  lime,
-  orange,
-  rose,
-  sky,
-  teal,
-  violet,
-  amber,
-}
-
-AccentColorSet getAccentColorSet(AccentColor color, SemanticAccentColors accent) {
-  return switch (color) {
-    AccentColor.blue => accent.blue,
-    AccentColor.cyan => accent.cyan,
-    AccentColor.emerald => accent.emerald,
-    AccentColor.fuchsia => accent.fuchsia,
-    AccentColor.indigo => accent.indigo,
-    AccentColor.lime => accent.lime,
-    AccentColor.orange => accent.orange,
-    AccentColor.rose => accent.rose,
-    AccentColor.sky => accent.sky,
-    AccentColor.teal => accent.teal,
-    AccentColor.violet => accent.violet,
-    AccentColor.amber => accent.amber,
-  };
-}

@@ -10,7 +10,6 @@ import 'package:sloth/src/rust/api/account_groups.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/utils/avatar_color.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 
@@ -161,7 +160,7 @@ void main() {
       final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
       expect(avatars.length, 2);
       for (final avatar in avatars) {
-        expect(avatar.color, avatarColorFromPubkey(_testGroupId));
+        expect(avatar.color, AvatarColor.fromPubkey(_testGroupId));
       }
     });
 

@@ -947,6 +947,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to pick image. Please try again.'**
   String get imagePickerError;
+
+  /// Title for scan nsec screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan QR code'**
+  String get scanNsec;
+
+  /// Hint text on scan nsec screen
+  ///
+  /// In en, this message translates to:
+  /// **'Scan your private key QR code to login.'**
+  String get scanNsecHint;
+
+  /// Error message when camera permission is denied
+  ///
+  /// In en, this message translates to:
+  /// **'Camera permission denied'**
+  String get cameraPermissionDenied;
+
+  /// Generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
