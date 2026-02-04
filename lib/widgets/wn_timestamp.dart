@@ -15,13 +15,12 @@ class WnTimestamp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final l10n = AppLocalizations.of(context);
     final text = _formatTimestamp(l10n);
 
     return Text(
       text,
-      style: typography.medium12.copyWith(color: colors.backgroundContentSecondary),
+      style: context.typographyScaled.medium12.copyWith(color: colors.backgroundContentSecondary),
       overflow: TextOverflow.ellipsis,
       maxLines: 1,
     );
