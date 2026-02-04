@@ -20,7 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RustLib.init();
   final container = await initializeAppContainer();
-  runApp(UncontrolledProviderScope(container: container, child: const MyApp()));
+  runApp(UncontrolledProviderScope(container: container, child: const WnApp()));
 }
 
 Future<ProviderContainer> initializeAppContainer() async {
@@ -37,14 +37,14 @@ Future<ProviderContainer> initializeAppContainer() async {
   return container;
 }
 
-class MyApp extends ConsumerStatefulWidget {
-  const MyApp({super.key});
+class WnApp extends ConsumerStatefulWidget {
+  const WnApp({super.key});
 
   @override
-  ConsumerState<MyApp> createState() => _MyAppState();
+  ConsumerState<WnApp> createState() => _WnAppState();
 }
 
-class _MyAppState extends ConsumerState<MyApp> {
+class _WnAppState extends ConsumerState<WnApp> {
   late final GoRouter _router;
 
   @override

@@ -127,10 +127,10 @@ void main() {
     mockApi.reset();
   });
 
-  group('MyApp', () {
+  group('WnApp', () {
     late _MockThemeNotifier mockTheme;
 
-    Future<void> pumpMyApp(WidgetTester tester) async {
+    Future<void> pumpWnApp(WidgetTester tester) async {
       setUpTestView(tester);
       mockTheme = _MockThemeNotifier();
       await tester.pumpWidget(
@@ -140,26 +140,26 @@ void main() {
             themeProvider.overrideWith(() => mockTheme),
             secureStorageProvider.overrideWithValue(MockSecureStorage()),
           ],
-          child: const MyApp(),
+          child: const WnApp(),
         ),
       );
       await tester.pumpAndSettle();
     }
 
     testWidgets('has app title', (tester) async {
-      await pumpMyApp(tester);
+      await pumpWnApp(tester);
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.title, 'White Noise');
     });
 
     testWidgets('defaults to system theme mode', (tester) async {
-      await pumpMyApp(tester);
+      await pumpWnApp(tester);
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.themeMode, ThemeMode.system);
     });
 
     testWidgets('responds to theme mode changes', (tester) async {
-      await pumpMyApp(tester);
+      await pumpWnApp(tester);
 
       mockTheme.setMode(ThemeMode.dark);
       await tester.pumpAndSettle();
@@ -169,7 +169,7 @@ void main() {
     });
 
     testWidgets('has routes configured', (tester) async {
-      await pumpMyApp(tester);
+      await pumpWnApp(tester);
       final app = tester.widget<MaterialApp>(find.byType(MaterialApp));
       expect(app.routerConfig, isNotNull);
     });
