@@ -59,7 +59,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'WnAvatarStory',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'WnAvatarStory',
+            name: 'Avatar',
             builder: _sloth_widgetbook_components_wn_avatar.wnAvatarShowcase,
           ),
         ],
@@ -86,7 +86,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'WnCopyCardStory',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'WnCopyCardStory',
+            name: 'Copy Card',
             builder:
                 _sloth_widgetbook_components_wn_copy_card.wnCopyCardShowcase,
           ),

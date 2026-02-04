@@ -37,14 +37,17 @@ class WnKeyPackageCard extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _buildTitleRow(colors),
-          _buildContent(colors),
+          _buildTitleRow(context),
+          _buildContent(context),
         ],
       ),
     );
   }
 
-  Widget _buildTitleRow(SemanticColors colors) {
+  Widget _buildTitleRow(BuildContext context) {
+    final colors = context.colors;
+    final typography = context.typographyScaled;
+
     return SizedBox(
       height: 44.h,
       child: Row(
@@ -63,12 +66,8 @@ class WnKeyPackageCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8.h),
               child: Text(
                 title,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w600,
+                style: typography.semiBold14.copyWith(
                   color: colors.fillContentSecondary,
-                  letterSpacing: 0.4,
-                  height: 18 / 14,
                 ),
                 overflow: TextOverflow.ellipsis,
                 maxLines: 1,
@@ -80,12 +79,12 @@ class WnKeyPackageCard extends StatelessWidget {
     );
   }
 
-  Widget _buildContent(SemanticColors colors) {
+  Widget _buildContent(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        _buildIdField(colors),
-        _buildCreatedAtField(colors),
+        _buildIdField(context),
+        _buildCreatedAtField(context),
         SizedBox(
           height: 44.h,
           child: WnButton(
@@ -102,32 +101,20 @@ class WnKeyPackageCard extends StatelessWidget {
     );
   }
 
-  Widget _buildIdField(SemanticColors colors) {
+  Widget _buildIdField(BuildContext context) {
+    final colors = context.colors;
+    final typography = context.typographyScaled;
+    final textStyle = typography.medium14.copyWith(
+      color: colors.backgroundContentSecondary,
+    );
+
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 4.h, 8.w, 13.h),
       child: Text.rich(
         TextSpan(
           children: [
-            TextSpan(
-              text: 'ID: ',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.backgroundContentSecondary,
-                letterSpacing: 0.4,
-                height: 18 / 14,
-              ),
-            ),
-            TextSpan(
-              text: packageId,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.backgroundContentSecondary,
-                letterSpacing: 0.4,
-                height: 18 / 14,
-              ),
-            ),
+            TextSpan(text: 'ID: ', style: textStyle),
+            TextSpan(text: packageId, style: textStyle),
           ],
         ),
         key: const Key('package_id_text'),
@@ -135,32 +122,20 @@ class WnKeyPackageCard extends StatelessWidget {
     );
   }
 
-  Widget _buildCreatedAtField(SemanticColors colors) {
+  Widget _buildCreatedAtField(BuildContext context) {
+    final colors = context.colors;
+    final typography = context.typographyScaled;
+    final textStyle = typography.medium14.copyWith(
+      color: colors.backgroundContentPrimary,
+    );
+
     return Padding(
       padding: EdgeInsets.fromLTRB(0, 4.h, 8.w, 13.h),
       child: Text.rich(
         TextSpan(
           children: [
-            TextSpan(
-              text: 'Created at: ',
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.backgroundContentPrimary,
-                letterSpacing: 0.4,
-                height: 18 / 14,
-              ),
-            ),
-            TextSpan(
-              text: createdAt,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.backgroundContentPrimary,
-                letterSpacing: 0.4,
-                height: 18 / 14,
-              ),
-            ),
+            TextSpan(text: 'Created at: ', style: textStyle),
+            TextSpan(text: createdAt, style: textStyle),
           ],
         ),
         key: const Key('created_at_text'),

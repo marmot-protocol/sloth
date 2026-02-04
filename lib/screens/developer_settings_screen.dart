@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' show useEffect, useState;
+import 'package:flutter_hooks/flutter_hooks.dart' show HookWidget, useEffect, useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
@@ -8,9 +8,9 @@ import 'package:sloth/providers/account_pubkey_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/theme.dart';
-import 'package:sloth/theme/app_typography.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_key_package_card.dart';
+import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import 'package:sloth/widgets/wn_system_notice.dart';
@@ -189,7 +189,7 @@ class _ActionButtons extends StatelessWidget {
   }
 }
 
-class _KeyPackagesList extends StatelessWidget {
+class _KeyPackagesList extends HookWidget {
   const _KeyPackagesList({
     required this.packages,
     required this.onDelete,
@@ -204,6 +204,13 @@ class _KeyPackagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typographyScaled;
+    final canScrollUp = useState(false);
+    final canScrollDown = useState(false);
+
+    void updateScrollState(ScrollMetrics metrics) {
+      canScrollUp.value = metrics.extentBefore > 0;
+      canScrollDown.value = metrics.extentAfter > 0;
+    }
 
     if (packages.isEmpty) {
       return Center(
@@ -216,21 +223,40 @@ class _KeyPackagesList extends StatelessWidget {
       );
     }
 
-    return ListView.separated(
-      itemCount: packages.length,
-      separatorBuilder: (_, _) => SizedBox(height: 8.h),
-      itemBuilder: (context, index) {
-        final package = packages[index];
-        return WnKeyPackageCard(
-          key: Key('key_package_card_${package.id}'),
-          title: context.l10n.packageNumber(index + 1),
-          packageId: package.id,
-          createdAt: package.createdAt.toIso8601String(),
-          onDelete: () => onDelete(package.id),
-          disabled: disabled,
-          deleteButtonKey: Key('delete_key_package_${package.id}'),
-        );
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: (notification) {
+        updateScrollState(notification.metrics);
+        return false;
       },
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          updateScrollState(notification.metrics);
+          return false;
+        },
+        child: Stack(
+          children: [
+            ListView.separated(
+              itemCount: packages.length,
+              separatorBuilder: (_, _) => SizedBox(height: 8.h),
+              itemBuilder: (context, index) {
+                final package = packages[index];
+                return WnKeyPackageCard(
+                  key: Key('key_package_card_${package.id}'),
+                  title: context.l10n.packageNumber(index + 1),
+                  packageId: package.id,
+                  createdAt: package.createdAt.toIso8601String(),
+                  onDelete: () => onDelete(package.id),
+                  disabled: disabled,
+                  deleteButtonKey: Key('delete_key_package_${package.id}'),
+                );
+              },
+            ),
+            if (canScrollUp.value) WnScrollEdgeEffect.slateTop(color: colors.backgroundSecondary),
+            if (canScrollDown.value)
+              WnScrollEdgeEffect.slateBottom(color: colors.backgroundSecondary),
+          ],
+        ),
+      ),
     );
   }
 }
