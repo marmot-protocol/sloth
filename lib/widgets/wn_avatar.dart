@@ -82,6 +82,7 @@ class WnAvatar extends HookWidget {
             fontSize: fontSize,
             iconSize: iconSize,
             colorSet: colorSet,
+            avatarSizeEnum: size,
           )
         : _ImageAvatar(
             image: image,
@@ -90,6 +91,7 @@ class WnAvatar extends HookWidget {
             fontSize: fontSize,
             iconSize: iconSize,
             colorSet: colorSet,
+            avatarSizeEnum: size,
           );
 
     final showEditButton = onEditTap != null && size == WnAvatarSize.large;
@@ -148,26 +150,31 @@ class _InitialsContent extends StatelessWidget {
     required this.fontSize,
     required this.iconSize,
     required this.contentColor,
+    required this.avatarSizeEnum,
   });
 
   final String? displayName;
   final double fontSize;
   final double iconSize;
   final Color contentColor;
+  final WnAvatarSize avatarSizeEnum;
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typographyScaled;
     final initials = formatInitials(displayName);
+
+    final textStyle = switch (avatarSizeEnum) {
+      WnAvatarSize.small => typography.semiBold14,
+      WnAvatarSize.medium => typography.semiBold16,
+      WnAvatarSize.large => typography.semiBold32,
+    };
 
     return Center(
       child: initials != null
           ? Text(
               initials,
-              style: TextStyle(
-                color: contentColor,
-                fontSize: fontSize,
-                fontWeight: FontWeight.w600,
-              ),
+              style: textStyle.copyWith(color: contentColor),
             )
           : WnIcon(
               WnIcons.user,
@@ -185,6 +192,7 @@ class _InitialsAvatar extends StatelessWidget {
     required this.fontSize,
     required this.iconSize,
     required this.colorSet,
+    required this.avatarSizeEnum,
   });
 
   final String? displayName;
@@ -192,6 +200,7 @@ class _InitialsAvatar extends StatelessWidget {
   final double fontSize;
   final double iconSize;
   final AvatarColorSet colorSet;
+  final WnAvatarSize avatarSizeEnum;
 
   @override
   Widget build(BuildContext context) {
@@ -210,6 +219,7 @@ class _InitialsAvatar extends StatelessWidget {
         fontSize: fontSize,
         iconSize: iconSize,
         contentColor: colorSet.content,
+        avatarSizeEnum: avatarSizeEnum,
       ),
     );
   }
@@ -249,6 +259,7 @@ class _ImageAvatar extends HookWidget {
     required this.fontSize,
     required this.iconSize,
     required this.colorSet,
+    required this.avatarSizeEnum,
   });
 
   final ImageProvider image;
@@ -257,6 +268,7 @@ class _ImageAvatar extends HookWidget {
   final double fontSize;
   final double iconSize;
   final AvatarColorSet colorSet;
+  final WnAvatarSize avatarSizeEnum;
 
   @override
   Widget build(BuildContext context) {
@@ -292,6 +304,7 @@ class _ImageAvatar extends HookWidget {
         fontSize: fontSize,
         iconSize: iconSize,
         colorSet: colorSet,
+        avatarSizeEnum: avatarSizeEnum,
       );
     }
 
@@ -307,6 +320,7 @@ class _ImageAvatar extends HookWidget {
               fontSize: fontSize,
               iconSize: iconSize,
               contentColor: colors.backgroundContentSecondary,
+              avatarSizeEnum: avatarSizeEnum,
             ),
           ),
           if (previousImage.value != null)

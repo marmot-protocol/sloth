@@ -229,12 +229,8 @@ class WnListItem extends HookWidget {
                 padding: EdgeInsets.only(right: 16.w),
                 child: Text(
                   title,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
+                  style: context.typographyScaled.medium14.copyWith(
                     color: colors.fillContentSecondary,
-                    height: 18 / 14,
-                    letterSpacing: 0.4.sp,
                   ),
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,

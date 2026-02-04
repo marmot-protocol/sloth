@@ -56,13 +56,7 @@ class WnMenuItem extends HookWidget {
                   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                   child: Text(
                     label,
-                    style: TextStyle(
-                      fontWeight: FontWeight.w500,
-                      fontSize: 16.sp,
-                      color: contentColor,
-                      letterSpacing: 0.2.sp,
-                      height: 22 / 16,
-                    ),
+                    style: context.typographyScaled.medium16.copyWith(color: contentColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

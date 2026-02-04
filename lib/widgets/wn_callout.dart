@@ -28,6 +28,7 @@ class WnCallout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final colorScheme = _getColorScheme(colors);
 
     return Container(
@@ -60,13 +61,7 @@ class WnCallout extends StatelessWidget {
                   padding: EdgeInsets.only(right: 16.w),
                   child: Text(
                     title,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w700,
-                      color: colorScheme.titleColor,
-                      letterSpacing: 0.4.sp,
-                      height: 20 / 14,
-                    ),
+                    style: typography.bold14.copyWith(color: colorScheme.titleColor),
                   ),
                 ),
               ),
@@ -93,13 +88,7 @@ class WnCallout extends StatelessWidget {
               padding: EdgeInsets.only(left: 8.w, right: 8.w, top: 4.h, bottom: 13.h),
               child: Text(
                 description!,
-                style: TextStyle(
-                  fontSize: 14.sp,
-                  fontWeight: FontWeight.w500,
-                  color: colorScheme.descriptionColor,
-                  letterSpacing: 0.4.sp,
-                  height: 20 / 14,
-                ),
+                style: typography.medium14.copyWith(color: colorScheme.descriptionColor),
               ),
             ),
           ],

@@ -14,6 +14,7 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: Stack(
@@ -41,31 +42,22 @@ class HomeScreen extends StatelessWidget {
                           Text(
                             context.l10n.appTitle,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w700,
-                              fontSize: 48.sp,
-                              letterSpacing: -0.6.sp,
-                              color: context.colors.backgroundContentPrimary,
+                            style: typography.bold48.copyWith(
+                              color: colors.backgroundContentPrimary,
                             ),
                           ),
                           Text(
                             context.l10n.tagline1,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18.sp,
-                              letterSpacing: 0.1.sp,
-                              color: context.colors.backgroundContentTertiary,
+                            style: typography.semiBold18.copyWith(
+                              color: colors.backgroundContentTertiary,
                             ),
                           ),
                           Text(
                             context.l10n.tagline2,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18.sp,
-                              letterSpacing: 0.1.sp,
-                              color: context.colors.backgroundContentTertiary,
+                            style: typography.semiBold18.copyWith(
+                              color: colors.backgroundContentTertiary,
                             ),
                           ),
                         ],

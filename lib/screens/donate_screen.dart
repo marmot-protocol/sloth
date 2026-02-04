@@ -55,10 +55,8 @@ class DonateScreen extends HookWidget {
                 children: [
                   Text(
                     context.l10n.donateDescription,
-                    style: TextStyle(
+                    style: context.typographyScaled.medium14.copyWith(
                       color: colors.backgroundContentTertiary,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
                     ),
                   ),
                   WnCopyableField(

@@ -57,6 +57,7 @@ class WnSystemNotice extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final (bgColor, contentColor, icon) = _getStyle(colors);
     final descriptionColor = colors.backgroundContentQuaternary;
     final bool shouldShowDetails =
@@ -156,13 +157,7 @@ class WnSystemNotice extends HookWidget {
                     Expanded(
                       child: Text(
                         title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.sp,
-                          height: 20 / 14,
-                          letterSpacing: 0.4.sp,
-                          color: contentColor,
-                        ),
+                        style: typography.bold14.copyWith(color: contentColor),
                       ),
                     ),
                     if (shouldShowActionIcon) ...[
@@ -197,11 +192,7 @@ class WnSystemNotice extends HookWidget {
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
                                   child: Text(
                                     description!,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.sp,
-                                      height: 20 / 14,
-                                      letterSpacing: 0.4.sp,
+                                    style: typography.medium14.copyWith(
                                       color: descriptionColor,
                                     ),
                                   ),

@@ -23,6 +23,7 @@ class ChatInviteScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
 
     final isAccepting = useState(false);
@@ -109,9 +110,7 @@ class ChatInviteScreen extends HookConsumerWidget {
                 SizedBox(height: 16.h),
                 Text(
                   groupAvatarSnapshot.data?.displayName ?? '',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
+                  style: typography.semiBold18.copyWith(
                     color: colors.backgroundContentPrimary,
                   ),
                   textAlign: TextAlign.center,
@@ -130,9 +129,8 @@ class ChatInviteScreen extends HookConsumerWidget {
                   ? Center(
                       child: Text(
                         context.l10n.invitedToSecureChat,
-                        style: TextStyle(
+                        style: typography.medium14.copyWith(
                           color: colors.backgroundContentTertiary,
-                          fontSize: 14.sp,
                         ),
                       ),
                     )

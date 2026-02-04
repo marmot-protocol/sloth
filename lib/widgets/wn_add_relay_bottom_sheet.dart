@@ -72,9 +72,7 @@ class WnAddRelayBottomSheet extends HookWidget {
             Gap(16.h),
             Text(
               context.l10n.addRelay,
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w600,
+              style: context.typographyScaled.semiBold18.copyWith(
                 color: colors.backgroundContentPrimary,
               ),
             ),

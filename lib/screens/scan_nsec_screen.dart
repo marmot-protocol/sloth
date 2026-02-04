@@ -55,9 +55,7 @@ class ScanNsecScreen extends StatelessWidget {
                       Text(
                         context.l10n.scanNsecHint,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
+                        style: context.typographyScaled.medium14.copyWith(
                           color: colors.backgroundContentSecondary,
                         ),
                       ),

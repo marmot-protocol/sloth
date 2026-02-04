@@ -20,23 +20,16 @@ class WnSearchField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     return TextField(
       controller: controller,
       autofocus: autofocus,
       onChanged: onChanged,
-      style: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w500,
-        color: colors.backgroundContentPrimary,
-      ),
+      style: typography.medium14.copyWith(color: colors.backgroundContentPrimary),
       decoration: InputDecoration(
         hintText: placeholder,
-        hintStyle: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.backgroundContentTertiary,
-        ),
+        hintStyle: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
         prefixIcon: Padding(
           padding: EdgeInsets.only(left: 14.w, right: 10.w),
           child: WnIcon(

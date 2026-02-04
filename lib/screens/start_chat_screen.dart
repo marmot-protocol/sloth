@@ -165,8 +165,7 @@ class StartChatScreen extends HookConsumerWidget {
                           Text(
                             key: const Key('user_not_on_whitenoise'),
                             context.l10n.userNotOnWhiteNoise,
-                            style: TextStyle(
-                              fontSize: 14.sp,
+                            style: context.typographyScaled.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                             textAlign: TextAlign.center,

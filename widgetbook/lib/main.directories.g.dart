@@ -34,6 +34,8 @@ import 'package:sloth_widgetbook/components/wn_copy_card.dart'
     as _sloth_widgetbook_components_wn_copy_card;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
     as _sloth_widgetbook_foundations_semantic_colors;
+import 'package:sloth_widgetbook/foundations/typography.dart'
+    as _sloth_widgetbook_foundations_typography;
 import 'package:sloth_widgetbook/introduction.dart'
     as _sloth_widgetbook_introduction;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
@@ -210,6 +212,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Semantic Colors',
             builder: _sloth_widgetbook_foundations_semantic_colors.allColors,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'TypographyStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Typography',
+            builder: _sloth_widgetbook_foundations_typography.allTypography,
           ),
         ],
       ),

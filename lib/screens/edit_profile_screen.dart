@@ -127,7 +127,9 @@ class EditProfileScreen extends HookConsumerWidget {
                       return Center(
                         child: Text(
                           message,
-                          style: TextStyle(color: colors.fillDestructive),
+                          style: context.typographyScaled.medium14.copyWith(
+                            color: colors.fillDestructive,
+                          ),
                         ),
                       );
                     },

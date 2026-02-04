@@ -23,6 +23,7 @@ class NetworkScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final (:state, :fetchAll, :addRelay, :removeRelay) = useNetworkRelays(pubkey);
     final listItemController = useListItemController();
@@ -55,10 +56,8 @@ class NetworkScreen extends HookConsumerWidget {
                 Flexible(
                   child: Text(
                     title,
-                    style: TextStyle(
+                    style: typography.semiBold16.copyWith(
                       color: colors.backgroundContentTertiary,
-                      fontWeight: FontWeight.w600,
-                      fontSize: 16.sp,
                     ),
                     overflow: TextOverflow.ellipsis,
                   ),
@@ -114,7 +113,7 @@ class NetworkScreen extends HookConsumerWidget {
         return Center(
           child: Text(
             context.l10n.errorLoadingRelays,
-            style: TextStyle(color: colors.fillDestructive),
+            style: typography.medium14.copyWith(color: colors.fillDestructive),
           ),
         );
       }
@@ -125,8 +124,7 @@ class NetworkScreen extends HookConsumerWidget {
             padding: EdgeInsets.symmetric(vertical: 16.h),
             child: Text(
               context.l10n.noRelaysConfigured,
-              style: TextStyle(
-                fontSize: 14.sp,
+              style: typography.medium14.copyWith(
                 color: colors.backgroundContentTertiary,
               ),
             ),

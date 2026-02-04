@@ -23,6 +23,7 @@ class ShareProfileScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final metadataSnapshot = useUserMetadata(context, pubkey);
     final npub = npubFromHex(pubkey);
@@ -71,9 +72,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                             Text(
                               displayName,
                               textAlign: TextAlign.center,
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.w600,
+                              style: typography.semiBold18.copyWith(
                                 color: colors.backgroundContentPrimary,
                               ),
                             ),
@@ -106,9 +105,7 @@ class ShareProfileScreen extends HookConsumerWidget {
                           Text(
                             context.l10n.scanToConnect,
                             textAlign: TextAlign.center,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                            style: typography.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                           ),
