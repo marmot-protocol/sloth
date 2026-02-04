@@ -175,7 +175,7 @@ class WnInput extends HookWidget {
                 padding: EdgeInsets.only(left: 16.w),
                 child: SizedBox(
                   width: 16.w,
-                  height: 16.w,
+                  height: 16.h,
                   child: leadingIcon,
                 ),
               ),
