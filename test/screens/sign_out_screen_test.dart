@@ -111,6 +111,20 @@ void main() {
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
     });
 
+    testWidgets('dismisses notice after auto-hide duration', (tester) async {
+      await pumpSignOutScreen(tester);
+      await tester.pumpAndSettle();
+      await tester.tap(find.byKey(const Key('copy_button')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.text('Private key copied to clipboard'), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Private key copied to clipboard'), findsNothing);
+    });
+
     testWidgets('tapping visibility toggle shows/hides private key', (tester) async {
       await pumpSignOutScreen(tester);
       await tester.pumpAndSettle();

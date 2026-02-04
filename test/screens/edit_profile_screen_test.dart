@@ -11,6 +11,7 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -333,7 +334,7 @@ void main() {
       expect(avatar.color, AvatarColor.cyan);
     });
 
-    testWidgets('shows error snackbar when image picker fails', (tester) async {
+    testWidgets('shows system notice when image picker fails', (tester) async {
       TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
         const MethodChannel('plugins.flutter.io/image_picker'),
         (MethodCall methodCall) async {
@@ -351,7 +352,28 @@ void main() {
       await tester.tap(find.byKey(const Key('avatar_edit_button')));
       await tester.pumpAndSettle();
 
+      expect(find.byType(WnSystemNotice), findsOneWidget);
       expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
+    });
+
+    testWidgets('dismisses notice after auto-hide duration', (tester) async {
+      await pumpEditProfileScreen(tester);
+      await tester.pumpAndSettle();
+      await tester.enterText(find.byType(TextField).first, 'Updated Name');
+      await tester.pump();
+      await tester.scrollUntilVisible(
+        find.text('Save'),
+        50.0,
+        scrollable: find.byType(Scrollable).first,
+      );
+      await tester.tap(find.text('Save'));
+      await tester.pumpAndSettle();
+      expect(find.byType(WnSystemNotice), findsOneWidget);
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WnSystemNotice), findsNothing);
     });
   });
 }

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart'
-    show useEffect, useScrollController, useTextEditingController;
+    show useEffect, useScrollController, useState, useTextEditingController;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
@@ -18,6 +18,7 @@ import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
 import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class SignupScreen extends HookConsumerWidget {
   const SignupScreen({super.key});
@@ -34,6 +35,15 @@ class SignupScreen extends HookConsumerWidget {
     final (:pickImage, error: imagePickerError, clearError: clearImagePickerError) = useImagePicker(
       onImageSelected: onImageSelected,
     );
+    final noticeMessage = useState<String?>(null);
+
+    void showNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
     useEffect(() {
@@ -53,9 +63,7 @@ class SignupScreen extends HookConsumerWidget {
       if (imagePickerError != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.l10n.imagePickerError)),
-            );
+            showNotice(context.l10n.imagePickerError);
           }
         });
         clearImagePickerError();
@@ -102,6 +110,14 @@ class SignupScreen extends HookConsumerWidget {
                       type: WnSlateNavigationType.back,
                       onNavigate: () => Routes.goBack(context),
                     ),
+                    systemNotice: noticeMessage.value != null
+                        ? WnSystemNotice(
+                            key: ValueKey(noticeMessage.value),
+                            title: noticeMessage.value!,
+                            type: WnSystemNoticeType.error,
+                            onDismiss: dismissNotice,
+                          )
+                        : null,
                     child: SingleChildScrollView(
                       controller: scrollController,
                       child: Padding(

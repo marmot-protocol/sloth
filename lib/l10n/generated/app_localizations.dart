@@ -324,7 +324,7 @@ abstract class AppLocalizations {
   /// **'Public key'**
   String get publicKey;
 
-  /// Snackbar message when public key is copied
+  /// System notice message when public key is copied
   ///
   /// In en, this message translates to:
   /// **'Public key copied to clipboard'**
@@ -342,7 +342,7 @@ abstract class AppLocalizations {
   /// **'Private Key'**
   String get privateKey;
 
-  /// Snackbar message when private key is copied
+  /// System notice message when private key is copied
   ///
   /// In en, this message translates to:
   /// **'Private key copied to clipboard'**
@@ -426,7 +426,7 @@ abstract class AppLocalizations {
   /// **'Save'**
   String get save;
 
-  /// Snackbar message when profile is updated
+  /// System notice message when profile is updated
   ///
   /// In en, this message translates to:
   /// **'Profile updated successfully'**
@@ -534,7 +534,7 @@ abstract class AppLocalizations {
   /// **'Bitcoin Silent Payment'**
   String get bitcoinSilentPayment;
 
-  /// Snackbar message when donation address is copied
+  /// System notice message when donation address is copied
   ///
   /// In en, this message translates to:
   /// **'Copied to clipboard. Thank you! 🦥'**

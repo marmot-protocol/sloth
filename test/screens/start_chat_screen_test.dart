@@ -12,6 +12,8 @@ import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_copy_card.dart';
 import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
+
 import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mockClipboardFailing;
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -255,7 +257,7 @@ void main() {
         expect(followButton.loading, isTrue);
       });
 
-      testWidgets('shows snackbar on follow error', (tester) async {
+      testWidgets('shows system notice on follow error', (tester) async {
         _api.followError = Exception('Network error');
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
 
@@ -263,7 +265,7 @@ void main() {
         await tester.pump();
         await tester.pump();
 
-        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.text('Failed to update follow status. Please try again.'), findsOneWidget);
       });
     });
@@ -292,14 +294,14 @@ void main() {
         expect(startButton.loading, isTrue);
       });
 
-      testWidgets('shows snackbar on failure', (tester) async {
+      testWidgets('shows system notice on failure', (tester) async {
         _api.createGroupError = Exception('Network error');
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
 
         await tester.tap(find.byKey(const Key('start_chat_button')));
         await tester.pumpAndSettle();
 
-        expect(find.byType(SnackBar), findsOneWidget);
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.text('Failed to start chat. Please try again.'), findsOneWidget);
       });
     });
@@ -366,6 +368,21 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.text('Failed to copy public key. Please try again.'), findsOneWidget);
+      });
+
+      testWidgets('dismisses notice after auto-hide duration', (tester) async {
+        mockClipboard();
+        await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 300));
+        expect(find.text('Public key copied to clipboard'), findsOneWidget);
+
+        await tester.pump(const Duration(seconds: 3));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Public key copied to clipboard'), findsNothing);
       });
     });
   });
