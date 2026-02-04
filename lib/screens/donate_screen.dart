@@ -19,7 +19,6 @@ class DonateScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final noticeMessage = useState<String?>(null);
 
     void showCopiedNotice(String message) {
@@ -56,7 +55,7 @@ class DonateScreen extends HookWidget {
                 children: [
                   Text(
                     context.l10n.donateDescription,
-                    style: typography.medium14.copyWith(
+                    style: context.typographyScaled.medium14.copyWith(
                       color: colors.backgroundContentTertiary,
                     ),
                   ),

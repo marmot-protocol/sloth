@@ -42,7 +42,6 @@ class WnAddRelayBottomSheet extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final (:controller, :isValid, :validationError, :paste) = useAddRelay();
 
     Future<void> addRelay() async {
@@ -73,7 +72,9 @@ class WnAddRelayBottomSheet extends HookWidget {
             Gap(16.h),
             Text(
               context.l10n.addRelay,
-              style: typography.semiBold18.copyWith(color: colors.backgroundContentPrimary),
+              style: context.typographyScaled.semiBold18.copyWith(
+                color: colors.backgroundContentPrimary,
+              ),
             ),
             Gap(16.h),
             WnInput(

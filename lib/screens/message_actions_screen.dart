@@ -268,7 +268,6 @@ class _ReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final typography = context.typographyScaled;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -281,7 +280,7 @@ class _ReactionButton extends StatelessWidget {
             : null,
         child: Text(
           emoji,
-          style: typography.medium20,
+          style: context.typographyScaled.medium20,
         ),
       ),
     );

@@ -29,7 +29,6 @@ class StartChatScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final accountPubkey = ref.watch(accountPubkeyProvider);
 
     final metadataSnapshot = useUserMetadata(context, userPubkey);
@@ -166,7 +165,7 @@ class StartChatScreen extends HookConsumerWidget {
                           Text(
                             key: const Key('user_not_on_whitenoise'),
                             context.l10n.userNotOnWhiteNoise,
-                            style: typography.medium14.copyWith(
+                            style: context.typographyScaled.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                             textAlign: TextAlign.center,

@@ -15,7 +15,6 @@ class OnboardingScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
@@ -41,7 +40,7 @@ class OnboardingScreen extends ConsumerWidget {
                     children: [
                       Text(
                         context.l10n.startConversationHint,
-                        style: typography.medium14.copyWith(
+                        style: context.typographyScaled.medium14.copyWith(
                           color: colors.backgroundContentTertiary,
                         ),
                       ),

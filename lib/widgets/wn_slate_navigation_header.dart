@@ -20,7 +20,6 @@ class WnSlateNavigationHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final isBack = type == WnSlateNavigationType.back;
     final hasAction = onNavigate != null;
     final hasLeadingAction = isBack && hasAction;
@@ -45,7 +44,9 @@ class WnSlateNavigationHeader extends StatelessWidget {
               child: Center(
                 child: Text(
                   title,
-                  style: typography.semiBold16.copyWith(color: colors.backgroundContentPrimary),
+                  style: context.typographyScaled.semiBold16.copyWith(
+                    color: colors.backgroundContentPrimary,
+                  ),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),
