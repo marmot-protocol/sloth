@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math' show min;
 
 import 'package:flutter/services.dart';
@@ -7,7 +6,6 @@ import 'package:logging/logging.dart';
 
 final _logger = Logger('AndroidSignerService');
 
-/// Response from the Android signer.
 class AndroidSignerResponse {
   final String? result;
   final String? packageName;
@@ -102,14 +100,16 @@ class AndroidSignerException implements Exception {
 class AndroidSignerService {
   static const _channel = MethodChannel('com.example.sloth/android_signer');
 
-  const AndroidSignerService();
+  const AndroidSignerService({required this.platformIsAndroid});
+
+  final bool platformIsAndroid;
 
   /// Checks if an external signer app (like Amber) is installed.
   ///
   /// Returns `true` if a signer is available, `false` otherwise.
   /// On non-Android platforms, always returns `false`.
   Future<bool> isAvailable() async {
-    if (!Platform.isAndroid) {
+    if (!platformIsAndroid) {
       return false;
     }
 
