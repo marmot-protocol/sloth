@@ -24,6 +24,40 @@ class WnListItemAction {
   final bool isDestructive;
 }
 
+class WnListItemController extends ChangeNotifier {
+  String? _expandedItemKey;
+
+  String? get expandedItemKey => _expandedItemKey;
+
+  void expand(String key) {
+    if (_expandedItemKey != key) {
+      _expandedItemKey = key;
+      notifyListeners();
+    }
+  }
+
+  void collapse() {
+    if (_expandedItemKey != null) {
+      _expandedItemKey = null;
+      notifyListeners();
+    }
+  }
+
+  bool isExpanded(String key) => _expandedItemKey == key;
+}
+
+class WnListItemScope extends InheritedNotifier<WnListItemController> {
+  const WnListItemScope({
+    super.key,
+    required WnListItemController controller,
+    required super.child,
+  }) : super(notifier: controller);
+
+  static WnListItemController? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<WnListItemScope>()?.notifier;
+  }
+}
+
 class WnListItem extends HookWidget {
   const WnListItem({
     super.key,
@@ -32,6 +66,7 @@ class WnListItem extends HookWidget {
     this.leadingIcon,
     this.onTap,
     this.actions,
+    this.itemKey,
   });
 
   final String title;
@@ -39,16 +74,44 @@ class WnListItem extends HookWidget {
   final WnIcons? leadingIcon;
   final VoidCallback? onTap;
   final List<WnListItemAction>? actions;
+  final String? itemKey;
 
   @override
   Widget build(BuildContext context) {
-    final isExpanded = useState(false);
+    final localExpanded = useState(false);
     final isPressed = useState(false);
     final colors = context.colors;
     final hasActions = actions != null && actions!.isNotEmpty;
 
+    final controller = WnListItemScope.maybeOf(context);
+    final widgetKey = key;
+    final effectiveKey = itemKey ?? (widgetKey is ValueKey ? widgetKey.value.toString() : title);
+
+    final isExpanded = controller != null
+        ? controller.isExpanded(effectiveKey)
+        : localExpanded.value;
+
+    void setExpanded(bool value) {
+      if (controller != null) {
+        if (value) {
+          controller.expand(effectiveKey);
+        } else {
+          controller.collapse();
+        }
+      } else {
+        localExpanded.value = value;
+      }
+    }
+
+    void handleTap() {
+      if (controller != null && controller.expandedItemKey != null) {
+        controller.collapse();
+      }
+      onTap?.call();
+    }
+
     Color getBackgroundColor() {
-      if (isExpanded.value) {
+      if (isExpanded) {
         return colors.fillSecondaryActive;
       }
       if (isPressed.value) {
@@ -94,10 +157,10 @@ class WnListItem extends HookWidget {
             return WnButton(
               text: action.label,
               type: action.isDestructive ? WnButtonType.destructive : WnButtonType.primary,
-              size: WnButtonSize.small,
+              size: WnButtonSize.xsmall,
               onPressed: () {
                 action.onTap();
-                isExpanded.value = false;
+                setExpanded(false);
               },
             );
           }).toList(),
@@ -108,7 +171,7 @@ class WnListItem extends HookWidget {
     final leadingIconWidget = buildLeadingIcon();
 
     return GestureDetector(
-      onTap: onTap,
+      onTap: handleTap,
       onTapDown: (_) => isPressed.value = true,
       onTapUp: (_) => isPressed.value = false,
       onTapCancel: () => isPressed.value = false,
@@ -151,10 +214,10 @@ class WnListItem extends HookWidget {
               ),
             ),
             if (hasActions) ...[
-              if (isExpanded.value) buildExpandedActions(),
+              if (isExpanded) buildExpandedActions(),
               GestureDetector(
                 key: const Key('list_item_menu_button'),
-                onTap: () => isExpanded.value = !isExpanded.value,
+                onTap: () => setExpanded(!isExpanded),
                 behavior: HitTestBehavior.opaque,
                 child: Padding(
                   padding: EdgeInsets.only(right: 8.w),
@@ -162,7 +225,7 @@ class WnListItem extends HookWidget {
                     width: 18.w,
                     height: 18.h,
                     child: WnIcon(
-                      isExpanded.value ? WnIcons.closeSmall : WnIcons.more,
+                      WnIcons.more,
                       key: const Key('list_item_menu_icon'),
                       size: 18.w,
                       color: colors.fillContentTertiary,

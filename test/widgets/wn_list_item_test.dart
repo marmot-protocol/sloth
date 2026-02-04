@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show BoxDecoration, Container, Key;
+import 'package:flutter/material.dart' show BoxDecoration, Column, Container, Key;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
@@ -201,7 +201,7 @@ void main() {
         expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
       });
 
-      testWidgets('collapses actions when close button tapped', (WidgetTester tester) async {
+      testWidgets('collapses actions when menu button tapped again', (WidgetTester tester) async {
         final widget = WnListItem(
           title: 'With Actions',
           actions: [
@@ -219,6 +219,188 @@ void main() {
         await tester.pump();
 
         expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
+      });
+
+      testWidgets('always shows more icon regardless of expanded state', (
+        WidgetTester tester,
+      ) async {
+        final widget = WnListItem(
+          title: 'With Actions',
+          actions: [
+            WnListItemAction(label: 'Edit', onTap: () {}),
+          ],
+        );
+        await mountWidget(widget, tester);
+
+        final iconFinder = find.byKey(const Key('list_item_menu_icon'));
+        expect(iconFinder, findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(iconFinder, findsOneWidget);
+      });
+    });
+
+    group('WnListItemController', () {
+      testWidgets('collapses item when controller.collapse() is called', (
+        WidgetTester tester,
+      ) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: WnListItem(
+            title: 'Controlled Item',
+            itemKey: 'test-item',
+            actions: [
+              WnListItemAction(label: 'Edit', onTap: () {}),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+
+        controller.collapse();
+        await tester.pump();
+
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
+
+        controller.dispose();
+      });
+
+      testWidgets('only one item can be expanded at a time with controller', (
+        WidgetTester tester,
+      ) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: Column(
+            children: [
+              WnListItem(
+                title: 'Item 1',
+                itemKey: 'item-1',
+                actions: [
+                  WnListItemAction(label: 'Edit 1', onTap: () {}),
+                ],
+              ),
+              WnListItem(
+                title: 'Item 2',
+                itemKey: 'item-2',
+                actions: [
+                  WnListItemAction(label: 'Edit 2', onTap: () {}),
+                ],
+              ),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')).first);
+        await tester.pump();
+
+        expect(find.text('Edit 1'), findsOneWidget);
+        expect(find.text('Edit 2'), findsNothing);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')).last);
+        await tester.pump();
+
+        expect(find.text('Edit 1'), findsNothing);
+        expect(find.text('Edit 2'), findsOneWidget);
+
+        controller.dispose();
+      });
+
+      testWidgets('uses title as key when itemKey not provided', (WidgetTester tester) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: WnListItem(
+            title: 'Unique Title',
+            actions: [
+              WnListItemAction(label: 'Edit', onTap: () {}),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(controller.expandedItemKey, 'Unique Title');
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+
+        controller.dispose();
+      });
+
+      testWidgets('uses widget Key value when itemKey not provided', (WidgetTester tester) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: WnListItem(
+            key: const Key('my-unique-key'),
+            title: 'Same Title',
+            actions: [
+              WnListItemAction(label: 'Edit', onTap: () {}),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(controller.expandedItemKey, 'my-unique-key');
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+
+        controller.dispose();
+      });
+
+      testWidgets('tapping on list item body collapses expanded menu', (WidgetTester tester) async {
+        final controller = WnListItemController();
+
+        final widget = WnListItemScope(
+          controller: controller,
+          child: Column(
+            children: [
+              WnListItem(
+                title: 'Item 1',
+                itemKey: 'item-1',
+                actions: [
+                  WnListItemAction(label: 'Edit 1', onTap: () {}),
+                ],
+              ),
+              WnListItem(
+                title: 'Item 2',
+                itemKey: 'item-2',
+                actions: [
+                  WnListItemAction(label: 'Edit 2', onTap: () {}),
+                ],
+              ),
+            ],
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')).first);
+        await tester.pump();
+
+        expect(find.text('Edit 1'), findsOneWidget);
+
+        await tester.tap(find.text('Item 2'));
+        await tester.pump();
+
+        expect(find.text('Edit 1'), findsNothing);
+        expect(find.text('Edit 2'), findsNothing);
+
+        controller.dispose();
       });
     });
 

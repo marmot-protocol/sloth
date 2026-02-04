@@ -284,7 +284,7 @@ void main() {
 
         await pumpNetworkScreen(tester);
 
-        expect(find.byKey(const Key('relay_item_wss://relay1.com')), findsOneWidget);
+        expect(find.byKey(const Key('relay_item_normal_wss://relay1.com')), findsOneWidget);
         expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
       });
 
@@ -296,7 +296,7 @@ void main() {
 
         await pumpNetworkScreen(tester);
 
-        expect(find.byKey(const Key('relay_item_wss://relay1.com')), findsOneWidget);
+        expect(find.byKey(const Key('relay_item_normal_wss://relay1.com')), findsOneWidget);
         expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
       });
 
