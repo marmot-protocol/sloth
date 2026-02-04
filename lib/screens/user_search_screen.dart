@@ -23,6 +23,7 @@ class UserSearchScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final accountPubkey = ref.watch(accountPubkeyProvider);
     final searchController = useTextEditingController();
     final searchQuery = useState('');
@@ -67,7 +68,9 @@ class UserSearchScreen extends HookConsumerWidget {
                               state.hasSearchQuery
                                   ? context.l10n.noResults
                                   : context.l10n.noFollowsYet,
-                              style: TextStyle(color: colors.backgroundContentTertiary),
+                              style: typography.medium14.copyWith(
+                                color: colors.backgroundContentTertiary,
+                              ),
                             ),
                           )
                         : Stack(
