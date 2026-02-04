@@ -105,10 +105,80 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.text('Bottom tooltip'), findsOneWidget);
       });
+
+      testWidgets('renders tooltip at left position', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'Left tooltip',
+            position: WnTooltipPosition.left,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.text('Left tooltip'), findsOneWidget);
+      });
+
+      testWidgets('renders tooltip at right position', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'Right tooltip',
+            position: WnTooltipPosition.right,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.text('Right tooltip'), findsOneWidget);
+      });
+
+      testWidgets('left position places tooltip to the left of trigger', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'Left',
+            position: WnTooltipPosition.left,
+            child: SizedBox(width: 50, height: 50, child: Text('T')),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('T'));
+        await tester.pumpAndSettle();
+
+        final tooltipBox = tester.getRect(find.byKey(const Key('tooltip_content')));
+        final triggerBox = tester.getRect(find.text('T'));
+        expect(tooltipBox.right, lessThanOrEqualTo(triggerBox.left + 10));
+      });
+
+      testWidgets('right position places tooltip to the right of trigger', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'Right',
+            position: WnTooltipPosition.right,
+            child: SizedBox(width: 50, height: 50, child: Text('T')),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('T'));
+        await tester.pumpAndSettle();
+
+        final tooltipBox = tester.getRect(find.byKey(const Key('tooltip_content')));
+        final triggerBox = tester.getRect(find.text('T'));
+        expect(tooltipBox.left, greaterThanOrEqualTo(triggerBox.right - 10));
+      });
     });
 
     group('arrow', () {
-      testWidgets('always shows arrow for top position', (WidgetTester tester) async {
+      testWidgets('shows arrow by default for top position', (WidgetTester tester) async {
         setUpTestView(tester);
         const widget = WnTooltip(message: 'With arrow', child: Text('Trigger'));
         await mountWidget(widget, tester);
@@ -117,7 +187,7 @@ void main() {
         expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
       });
 
-      testWidgets('always shows arrow for bottom position', (WidgetTester tester) async {
+      testWidgets('shows arrow by default for bottom position', (WidgetTester tester) async {
         setUpTestView(tester);
         const widget = WnTooltip(
           message: 'With arrow',
@@ -128,6 +198,113 @@ void main() {
         await tester.longPress(find.text('Trigger'));
         await tester.pumpAndSettle();
         expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      testWidgets('shows arrow for left position', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'With arrow',
+            position: WnTooltipPosition.left,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      testWidgets('shows arrow for right position', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'With arrow',
+            position: WnTooltipPosition.right,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      testWidgets('hides arrow when showArrow is false', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'No arrow',
+          showArrow: false,
+          child: Text('Trigger'),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsNothing);
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+
+      testWidgets('hides arrow for bottom position when showArrow is false', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'No arrow',
+          position: WnTooltipPosition.bottom,
+          showArrow: false,
+          child: Text('Trigger'),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsNothing);
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+
+      testWidgets('hides arrow for left position when showArrow is false', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'No arrow',
+            position: WnTooltipPosition.left,
+            showArrow: false,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsNothing);
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+
+      testWidgets('hides arrow for right position when showArrow is false', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'No arrow',
+            position: WnTooltipPosition.right,
+            showArrow: false,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_arrow')), findsNothing);
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+
+      testWidgets('showArrow defaults to true', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(message: 'Default', child: Text('Trigger'));
+        await mountWidget(widget, tester);
+        final tooltip = tester.widget<WnTooltip>(find.byType(WnTooltip));
+        expect(tooltip.showArrow, isTrue);
       });
     });
 
@@ -449,6 +626,38 @@ void main() {
         expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
       });
 
+      testWidgets('renders arrow for left position tooltip', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'Tooltip',
+            position: WnTooltipPosition.left,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
+      testWidgets('renders arrow for right position tooltip', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = Center(
+          child: WnTooltip(
+            message: 'Tooltip',
+            position: WnTooltipPosition.right,
+            child: Text('Trigger'),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('Trigger'));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('tooltip_arrow')), findsOneWidget);
+      });
+
       test('shouldRepaint returns true when position changes', () {
         final painter1 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
         final painter2 = ArrowPainter(position: WnTooltipPosition.bottom, color: Colors.black);
@@ -468,6 +677,20 @@ void main() {
         final painter2 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
 
         expect(painter2.shouldRepaint(painter1), isFalse);
+      });
+
+      test('shouldRepaint returns true when position changes to left', () {
+        final painter1 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
+        final painter2 = ArrowPainter(position: WnTooltipPosition.left, color: Colors.black);
+
+        expect(painter2.shouldRepaint(painter1), isTrue);
+      });
+
+      test('shouldRepaint returns true when position changes to right', () {
+        final painter1 = ArrowPainter(position: WnTooltipPosition.top, color: Colors.black);
+        final painter2 = ArrowPainter(position: WnTooltipPosition.right, color: Colors.black);
+
+        expect(painter2.shouldRepaint(painter1), isTrue);
       });
     });
   });

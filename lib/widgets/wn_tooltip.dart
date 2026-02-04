@@ -5,7 +5,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 
-enum WnTooltipPosition { top, bottom }
+enum WnTooltipPosition { top, bottom, left, right }
 
 enum WnTooltipTriggerMode { tap, longPress }
 
@@ -18,6 +18,7 @@ class WnTooltip extends HookWidget {
     this.position = WnTooltipPosition.top,
     this.waitDuration = const Duration(milliseconds: 400),
     this.triggerMode = WnTooltipTriggerMode.tap,
+    this.showArrow = true,
   });
 
   final Widget child;
@@ -26,6 +27,7 @@ class WnTooltip extends HookWidget {
   final WnTooltipPosition position;
   final Duration waitDuration;
   final WnTooltipTriggerMode triggerMode;
+  final bool showArrow;
 
   @override
   Widget build(BuildContext context) {
@@ -61,6 +63,7 @@ class WnTooltip extends HookWidget {
           targetGlobalPosition: targetGlobalPosition,
           colors: colors,
           onDismiss: () => hideTooltip(fromDismiss: true),
+          showArrow: showArrow,
           child: content ?? Text(message, style: TextStyle(fontSize: 14.sp)),
         ),
       );
@@ -108,7 +111,7 @@ class WnTooltip extends HookWidget {
   }
 }
 
-class _TooltipOverlay extends StatefulWidget {
+class _TooltipOverlay extends HookWidget {
   const _TooltipOverlay({
     required this.layerLink,
     required this.position,
@@ -117,6 +120,7 @@ class _TooltipOverlay extends StatefulWidget {
     required this.colors,
     required this.onDismiss,
     required this.child,
+    required this.showArrow,
   });
 
   final LayerLink layerLink;
@@ -126,122 +130,144 @@ class _TooltipOverlay extends StatefulWidget {
   final SemanticColors colors;
   final VoidCallback onDismiss;
   final Widget child;
-
-  @override
-  State<_TooltipOverlay> createState() => _TooltipOverlayState();
-}
-
-class _TooltipOverlayState extends State<_TooltipOverlay> with SingleTickerProviderStateMixin {
-  final GlobalKey _contentKey = GlobalKey();
-  double _arrowOffset = 0;
-  double _horizontalShift = 0;
-  bool _isPositioned = false;
-  late final AnimationController _animationController;
-  late final Animation<double> _fadeAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 150),
-      vsync: this,
-    );
-    _fadeAnimation = CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeOut,
-    );
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      _calculateShift();
-    });
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  void _calculateShift() {
-    final contentRenderBox = _contentKey.currentContext?.findRenderObject() as RenderBox?;
-    if (contentRenderBox == null) return;
-
-    final contentSize = contentRenderBox.size;
-    final screenWidth = MediaQuery.of(context).size.width;
-    final padding = 16.w;
-
-    final targetCenterX = widget.targetGlobalPosition.dx + widget.targetSize.width / 2;
-    final tooltipLeft = targetCenterX - contentSize.width / 2;
-    final tooltipRight = targetCenterX + contentSize.width / 2;
-
-    double shift = 0;
-
-    final wouldOverflowLeft = tooltipLeft < padding;
-    final wouldOverflowRight = tooltipRight > screenWidth - padding;
-
-    if (wouldOverflowLeft || wouldOverflowRight) {
-      final screenCenterX = screenWidth / 2;
-      shift = screenCenterX - targetCenterX;
-    }
-
-    setState(() {
-      _horizontalShift = shift;
-      _arrowOffset = -shift;
-      _isPositioned = true;
-    });
-    _animationController.forward();
-  }
-
-  Offset _getOffset() {
-    final arrowHeight = 6.h;
-
-    return switch (widget.position) {
-      WnTooltipPosition.top => Offset(
-        widget.targetSize.width / 2 + _horizontalShift,
-        -arrowHeight,
-      ),
-      WnTooltipPosition.bottom => Offset(
-        widget.targetSize.width / 2 + _horizontalShift,
-        widget.targetSize.height + arrowHeight,
-      ),
-    };
-  }
-
-  Alignment _getFollowerAnchor() {
-    return switch (widget.position) {
-      WnTooltipPosition.top => Alignment.bottomCenter,
-      WnTooltipPosition.bottom => Alignment.topCenter,
-    };
-  }
+  final bool showArrow;
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.of(context).size.width;
+    final contentKey = useMemoized(() => GlobalKey());
+    final arrowOffset = useState(0.0);
+    final shift = useState(0.0);
+    final isPositioned = useState(false);
+    final mountedRef = useRef(true);
+
+    useEffect(() {
+      mountedRef.value = true;
+      return () => mountedRef.value = false;
+    }, const []);
+
+    final animationController = useAnimationController(
+      duration: const Duration(milliseconds: 150),
+    );
+    final fadeAnimation = useMemoized(
+      () => CurvedAnimation(parent: animationController, curve: Curves.easeOut),
+      [animationController],
+    );
+
+    void calculateShift() {
+      if (!mountedRef.value) return;
+
+      final contentRenderBox = contentKey.currentContext?.findRenderObject() as RenderBox?;
+      if (contentRenderBox == null) return;
+
+      final contentSize = contentRenderBox.size;
+      final screenSize = MediaQuery.of(context).size;
+      final padding = 16.w;
+
+      double newShift = 0;
+
+      if (position == WnTooltipPosition.top || position == WnTooltipPosition.bottom) {
+        final targetCenterX = targetGlobalPosition.dx + targetSize.width / 2;
+        final tooltipLeft = targetCenterX - contentSize.width / 2;
+        final tooltipRight = targetCenterX + contentSize.width / 2;
+
+        final wouldOverflowLeft = tooltipLeft < padding;
+        final wouldOverflowRight = tooltipRight > screenSize.width - padding;
+
+        if (wouldOverflowLeft || wouldOverflowRight) {
+          final screenCenterX = screenSize.width / 2;
+          newShift = screenCenterX - targetCenterX;
+        }
+      } else {
+        final targetCenterY = targetGlobalPosition.dy + targetSize.height / 2;
+        final tooltipTop = targetCenterY - contentSize.height / 2;
+        final tooltipBottom = targetCenterY + contentSize.height / 2;
+
+        final wouldOverflowTop = tooltipTop < padding;
+        final wouldOverflowBottom = tooltipBottom > screenSize.height - padding;
+
+        if (wouldOverflowTop || wouldOverflowBottom) {
+          final screenCenterY = screenSize.height / 2;
+          newShift = screenCenterY - targetCenterY;
+        }
+      }
+
+      if (!mountedRef.value) return;
+
+      shift.value = newShift;
+      arrowOffset.value = -newShift;
+      isPositioned.value = true;
+      animationController.forward();
+    }
+
+    useEffect(() {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mountedRef.value) {
+          calculateShift();
+        }
+      });
+      return null;
+    }, const []);
+
+    final screenSize = MediaQuery.of(context).size;
+
+    Offset getOffset() {
+      final arrowSize = showArrow ? 6.h : 0.0;
+
+      return switch (position) {
+        WnTooltipPosition.top => Offset(
+          targetSize.width / 2 + shift.value,
+          -arrowSize,
+        ),
+        WnTooltipPosition.bottom => Offset(
+          targetSize.width / 2 + shift.value,
+          targetSize.height + arrowSize,
+        ),
+        WnTooltipPosition.left => Offset(
+          -arrowSize,
+          targetSize.height / 2 + shift.value,
+        ),
+        WnTooltipPosition.right => Offset(
+          targetSize.width + arrowSize,
+          targetSize.height / 2 + shift.value,
+        ),
+      };
+    }
+
+    Alignment getFollowerAnchor() {
+      return switch (position) {
+        WnTooltipPosition.top => Alignment.bottomCenter,
+        WnTooltipPosition.bottom => Alignment.topCenter,
+        WnTooltipPosition.left => Alignment.centerRight,
+        WnTooltipPosition.right => Alignment.centerLeft,
+      };
+    }
 
     return Stack(
       children: [
         Positioned.fill(
           child: GestureDetector(
-            onTap: widget.onDismiss,
+            onTap: onDismiss,
             behavior: HitTestBehavior.translucent,
           ),
         ),
         CompositedTransformFollower(
-          link: widget.layerLink,
-          offset: _getOffset(),
-          followerAnchor: _getFollowerAnchor(),
+          link: layerLink,
+          offset: getOffset(),
+          followerAnchor: getFollowerAnchor(),
           child: FadeTransition(
-            opacity: _fadeAnimation,
+            opacity: fadeAnimation,
             child: Opacity(
-              opacity: _isPositioned ? 1.0 : 0.0,
+              opacity: isPositioned.value ? 1.0 : 0.0,
               child: Material(
                 color: Colors.transparent,
                 child: _TooltipContent(
-                  key: _contentKey,
-                  position: widget.position,
-                  colors: widget.colors,
-                  arrowOffset: _arrowOffset,
-                  screenWidth: screenWidth,
-                  child: widget.child,
+                  key: contentKey,
+                  position: position,
+                  colors: colors,
+                  arrowOffset: arrowOffset.value,
+                  screenSize: screenSize,
+                  showArrow: showArrow,
+                  child: child,
                 ),
               ),
             ),
@@ -258,7 +284,8 @@ class _TooltipContent extends StatelessWidget {
     required this.position,
     required this.colors,
     required this.child,
-    required this.screenWidth,
+    required this.screenSize,
+    required this.showArrow,
     this.arrowOffset = 0,
   });
 
@@ -266,35 +293,50 @@ class _TooltipContent extends StatelessWidget {
   final SemanticColors colors;
   final Widget child;
   final double arrowOffset;
-  final double screenWidth;
-
-  static final double _horizontalPadding = 16.w;
+  final Size screenSize;
+  final bool showArrow;
 
   @override
   Widget build(BuildContext context) {
-    final arrowWidget = Transform.translate(
-      offset: Offset(arrowOffset, 0),
-      child: _TooltipArrow(
-        key: const Key('tooltip_arrow'),
-        position: position,
-        color: colors.fillPrimary,
-      ),
-    );
+    final horizontalPadding = 16.w;
+    final isVertical = position == WnTooltipPosition.top || position == WnTooltipPosition.bottom;
+
+    Widget? arrowWidget;
+    if (showArrow) {
+      arrowWidget = Transform.translate(
+        offset: isVertical ? Offset(arrowOffset, 0) : Offset(0, arrowOffset),
+        child: _TooltipArrow(
+          key: const Key('tooltip_arrow'),
+          position: position,
+          color: colors.fillPrimary,
+        ),
+      );
+    }
+
+    final contentBox = _buildContentBox(horizontalPadding);
 
     return switch (position) {
       WnTooltipPosition.top => Column(
         mainAxisSize: MainAxisSize.min,
-        children: [_buildContentBox(), arrowWidget],
+        children: [contentBox, if (arrowWidget != null) arrowWidget],
       ),
       WnTooltipPosition.bottom => Column(
         mainAxisSize: MainAxisSize.min,
-        children: [arrowWidget, _buildContentBox()],
+        children: [if (arrowWidget != null) arrowWidget, contentBox],
+      ),
+      WnTooltipPosition.left => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [contentBox, if (arrowWidget != null) arrowWidget],
+      ),
+      WnTooltipPosition.right => Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [if (arrowWidget != null) arrowWidget, contentBox],
       ),
     };
   }
 
-  Widget _buildContentBox() {
-    final maxWidth = screenWidth - (_horizontalPadding * 2);
+  Widget _buildContentBox(double horizontalPadding) {
+    final maxWidth = screenSize.width - (horizontalPadding * 2);
 
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: maxWidth),
@@ -335,8 +377,9 @@ class _TooltipArrow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isVertical = position == WnTooltipPosition.top || position == WnTooltipPosition.bottom;
     return CustomPaint(
-      size: Size(13.w, 6.h),
+      size: isVertical ? Size(13.w, 6.h) : Size(6.w, 13.h),
       painter: ArrowPainter(position: position, color: color),
     );
   }
@@ -366,6 +409,16 @@ class ArrowPainter extends CustomPainter {
       case WnTooltipPosition.bottom:
         path.moveTo(0, size.height);
         path.lineTo(size.width / 2, 0);
+        path.lineTo(size.width, size.height);
+        break;
+      case WnTooltipPosition.left:
+        path.moveTo(0, 0);
+        path.lineTo(size.width, size.height / 2);
+        path.lineTo(0, size.height);
+        break;
+      case WnTooltipPosition.right:
+        path.moveTo(size.width, 0);
+        path.lineTo(0, size.height / 2);
         path.lineTo(size.width, size.height);
         break;
     }
