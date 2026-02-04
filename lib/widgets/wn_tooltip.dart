@@ -220,23 +220,24 @@ class _TooltipOverlay extends HookWidget {
     final screenSize = MediaQuery.of(context).size;
 
     Offset getOffset() {
-      final arrowSize = showArrow ? 6.h : 0.0;
+      final arrowHeight = showArrow ? 6.h : 0.0;
+      final arrowWidth = showArrow ? 6.w : 0.0;
 
       return switch (position) {
         WnTooltipPosition.top => Offset(
           targetSize.width / 2 + shift.value,
-          -arrowSize,
+          -arrowHeight,
         ),
         WnTooltipPosition.bottom => Offset(
           targetSize.width / 2 + shift.value,
-          targetSize.height + arrowSize,
+          targetSize.height + arrowHeight,
         ),
         WnTooltipPosition.left => Offset(
-          -arrowSize,
+          -arrowWidth,
           targetSize.height / 2 + shift.value,
         ),
         WnTooltipPosition.right => Offset(
-          targetSize.width + arrowSize,
+          targetSize.width + arrowWidth,
           targetSize.height / 2 + shift.value,
         ),
       };
