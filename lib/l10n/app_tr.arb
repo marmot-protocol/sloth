@@ -146,7 +146,7 @@
   "cameraPermissionDenied": "Kamera izni reddedildi",
   "somethingWentWrong": "Bir şeyler yanlış gitti",
   "timestampNow": "Şimdi",
-  "timestampMinutes": "{count}d",
+  "timestampMinutes": "{count}dk",
   "timestampHours": "{count}sa",
   "timestampYesterday": "Dün",
   "weekdayMonday": "Pazartesi",

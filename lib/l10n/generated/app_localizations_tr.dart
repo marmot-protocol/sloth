@@ -498,7 +498,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String timestampMinutes(int count) {
-    return '${count}d';
+    return '${count}dk';
   }
 
   @override
