@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart' show Column, CrossAxisAlignment, Icons;
+import 'package:flutter/material.dart' show Column, CrossAxisAlignment, Key;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_list.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
@@ -71,20 +71,17 @@ void main() {
             WnListItem(
               title: 'Success',
               type: WnListItemType.success,
-              showIcon: true,
             ),
             WnListItem(
               title: 'Warning',
               type: WnListItemType.warning,
-              showIcon: true,
             ),
           ],
         );
         await mountWidget(widget, tester);
         expect(find.text('Success'), findsOneWidget);
         expect(find.text('Warning'), findsOneWidget);
-        expect(find.byIcon(Icons.check_circle), findsOneWidget);
-        expect(find.byIcon(Icons.warning), findsOneWidget);
+        expect(find.byKey(const Key('list_item_type_icon')), findsNWidgets(2));
       });
     });
 

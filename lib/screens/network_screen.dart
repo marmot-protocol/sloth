@@ -10,7 +10,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
 import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_relay_tile.dart';
+import 'package:sloth/widgets/wn_list.dart';
+import 'package:sloth/widgets/wn_list_item.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
@@ -112,6 +113,14 @@ class NetworkScreen extends HookConsumerWidget {
       );
     }
 
+    WnListItemType getRelayType(String? status) {
+      if (status == null) return WnListItemType.warning;
+      final lowerStatus = status.toLowerCase();
+      if (lowerStatus == 'connected') return WnListItemType.success;
+      if (lowerStatus == 'disconnected') return WnListItemType.error;
+      return WnListItemType.warning;
+    }
+
     Widget buildRelayList(RelayListState relayState, RelayCategory category) {
       if (relayState.isLoading && relayState.relays.isEmpty) {
         return const Center(child: CircularProgressIndicator());
@@ -141,16 +150,20 @@ class NetworkScreen extends HookConsumerWidget {
         );
       }
 
-      return Column(
+      return WnList(
         children: relayState.relays.map((relay) {
           final status = state.relayStatuses[relay.url];
-          return Padding(
-            padding: EdgeInsets.only(bottom: 12.h),
-            child: WnRelayTile(
-              relay: relay,
-              status: status,
-              onDelete: () => removeRelay(relay.url, category),
-            ),
+          return WnListItem(
+            key: Key('relay_item_${relay.url}'),
+            title: relay.url,
+            type: getRelayType(status),
+            actions: [
+              WnListItemAction(
+                label: context.l10n.remove,
+                onTap: () => removeRelay(relay.url, category),
+                isDestructive: true,
+              ),
+            ],
           );
         }).toList(),
       );

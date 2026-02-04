@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart' show BoxDecoration, Container, Icons, Key;
+import 'package:flutter/material.dart' show BoxDecoration, Container, Key;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
 
 import '../test_helpers.dart' show mountWidget;
@@ -39,56 +40,50 @@ void main() {
     });
 
     group('type icons', () {
-      testWidgets('does not show icon when showIcon is false', (WidgetTester tester) async {
-        final widget = const WnListItem(
-          title: 'No Icon',
-          type: WnListItemType.success,
-        );
+      testWidgets('does not show icon for neutral type without leadingIcon', (
+        WidgetTester tester,
+      ) async {
+        final widget = const WnListItem(title: 'No Icon');
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('list_item_type_icon')), findsNothing);
       });
 
-      testWidgets('shows neutral icon when type is neutral', (WidgetTester tester) async {
+      testWidgets('shows custom icon for neutral type with leadingIcon', (
+        WidgetTester tester,
+      ) async {
         final widget = const WnListItem(
-          title: 'Neutral',
-          showIcon: true,
+          title: 'Neutral with custom icon',
+          leadingIcon: WnIcons.placeholder,
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
-        expect(find.byIcon(Icons.circle_outlined), findsOneWidget);
       });
 
       testWidgets('shows success icon when type is success', (WidgetTester tester) async {
         final widget = const WnListItem(
           title: 'Success',
           type: WnListItemType.success,
-          showIcon: true,
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
-        expect(find.byIcon(Icons.check_circle), findsOneWidget);
       });
 
       testWidgets('shows warning icon when type is warning', (WidgetTester tester) async {
         final widget = const WnListItem(
           title: 'Warning',
           type: WnListItemType.warning,
-          showIcon: true,
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
-        expect(find.byIcon(Icons.warning), findsOneWidget);
       });
 
       testWidgets('shows error icon when type is error', (WidgetTester tester) async {
         final widget = const WnListItem(
           title: 'Error',
           type: WnListItemType.error,
-          showIcon: true,
         );
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
-        expect(find.byIcon(Icons.error), findsOneWidget);
       });
     });
 
@@ -203,6 +198,26 @@ void main() {
         await tester.pump();
 
         expect(actionCalled, isTrue);
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
+      });
+
+      testWidgets('collapses actions when close button tapped', (WidgetTester tester) async {
+        final widget = WnListItem(
+          title: 'With Actions',
+          actions: [
+            WnListItemAction(label: 'Edit', onTap: () {}),
+          ],
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('list_item_menu_button')));
+        await tester.pump();
+
         expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
       });
     });

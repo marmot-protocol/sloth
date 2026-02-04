@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:sloth/theme.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_list.dart';
 import 'package:sloth/widgets/wn_list_item.dart';
 import 'package:widgetbook/widgetbook.dart';
@@ -71,41 +72,33 @@ Widget wnListShowcase(BuildContext context) {
               child: WnList(
                 children: const [
                   WnListItem(
-                    title: 'Neutral Item',
+                    title: 'Neutral with custom icon',
                     type: WnListItemType.neutral,
-                    showIcon: true,
+                    leadingIcon: WnIcons.placeholder,
                   ),
                   WnListItem(
                     title: 'Success Item',
                     type: WnListItemType.success,
-                    showIcon: true,
                   ),
                   WnListItem(
                     title: 'Warning Item',
                     type: WnListItemType.warning,
-                    showIcon: true,
                   ),
-                  WnListItem(
-                    title: 'Error Item',
-                    type: WnListItemType.error,
-                    showIcon: true,
-                  ),
+                  WnListItem(title: 'Error Item', type: WnListItemType.error),
                 ],
               ),
             ),
             _ListExample(
-              label: 'Without Icons',
+              label: 'Neutral without icon',
               child: WnList(
                 children: const [
                   WnListItem(
                     title: 'Item without icon',
-                    type: WnListItemType.success,
-                    showIcon: false,
+                    type: WnListItemType.neutral,
                   ),
                   WnListItem(
-                    title: 'Another item',
-                    type: WnListItemType.warning,
-                    showIcon: false,
+                    title: 'Another item without icon',
+                    type: WnListItemType.neutral,
                   ),
                 ],
               ),
@@ -125,7 +118,7 @@ Widget wnListShowcase(BuildContext context) {
                   WnListItem(
                     title: 'Editable Item',
                     type: WnListItemType.neutral,
-                    showIcon: true,
+                    leadingIcon: WnIcons.placeholder,
                     actions: [
                       WnListItemAction(label: 'Edit', onTap: () {}),
                       WnListItemAction(label: 'Duplicate', onTap: () {}),
@@ -139,7 +132,6 @@ Widget wnListShowcase(BuildContext context) {
                   WnListItem(
                     title: 'Another Item',
                     type: WnListItemType.success,
-                    showIcon: true,
                     actions: [
                       WnListItemAction(label: 'Edit', onTap: () {}),
                       WnListItemAction(
@@ -167,12 +159,11 @@ Widget wnListShowcase(BuildContext context) {
                   const WnListItem(
                     title: 'Tap and hold me',
                     type: WnListItemType.success,
-                    showIcon: true,
                   ),
                   WnListItem(
                     title: 'Tap the menu to expand',
                     type: WnListItemType.neutral,
-                    showIcon: true,
+                    leadingIcon: WnIcons.placeholder,
                     actions: [
                       WnListItemAction(label: 'Edit', onTap: () {}),
                       WnListItemAction(
@@ -266,16 +257,16 @@ class _InteractiveList extends StatelessWidget {
       max: 10,
     );
 
-    final showIcon = this.context.knobs.boolean(
-      label: 'Show Type Icons',
-      initialValue: true,
-    );
-
     final typeIndex = this.context.knobs.int.slider(
       label: 'Item Type (0=neutral, 1=success, 2=warning, 3=error)',
-      initialValue: 0,
+      initialValue: 1,
       min: 0,
       max: 3,
+    );
+
+    final showLeadingIcon = this.context.knobs.boolean(
+      label: 'Show Leading Icon (neutral type only)',
+      initialValue: true,
     );
 
     final showActions = this.context.knobs.boolean(
@@ -289,7 +280,9 @@ class _InteractiveList extends StatelessWidget {
       return WnListItem(
         title: 'List Item ${index + 1}',
         type: type,
-        showIcon: showIcon,
+        leadingIcon: (type == WnListItemType.neutral && showLeadingIcon)
+            ? WnIcons.placeholder
+            : null,
         actions: showActions
             ? [
                 WnListItemAction(label: 'Edit', onTap: () {}),
