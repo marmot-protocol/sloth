@@ -10,6 +10,7 @@ import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../mocks/mock_android_signer_channel.dart';
 import '../mocks/mock_secure_storage.dart';
 import '../test_helpers.dart';
 
@@ -26,6 +27,11 @@ class _MockRustLibApi implements RustLibApi {
   String? loginWithSignerPubkey;
   Object? loginWithSignerError;
   bool registerExternalSignerCalled = false;
+  FutureOr<String> Function(String)? signEventCallback;
+  FutureOr<String> Function(String, String)? nip04EncryptCallback;
+  FutureOr<String> Function(String, String)? nip04DecryptCallback;
+  FutureOr<String> Function(String, String)? nip44EncryptCallback;
+  FutureOr<String> Function(String, String)? nip44DecryptCallback;
 
   @override
   Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
@@ -54,6 +60,11 @@ class _MockRustLibApi implements RustLibApi {
   }) async {
     loginWithSignerCalled = true;
     loginWithSignerPubkey = pubkey;
+    signEventCallback = signEvent;
+    nip04EncryptCallback = nip04Encrypt;
+    nip04DecryptCallback = nip04Decrypt;
+    nip44EncryptCallback = nip44Encrypt;
+    nip44DecryptCallback = nip44Decrypt;
     if (loginWithSignerError != null) {
       throw loginWithSignerError!;
     }
@@ -77,6 +88,11 @@ class _MockRustLibApi implements RustLibApi {
     required FutureOr<String> Function(String, String) nip44Decrypt,
   }) async {
     registerExternalSignerCalled = true;
+    signEventCallback = signEvent;
+    nip04EncryptCallback = nip04Encrypt;
+    nip04DecryptCallback = nip04Decrypt;
+    nip44EncryptCallback = nip44Encrypt;
+    nip44DecryptCallback = nip44Decrypt;
   }
 
   @override
@@ -133,6 +149,7 @@ void main() {
   late MockSecureStorage mockStorage;
 
   setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
     mockApi = _MockRustLibApi();
     RustLib.initMock(api: mockApi);
   });
@@ -150,6 +167,11 @@ void main() {
     mockApi.loginWithSignerPubkey = null;
     mockApi.loginWithSignerError = null;
     mockApi.registerExternalSignerCalled = false;
+    mockApi.signEventCallback = null;
+    mockApi.nip04EncryptCallback = null;
+    mockApi.nip04DecryptCallback = null;
+    mockApi.nip44EncryptCallback = null;
+    mockApi.nip44DecryptCallback = null;
     mockStorage = MockSecureStorage();
     container = ProviderContainer(
       overrides: [secureStorageProvider.overrideWithValue(mockStorage)],
@@ -579,6 +601,86 @@ void main() {
         await container.read(authProvider.future);
 
         expect(mockApi.registerExternalSignerCalled, isFalse);
+      });
+    });
+
+    group('signer callbacks from _createSignerCallbacks', () {
+      late dynamic mockAndroidSigner;
+
+      setUp(() {
+        mockAndroidSigner = mockAndroidSignerChannel();
+      });
+
+      tearDown(() {
+        mockAndroidSigner.reset();
+      });
+
+      test('signEvent returns signed event when signer returns event', () async {
+        mockAndroidSigner.setResult('signEvent', {'event': 'signed_event_json'});
+        await container.read(authProvider.notifier).loginWithAndroidSigner(
+          pubkey: testPubkeyA,
+          onDisconnect: () async {},
+        );
+        final result = await mockApi.signEventCallback!('{}');
+        expect(result, 'signed_event_json');
+      });
+
+      test('signEvent throws NO_EVENT when signer returns signature but no event', () async {
+        mockAndroidSigner.setResult('signEvent', {'result': 'sig_without_event'});
+        await container.read(authProvider.notifier).loginWithAndroidSigner(
+          pubkey: testPubkeyA,
+          onDisconnect: () async {},
+        );
+        expect(
+          () => mockApi.signEventCallback!('{}'),
+          throwsA(
+            isA<AndroidSignerException>().having(
+              (e) => e.code,
+              'code',
+              'NO_EVENT',
+            ),
+          ),
+        );
+      });
+
+      test('nip04Encrypt returns ciphertext from signer', () async {
+        mockAndroidSigner.setResult('nip04Encrypt', {'result': 'encrypted'});
+        await container.read(authProvider.notifier).loginWithAndroidSigner(
+          pubkey: testPubkeyA,
+          onDisconnect: () async {},
+        );
+        final result = await mockApi.nip04EncryptCallback!('plain', testPubkeyB);
+        expect(result, 'encrypted');
+      });
+
+      test('nip04Decrypt returns plaintext from signer', () async {
+        mockAndroidSigner.setResult('nip04Decrypt', {'result': 'decrypted'});
+        await container.read(authProvider.notifier).loginWithAndroidSigner(
+          pubkey: testPubkeyA,
+          onDisconnect: () async {},
+        );
+        final result = await mockApi.nip04DecryptCallback!('cipher', testPubkeyB);
+        expect(result, 'decrypted');
+      });
+
+      test('nip44Encrypt returns ciphertext from signer', () async {
+        mockAndroidSigner.setResult('nip44Encrypt', {'result': 'enc44'});
+        await container.read(authProvider.notifier).loginWithAndroidSigner(
+          pubkey: testPubkeyA,
+          onDisconnect: () async {},
+        );
+        final result = await mockApi.nip44EncryptCallback!('plain', testPubkeyB);
+        expect(result, 'enc44');
+      });
+
+      test('nip44Decrypt returns plaintext from signer', () async {
+        mockAndroidSigner.setResult('nip44Decrypt', {'result': 'dec44'});
+        await container.read(authProvider.notifier).loginWithAndroidSigner(
+          pubkey: testPubkeyA,
+          onDisconnect: () async {},
+        );
+        final result = await mockApi.nip44DecryptCallback!('cipher', testPubkeyB);
+        expect(result, 'dec44');
       });
     });
   });
