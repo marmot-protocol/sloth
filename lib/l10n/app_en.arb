@@ -183,7 +183,7 @@
 
   "publicKeyCopied": "Public key copied to clipboard",
   "@publicKeyCopied": {
-    "description": "Systtem notice message when public key is copied"
+    "description": "System notice message when public key is copied"
   },
 
   "publicKeyDescription": "Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.",

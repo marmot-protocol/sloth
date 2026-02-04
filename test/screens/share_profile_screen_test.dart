@@ -126,6 +126,7 @@ void main() {
     });
 
     testWidgets('dismisses notice after auto-hide duration', (tester) async {
+      mockClipboard();
       await pumpShareProfileScreen(tester);
       await tester.pumpAndSettle();
       await tester.tap(find.byKey(const Key('copy_button')));

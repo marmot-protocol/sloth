@@ -345,6 +345,7 @@ void main() {
       });
 
       testWidgets('dismisses notice after auto-hide duration', (tester) async {
+        mockClipboard();
         await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
 
         await tester.tap(find.byKey(const Key('copy_button')));
