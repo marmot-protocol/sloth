@@ -29,6 +29,7 @@ class WnInput extends HookWidget {
     this.size = WnInputSize.size56,
     this.onChanged,
     this.textInputAction,
+    this.leadingIcon,
     this.inlineAction,
     this.trailingAction,
     this.focusNode,
@@ -46,6 +47,7 @@ class WnInput extends HookWidget {
   final WnInputSize size;
   final ValueChanged<String>? onChanged;
   final TextInputAction? textInputAction;
+  final Widget? leadingIcon;
   final Widget? inlineAction;
   final Widget? trailingAction;
   final FocusNode? focusNode;
@@ -167,6 +169,19 @@ class WnInput extends HookWidget {
         ),
         child: Row(
           children: [
+            if (leadingIcon != null)
+              Padding(
+                key: const Key('leading_icon_wrapper'),
+                padding: EdgeInsets.only(left: 16.r),
+                child: IgnorePointer(
+                  ignoring: !enabled,
+                  child: SizedBox(
+                    width: 16.r,
+                    height: 16.r,
+                    child: leadingIcon,
+                  ),
+                ),
+              ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
