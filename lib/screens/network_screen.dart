@@ -113,7 +113,7 @@ class NetworkScreen extends HookConsumerWidget {
         return Center(
           child: Text(
             context.l10n.errorLoadingRelays,
-            style: TextStyle(color: colors.fillDestructive),
+            style: typography.medium14.copyWith(color: colors.fillDestructive),
           ),
         );
       }

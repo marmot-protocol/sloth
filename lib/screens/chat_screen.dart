@@ -213,7 +213,7 @@ class _ChatInput extends StatelessWidget {
               ),
               decoration: InputDecoration(
                 hintText: context.l10n.messagePlaceholder,
-                hintStyle: TextStyle(color: colors.backgroundContentTertiary),
+                hintStyle: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
                 filled: true,
                 fillColor: colors.backgroundTertiary,
                 contentPadding: EdgeInsets.symmetric(
