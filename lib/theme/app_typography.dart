@@ -7,72 +7,45 @@ TextStyle _scaleStyle(TextStyle style) {
 
 @immutable
 class AppTypography extends ThemeExtension<AppTypography> {
-  // 96px variants
   final TextStyle medium96;
   final TextStyle semiBold96;
   final TextStyle bold96;
-
-  // 72px variants
   final TextStyle medium72;
   final TextStyle semiBold72;
   final TextStyle bold72;
-
-  // 60px variants
   final TextStyle medium60;
   final TextStyle semiBold60;
   final TextStyle bold60;
-
-  // 48px variants
   final TextStyle medium48;
   final TextStyle semiBold48;
   final TextStyle bold48;
-
-  // 36px variants
   final TextStyle medium36;
   final TextStyle semiBold36;
   final TextStyle bold36;
-
-  // 32px variants
   final TextStyle medium32;
   final TextStyle semiBold32;
   final TextStyle bold32;
-
-  // 28px variants
   final TextStyle medium28;
   final TextStyle semiBold28;
   final TextStyle bold28;
-
-  // 24px variants
   final TextStyle medium24;
   final TextStyle semiBold24;
   final TextStyle bold24;
-
-  // 20px variants
   final TextStyle medium20;
   final TextStyle semiBold20;
   final TextStyle bold20;
-
-  // 18px variants
   final TextStyle medium18;
   final TextStyle semiBold18;
   final TextStyle bold18;
-
-  // 16px variants
   final TextStyle medium16;
   final TextStyle semiBold16;
   final TextStyle bold16;
-
-  // 14px variants
   final TextStyle medium14;
   final TextStyle semiBold14;
   final TextStyle bold14;
-
-  // 14px compact variants
   final TextStyle medium14Compact;
   final TextStyle semiBold14Compact;
   final TextStyle bold14Compact;
-
-  // 12px variants
   final TextStyle medium12;
   final TextStyle semiBold12;
   final TextStyle bold12;
@@ -123,7 +96,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
   });
 
   static const instance = AppTypography(
-    // 96px: line-height 104px, letter-spacing -1.5px
     medium96: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 96,
@@ -148,7 +120,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 72px: line-height 80px, letter-spacing -1.2px
     medium72: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 72,
@@ -173,7 +144,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 60px: line-height 68px, letter-spacing -1.0px
     medium60: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 60,
@@ -198,7 +168,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 48px: line-height 56px, letter-spacing -0.6px
     medium48: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 48,
@@ -223,7 +192,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 36px: line-height 44px, letter-spacing -0.4px
     medium36: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 36,
@@ -248,7 +216,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 32px: line-height 38px, letter-spacing -0.3px
     medium32: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 32,
@@ -273,7 +240,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 28px: line-height 34px, letter-spacing -0.2px
     medium28: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 28,
@@ -298,7 +264,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 24px: line-height 30px, letter-spacing -0.1px
     medium24: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 24,
@@ -323,7 +288,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 20px: line-height 26px, letter-spacing 0px
     medium20: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 20,
@@ -348,7 +312,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 18px: line-height 24px, letter-spacing +0.1px
     medium18: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 18,
@@ -373,7 +336,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 16px: line-height 22px, letter-spacing +0.2px
     medium16: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 16,
@@ -398,7 +360,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 14px: line-height 18px, letter-spacing +0.4px
     medium14: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 14,
@@ -423,7 +384,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 14px compact: line-height 16px, letter-spacing +0.4px
     medium14Compact: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 14,
@@ -448,7 +408,6 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
-    // 12px: line-height 16px, letter-spacing +0.6px
     medium12: TextStyle(
       fontFamily: 'Manrope',
       fontSize: 12,
