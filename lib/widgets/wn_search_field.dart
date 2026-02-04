@@ -10,12 +10,14 @@ class WnSearchField extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.autofocus = false,
+    this.onScan,
   });
 
   final String placeholder;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final bool autofocus;
+  final VoidCallback? onScan;
 
   @override
   Widget build(BuildContext context) {
@@ -47,6 +49,21 @@ class WnSearchField extends StatelessWidget {
           ),
         ),
         prefixIconConstraints: const BoxConstraints(),
+        suffixIcon: onScan != null
+            ? GestureDetector(
+                key: const Key('scan_button'),
+                onTap: onScan,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 14.w),
+                  child: WnIcon(
+                    WnIcons.scan,
+                    size: 20.sp,
+                    color: colors.backgroundContentTertiary,
+                  ),
+                ),
+              )
+            : null,
+        suffixIconConstraints: const BoxConstraints(),
         filled: true,
         fillColor: colors.backgroundTertiary,
         contentPadding: EdgeInsets.symmetric(
