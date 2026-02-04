@@ -26,6 +26,7 @@ class WnMessageReactions extends StatelessWidget {
     }
 
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final bubbleColor = isOwnMessage ? colors.fillPrimary : colors.fillSecondary;
     final textColor = isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary;
     final visibleReactions = reactions.take(maxVisibleReactions).toList();
@@ -48,9 +49,9 @@ class WnMessageReactions extends StatelessWidget {
             padding: EdgeInsets.only(left: 2.w),
             child: Text(
               '...',
-              style: TextStyle(
-                fontSize: 10.sp,
+              style: typography.medium12.copyWith(
                 color: textColor,
+                fontSize: 10.sp,
               ),
             ),
           ),
@@ -78,6 +79,7 @@ class _ReactionPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typographyScaled;
     final pill = Container(
       margin: EdgeInsets.only(right: 4.w),
       decoration: BoxDecoration(
@@ -90,14 +92,14 @@ class _ReactionPill extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(emoji, style: TextStyle(fontSize: 14.sp)),
+            Text(emoji, style: typography.medium14),
             if (count > 1) ...[
               SizedBox(width: 2.w),
               Text(
                 count > 99 ? '99+' : count.toString(),
-                style: TextStyle(
-                  fontSize: 10.sp,
+                style: typography.medium12.copyWith(
                   color: textColor,
+                  fontSize: 10.sp,
                 ),
               ),
             ],

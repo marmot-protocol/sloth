@@ -167,16 +167,12 @@ class WnButton extends StatelessWidget {
   Widget _buildContent(Color contentColor, double iconSize, double fontSize, double iconPadding) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final typography = context.typographyScaled;
         final isBounded = constraints.maxWidth.isFinite;
+        final baseStyle = size == WnButtonSize.small ? typography.medium12 : typography.medium14;
         final textWidget = Text(
           text,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: fontSize,
-            color: contentColor,
-            letterSpacing: 0.4,
-            height: 20 / 14,
-          ),
+          style: baseStyle.copyWith(color: contentColor),
           overflow: TextOverflow.ellipsis,
         );
 

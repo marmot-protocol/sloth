@@ -25,6 +25,7 @@ class WnUserProfileCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final displayName = presentName(metadata);
     final npub = npubFromHex(userPubkey);
     final formattedNpub = formatPublicKey(npub ?? userPubkey);
@@ -42,21 +43,14 @@ class WnUserProfileCard extends StatelessWidget {
         if (displayName != null)
           Text(
             displayName,
-            style: TextStyle(
-              fontSize: 20.sp,
-              fontWeight: FontWeight.w600,
-              color: colors.backgroundContentPrimary,
-            ),
+            style: typography.semiBold20.copyWith(color: colors.backgroundContentPrimary),
             textAlign: TextAlign.center,
           ),
         if (metadata?.nip05 != null && metadata!.nip05!.isNotEmpty) ...[
           Gap(4.h),
           Text(
             metadata!.nip05!,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: colors.backgroundContentTertiary,
-            ),
+            style: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
             textAlign: TextAlign.center,
           ),
         ],
@@ -64,10 +58,7 @@ class WnUserProfileCard extends StatelessWidget {
           Gap(16.h),
           Text(
             metadata!.about!,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: colors.backgroundContentSecondary,
-            ),
+            style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
             textAlign: TextAlign.center,
           ),
         ],

@@ -16,6 +16,7 @@ class ErrorScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
@@ -35,28 +36,22 @@ class ErrorScreen extends StatelessWidget {
                 children: [
                   Text(
                     '🦥',
-                    style: TextStyle(
+                    style: typography.semiBold60.copyWith(
                       color: colors.backgroundContentPrimary,
-                      fontSize: 56.sp,
-                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     context.l10n.ohNo,
-                    style: TextStyle(
+                    style: typography.semiBold16.copyWith(
                       color: colors.backgroundContentPrimary,
-                      fontSize: 16.sp,
-                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     description,
-                    style: TextStyle(
+                    style: typography.medium14.copyWith(
                       color: colors.backgroundContentTertiary,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
                   ),

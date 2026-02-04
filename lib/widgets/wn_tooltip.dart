@@ -64,7 +64,7 @@ class WnTooltip extends HookWidget {
           colors: colors,
           onDismiss: () => hideTooltip(fromDismiss: true),
           showArrow: showArrow,
-          child: content ?? Text(message, style: TextStyle(fontSize: 14.sp)),
+          child: content ?? Text(message),
         ),
       );
 
@@ -323,7 +323,7 @@ class _TooltipContent extends StatelessWidget {
       );
     }
 
-    final contentBox = _buildContentBox(horizontalPadding);
+    final contentBox = _buildContentBox(context, horizontalPadding);
 
     return switch (position) {
       WnTooltipPosition.top => Column(
@@ -345,7 +345,7 @@ class _TooltipContent extends StatelessWidget {
     };
   }
 
-  Widget _buildContentBox(double horizontalPadding) {
+  Widget _buildContentBox(BuildContext context, double horizontalPadding) {
     final maxWidth = screenSize.width - (horizontalPadding * 2);
 
     return ConstrainedBox(
@@ -360,12 +360,8 @@ class _TooltipContent extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 8.h),
           child: DefaultTextStyle(
-            style: TextStyle(
+            style: context.typographyScaled.medium14.copyWith(
               color: colors.fillContentPrimary,
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              height: 18 / 14,
-              letterSpacing: 0.4.sp,
             ),
             child: child,
           ),

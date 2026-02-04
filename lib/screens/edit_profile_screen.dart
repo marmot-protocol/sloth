@@ -27,6 +27,7 @@ class EditProfileScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final (
       :state,
@@ -127,7 +128,9 @@ class EditProfileScreen extends HookConsumerWidget {
                       return Center(
                         child: Text(
                           message,
-                          style: TextStyle(color: colors.fillDestructive),
+                          style: typography.medium14.copyWith(
+                            color: colors.fillDestructive,
+                          ),
                         ),
                       );
                     },

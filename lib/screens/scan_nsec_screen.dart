@@ -16,6 +16,7 @@ class ScanNsecScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     void onBarcodeDetected(String value) {
       GoRouter.of(context).pop(value);
@@ -55,9 +56,7 @@ class ScanNsecScreen extends StatelessWidget {
                       Text(
                         context.l10n.scanNsecHint,
                         textAlign: TextAlign.center,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w500,
+                        style: typography.medium14.copyWith(
                           color: colors.backgroundContentSecondary,
                         ),
                       ),

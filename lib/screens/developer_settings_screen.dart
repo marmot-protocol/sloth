@@ -20,6 +20,7 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final (:state, :fetch, :publish, :delete, :deleteAll) = useKeyPackages(pubkey);
 
@@ -108,15 +109,15 @@ class DeveloperSettingsScreen extends HookConsumerWidget {
                     SizedBox(height: 12.h),
                     Text(
                       state.error!,
-                      style: TextStyle(color: colors.fillDestructive, fontSize: 14.sp),
+                      style: typography.medium14.copyWith(
+                        color: colors.fillDestructive,
+                      ),
                     ),
                   ],
                   SizedBox(height: 16.h),
                   Text(
                     context.l10n.keyPackagesCount(state.packages.length),
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w600,
+                    style: typography.semiBold14.copyWith(
                       color: colors.backgroundContentPrimary,
                     ),
                   ),
@@ -201,13 +202,13 @@ class _KeyPackagesList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     if (packages.isEmpty) {
       return Center(
         child: Text(
           context.l10n.noKeyPackagesFound,
-          style: TextStyle(
-            fontSize: 14.sp,
+          style: typography.medium14.copyWith(
             color: colors.backgroundContentTertiary,
           ),
         ),
@@ -246,6 +247,7 @@ class _KeyPackageTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     return Container(
       padding: EdgeInsets.all(12.w),
@@ -262,17 +264,14 @@ class _KeyPackageTile extends StatelessWidget {
               children: [
                 Text(
                   context.l10n.packageNumber(index + 1),
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w600,
+                  style: typography.semiBold14.copyWith(
                     color: colors.backgroundContentPrimary,
                   ),
                 ),
                 SizedBox(height: 4.h),
                 Text(
                   package.id,
-                  style: TextStyle(
-                    fontSize: 11.sp,
+                  style: typography.medium12.copyWith(
                     color: colors.backgroundContentSecondary,
                   ),
                   maxLines: 1,

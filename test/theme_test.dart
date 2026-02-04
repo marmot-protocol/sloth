@@ -20,6 +20,12 @@ void main() {
         SemanticColors.light.backgroundPrimary,
       );
     });
+
+    test('includes AppTypography extension', () {
+      final typography = lightTheme.extension<AppTypography>();
+      expect(typography, isNotNull);
+      expect(typography!.medium14.fontSize, AppTypography.instance.medium14.fontSize);
+    });
   });
 
   group('darkTheme', () {
@@ -38,6 +44,12 @@ void main() {
         semanticColors!.backgroundPrimary,
         SemanticColors.dark.backgroundPrimary,
       );
+    });
+
+    test('includes AppTypography extension', () {
+      final typography = darkTheme.extension<AppTypography>();
+      expect(typography, isNotNull);
+      expect(typography!.medium14.fontSize, AppTypography.instance.medium14.fontSize);
     });
   });
 

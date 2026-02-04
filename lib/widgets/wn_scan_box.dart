@@ -56,6 +56,7 @@ class _CameraPermissionDenied extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typographyScaled;
     return Container(
       color: colors.backgroundSecondary,
       child: Center(
@@ -64,11 +65,7 @@ class _CameraPermissionDenied extends StatelessWidget {
           child: Text(
             context.l10n.cameraPermissionDenied,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: colors.backgroundContentSecondary,
-            ),
+            style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
           ),
         ),
       ),
@@ -83,6 +80,7 @@ class _ScannerError extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typographyScaled;
     return Container(
       color: colors.backgroundSecondary,
       child: Center(
@@ -91,11 +89,7 @@ class _ScannerError extends StatelessWidget {
           child: Text(
             context.l10n.somethingWentWrong,
             textAlign: TextAlign.center,
-            style: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: colors.backgroundContentSecondary,
-            ),
+            style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
           ),
         ),
       ),

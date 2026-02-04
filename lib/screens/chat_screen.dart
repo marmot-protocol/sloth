@@ -30,6 +30,7 @@ class ChatScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final (
       :messageCount,
@@ -123,9 +124,8 @@ class ChatScreen extends HookConsumerWidget {
                     ? Center(
                         child: Text(
                           context.l10n.noMessagesYet,
-                          style: TextStyle(
+                          style: typography.medium14.copyWith(
                             color: colors.backgroundContentTertiary,
-                            fontSize: 14.sp,
                           ),
                         ),
                       )
@@ -177,6 +177,7 @@ class _ChatInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     Future<void> handleSend() async {
       final text = input.controller.text.trim();
@@ -207,8 +208,7 @@ class _ChatInput extends StatelessWidget {
               maxLines: 5,
               minLines: 1,
               textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(
-                fontSize: 14.sp,
+              style: typography.medium14.copyWith(
                 color: colors.backgroundContentPrimary,
               ),
               decoration: InputDecoration(

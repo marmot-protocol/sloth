@@ -27,6 +27,7 @@ class WnMessageBubble extends StatelessWidget {
     }
 
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final hasReactions = message.reactions.byEmoji.isNotEmpty;
 
     return Align(
@@ -56,9 +57,8 @@ class WnMessageBubble extends StatelessWidget {
                 ),
                 child: Text(
                   message.content,
-                  style: TextStyle(
+                  style: typography.medium14.copyWith(
                     color: isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary,
-                    fontSize: 14.sp,
                   ),
                 ),
               ),

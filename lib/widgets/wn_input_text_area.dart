@@ -52,17 +52,18 @@ class WnInputTextArea extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (label != null) _buildLabel(colors),
-        _buildTextArea(colors),
+        if (label != null) _buildLabel(context, colors),
+        _buildTextArea(context, colors),
         if (_hasError)
-          _buildErrorText(colors)
+          _buildErrorText(context, colors)
         else if (helperText != null)
-          _buildHelperText(colors),
+          _buildHelperText(context, colors),
       ],
     );
   }
 
-  Widget _buildLabel(SemanticColors colors) {
+  Widget _buildLabel(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     return Padding(
       padding: EdgeInsets.only(left: 2.w),
       child: Row(
@@ -72,13 +73,7 @@ class WnInputTextArea extends StatelessWidget {
             padding: EdgeInsets.symmetric(vertical: 4.h),
             child: Text(
               label!,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.backgroundContentPrimary,
-                height: 20 / 14,
-                letterSpacing: 0.4.sp,
-              ),
+              style: typography.medium14.copyWith(color: colors.backgroundContentPrimary),
             ),
           ),
           if (labelHelpIcon != null)
@@ -102,7 +97,8 @@ class WnInputTextArea extends StatelessWidget {
     );
   }
 
-  Widget _buildTextArea(SemanticColors colors) {
+  Widget _buildTextArea(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     final borderColor = _hasError ? colors.borderDestructivePrimary : colors.borderTertiary;
 
     return Container(
@@ -126,26 +122,16 @@ class WnInputTextArea extends StatelessWidget {
           onChanged: onChanged,
           textInputAction: textInputAction,
           keyboardType: TextInputType.multiline,
-          style: TextStyle(
-            fontSize: 14.sp,
-            fontWeight: FontWeight.w500,
+          style: typography.medium14.copyWith(
             color: enabled
                 ? (_hasError
                       ? colors.backgroundContentDestructive
                       : colors.backgroundContentPrimary)
                 : colors.backgroundContentTertiary,
-            height: 20 / 14,
-            letterSpacing: 0.4.sp,
           ),
           decoration: InputDecoration(
             hintText: placeholder,
-            hintStyle: TextStyle(
-              fontSize: 14.sp,
-              fontWeight: FontWeight.w500,
-              color: colors.backgroundContentSecondary,
-              height: 20 / 14,
-              letterSpacing: 0.4.sp,
-            ),
+            hintStyle: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
             border: InputBorder.none,
             contentPadding: EdgeInsets.zero,
             isDense: true,
@@ -155,34 +141,24 @@ class WnInputTextArea extends StatelessWidget {
     );
   }
 
-  Widget _buildHelperText(SemanticColors colors) {
+  Widget _buildHelperText(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     return Padding(
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         helperText!,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.backgroundContentSecondary,
-          height: 20 / 14,
-          letterSpacing: 0.4.sp,
-        ),
+        style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
       ),
     );
   }
 
-  Widget _buildErrorText(SemanticColors colors) {
+  Widget _buildErrorText(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     return Padding(
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         errorText!,
-        style: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.backgroundContentDestructive,
-          height: 20 / 14,
-          letterSpacing: 0.4.sp,
-        ),
+        style: typography.medium14.copyWith(color: colors.backgroundContentDestructive),
       ),
     );
   }
