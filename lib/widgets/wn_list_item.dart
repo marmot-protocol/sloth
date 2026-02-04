@@ -147,24 +147,21 @@ class WnListItem extends HookWidget {
     }
 
     Widget buildExpandedActions() {
-      return Padding(
+      return Row(
         key: const Key('list_item_expanded_actions'),
-        padding: EdgeInsets.only(right: 8.w),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          spacing: 4.w,
-          children: actions!.map((action) {
-            return WnButton(
-              text: action.label,
-              type: action.isDestructive ? WnButtonType.destructive : WnButtonType.primary,
-              size: WnButtonSize.xsmall,
-              onPressed: () {
-                action.onTap();
-                setExpanded(false);
-              },
-            );
-          }).toList(),
-        ),
+        mainAxisSize: MainAxisSize.min,
+        spacing: 4.w,
+        children: actions!.map((action) {
+          return WnButton(
+            text: action.label,
+            type: action.isDestructive ? WnButtonType.destructive : WnButtonType.primary,
+            size: WnButtonSize.xsmall,
+            onPressed: () {
+              action.onTap();
+              setExpanded(false);
+            },
+          );
+        }).toList(),
       );
     }
 
