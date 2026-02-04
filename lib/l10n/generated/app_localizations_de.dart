@@ -118,8 +118,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get publicKey => 'Öffentlicher Schlüssel';
 
   @override
-  String get publicKeyCopied =>
-      'Öffentlicher Schlüssel in Zwischenablage kopiert';
+  String get publicKeyCopied => 'Öffentlicher Schlüssel in Zwischenablage kopiert';
 
   @override
   String get publicKeyDescription =>
@@ -201,8 +200,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get myRelays => 'Meine Relays';
 
   @override
-  String get myRelaysHelp =>
-      'Relays, die du für alle deine Nostr-Anwendungen definiert hast.';
+  String get myRelaysHelp => 'Relays, die du für alle deine Nostr-Anwendungen definiert hast.';
 
   @override
   String get inboxRelays => 'Posteingang-Relays';
@@ -238,8 +236,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get bitcoinSilentPayment => 'Bitcoin Silent Payment';
 
   @override
-  String get copiedToClipboardThankYou =>
-      'In Zwischenablage kopiert. Danke! 🦥';
+  String get copiedToClipboardThankYou => 'In Zwischenablage kopiert. Danke! 🦥';
 
   @override
   String get shareProfileTitle => 'Profil teilen';
@@ -281,8 +278,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Nachricht konnte nicht gesendet werden. Bitte erneut versuchen.';
 
   @override
-  String get invitedToSecureChat =>
-      'Du wurdest zu einem sicheren Chat eingeladen';
+  String get invitedToSecureChat => 'Du wurdest zu einem sicheren Chat eingeladen';
 
   @override
   String get decline => 'Ablehnen';
@@ -412,8 +408,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get unknownGroup => 'Unbekannte Gruppe';
 
   @override
-  String get hasInvitedYouToSecureChat =>
-      'Hat dich zu einem sicheren Chat eingeladen';
+  String get hasInvitedYouToSecureChat => 'Hat dich zu einem sicheren Chat eingeladen';
 
   @override
   String userInvitedYouToSecureChat(String name) {
@@ -421,8 +416,7 @@ class AppLocalizationsDe extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat =>
-      'Du wurdest zu einem sicheren Chat eingeladen';
+  String get youHaveBeenInvitedToSecureChat => 'Du wurdest zu einem sicheren Chat eingeladen';
 
   @override
   String get language => 'Sprache';
@@ -484,8 +478,7 @@ class AppLocalizationsDe extends AppLocalizations {
       'Chat konnte nicht gestartet werden. Bitte versuchen Sie es erneut.';
 
   @override
-  String get userNotOnWhiteNoise =>
-      'Dieser Benutzer ist noch nicht bei White Noise.';
+  String get userNotOnWhiteNoise => 'Dieser Benutzer ist noch nicht bei White Noise.';
 
   @override
   String get failedToUpdateFollow =>
@@ -506,8 +499,7 @@ class AppLocalizationsDe extends AppLocalizations {
   String get scanNsec => 'QR-Code scannen';
 
   @override
-  String get scanNsecHint =>
-      'Scannen Sie den QR-Code Ihres privaten Schlüssels zum Anmelden.';
+  String get scanNsecHint => 'Scannen Sie den QR-Code Ihres privaten Schlüssels zum Anmelden.';
 
   @override
   String get cameraPermissionDenied => 'Kamerazugriff verweigert';

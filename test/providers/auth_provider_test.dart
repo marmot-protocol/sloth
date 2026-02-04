@@ -617,20 +617,24 @@ void main() {
 
       test('signEvent returns signed event when signer returns event', () async {
         mockAndroidSigner.setResult('signEvent', {'event': 'signed_event_json'});
-        await container.read(authProvider.notifier).loginWithAndroidSigner(
-          pubkey: testPubkeyA,
-          onDisconnect: () async {},
-        );
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
         final result = await mockApi.signEventCallback!('{}');
         expect(result, 'signed_event_json');
       });
 
       test('signEvent throws NO_EVENT when signer returns signature but no event', () async {
         mockAndroidSigner.setResult('signEvent', {'result': 'sig_without_event'});
-        await container.read(authProvider.notifier).loginWithAndroidSigner(
-          pubkey: testPubkeyA,
-          onDisconnect: () async {},
-        );
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
         expect(
           () => mockApi.signEventCallback!('{}'),
           throwsA(
@@ -645,40 +649,48 @@ void main() {
 
       test('nip04Encrypt returns ciphertext from signer', () async {
         mockAndroidSigner.setResult('nip04Encrypt', {'result': 'encrypted'});
-        await container.read(authProvider.notifier).loginWithAndroidSigner(
-          pubkey: testPubkeyA,
-          onDisconnect: () async {},
-        );
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
         final result = await mockApi.nip04EncryptCallback!('plain', testPubkeyB);
         expect(result, 'encrypted');
       });
 
       test('nip04Decrypt returns plaintext from signer', () async {
         mockAndroidSigner.setResult('nip04Decrypt', {'result': 'decrypted'});
-        await container.read(authProvider.notifier).loginWithAndroidSigner(
-          pubkey: testPubkeyA,
-          onDisconnect: () async {},
-        );
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
         final result = await mockApi.nip04DecryptCallback!('cipher', testPubkeyB);
         expect(result, 'decrypted');
       });
 
       test('nip44Encrypt returns ciphertext from signer', () async {
         mockAndroidSigner.setResult('nip44Encrypt', {'result': 'enc44'});
-        await container.read(authProvider.notifier).loginWithAndroidSigner(
-          pubkey: testPubkeyA,
-          onDisconnect: () async {},
-        );
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
         final result = await mockApi.nip44EncryptCallback!('plain', testPubkeyB);
         expect(result, 'enc44');
       });
 
       test('nip44Decrypt returns plaintext from signer', () async {
         mockAndroidSigner.setResult('nip44Decrypt', {'result': 'dec44'});
-        await container.read(authProvider.notifier).loginWithAndroidSigner(
-          pubkey: testPubkeyA,
-          onDisconnect: () async {},
-        );
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
         final result = await mockApi.nip44DecryptCallback!('cipher', testPubkeyB);
         expect(result, 'dec44');
       });

@@ -160,8 +160,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get profileIsPublic => 'Профиль публичный';
 
   @override
-  String get profilePublicDescription =>
-      'Информация вашего профиля будет видна всем в сети.';
+  String get profilePublicDescription => 'Информация вашего профиля будет видна всем в сети.';
 
   @override
   String get discard => 'Отменить';
@@ -186,12 +185,10 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get profileLoadError =>
-      'Не удалось загрузить профиль. Пожалуйста, попробуйте снова.';
+  String get profileLoadError => 'Не удалось загрузить профиль. Пожалуйста, попробуйте снова.';
 
   @override
-  String get profileSaveError =>
-      'Не удалось сохранить профиль. Пожалуйста, попробуйте снова.';
+  String get profileSaveError => 'Не удалось сохранить профиль. Пожалуйста, попробуйте снова.';
 
   @override
   String get networkRelaysTitle => 'Сетевые Реле';
@@ -237,8 +234,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bitcoinSilentPayment => 'Тихий Платёж Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou =>
-      'Скопировано в буфер обмена. Спасибо! 🦥';
+  String get copiedToClipboardThankYou => 'Скопировано в буфер обмена. Спасибо! 🦥';
 
   @override
   String get shareProfileTitle => 'Поделиться профилем';
@@ -276,8 +272,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get messagePlaceholder => 'Сообщение';
 
   @override
-  String get failedToSendMessage =>
-      'Не удалось отправить сообщение. Попробуйте снова.';
+  String get failedToSendMessage => 'Не удалось отправить сообщение. Попробуйте снова.';
 
   @override
   String get invitedToSecureChat => 'Вы приглашены в безопасный чат';
@@ -392,16 +387,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get delete => 'Удалить';
 
   @override
-  String get failedToDeleteMessage =>
-      'Не удалось удалить сообщение. Попробуйте снова.';
+  String get failedToDeleteMessage => 'Не удалось удалить сообщение. Попробуйте снова.';
 
   @override
-  String get failedToSendReaction =>
-      'Не удалось отправить реакцию. Попробуйте снова.';
+  String get failedToSendReaction => 'Не удалось отправить реакцию. Попробуйте снова.';
 
   @override
-  String get failedToRemoveReaction =>
-      'Не удалось удалить реакцию. Попробуйте снова.';
+  String get failedToRemoveReaction => 'Не удалось удалить реакцию. Попробуйте снова.';
 
   @override
   String get unknownUser => 'Неизвестный пользователь';
@@ -418,8 +410,7 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat =>
-      'Вы были приглашены в безопасный чат';
+  String get youHaveBeenInvitedToSecureChat => 'Вы были приглашены в безопасный чат';
 
   @override
   String get language => 'Язык';
@@ -428,8 +419,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get languageSystem => 'Системный';
 
   @override
-  String get languageUpdateFailed =>
-      'Не удалось сохранить языковые настройки. Попробуйте снова.';
+  String get languageUpdateFailed => 'Не удалось сохранить языковые настройки. Попробуйте снова.';
 
   @override
   String get timeJustNow => 'только что';
@@ -489,26 +479,22 @@ class AppLocalizationsRu extends AppLocalizations {
   String get userNotOnWhiteNoise => 'Этот пользователь ещё не в White Noise.';
 
   @override
-  String get failedToUpdateFollow =>
-      'Не удалось обновить статус подписки. Попробуйте снова.';
+  String get failedToUpdateFollow => 'Не удалось обновить статус подписки. Попробуйте снова.';
 
   @override
-  String get imagePickerError =>
-      'Не удалось выбрать изображение. Попробуйте снова.';
+  String get imagePickerError => 'Не удалось выбрать изображение. Попробуйте снова.';
 
   @override
   String get loginWithSigner => 'Войти через Signer';
 
   @override
-  String get signerConnectionError =>
-      'Не удалось подключиться к signer. Попробуйте снова.';
+  String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
 
   @override
   String get scanNsec => 'Сканировать QR-код';
 
   @override
-  String get scanNsecHint =>
-      'Отсканируйте QR-код вашего приватного ключа для входа.';
+  String get scanNsecHint => 'Отсканируйте QR-код вашего приватного ключа для входа.';
 
   @override
   String get cameraPermissionDenied => 'Доступ к камере запрещён';

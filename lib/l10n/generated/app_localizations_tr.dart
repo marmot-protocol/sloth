@@ -45,8 +45,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get introduceYourself => 'Kendinizi tanıtın';
 
   @override
-  String get writeSomethingAboutYourself =>
-      'Kendiniz hakkında bir şeyler yazın';
+  String get writeSomethingAboutYourself => 'Kendiniz hakkında bir şeyler yazın';
 
   @override
   String get cancel => 'İptal';
@@ -199,8 +198,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get myRelays => 'Rölelerim';
 
   @override
-  String get myRelaysHelp =>
-      'Tüm Nostr uygulamalarınızda kullanmak üzere tanımladığınız röleler.';
+  String get myRelaysHelp => 'Tüm Nostr uygulamalarınızda kullanmak üzere tanımladığınız röleler.';
 
   @override
   String get inboxRelays => 'Gelen Kutusu Röleleri';
@@ -274,8 +272,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get messagePlaceholder => 'Mesaj';
 
   @override
-  String get failedToSendMessage =>
-      'Mesaj gönderilemedi. Lütfen tekrar deneyin.';
+  String get failedToSendMessage => 'Mesaj gönderilemedi. Lütfen tekrar deneyin.';
 
   @override
   String get invitedToSecureChat => 'Güvenli bir sohbete davet edildiniz';
@@ -390,16 +387,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get delete => 'Sil';
 
   @override
-  String get failedToDeleteMessage =>
-      'Mesaj silinemedi. Lütfen tekrar deneyin.';
+  String get failedToDeleteMessage => 'Mesaj silinemedi. Lütfen tekrar deneyin.';
 
   @override
-  String get failedToSendReaction =>
-      'Tepki gönderilemedi. Lütfen tekrar deneyin.';
+  String get failedToSendReaction => 'Tepki gönderilemedi. Lütfen tekrar deneyin.';
 
   @override
-  String get failedToRemoveReaction =>
-      'Tepki kaldırılamadı. Lütfen tekrar deneyin.';
+  String get failedToRemoveReaction => 'Tepki kaldırılamadı. Lütfen tekrar deneyin.';
 
   @override
   String get unknownUser => 'Bilinmeyen kullanıcı';
@@ -416,8 +410,7 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat =>
-      'Güvenli bir sohbete davet edildiniz';
+  String get youHaveBeenInvitedToSecureChat => 'Güvenli bir sohbete davet edildiniz';
 
   @override
   String get language => 'Dil';
@@ -426,8 +419,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get languageSystem => 'Sistem';
 
   @override
-  String get languageUpdateFailed =>
-      'Dil tercihi kaydedilemedi. Lütfen tekrar deneyin.';
+  String get languageUpdateFailed => 'Dil tercihi kaydedilemedi. Lütfen tekrar deneyin.';
 
   @override
   String get timeJustNow => 'şimdi';
@@ -475,15 +467,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get unfollow => 'Takibi bırak';
 
   @override
-  String get failedToStartChat =>
-      'Sohbet başlatılamadı. Lütfen tekrar deneyin.';
+  String get failedToStartChat => 'Sohbet başlatılamadı. Lütfen tekrar deneyin.';
 
   @override
   String get userNotOnWhiteNoise => 'Bu kullanıcı henüz White Noise\'da değil.';
 
   @override
-  String get failedToUpdateFollow =>
-      'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
+  String get failedToUpdateFollow => 'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
 
   @override
   String get imagePickerError => 'Görsel seçilemedi. Lütfen tekrar deneyin.';
@@ -492,15 +482,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get loginWithSigner => 'Signer ile giriş yap';
 
   @override
-  String get signerConnectionError =>
-      'Signer\'a bağlanılamadı. Lütfen tekrar deneyin.';
+  String get signerConnectionError => 'Signer\'a bağlanılamadı. Lütfen tekrar deneyin.';
 
   @override
   String get scanNsec => 'QR kodu tara';
 
   @override
-  String get scanNsecHint =>
-      'Giriş yapmak için özel anahtar QR kodunuzu tarayın.';
+  String get scanNsecHint => 'Giriş yapmak için özel anahtar QR kodunuzu tarayın.';
 
   @override
   String get cameraPermissionDenied => 'Kamera izni reddedildi';
