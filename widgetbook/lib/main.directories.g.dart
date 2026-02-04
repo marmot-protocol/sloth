@@ -24,6 +24,8 @@ import 'package:sloth_widgetbook/components/spinner.dart'
     as _sloth_widgetbook_components_spinner;
 import 'package:sloth_widgetbook/components/structure.dart'
     as _sloth_widgetbook_components_structure;
+import 'package:sloth_widgetbook/components/tooltip.dart'
+    as _sloth_widgetbook_components_tooltip;
 import 'package:sloth_widgetbook/components/wn_avatar.dart'
     as _sloth_widgetbook_components_wn_avatar;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
@@ -162,6 +164,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Spinner',
             builder: _sloth_widgetbook_components_spinner.wnSpinnerShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnTooltipStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Tooltip',
+            builder: _sloth_widgetbook_components_tooltip.wnTooltipShowcase,
           ),
         ],
       ),

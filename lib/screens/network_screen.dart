@@ -13,6 +13,7 @@ import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_relay_tile.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_tooltip.dart';
 
 class NetworkScreen extends HookConsumerWidget {
   const NetworkScreen({super.key});
@@ -41,6 +42,7 @@ class NetworkScreen extends HookConsumerWidget {
       required Key infoIconKey,
       required Key addIconKey,
       required VoidCallback onAdd,
+      WnTooltipPosition tooltipPosition = WnTooltipPosition.top,
     }) {
       return Row(
         children: [
@@ -59,29 +61,9 @@ class NetworkScreen extends HookConsumerWidget {
                   ),
                 ),
                 Gap(8.w),
-                Tooltip(
+                WnTooltip(
                   message: helpMessage,
-                  triggerMode: TooltipTriggerMode.tap,
-                  showDuration: const Duration(minutes: 1),
-                  preferBelow: true,
-                  verticalOffset: 20.h,
-                  margin: EdgeInsets.symmetric(horizontal: 16.w),
-                  decoration: BoxDecoration(
-                    color: colors.fillPrimary,
-                    borderRadius: BorderRadius.circular(8.r),
-                    boxShadow: [
-                      BoxShadow(
-                        color: colors.shadow.withValues(alpha: 0.2),
-                        blurRadius: 8.r,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  textStyle: TextStyle(
-                    fontSize: 12.sp,
-                    color: colors.fillContentPrimary,
-                  ),
-                  padding: EdgeInsets.all(12.w),
+                  position: tooltipPosition,
                   child: Padding(
                     padding: EdgeInsets.all(4.w),
                     child: WnIcon(
@@ -187,6 +169,7 @@ class NetworkScreen extends HookConsumerWidget {
                                 infoIconKey: const Key('info_icon_my_relays'),
                                 addIconKey: const Key('add_icon_my_relays'),
                                 onAdd: () => showAddRelaySheet(RelayCategory.normal),
+                                tooltipPosition: WnTooltipPosition.bottom,
                               ),
                               Gap(12.h),
                               buildRelayList(state.normalRelays, RelayCategory.normal),
