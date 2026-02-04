@@ -154,15 +154,14 @@ class WnSystemNotice extends HookWidget {
                       Gap(8.w),
                     ],
                     Expanded(
-                      child: Text(
-                        title,
-                        style: TextStyle(
-                          fontWeight: FontWeight.w700,
-                          fontSize: 14.sp,
-                          height: 20 / 14,
-                          letterSpacing: 0.4.sp,
-                          color: contentColor,
-                        ),
+                      child: Builder(
+                        builder: (context) {
+                          final typography = context.typographyScaled;
+                          return Text(
+                            title,
+                            style: typography.bold14.copyWith(color: contentColor),
+                          );
+                        },
                       ),
                     ),
                     if (shouldShowActionIcon) ...[
@@ -195,15 +194,16 @@ class WnSystemNotice extends HookWidget {
                                 Gap(4.h),
                                 Padding(
                                   padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                  child: Text(
-                                    description!,
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.w500,
-                                      fontSize: 14.sp,
-                                      height: 20 / 14,
-                                      letterSpacing: 0.4.sp,
-                                      color: descriptionColor,
-                                    ),
+                                  child: Builder(
+                                    builder: (context) {
+                                      final typography = context.typographyScaled;
+                                      return Text(
+                                        description!,
+                                        style: typography.medium14.copyWith(
+                                          color: descriptionColor,
+                                        ),
+                                      );
+                                    },
                                   ),
                                 ),
                               ],

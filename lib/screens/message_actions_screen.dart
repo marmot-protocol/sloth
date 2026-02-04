@@ -5,7 +5,6 @@ import 'package:gap/gap.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
-import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_emoji_picker.dart';
 import 'package:sloth/widgets/wn_icon.dart';
@@ -269,6 +268,7 @@ class _ReactionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final typography = context.typographyScaled;
     return GestureDetector(
       onTap: onTap,
       child: Container(
@@ -281,7 +281,7 @@ class _ReactionButton extends StatelessWidget {
             : null,
         child: Text(
           emoji,
-          style: TextStyle(fontSize: 20.sp),
+          style: typography.medium20,
         ),
       ),
     );

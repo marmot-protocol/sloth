@@ -2,7 +2,6 @@ import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 
 class WnEmojiPicker extends StatelessWidget {
@@ -18,6 +17,7 @@ class WnEmojiPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     return Container(
       decoration: BoxDecoration(
@@ -60,10 +60,7 @@ class WnEmojiPicker extends StatelessWidget {
                   backgroundColor: colors.backgroundSecondary,
                   noRecents: Text(
                     'No recent emojis',
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: colors.backgroundContentSecondary,
-                    ),
+                    style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
                   ),
                 ),
                 categoryViewConfig: CategoryViewConfig(

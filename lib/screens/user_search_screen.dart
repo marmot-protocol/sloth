@@ -110,6 +110,7 @@ class _UserListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final displayName = presentName(user.metadata);
     final hasDisplayName = displayName != null;
     final formattedPubKey = formatPublicKey(npubFromHex(user.pubkey) ?? user.pubkey);
@@ -125,27 +126,22 @@ class _UserListTile extends StatelessWidget {
       title: hasDisplayName
           ? Text(
               displayName,
-              style: TextStyle(
-                fontSize: 16.sp,
-                fontWeight: FontWeight.w600,
+              style: typography.semiBold16.copyWith(
                 color: colors.backgroundContentPrimary,
               ),
               overflow: TextOverflow.ellipsis,
             )
           : Text(
               formattedPubKey,
-              style: TextStyle(
-                fontSize: 12.sp,
+              style: typography.medium12.copyWith(
                 color: colors.backgroundContentTertiary,
               ),
             ),
       subtitle: hasDisplayName
           ? Text(
               formattedPubKey,
-              style: TextStyle(
-                fontSize: 14.sp,
+              style: typography.medium14.copyWith(
                 color: colors.backgroundContentTertiary,
-                fontWeight: FontWeight.w500,
               ),
             )
           : null,

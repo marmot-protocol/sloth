@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/locale_provider.dart';
@@ -81,6 +80,8 @@ class ChatListTile extends HookConsumerWidget {
     final timestamp = chatSummary.lastMessage?.createdAt ?? chatSummary.createdAt;
     final formattedTime = formatters.formatRelativeTime(timestamp, context.l10n);
 
+    final typography = context.typographyScaled;
+
     return ListTile(
       onTap: isPending
           ? () => Routes.pushToInvite(context, chatSummary.mlsGroupId)
@@ -92,20 +93,17 @@ class ChatListTile extends HookConsumerWidget {
       ),
       title: Text(
         title,
-        style: TextStyle(color: colors.backgroundContentPrimary),
+        style: typography.medium14.copyWith(color: colors.backgroundContentPrimary),
       ),
       subtitle: Text(
         subtitle,
-        style: TextStyle(color: colors.backgroundContentSecondary),
+        style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
         maxLines: 1,
         overflow: TextOverflow.ellipsis,
       ),
       trailing: Text(
         formattedTime,
-        style: TextStyle(
-          color: colors.backgroundContentTertiary,
-          fontSize: 12.sp,
-        ),
+        style: typography.medium12.copyWith(color: colors.backgroundContentTertiary),
       ),
     );
   }

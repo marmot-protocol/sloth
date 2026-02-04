@@ -21,6 +21,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final npub = npubFromHex(pubkey);
     final (:state, :loadNsec) = useNsec(pubkey);
@@ -81,9 +82,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                           Gap(12.h),
                           Text(
                             context.l10n.publicKeyDescription,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                            style: typography.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                           ),
@@ -99,9 +98,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
                           Gap(10.h),
                           Text(
                             context.l10n.privateKeyDescription,
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.w500,
+                            style: typography.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                           ),
