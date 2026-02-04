@@ -43,9 +43,16 @@ class _MockAuthNotifier extends AuthNotifier {
   }
 }
 
+late _MockApi _mockApi;
+
 void main() {
   setUpAll(() {
-    RustLib.initMock(api: _MockApi());
+    _mockApi = _MockApi();
+    RustLib.initMock(api: _mockApi);
+  });
+
+  setUp(() {
+    _mockApi.reset();
   });
 
   Future<void> pumpScanNpubScreen(WidgetTester tester) async {
