@@ -1335,7 +1335,7 @@ packages:
       path: ".."
       relative: true
     source: path
-    version: "1.0.0+1"
+    version: "0.3.0+15"
   widgetbook:
     dependency: "direct main"
     description:
