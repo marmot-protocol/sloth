@@ -201,29 +201,7 @@ void main() {
         expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
       });
 
-      testWidgets('collapses actions when menu button tapped again', (WidgetTester tester) async {
-        final widget = WnListItem(
-          title: 'With Actions',
-          actions: [
-            WnListItemAction(label: 'Edit', onTap: () {}),
-          ],
-        );
-        await mountWidget(widget, tester);
-
-        await tester.tap(find.byKey(const Key('list_item_menu_button')));
-        await tester.pump();
-
-        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
-
-        await tester.tap(find.byKey(const Key('list_item_menu_button')));
-        await tester.pump();
-
-        expect(find.byKey(const Key('list_item_expanded_actions')), findsNothing);
-      });
-
-      testWidgets('always shows more icon regardless of expanded state', (
-        WidgetTester tester,
-      ) async {
+      testWidgets('hides more icon when expanded', (WidgetTester tester) async {
         final widget = WnListItem(
           title: 'With Actions',
           actions: [
@@ -238,7 +216,8 @@ void main() {
         await tester.tap(find.byKey(const Key('list_item_menu_button')));
         await tester.pump();
 
-        expect(iconFinder, findsOneWidget);
+        expect(find.byKey(const Key('list_item_expanded_actions')), findsOneWidget);
+        expect(iconFinder, findsNothing);
       });
     });
 

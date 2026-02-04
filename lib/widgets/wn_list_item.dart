@@ -214,25 +214,27 @@ class WnListItem extends HookWidget {
               ),
             ),
             if (hasActions) ...[
-              if (isExpanded) buildExpandedActions(),
-              GestureDetector(
-                key: const Key('list_item_menu_button'),
-                onTap: () => setExpanded(!isExpanded),
-                behavior: HitTestBehavior.opaque,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 8.w),
-                  child: SizedBox(
-                    width: 18.w,
-                    height: 18.h,
-                    child: WnIcon(
-                      WnIcons.more,
-                      key: const Key('list_item_menu_icon'),
-                      size: 18.w,
-                      color: colors.fillContentTertiary,
+              if (isExpanded)
+                buildExpandedActions()
+              else
+                GestureDetector(
+                  key: const Key('list_item_menu_button'),
+                  onTap: () => setExpanded(true),
+                  behavior: HitTestBehavior.opaque,
+                  child: Padding(
+                    padding: EdgeInsets.only(right: 8.w),
+                    child: SizedBox(
+                      width: 18.w,
+                      height: 18.h,
+                      child: WnIcon(
+                        WnIcons.more,
+                        key: const Key('list_item_menu_icon'),
+                        size: 18.w,
+                        color: colors.fillContentTertiary,
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ],
         ),
