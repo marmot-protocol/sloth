@@ -26,6 +26,8 @@ import 'package:sloth_widgetbook/components/spinner.dart'
     as _sloth_widgetbook_components_spinner;
 import 'package:sloth_widgetbook/components/structure.dart'
     as _sloth_widgetbook_components_structure;
+import 'package:sloth_widgetbook/components/timestamp.dart'
+    as _sloth_widgetbook_components_timestamp;
 import 'package:sloth_widgetbook/components/tooltip.dart'
     as _sloth_widgetbook_components_tooltip;
 import 'package:sloth_widgetbook/components/wn_avatar.dart'
@@ -189,6 +191,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Spinner',
             builder: _sloth_widgetbook_components_spinner.wnSpinnerShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnTimestampStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Timestamp',
+            builder: _sloth_widgetbook_components_timestamp.wnTimestampShowcase,
           ),
         ],
       ),

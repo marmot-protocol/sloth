@@ -774,5 +774,130 @@
   "somethingWentWrong": "Something went wrong",
   "@somethingWentWrong": {
     "description": "Generic error message"
+  },
+
+  "timestampNow": "Now",
+  "@timestampNow": {
+    "description": "Timestamp for events less than 60 seconds ago"
+  },
+
+  "timestampMinutes": "{count}m",
+  "@timestampMinutes": {
+    "description": "Timestamp for events 1-59 minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "timestampHours": "{count}h",
+  "@timestampHours": {
+    "description": "Timestamp for events 1-12 hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "timestampYesterday": "Yesterday",
+  "@timestampYesterday": {
+    "description": "Timestamp for events from yesterday"
+  },
+
+  "weekdayMonday": "Monday",
+  "@weekdayMonday": {
+    "description": "Monday weekday name"
+  },
+
+  "weekdayTuesday": "Tuesday",
+  "@weekdayTuesday": {
+    "description": "Tuesday weekday name"
+  },
+
+  "weekdayWednesday": "Wednesday",
+  "@weekdayWednesday": {
+    "description": "Wednesday weekday name"
+  },
+
+  "weekdayThursday": "Thursday",
+  "@weekdayThursday": {
+    "description": "Thursday weekday name"
+  },
+
+  "weekdayFriday": "Friday",
+  "@weekdayFriday": {
+    "description": "Friday weekday name"
+  },
+
+  "weekdaySaturday": "Saturday",
+  "@weekdaySaturday": {
+    "description": "Saturday weekday name"
+  },
+
+  "weekdaySunday": "Sunday",
+  "@weekdaySunday": {
+    "description": "Sunday weekday name"
+  },
+
+  "monthJanShort": "Jan",
+  "@monthJanShort": {
+    "description": "January short name"
+  },
+
+  "monthFebShort": "Feb",
+  "@monthFebShort": {
+    "description": "February short name"
+  },
+
+  "monthMarShort": "Mar",
+  "@monthMarShort": {
+    "description": "March short name"
+  },
+
+  "monthAprShort": "Apr",
+  "@monthAprShort": {
+    "description": "April short name"
+  },
+
+  "monthMayShort": "May",
+  "@monthMayShort": {
+    "description": "May short name"
+  },
+
+  "monthJunShort": "Jun",
+  "@monthJunShort": {
+    "description": "June short name"
+  },
+
+  "monthJulShort": "Jul",
+  "@monthJulShort": {
+    "description": "July short name"
+  },
+
+  "monthAugShort": "Aug",
+  "@monthAugShort": {
+    "description": "August short name"
+  },
+
+  "monthSepShort": "Sep",
+  "@monthSepShort": {
+    "description": "September short name"
+  },
+
+  "monthOctShort": "Oct",
+  "@monthOctShort": {
+    "description": "October short name"
+  },
+
+  "monthNovShort": "Nov",
+  "@monthNovShort": {
+    "description": "November short name"
+  },
+
+  "monthDecShort": "Dec",
+  "@monthDecShort": {
+    "description": "December short name"
   }
 }

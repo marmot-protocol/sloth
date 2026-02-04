@@ -498,4 +498,77 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Что-то пошло не так';
+
+  @override
+  String get timestampNow => 'Сейчас';
+
+  @override
+  String timestampMinutes(int count) {
+    return '$countм';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '$countч';
+  }
+
+  @override
+  String get timestampYesterday => 'Вчера';
+
+  @override
+  String get weekdayMonday => 'Понедельник';
+
+  @override
+  String get weekdayTuesday => 'Вторник';
+
+  @override
+  String get weekdayWednesday => 'Среда';
+
+  @override
+  String get weekdayThursday => 'Четверг';
+
+  @override
+  String get weekdayFriday => 'Пятница';
+
+  @override
+  String get weekdaySaturday => 'Суббота';
+
+  @override
+  String get weekdaySunday => 'Воскресенье';
+
+  @override
+  String get monthJanShort => 'Янв';
+
+  @override
+  String get monthFebShort => 'Фев';
+
+  @override
+  String get monthMarShort => 'Мар';
+
+  @override
+  String get monthAprShort => 'Апр';
+
+  @override
+  String get monthMayShort => 'Май';
+
+  @override
+  String get monthJunShort => 'Июн';
+
+  @override
+  String get monthJulShort => 'Июл';
+
+  @override
+  String get monthAugShort => 'Авг';
+
+  @override
+  String get monthSepShort => 'Сен';
+
+  @override
+  String get monthOctShort => 'Окт';
+
+  @override
+  String get monthNovShort => 'Ноя';
+
+  @override
+  String get monthDecShort => 'Дек';
 }

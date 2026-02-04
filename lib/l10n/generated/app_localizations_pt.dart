@@ -494,4 +494,77 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Algo deu errado';
+
+  @override
+  String get timestampNow => 'Agora';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String get timestampYesterday => 'Ontem';
+
+  @override
+  String get weekdayMonday => 'Segunda';
+
+  @override
+  String get weekdayTuesday => 'Terça';
+
+  @override
+  String get weekdayWednesday => 'Quarta';
+
+  @override
+  String get weekdayThursday => 'Quinta';
+
+  @override
+  String get weekdayFriday => 'Sexta';
+
+  @override
+  String get weekdaySaturday => 'Sábado';
+
+  @override
+  String get weekdaySunday => 'Domingo';
+
+  @override
+  String get monthJanShort => 'Jan';
+
+  @override
+  String get monthFebShort => 'Fev';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Abr';
+
+  @override
+  String get monthMayShort => 'Mai';
+
+  @override
+  String get monthJunShort => 'Jun';
+
+  @override
+  String get monthJulShort => 'Jul';
+
+  @override
+  String get monthAugShort => 'Ago';
+
+  @override
+  String get monthSepShort => 'Set';
+
+  @override
+  String get monthOctShort => 'Out';
+
+  @override
+  String get monthNovShort => 'Nov';
+
+  @override
+  String get monthDecShort => 'Dez';
 }

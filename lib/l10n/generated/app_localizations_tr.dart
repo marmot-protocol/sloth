@@ -492,4 +492,77 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Bir şeyler yanlış gitti';
+
+  @override
+  String get timestampNow => 'Şimdi';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}d';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}sa';
+  }
+
+  @override
+  String get timestampYesterday => 'Dün';
+
+  @override
+  String get weekdayMonday => 'Pazartesi';
+
+  @override
+  String get weekdayTuesday => 'Salı';
+
+  @override
+  String get weekdayWednesday => 'Çarşamba';
+
+  @override
+  String get weekdayThursday => 'Perşembe';
+
+  @override
+  String get weekdayFriday => 'Cuma';
+
+  @override
+  String get weekdaySaturday => 'Cumartesi';
+
+  @override
+  String get weekdaySunday => 'Pazar';
+
+  @override
+  String get monthJanShort => 'Oca';
+
+  @override
+  String get monthFebShort => 'Şub';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Nis';
+
+  @override
+  String get monthMayShort => 'May';
+
+  @override
+  String get monthJunShort => 'Haz';
+
+  @override
+  String get monthJulShort => 'Tem';
+
+  @override
+  String get monthAugShort => 'Ağu';
+
+  @override
+  String get monthSepShort => 'Eyl';
+
+  @override
+  String get monthOctShort => 'Eki';
+
+  @override
+  String get monthNovShort => 'Kas';
+
+  @override
+  String get monthDecShort => 'Ara';
 }
