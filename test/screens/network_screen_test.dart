@@ -199,10 +199,30 @@ void main() {
 
       testWidgets('first tooltip uses bottom position, others use top', (tester) async {
         await pumpNetworkScreen(tester);
-        final tooltips = tester.widgetList<WnTooltip>(find.byType(WnTooltip)).toList();
-        expect(tooltips[0].position, WnTooltipPosition.bottom);
-        expect(tooltips[1].position, WnTooltipPosition.top);
-        expect(tooltips[2].position, WnTooltipPosition.top);
+
+        final myRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_my_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(myRelaysTooltip.position, WnTooltipPosition.bottom);
+
+        final inboxRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_inbox_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(inboxRelaysTooltip.position, WnTooltipPosition.top);
+
+        final keyPackageRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_key_package_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(keyPackageRelaysTooltip.position, WnTooltipPosition.top);
       });
 
       testWidgets('all tooltips use tap trigger mode', (tester) async {

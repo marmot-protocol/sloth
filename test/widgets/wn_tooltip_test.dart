@@ -506,6 +506,65 @@ void main() {
         await tester.pump();
         expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
       });
+
+      testWidgets('tap reopens tooltip after dismiss without mouse exit', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        final widget = const SizedBox(
+          width: 300,
+          height: 300,
+          child: Center(
+            child: WnTooltip(
+              message: 'Tooltip message',
+              child: SizedBox(width: 100, height: 50, child: Text('Tap me')),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.tap(find.text('Tap me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsNothing);
+
+        await tester.tap(find.text('Tap me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+
+      testWidgets('long press reopens tooltip after dismiss without mouse exit', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        final widget = const SizedBox(
+          width: 300,
+          height: 300,
+          child: Center(
+            child: WnTooltip(
+              message: 'Tooltip message',
+              triggerMode: WnTooltipTriggerMode.longPress,
+              child: SizedBox(width: 100, height: 50, child: Text('Long press me')),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+
+        await tester.longPress(find.text('Long press me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+
+        await tester.tapAt(const Offset(10, 10));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsNothing);
+
+        await tester.longPress(find.text('Long press me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
     });
 
     group('screen edge awareness', () {

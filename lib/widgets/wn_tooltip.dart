@@ -102,8 +102,18 @@ class WnTooltip extends HookWidget {
           hideTooltip();
         },
         child: GestureDetector(
-          onTap: triggerMode == WnTooltipTriggerMode.tap ? showTooltip : null,
-          onLongPress: triggerMode == WnTooltipTriggerMode.longPress ? showTooltip : null,
+          onTap: triggerMode == WnTooltipTriggerMode.tap
+              ? () {
+                  dismissedWhileHovering.value = false;
+                  showTooltip();
+                }
+              : null,
+          onLongPress: triggerMode == WnTooltipTriggerMode.longPress
+              ? () {
+                  dismissedWhileHovering.value = false;
+                  showTooltip();
+                }
+              : null,
           child: child,
         ),
       ),
