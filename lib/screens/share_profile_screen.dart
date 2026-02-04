@@ -12,7 +12,9 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_copy_card.dart';
+import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import 'package:sloth/widgets/wn_system_notice.dart' show WnSystemNotice;
@@ -110,6 +112,21 @@ class ShareProfileScreen extends HookConsumerWidget {
                               fontSize: 14.sp,
                               fontWeight: FontWeight.w500,
                               color: colors.backgroundContentSecondary,
+                            ),
+                          ),
+                          Gap(24.h),
+                          Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                            child: SizedBox(
+                              width: double.infinity,
+                              child: WnButton(
+                                key: const Key('scan_qr_button'),
+                                text: context.l10n.scanNpub,
+                                type: WnButtonType.outline,
+                                trailingIcon: WnIcons.scan,
+                                size: WnButtonSize.medium,
+                                onPressed: () => Routes.pushToScanNpub(context),
+                              ),
                             ),
                           ),
                         ],

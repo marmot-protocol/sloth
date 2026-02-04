@@ -52,6 +52,7 @@ class UserSearchScreen extends HookConsumerWidget {
                     placeholder: 'npub1...',
                     controller: searchController,
                     onChanged: (value) => searchQuery.value = value,
+                    onScan: () => Routes.pushToScanNpub(context),
                   ),
                   Expanded(
                     child: state.isLoading
