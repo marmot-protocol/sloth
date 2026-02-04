@@ -102,17 +102,6 @@ void main() {
         await tester.tap(find.byKey(const Key('delete_button')));
         expect(deleteCalled, isFalse);
       });
-
-      testWidgets('renders correctly with null onDelete', (WidgetTester tester) async {
-        const widget = WnKeyPackageCard(
-          title: 'Key Package #1',
-          packageId: 'abc123',
-          createdAt: '2026-01-28T21:00:42.000Z',
-          onDelete: null,
-        );
-        await mountWidget(widget, tester);
-        expect(find.byKey(const Key('delete_button')), findsOneWidget);
-      });
     });
 
     group('disabled state', () {

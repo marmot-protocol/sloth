@@ -19,7 +19,7 @@ class WnKeyPackageCard extends StatelessWidget {
   final String title;
   final String packageId;
   final String createdAt;
-  final VoidCallback? onDelete;
+  final VoidCallback onDelete;
   final bool disabled;
   final Key? deleteButtonKey;
 
@@ -47,7 +47,6 @@ class WnKeyPackageCard extends StatelessWidget {
 
   Widget _buildTitleRow(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
 
     return SizedBox(
       height: 44.h,
@@ -67,7 +66,7 @@ class WnKeyPackageCard extends StatelessWidget {
               padding: EdgeInsets.symmetric(vertical: 8.h),
               child: Text(
                 title,
-                style: typography.semiBold14.copyWith(
+                style: context.typographyScaled.semiBold14.copyWith(
                   color: colors.fillContentSecondary,
                 ),
                 overflow: TextOverflow.ellipsis,
@@ -104,8 +103,7 @@ class WnKeyPackageCard extends StatelessWidget {
 
   Widget _buildIdField(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
-    final textStyle = typography.medium14.copyWith(
+    final textStyle = context.typographyScaled.medium14.copyWith(
       color: colors.backgroundContentSecondary,
     );
 
@@ -125,8 +123,7 @@ class WnKeyPackageCard extends StatelessWidget {
 
   Widget _buildCreatedAtField(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
-    final textStyle = typography.medium14.copyWith(
+    final textStyle = context.typographyScaled.medium14.copyWith(
       color: colors.backgroundContentPrimary,
     );
 
