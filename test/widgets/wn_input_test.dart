@@ -3,7 +3,7 @@ import 'dart:ui' show PointerDeviceKind;
 import 'package:flutter/material.dart' show BoxDecoration, Container, EditableText, Key, TextField;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/theme/semantic_colors.dart' show SemanticColors;
-import 'package:sloth/widgets/wn_icon.dart' show WnIcons;
+import 'package:sloth/widgets/wn_icon.dart' show WnIcon, WnIcons;
 import 'package:sloth/widgets/wn_input.dart';
 import '../test_helpers.dart' show mountWidget;
 
@@ -258,6 +258,33 @@ void main() {
         );
         final decorationAfter = containerAfter.decoration! as BoxDecoration;
         expect(decorationAfter.border!.top.color, equals(SemanticColors.light.borderTertiary));
+      });
+    });
+
+    group('with leading icon', () {
+      testWidgets('displays leading icon when provided', (tester) async {
+        await mountWidget(
+          const WnInput(
+            label: 'Label',
+            placeholder: 'hint',
+            leadingIcon: WnIcon(
+              key: Key('leading_icon'),
+              WnIcons.search,
+              size: 16,
+            ),
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('leading_icon_wrapper')), findsOneWidget);
+        expect(find.byKey(const Key('leading_icon')), findsOneWidget);
+      });
+
+      testWidgets('does not display leading icon wrapper when not provided', (tester) async {
+        await mountWidget(
+          const WnInput(label: 'Label', placeholder: 'hint'),
+          tester,
+        );
+        expect(find.byKey(const Key('leading_icon_wrapper')), findsNothing);
       });
     });
 

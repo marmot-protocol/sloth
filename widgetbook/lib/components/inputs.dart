@@ -213,6 +213,45 @@ Widget wnInputShowcase(BuildContext context) {
         const SizedBox(height: 32),
         _buildSection(
           context,
+          'With Leading Icon',
+          'Input fields can display an optional leading icon on the left side.',
+          [
+            _InputExample(
+              label: 'With Leading Icon',
+              child: _StaticInput(
+                placeholder: 'Search...',
+                showLeadingIcon: true,
+              ),
+            ),
+            _InputExample(
+              label: 'Leading Icon + Label',
+              child: _StaticInput(
+                placeholder: 'Search...',
+                inputLabel: 'Search',
+                showLeadingIcon: true,
+              ),
+            ),
+            _InputExample(
+              label: 'Leading Icon Compact',
+              child: _StaticInput(
+                placeholder: 'Search...',
+                size: WnInputSize.size44,
+                showLeadingIcon: true,
+              ),
+            ),
+            _InputExample(
+              label: 'Leading + Inline Action',
+              child: _StaticInput(
+                placeholder: 'Search...',
+                showLeadingIcon: true,
+                showInlineAction: true,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        _buildSection(
+          context,
           'With Actions',
           'Input fields can have inline or trailing action buttons.',
           [
@@ -261,6 +300,8 @@ Widget wnInputShowcase(BuildContext context) {
                 placeholder: 'Enter your email...',
                 inputLabel: 'Email Address',
                 helperText: 'We will never share your email',
+                showLeadingIcon: true,
+                leadingIconData: WnIcons.message,
                 showInlineAction: true,
               ),
             ),
@@ -279,6 +320,7 @@ Widget wnInputShowcase(BuildContext context) {
               child: _StaticInput(
                 placeholder: 'Search messages...',
                 size: WnInputSize.size44,
+                showLeadingIcon: true,
                 showInlineAction: true,
                 showTrailingAction: true,
               ),
@@ -361,6 +403,8 @@ class _StaticInput extends StatelessWidget {
     this.readOnly = false,
     this.size = WnInputSize.size56,
     this.showLabelHelpIcon = false,
+    this.showLeadingIcon = false,
+    this.leadingIconData,
     this.showInlineAction = false,
     this.showTrailingAction = false,
   });
@@ -374,6 +418,8 @@ class _StaticInput extends StatelessWidget {
   final bool readOnly;
   final WnInputSize size;
   final bool showLabelHelpIcon;
+  final bool showLeadingIcon;
+  final WnIcons? leadingIconData;
   final bool showInlineAction;
   final bool showTrailingAction;
 
@@ -391,6 +437,13 @@ class _StaticInput extends StatelessWidget {
       enabled: enabled,
       readOnly: readOnly,
       size: size,
+      leadingIcon: showLeadingIcon
+          ? WnIcon(
+              leadingIconData ?? WnIcons.search,
+              size: 16,
+              color: context.colors.backgroundContentSecondary,
+            )
+          : null,
       inlineAction: showInlineAction
           ? WnInputFieldButton(
               icon: WnIcons.closeSmall,
@@ -416,6 +469,7 @@ class _InteractiveInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final colors = context.colors;
     final size = this.context.knobs.object.dropdown<WnInputSize>(
       label: 'Size',
       options: WnInputSize.values,
@@ -453,6 +507,17 @@ class _InteractiveInput extends StatelessWidget {
         initialValue: false,
       ),
       size: size,
+      leadingIcon:
+          this.context.knobs.boolean(
+            label: 'Show Leading Icon',
+            initialValue: false,
+          )
+          ? WnIcon(
+              WnIcons.search,
+              size: 16,
+              color: colors.backgroundContentSecondary,
+            )
+          : null,
       inlineAction:
           this.context.knobs.boolean(
             label: 'Show Inline Action',
