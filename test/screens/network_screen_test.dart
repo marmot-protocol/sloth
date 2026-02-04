@@ -280,7 +280,7 @@ void main() {
     });
 
     group('relay list', () {
-      testWidgets('displays relay tiles when relays exist', (tester) async {
+      testWidgets('displays relay items when relays exist', (tester) async {
         mockApi.normalRelays = [
           Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
           Relay(url: 'wss://relay2.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
@@ -297,7 +297,31 @@ void main() {
         expect(find.text('No relays configured'), findsNWidgets(2));
       });
 
-      testWidgets('deletes relay when delete button is tapped and confirmed', (tester) async {
+      testWidgets('shows success icon for connected relays', (tester) async {
+        mockApi.normalRelays = [
+          Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        mockApi.relayStatuses = [('wss://relay1.com', 'connected')];
+
+        await pumpNetworkScreen(tester);
+
+        expect(find.byKey(const Key('relay_item_normal_wss://relay1.com')), findsOneWidget);
+        expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
+      });
+
+      testWidgets('shows error icon for disconnected relays', (tester) async {
+        mockApi.normalRelays = [
+          Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        mockApi.relayStatuses = [('wss://relay1.com', 'disconnected')];
+
+        await pumpNetworkScreen(tester);
+
+        expect(find.byKey(const Key('relay_item_normal_wss://relay1.com')), findsOneWidget);
+        expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
+      });
+
+      testWidgets('removes relay when Remove action is tapped', (tester) async {
         mockApi.normalRelays = [
           Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
         ];
@@ -306,14 +330,10 @@ void main() {
 
         expect(find.text('wss://relay1.com'), findsOneWidget);
 
-        final deleteButton = find.byKey(const Key('delete_relay_wss://relay1.com'));
-        expect(deleteButton, findsOneWidget);
-        await tester.tap(deleteButton);
-        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('list_item_menu_button')).first);
+        await tester.pump();
 
-        expect(find.text('Remove Relay?'), findsOneWidget);
-
-        await tester.tap(find.byKey(const Key('confirm_delete_button')));
+        await tester.tap(find.text('Remove'));
         await tester.pumpAndSettle();
 
         expect(mockApi.removedRelays.contains('wss://relay1.com'), isTrue);

@@ -111,6 +111,16 @@ void main() {
         await mountWidget(widget, tester);
         expect(find.text('Small'), findsOneWidget);
       });
+
+      testWidgets('renders xsmall size', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'XSmall',
+          onPressed: () {},
+          size: WnButtonSize.xsmall,
+        );
+        await mountWidget(widget, tester);
+        expect(find.text('XSmall'), findsOneWidget);
+      });
     });
 
     group('icons', () {
@@ -522,6 +532,47 @@ void main() {
         await mountWidget(widget, tester);
         expect(find.byKey(const Key('leading_icon')), findsOneWidget);
         expect(find.byKey(const Key('trailing_icon')), findsOneWidget);
+      });
+
+      testWidgets('renders icons correctly with xsmall size', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'XSmall',
+          onPressed: () {},
+          size: WnButtonSize.xsmall,
+          leadingIcon: WnIcons.addLarge,
+          trailingIcon: WnIcons.arrowRight,
+        );
+        await mountWidget(widget, tester);
+        expect(find.byKey(const Key('leading_icon')), findsOneWidget);
+        expect(find.byKey(const Key('trailing_icon')), findsOneWidget);
+      });
+    });
+
+    group('xsmall button specifics', () {
+      testWidgets('xsmall button shows loading indicator', (WidgetTester tester) async {
+        final widget = WnButton(
+          text: 'XSmall',
+          onPressed: () {},
+          size: WnButtonSize.xsmall,
+          loading: true,
+        );
+        await mountWidget(widget, tester);
+        expect(find.byKey(const Key('loading_indicator')), findsOneWidget);
+      });
+
+      testWidgets('xsmall button respects disabled state', (WidgetTester tester) async {
+        var onPressedCalled = false;
+        final widget = WnButton(
+          text: 'XSmall',
+          onPressed: () {
+            onPressedCalled = true;
+          },
+          size: WnButtonSize.xsmall,
+          disabled: true,
+        );
+        await mountWidget(widget, tester);
+        await tester.tap(find.byType(WnButton));
+        expect(onPressedCalled, isFalse);
       });
     });
   });
