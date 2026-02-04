@@ -12,6 +12,7 @@ import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -212,12 +213,13 @@ void main() {
         expect(find.byType(ChatScreen), findsOneWidget);
       });
 
-      testWidgets('shows snackbar on error', (tester) async {
+      testWidgets('shows system notice on error', (tester) async {
         _api.errorToThrow = Exception('Network error');
         await pumpInviteScreen(tester);
         await tester.tap(find.text('Accept'));
         await tester.pumpAndSettle();
 
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.textContaining('Failed to accept'), findsOneWidget);
       });
     });
@@ -239,12 +241,13 @@ void main() {
         expect(find.byType(ChatListScreen), findsOneWidget);
       });
 
-      testWidgets('shows snackbar on error', (tester) async {
+      testWidgets('shows system notice on error', (tester) async {
         _api.errorToThrow = Exception('Network error');
         await pumpInviteScreen(tester);
         await tester.tap(find.text('Decline'));
         await tester.pumpAndSettle();
 
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.textContaining('Failed to decline'), findsOneWidget);
       });
     });

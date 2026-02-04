@@ -183,7 +183,7 @@
 
   "publicKeyCopied": "Public key copied to clipboard",
   "@publicKeyCopied": {
-    "description": "Snackbar message when public key is copied"
+    "description": "Systtem notice message when public key is copied"
   },
 
   "publicKeyDescription": "Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.",
@@ -198,7 +198,7 @@
 
   "privateKeyCopied": "Private key copied to clipboard",
   "@privateKeyCopied": {
-    "description": "Snackbar message when private key is copied"
+    "description": "System notice message when private key is copied"
   },
 
   "privateKeyDescription": "Your private key works like a secret password that grants access to your Nostr identity.",
@@ -268,7 +268,7 @@
 
   "profileUpdatedSuccessfully": "Profile updated successfully",
   "@profileUpdatedSuccessfully": {
-    "description": "Snackbar message when profile is updated"
+    "description": "System notice message when profile is updated"
   },
 
   "errorLoadingProfile": "Error loading profile: {error}",
@@ -368,7 +368,7 @@
 
   "copiedToClipboardThankYou": "Copied to clipboard. Thank you! 🦥",
   "@copiedToClipboardThankYou": {
-    "description": "Snackbar message when donation address is copied"
+    "description": "System notice message when donation address is copied"
   },
 
   "shareProfileTitle": "Share profile",

@@ -14,6 +14,7 @@ import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class ChatInviteScreen extends HookConsumerWidget {
   final String mlsGroupId;
@@ -29,6 +30,15 @@ class ChatInviteScreen extends HookConsumerWidget {
     final isAccepting = useState(false);
     final isDeclining = useState(false);
     final isProcessing = isAccepting.value || isDeclining.value;
+    final noticeMessage = useState<String?>(null);
+
+    void showNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final groupAvatarSnapshot = useChatAvatar(pubkey, mlsGroupId);
 
@@ -56,9 +66,7 @@ class ChatInviteScreen extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToAcceptInvitation(e.toString()))),
-          );
+          showNotice(context.l10n.failedToAcceptInvitation(e.toString()));
         }
       } finally {
         if (context.mounted) isAccepting.value = false;
@@ -77,9 +85,7 @@ class ChatInviteScreen extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToDeclineInvitation(e.toString()))),
-          );
+          showNotice(context.l10n.failedToDeclineInvitation(e.toString()));
         }
       } finally {
         if (context.mounted) isDeclining.value = false;
@@ -91,6 +97,13 @@ class ChatInviteScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
+            if (noticeMessage.value != null)
+              WnSystemNotice(
+                key: ValueKey(noticeMessage.value),
+                title: noticeMessage.value!,
+                type: WnSystemNoticeType.error,
+                onDismiss: dismissNotice,
+              ),
             Column(
               children: [
                 WnChatHeader(

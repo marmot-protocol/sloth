@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' show useEffect;
+import 'package:flutter_hooks/flutter_hooks.dart' show useEffect, useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
@@ -18,6 +18,7 @@ import 'package:sloth/widgets/wn_input.dart' show WnInput;
 import 'package:sloth/widgets/wn_input_text_area.dart' show WnInputTextArea;
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 final _logger = Logger('EditProfileScreen');
 
@@ -43,6 +44,17 @@ class EditProfileScreen extends HookConsumerWidget {
     final (:pickImage, error: imagePickerError, clearError: clearImagePickerError) = useImagePicker(
       onImageSelected: onImageSelected,
     );
+    final noticeMessage = useState<String?>(null);
+    final noticeType = useState(WnSystemNoticeType.success);
+
+    void showNotice(String message, {WnSystemNoticeType type = WnSystemNoticeType.success}) {
+      noticeMessage.value = message;
+      noticeType.value = type;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     useEffect(() {
       loadProfile();
@@ -53,9 +65,7 @@ class EditProfileScreen extends HookConsumerWidget {
       if (imagePickerError != null) {
         WidgetsBinding.instance.addPostFrameCallback((_) {
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text(context.l10n.imagePickerError)),
-            );
+            showNotice(context.l10n.imagePickerError, type: WnSystemNoticeType.error);
           }
         });
         clearImagePickerError();
@@ -76,6 +86,14 @@ class EditProfileScreen extends HookConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
+            systemNotice: noticeMessage.value != null
+                ? WnSystemNotice(
+                    key: ValueKey(noticeMessage.value),
+                    title: noticeMessage.value!,
+                    type: noticeType.value,
+                    onDismiss: dismissNotice,
+                  )
+                : null,
             footer: state.loadingState != EditProfileLoadingState.loading && state.error == null
                 ? Padding(
                     padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
@@ -102,12 +120,7 @@ class EditProfileScreen extends HookConsumerWidget {
                               ? () async {
                                   final success = await updateProfileData();
                                   if (context.mounted && success) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(context.l10n.profileUpdatedSuccessfully),
-                                        duration: const Duration(seconds: 2),
-                                      ),
-                                    );
+                                    showNotice(context.l10n.profileUpdatedSuccessfully);
                                   }
                                 }
                               : null,

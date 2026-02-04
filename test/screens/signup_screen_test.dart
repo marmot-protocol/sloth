@@ -13,6 +13,7 @@ import 'package:sloth/screens/onboarding_screen.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -201,7 +202,7 @@ void main() {
     });
 
     group('image picker', () {
-      testWidgets('shows error snackbar when image picker fails', (tester) async {
+      testWidgets('shows system notice when image picker fails', (tester) async {
         TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
           const MethodChannel('plugins.flutter.io/image_picker'),
           (MethodCall methodCall) async {
@@ -220,6 +221,7 @@ void main() {
         await tester.tap(find.byKey(const Key('avatar_edit_button')));
         await tester.pumpAndSettle();
 
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(find.text('Failed to pick image. Please try again.'), findsOneWidget);
       });
     });

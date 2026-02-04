@@ -12,6 +12,8 @@ import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_copy_card.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
+
 import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mockClipboardFailing;
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -243,20 +245,21 @@ void main() {
         expect(button.loading, isTrue);
       });
 
-      testWidgets('shows snackbar when follow fails', (tester) async {
+      testWidgets('shows system notice when follow fails', (tester) async {
         _api.followError = Exception('Network error');
         await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
 
         await tester.tap(find.byKey(const Key('follow_button')));
         await tester.pumpAndSettle();
 
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(
           find.text('Failed to update follow status. Please try again.'),
           findsOneWidget,
         );
       });
 
-      testWidgets('shows snackbar when unfollow fails', (tester) async {
+      testWidgets('shows system notice when unfollow fails', (tester) async {
         _api.followingPubkeys.add(_otherPubkey);
         _api.unfollowError = Exception('Network error');
         await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
@@ -264,6 +267,7 @@ void main() {
         await tester.tap(find.byKey(const Key('follow_button')));
         await tester.pumpAndSettle();
 
+        expect(find.byType(WnSystemNotice), findsOneWidget);
         expect(
           find.text('Failed to update follow status. Please try again.'),
           findsOneWidget,

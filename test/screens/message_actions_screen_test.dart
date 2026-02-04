@@ -7,6 +7,7 @@ import 'package:sloth/l10n/generated/app_localizations.dart';
 import 'package:sloth/screens/message_actions_screen.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 import '../test_helpers.dart';
 
 ChatMessage _createTestMessage({
@@ -574,7 +575,7 @@ void main() {
       expect(align.alignment, Alignment.centerLeft);
     });
 
-    testWidgets('shows snackbar and closes menu when delete fails', (tester) async {
+    testWidgets('shows system notice when delete fails', (tester) async {
       const myPubkey = 'my-pubkey';
 
       await mountShowTest(
@@ -602,8 +603,9 @@ void main() {
       await tester.tap(find.byKey(const Key('delete_button')));
       await tester.pumpAndSettle();
 
+      expect(find.byType(WnSystemNotice), findsOneWidget);
       expect(find.text('Failed to delete message. Please try again.'), findsOneWidget);
-      expect(find.text('Message actions'), findsNothing);
+      expect(find.text('Message actions'), findsOneWidget);
     });
 
     testWidgets('calls onAddReaction and closes menu when reaction button is tapped', (
@@ -639,7 +641,7 @@ void main() {
       expect(find.text('Message actions'), findsNothing);
     });
 
-    testWidgets('shows snackbar and closes menu when add reaction fails', (tester) async {
+    testWidgets('shows system notice when add reaction fails', (tester) async {
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
@@ -664,8 +666,9 @@ void main() {
       await tester.tap(find.text('❤'));
       await tester.pumpAndSettle();
 
+      expect(find.byType(WnSystemNotice), findsOneWidget);
       expect(find.text('Failed to send reaction. Please try again.'), findsOneWidget);
-      expect(find.text('Message actions'), findsNothing);
+      expect(find.text('Message actions'), findsOneWidget);
     });
 
     testWidgets('highlights emojis user has already reacted with', (tester) async {
@@ -763,7 +766,7 @@ void main() {
       expect(find.text('Message actions'), findsNothing);
     });
 
-    testWidgets('shows snackbar and closes menu when remove reaction fails', (tester) async {
+    testWidgets('shows system notice when remove reaction fails', (tester) async {
       const myPubkey = 'my-pubkey';
       final message = _createTestMessage(
         pubkey: 'other-user',
@@ -804,8 +807,9 @@ void main() {
       await tester.tap(find.byKey(const Key('reaction_❤')));
       await tester.pumpAndSettle();
 
+      expect(find.byType(WnSystemNotice), findsOneWidget);
       expect(find.text('Failed to remove reaction. Please try again.'), findsOneWidget);
-      expect(find.text('Message actions'), findsNothing);
+      expect(find.text('Message actions'), findsOneWidget);
     });
 
     group('emoji picker', () {

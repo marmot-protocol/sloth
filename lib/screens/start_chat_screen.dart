@@ -69,9 +69,7 @@ class StartChatScreen extends HookConsumerWidget {
       } catch (e) {
         _logger.severe('Failed to start chat: $e');
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToStartChat)),
-          );
+          showErrorNotice(context.l10n.failedToStartChat);
         }
       } finally {
         if (context.mounted) {
@@ -85,9 +83,7 @@ class StartChatScreen extends HookConsumerWidget {
         await followState.toggleFollow();
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToUpdateFollow)),
-          );
+          showErrorNotice(context.l10n.failedToUpdateFollow);
         }
       }
     }
