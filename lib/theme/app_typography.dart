@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 TextStyle _scaleStyle(TextStyle style) {
-  return style.copyWith(fontSize: style.fontSize?.sp);
+  return style.copyWith(
+    fontSize: style.fontSize?.sp,
+    letterSpacing: style.letterSpacing?.sp,
+  );
 }
 
 @immutable
