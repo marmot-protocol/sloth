@@ -57,7 +57,11 @@ class WnTimestamp extends StatelessWidget {
       return l10n.timestampYesterday;
     }
 
-    if (difference.inDays >= 2 && difference.inDays <= 6) {
+    final normalizedTimestamp = DateTime(timestamp.year, timestamp.month, timestamp.day);
+    final normalizedCurrent = DateTime(currentTime.year, currentTime.month, currentTime.day);
+    final dayDiff = normalizedCurrent.difference(normalizedTimestamp).inDays;
+
+    if (dayDiff >= 2 && dayDiff <= 6) {
       return _formatWeekday(timestamp, l10n);
     }
 
