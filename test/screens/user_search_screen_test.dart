@@ -333,5 +333,20 @@ void main() {
         expect(find.byKey(const Key('start_chat_button')), findsOneWidget);
       });
     });
+
+    group('scan button', () {
+      testWidgets('displays scan button', (tester) async {
+        await pumpUserSearchScreen(tester);
+        expect(find.byKey(const Key('scan_button')), findsOneWidget);
+      });
+
+      testWidgets('navigates to scan npub screen when tapped', (tester) async {
+        await pumpUserSearchScreen(tester);
+        await tester.tap(find.byKey(const Key('scan_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text("Scan a contact's QR code."), findsOneWidget);
+      });
+    });
   });
 }

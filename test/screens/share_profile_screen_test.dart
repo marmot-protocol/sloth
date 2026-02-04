@@ -160,5 +160,19 @@ void main() {
       final copyCard = tester.widget<WnCopyCard>(find.byType(WnCopyCard));
       expect(copyCard.textToDisplay, testNpubAFormatted);
     });
+
+    testWidgets('displays scan QR code button', (tester) async {
+      await pumpShareProfileScreen(tester);
+      expect(find.byKey(const Key('scan_qr_button')), findsOneWidget);
+      expect(find.text('Scan QR code'), findsOneWidget);
+    });
+
+    testWidgets('tapping scan button navigates to scan npub screen', (tester) async {
+      await pumpShareProfileScreen(tester);
+      await tester.tap(find.byKey(const Key('scan_qr_button')));
+      await tester.pumpAndSettle();
+
+      expect(find.text("Scan a contact's QR code."), findsOneWidget);
+    });
   });
 }
