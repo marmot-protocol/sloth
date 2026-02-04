@@ -299,11 +299,22 @@ void main() {
         expect(find.text('Jan 9, 2009'), findsOneWidget);
       });
 
-      testWidgets('displays month/day for exactly 1 year ago (edge case)', (
+      testWidgets('handles leap year Feb 29 correctly when current date is non-leap year', (
         WidgetTester tester,
       ) async {
-        final now = DateTime(2024, 6, 15, 14, 30);
-        final timestamp = DateTime(2023, 6, 15, 14, 30);
+        final now = DateTime(2025, 2, 28, 14, 30);
+        final timestamp = DateTime(2024, 2, 29, 14, 30);
+
+        await mountWidget(WnTimestamp(timestamp: timestamp, now: now), tester);
+
+        expect(find.text('Feb 29'), findsOneWidget);
+      });
+
+      testWidgets('displays month/day for exactly 365 days ago (edge case)', (
+        WidgetTester tester,
+      ) async {
+        final now = DateTime(2023, 6, 15, 14, 30);
+        final timestamp = DateTime(2022, 6, 15, 14, 30);
 
         await mountWidget(WnTimestamp(timestamp: timestamp, now: now), tester);
 

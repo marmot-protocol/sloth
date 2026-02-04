@@ -84,8 +84,7 @@ class WnTimestamp extends StatelessWidget {
   }
 
   bool _isWithinOneYear(DateTime date, DateTime currentTime) {
-    final oneYearAgo = DateTime(currentTime.year - 1, currentTime.month, currentTime.day);
-    return !date.isBefore(oneYearAgo);
+    return currentTime.difference(date).inDays <= 365;
   }
 
   String _formatTime(DateTime date) {
