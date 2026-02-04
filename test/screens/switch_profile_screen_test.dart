@@ -7,8 +7,8 @@ import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/theme/semantic_colors.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/utils/avatar_color.dart' show AvatarColor;
+import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar;
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -180,8 +180,8 @@ void main() {
 
       final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
       expect(avatars.length, 2);
-      expect(avatars[0].color, AccentColor.violet);
-      expect(avatars[1].color, AccentColor.amber);
+      expect(avatars[0].color, AvatarColor.violet);
+      expect(avatars[1].color, AvatarColor.amber);
     });
   });
 }

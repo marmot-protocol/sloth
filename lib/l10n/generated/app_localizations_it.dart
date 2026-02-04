@@ -388,13 +388,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get delete => 'Elimina';
 
   @override
-  String get failedToDeleteMessage => 'Eliminazione del messaggio fallita. Riprova.';
+  String get failedToDeleteMessage =>
+      'Eliminazione del messaggio fallita. Riprova.';
 
   @override
   String get failedToSendReaction => 'Invio della reazione fallito. Riprova.';
 
   @override
-  String get failedToRemoveReaction => 'Rimozione della reazione fallita. Riprova.';
+  String get failedToRemoveReaction =>
+      'Rimozione della reazione fallita. Riprova.';
 
   @override
   String get unknownUser => 'Utente sconosciuto';
@@ -411,7 +413,8 @@ class AppLocalizationsIt extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat => 'Sei stato invitato a una chat sicura';
+  String get youHaveBeenInvitedToSecureChat =>
+      'Sei stato invitato a una chat sicura';
 
   @override
   String get language => 'Lingua';
@@ -420,7 +423,8 @@ class AppLocalizationsIt extends AppLocalizations {
   String get languageSystem => 'Sistema';
 
   @override
-  String get languageUpdateFailed => 'Salvataggio della preferenza della lingua fallito. Riprova.';
+  String get languageUpdateFailed =>
+      'Salvataggio della preferenza della lingua fallito. Riprova.';
 
   @override
   String get timeJustNow => 'proprio ora';
@@ -471,17 +475,34 @@ class AppLocalizationsIt extends AppLocalizations {
   String get failedToStartChat => 'Impossibile avviare la chat. Riprova.';
 
   @override
-  String get userNotOnWhiteNoise => 'Questo utente non è ancora su White Noise.';
+  String get userNotOnWhiteNoise =>
+      'Questo utente non è ancora su White Noise.';
 
   @override
-  String get failedToUpdateFollow => 'Impossibile aggiornare lo stato del seguito. Riprova.';
+  String get failedToUpdateFollow =>
+      'Impossibile aggiornare lo stato del seguito. Riprova.';
 
   @override
-  String get imagePickerError => 'Impossibile selezionare l\'immagine. Riprova.';
+  String get imagePickerError =>
+      'Impossibile selezionare l\'immagine. Riprova.';
 
   @override
   String get loginWithSigner => 'Accedi con Signer';
 
   @override
-  String get signerConnectionError => 'Impossibile connettersi al signer. Riprova.';
+  String get signerConnectionError =>
+      'Impossibile connettersi al signer. Riprova.';
+
+  @override
+  String get scanNsec => 'Scansiona codice QR';
+
+  @override
+  String get scanNsecHint =>
+      'Scansiona il codice QR della tua chiave privata per accedere.';
+
+  @override
+  String get cameraPermissionDenied => 'Permesso fotocamera negato';
+
+  @override
+  String get somethingWentWrong => 'Qualcosa è andato storto';
 }

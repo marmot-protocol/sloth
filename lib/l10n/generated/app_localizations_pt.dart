@@ -118,7 +118,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get publicKey => 'Chave pública';
 
   @override
-  String get publicKeyCopied => 'Chave pública copiada para a área de transferência';
+  String get publicKeyCopied =>
+      'Chave pública copiada para a área de transferência';
 
   @override
   String get publicKeyDescription =>
@@ -128,7 +129,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get privateKey => 'Chave privada';
 
   @override
-  String get privateKeyCopied => 'Chave privada copiada para a área de transferência';
+  String get privateKeyCopied =>
+      'Chave privada copiada para a área de transferência';
 
   @override
   String get privateKeyDescription =>
@@ -186,10 +188,12 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get profileLoadError => 'Não foi possível carregar o perfil. Por favor, tente novamente.';
+  String get profileLoadError =>
+      'Não foi possível carregar o perfil. Por favor, tente novamente.';
 
   @override
-  String get profileSaveError => 'Não foi possível salvar o perfil. Por favor, tente novamente.';
+  String get profileSaveError =>
+      'Não foi possível salvar o perfil. Por favor, tente novamente.';
 
   @override
   String get networkRelaysTitle => 'Relays de Rede';
@@ -198,7 +202,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get myRelays => 'Meus Relays';
 
   @override
-  String get myRelaysHelp => 'Relays que você definiu para uso em todas as suas aplicações Nostr.';
+  String get myRelaysHelp =>
+      'Relays que você definiu para uso em todas as suas aplicações Nostr.';
 
   @override
   String get inboxRelays => 'Relays de Caixa de Entrada';
@@ -234,7 +239,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get bitcoinSilentPayment => 'Pagamento Silencioso Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou => 'Copiado para a área de transferência. Obrigado! 🦥';
+  String get copiedToClipboardThankYou =>
+      'Copiado para a área de transferência. Obrigado! 🦥';
 
   @override
   String get shareProfileTitle => 'Compartilhar perfil';
@@ -272,10 +278,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get messagePlaceholder => 'Mensagem';
 
   @override
-  String get failedToSendMessage => 'Falha ao enviar mensagem. Por favor, tente novamente.';
+  String get failedToSendMessage =>
+      'Falha ao enviar mensagem. Por favor, tente novamente.';
 
   @override
-  String get invitedToSecureChat => 'Você foi convidado para uma conversa segura';
+  String get invitedToSecureChat =>
+      'Você foi convidado para uma conversa segura';
 
   @override
   String get decline => 'Recusar';
@@ -387,13 +395,16 @@ class AppLocalizationsPt extends AppLocalizations {
   String get delete => 'Excluir';
 
   @override
-  String get failedToDeleteMessage => 'Falha ao excluir mensagem. Por favor, tente novamente.';
+  String get failedToDeleteMessage =>
+      'Falha ao excluir mensagem. Por favor, tente novamente.';
 
   @override
-  String get failedToSendReaction => 'Falha ao enviar reação. Por favor, tente novamente.';
+  String get failedToSendReaction =>
+      'Falha ao enviar reação. Por favor, tente novamente.';
 
   @override
-  String get failedToRemoveReaction => 'Falha ao remover reação. Por favor, tente novamente.';
+  String get failedToRemoveReaction =>
+      'Falha ao remover reação. Por favor, tente novamente.';
 
   @override
   String get unknownUser => 'Usuário desconhecido';
@@ -402,7 +413,8 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unknownGroup => 'Grupo desconhecido';
 
   @override
-  String get hasInvitedYouToSecureChat => 'Convidou você para uma conversa segura';
+  String get hasInvitedYouToSecureChat =>
+      'Convidou você para uma conversa segura';
 
   @override
   String userInvitedYouToSecureChat(String name) {
@@ -410,7 +422,8 @@ class AppLocalizationsPt extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat => 'Você foi convidado para uma conversa segura';
+  String get youHaveBeenInvitedToSecureChat =>
+      'Você foi convidado para uma conversa segura';
 
   @override
   String get language => 'Idioma';
@@ -468,17 +481,20 @@ class AppLocalizationsPt extends AppLocalizations {
   String get unfollow => 'Deixar de seguir';
 
   @override
-  String get failedToStartChat => 'Falha ao iniciar a conversa. Por favor, tente novamente.';
+  String get failedToStartChat =>
+      'Falha ao iniciar a conversa. Por favor, tente novamente.';
 
   @override
-  String get userNotOnWhiteNoise => 'Este usuário ainda não está no White Noise.';
+  String get userNotOnWhiteNoise =>
+      'Este usuário ainda não está no White Noise.';
 
   @override
   String get failedToUpdateFollow =>
       'Falha ao atualizar o status de seguir. Por favor, tente novamente.';
 
   @override
-  String get imagePickerError => 'Falha ao selecionar imagem. Por favor, tente novamente.';
+  String get imagePickerError =>
+      'Falha ao selecionar imagem. Por favor, tente novamente.';
 
   @override
   String get loginWithSigner => 'Entrar com Signer';
@@ -486,4 +502,17 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get signerConnectionError =>
       'Não foi possível conectar ao signer. Por favor, tente novamente.';
+
+  @override
+  String get scanNsec => 'Escanear código QR';
+
+  @override
+  String get scanNsecHint =>
+      'Escaneie o código QR da sua chave privada para fazer login.';
+
+  @override
+  String get cameraPermissionDenied => 'Permissão de câmera negada';
+
+  @override
+  String get somethingWentWrong => 'Algo deu errado';
 }

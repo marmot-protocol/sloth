@@ -186,10 +186,12 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get profileLoadError => 'Impossible de charger le profil. Veuillez réessayer.';
+  String get profileLoadError =>
+      'Impossible de charger le profil. Veuillez réessayer.';
 
   @override
-  String get profileSaveError => 'Impossible d\'enregistrer le profil. Veuillez réessayer.';
+  String get profileSaveError =>
+      'Impossible d\'enregistrer le profil. Veuillez réessayer.';
 
   @override
   String get networkRelaysTitle => 'Relais Réseau';
@@ -235,7 +237,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get bitcoinSilentPayment => 'Paiement Silencieux Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou => 'Copié dans le presse-papiers. Merci ! 🦥';
+  String get copiedToClipboardThankYou =>
+      'Copié dans le presse-papiers. Merci ! 🦥';
 
   @override
   String get shareProfileTitle => 'Partager le profil';
@@ -247,7 +250,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signOutTitle => 'Déconnexion';
 
   @override
-  String get signOutConfirmation => 'Êtes-vous sûr de vouloir vous déconnecter ?';
+  String get signOutConfirmation =>
+      'Êtes-vous sûr de vouloir vous déconnecter ?';
 
   @override
   String get signOutWarning =>
@@ -273,10 +277,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get messagePlaceholder => 'Message';
 
   @override
-  String get failedToSendMessage => 'Échec de l\'envoi du message. Veuillez réessayer.';
+  String get failedToSendMessage =>
+      'Échec de l\'envoi du message. Veuillez réessayer.';
 
   @override
-  String get invitedToSecureChat => 'Vous êtes invité à une discussion sécurisée';
+  String get invitedToSecureChat =>
+      'Vous êtes invité à une discussion sécurisée';
 
   @override
   String get decline => 'Refuser';
@@ -388,10 +394,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get delete => 'Supprimer';
 
   @override
-  String get failedToDeleteMessage => 'Échec de la suppression du message. Veuillez réessayer.';
+  String get failedToDeleteMessage =>
+      'Échec de la suppression du message. Veuillez réessayer.';
 
   @override
-  String get failedToSendReaction => 'Échec de l\'envoi de la réaction. Veuillez réessayer.';
+  String get failedToSendReaction =>
+      'Échec de l\'envoi de la réaction. Veuillez réessayer.';
 
   @override
   String get failedToRemoveReaction =>
@@ -404,7 +412,8 @@ class AppLocalizationsFr extends AppLocalizations {
   String get unknownGroup => 'Groupe inconnu';
 
   @override
-  String get hasInvitedYouToSecureChat => 'Vous a invité à une discussion sécurisée';
+  String get hasInvitedYouToSecureChat =>
+      'Vous a invité à une discussion sécurisée';
 
   @override
   String userInvitedYouToSecureChat(String name) {
@@ -412,7 +421,8 @@ class AppLocalizationsFr extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat => 'Vous avez été invité à une discussion sécurisée';
+  String get youHaveBeenInvitedToSecureChat =>
+      'Vous avez été invité à une discussion sécurisée';
 
   @override
   String get language => 'Langue';
@@ -470,21 +480,38 @@ class AppLocalizationsFr extends AppLocalizations {
   String get unfollow => 'Ne plus suivre';
 
   @override
-  String get failedToStartChat => 'Échec du démarrage de la discussion. Veuillez réessayer.';
+  String get failedToStartChat =>
+      'Échec du démarrage de la discussion. Veuillez réessayer.';
 
   @override
-  String get userNotOnWhiteNoise => 'Cet utilisateur n\'est pas encore sur White Noise.';
+  String get userNotOnWhiteNoise =>
+      'Cet utilisateur n\'est pas encore sur White Noise.';
 
   @override
   String get failedToUpdateFollow =>
       'Échec de la mise à jour du statut de suivi. Veuillez réessayer.';
 
   @override
-  String get imagePickerError => 'Échec de la sélection de l\'image. Veuillez réessayer.';
+  String get imagePickerError =>
+      'Échec de la sélection de l\'image. Veuillez réessayer.';
 
   @override
   String get loginWithSigner => 'Se connecter avec Signer';
 
   @override
-  String get signerConnectionError => 'Impossible de se connecter au signer. Veuillez réessayer.';
+  String get signerConnectionError =>
+      'Impossible de se connecter au signer. Veuillez réessayer.';
+
+  @override
+  String get scanNsec => 'Scanner le code QR';
+
+  @override
+  String get scanNsecHint =>
+      'Scannez le code QR de votre clé privée pour vous connecter.';
+
+  @override
+  String get cameraPermissionDenied => 'Autorisation caméra refusée';
+
+  @override
+  String get somethingWentWrong => 'Une erreur s\'est produite';
 }

@@ -198,7 +198,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get myRelays => 'My Relays';
 
   @override
-  String get myRelaysHelp => 'Relays you have defined for use across all your Nostr applications.';
+  String get myRelaysHelp =>
+      'Relays you have defined for use across all your Nostr applications.';
 
   @override
   String get inboxRelays => 'Inbox Relays';
@@ -387,13 +388,16 @@ class AppLocalizationsEn extends AppLocalizations {
   String get delete => 'Delete';
 
   @override
-  String get failedToDeleteMessage => 'Failed to delete message. Please try again.';
+  String get failedToDeleteMessage =>
+      'Failed to delete message. Please try again.';
 
   @override
-  String get failedToSendReaction => 'Failed to send reaction. Please try again.';
+  String get failedToSendReaction =>
+      'Failed to send reaction. Please try again.';
 
   @override
-  String get failedToRemoveReaction => 'Failed to remove reaction. Please try again.';
+  String get failedToRemoveReaction =>
+      'Failed to remove reaction. Please try again.';
 
   @override
   String get unknownUser => 'Unknown user';
@@ -410,7 +414,8 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat => 'You have been invited to a secure chat';
+  String get youHaveBeenInvitedToSecureChat =>
+      'You have been invited to a secure chat';
 
   @override
   String get language => 'Language';
@@ -419,7 +424,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get languageSystem => 'System';
 
   @override
-  String get languageUpdateFailed => 'Failed to save language preference. Please try again.';
+  String get languageUpdateFailed =>
+      'Failed to save language preference. Please try again.';
 
   @override
   String get timeJustNow => 'just now';
@@ -473,7 +479,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get userNotOnWhiteNoise => 'This user is not on White Noise yet.';
 
   @override
-  String get failedToUpdateFollow => 'Failed to update follow status. Please try again.';
+  String get failedToUpdateFollow =>
+      'Failed to update follow status. Please try again.';
 
   @override
   String get imagePickerError => 'Failed to pick image. Please try again.';
@@ -482,5 +489,18 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginWithSigner => 'Login with Signer';
 
   @override
-  String get signerConnectionError => 'Unable to connect to signer. Please try again.';
+  String get signerConnectionError =>
+      'Unable to connect to signer. Please try again.';
+
+  @override
+  String get scanNsec => 'Scan QR code';
+
+  @override
+  String get scanNsecHint => 'Scan your private key QR code to login.';
+
+  @override
+  String get cameraPermissionDenied => 'Camera permission denied';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
 }

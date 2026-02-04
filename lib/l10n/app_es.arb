@@ -141,5 +141,9 @@
   "failedToUpdateFollow": "Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo.",
   "imagePickerError": "Error al seleccionar imagen. Por favor, inténtalo de nuevo.",
   "loginWithSigner": "Iniciar sesión con Signer",
-  "signerConnectionError": "No se pudo conectar al signer. Por favor, inténtalo de nuevo."
+  "signerConnectionError": "No se pudo conectar al signer. Por favor, inténtalo de nuevo.",
+  "scanNsec": "Escanear código QR",
+  "scanNsecHint": "Escanea el código QR de tu clave privada para iniciar sesión.",
+  "cameraPermissionDenied": "Permiso de cámara denegado",
+  "somethingWentWrong": "Algo salió mal"
 }

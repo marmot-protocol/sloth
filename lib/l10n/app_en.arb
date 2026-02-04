@@ -759,5 +759,24 @@
   "signerConnectionError": "Unable to connect to signer. Please try again.",
   "@signerConnectionError": {
     "description": "Error message when connection to external signer fails"
+  },
+  "scanNsec": "Scan QR code",
+  "@scanNsec": {
+    "description": "Title for scan nsec screen"
+  },
+
+  "scanNsecHint": "Scan your private key QR code to login.",
+  "@scanNsecHint": {
+    "description": "Hint text on scan nsec screen"
+  },
+
+  "cameraPermissionDenied": "Camera permission denied",
+  "@cameraPermissionDenied": {
+    "description": "Error message when camera permission is denied"
+  },
+
+  "somethingWentWrong": "Something went wrong",
+  "@somethingWentWrong": {
+    "description": "Generic error message"
   }
 }

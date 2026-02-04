@@ -186,10 +186,12 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get profileLoadError => 'No se pudo cargar el perfil. Por favor, inténtelo de nuevo.';
+  String get profileLoadError =>
+      'No se pudo cargar el perfil. Por favor, inténtelo de nuevo.';
 
   @override
-  String get profileSaveError => 'No se pudo guardar el perfil. Por favor, inténtelo de nuevo.';
+  String get profileSaveError =>
+      'No se pudo guardar el perfil. Por favor, inténtelo de nuevo.';
 
   @override
   String get networkRelaysTitle => 'Relés de Red';
@@ -198,7 +200,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get myRelays => 'Mis Relés';
 
   @override
-  String get myRelaysHelp => 'Relés que has definido para usar en todas tus aplicaciones Nostr.';
+  String get myRelaysHelp =>
+      'Relés que has definido para usar en todas tus aplicaciones Nostr.';
 
   @override
   String get inboxRelays => 'Relés de Bandeja de Entrada';
@@ -234,7 +237,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get bitcoinSilentPayment => 'Pago Silencioso de Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou => 'Copiado al portapapeles. ¡Gracias! 🦥';
+  String get copiedToClipboardThankYou =>
+      'Copiado al portapapeles. ¡Gracias! 🦥';
 
   @override
   String get shareProfileTitle => 'Compartir perfil';
@@ -246,7 +250,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signOutTitle => 'Cerrar sesión';
 
   @override
-  String get signOutConfirmation => '¿Estás seguro de que quieres cerrar sesión?';
+  String get signOutConfirmation =>
+      '¿Estás seguro de que quieres cerrar sesión?';
 
   @override
   String get signOutWarning =>
@@ -272,7 +277,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get messagePlaceholder => 'Mensaje';
 
   @override
-  String get failedToSendMessage => 'Error al enviar el mensaje. Por favor, inténtalo de nuevo.';
+  String get failedToSendMessage =>
+      'Error al enviar el mensaje. Por favor, inténtalo de nuevo.';
 
   @override
   String get invitedToSecureChat => 'Has sido invitado a un chat seguro';
@@ -391,7 +397,8 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al eliminar el mensaje. Por favor, inténtalo de nuevo.';
 
   @override
-  String get failedToSendReaction => 'Error al enviar la reacción. Por favor, inténtalo de nuevo.';
+  String get failedToSendReaction =>
+      'Error al enviar la reacción. Por favor, inténtalo de nuevo.';
 
   @override
   String get failedToRemoveReaction =>
@@ -412,7 +419,8 @@ class AppLocalizationsEs extends AppLocalizations {
   }
 
   @override
-  String get youHaveBeenInvitedToSecureChat => 'Has sido invitado a un chat seguro';
+  String get youHaveBeenInvitedToSecureChat =>
+      'Has sido invitado a un chat seguro';
 
   @override
   String get language => 'Idioma';
@@ -470,7 +478,8 @@ class AppLocalizationsEs extends AppLocalizations {
   String get unfollow => 'Dejar de seguir';
 
   @override
-  String get failedToStartChat => 'Error al iniciar el chat. Por favor, inténtalo de nuevo.';
+  String get failedToStartChat =>
+      'Error al iniciar el chat. Por favor, inténtalo de nuevo.';
 
   @override
   String get userNotOnWhiteNoise => 'Este usuario aún no está en White Noise.';
@@ -480,7 +489,8 @@ class AppLocalizationsEs extends AppLocalizations {
       'Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo.';
 
   @override
-  String get imagePickerError => 'Error al seleccionar imagen. Por favor, inténtalo de nuevo.';
+  String get imagePickerError =>
+      'Error al seleccionar imagen. Por favor, inténtalo de nuevo.';
 
   @override
   String get loginWithSigner => 'Iniciar sesión con Signer';
@@ -488,4 +498,17 @@ class AppLocalizationsEs extends AppLocalizations {
   @override
   String get signerConnectionError =>
       'No se pudo conectar al signer. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get scanNsec => 'Escanear código QR';
+
+  @override
+  String get scanNsecHint =>
+      'Escanea el código QR de tu clave privada para iniciar sesión.';
+
+  @override
+  String get cameraPermissionDenied => 'Permiso de cámara denegado';
+
+  @override
+  String get somethingWentWrong => 'Algo salió mal';
 }

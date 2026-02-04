@@ -66,6 +66,14 @@ class LoginScreen extends HookConsumerWidget {
 
     final anyLoading = state.isLoading || isSignerLoading.value;
 
+    Future<void> onScan() async {
+      final scannedValue = await Routes.pushToScanNsec(context);
+      if (scannedValue != null && scannedValue.isNotEmpty) {
+        controller.text = scannedValue;
+        clearError();
+      }
+    }
+
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: Stack(
@@ -104,6 +112,7 @@ class LoginScreen extends HookConsumerWidget {
                           errorText: state.error,
                           onChanged: (_) => clearError(),
                           onPaste: paste,
+                          onScan: onScan,
                         ),
                         WnButton(
                           key: const Key('login_button'),
