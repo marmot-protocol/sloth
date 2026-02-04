@@ -78,7 +78,7 @@ void main() {
 
       testWidgets('displays hint text', (tester) async {
         await pumpScanNpubScreen(tester);
-        expect(find.text("Scan a contact's QR code."), findsOneWidget);
+        expect(find.text('Scan a contact\'s QR code.'), findsOneWidget);
       });
 
       testWidgets('displays title', (tester) async {
@@ -117,7 +117,7 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(WnScanBox), findsOneWidget);
-        expect(find.text("Scan a contact's QR code."), findsOneWidget);
+        expect(find.text('Scan a contact\'s QR code.'), findsOneWidget);
       });
 
       testWidgets('calling onBarcodeDetected with invalid npub shows error', (tester) async {
