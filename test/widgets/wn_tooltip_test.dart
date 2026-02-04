@@ -1,7 +1,9 @@
 import 'package:flutter/gestures.dart' show PointerDeviceKind;
-import 'package:flutter/material.dart' show Center, Colors, Key, Scaffold, SizedBox, Text;
+import 'package:flutter/material.dart'
+    show Align, Alignment, Center, Colors, Key, Scaffold, SizedBox, Text;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_tooltip.dart' show ArrowPainter, WnTooltip, WnTooltipPosition;
+import 'package:sloth/widgets/wn_tooltip.dart'
+    show ArrowPainter, WnTooltip, WnTooltipPosition, WnTooltipTriggerMode;
 import '../test_helpers.dart' show mountWidget, setUpTestView;
 
 void main() {
@@ -192,6 +194,42 @@ void main() {
         await tester.pumpAndSettle();
         expect(find.byKey(const Key('tooltip_content')), findsNothing);
       });
+
+      testWidgets('shows tooltip on tap when triggerMode is tap', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'Tap tooltip',
+          child: Text('Tap me'),
+        );
+        await mountWidget(widget, tester);
+        await tester.tap(find.text('Tap me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+        expect(find.text('Tap tooltip'), findsOneWidget);
+      });
+
+      testWidgets('does not show tooltip on tap when triggerMode is longPress', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(
+          message: 'Long press tooltip',
+          triggerMode: WnTooltipTriggerMode.longPress,
+          child: Text('Long press me'),
+        );
+        await mountWidget(widget, tester);
+        await tester.tap(find.text('Long press me'));
+        await tester.pumpAndSettle();
+        expect(find.byKey(const Key('tooltip_content')), findsNothing);
+      });
+
+      testWidgets('defaults to tap trigger mode', (WidgetTester tester) async {
+        setUpTestView(tester);
+        const widget = WnTooltip(message: 'Default tooltip', child: Text('Trigger'));
+        await mountWidget(widget, tester);
+        final tooltip = tester.widget<WnTooltip>(find.byType(WnTooltip));
+        expect(tooltip.triggerMode, WnTooltipTriggerMode.tap);
+      });
     });
 
     group('wait duration', () {
@@ -251,7 +289,9 @@ void main() {
         expect(find.byKey(const Key('tooltip_content')), findsNothing);
       });
 
-      testWidgets('resets wasDismissed flag when mouse exits', (WidgetTester tester) async {
+      testWidgets('allows tooltip to show again after mouse exits and re-enters', (
+        WidgetTester tester,
+      ) async {
         setUpTestView(tester);
         final widget = const SizedBox(
           width: 300,
@@ -288,6 +328,96 @@ void main() {
         await tester.pump(const Duration(milliseconds: 150));
         await tester.pump();
         expect(find.byKey(const Key('tooltip_content')), findsOneWidget);
+      });
+    });
+
+    group('screen edge awareness', () {
+      testWidgets('tooltip near left edge shifts right to stay on screen', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        final widget = const Scaffold(
+          body: SizedBox(
+            width: 400,
+            height: 400,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: WnTooltip(
+                message: 'This is a tooltip with long text',
+                child: SizedBox(width: 20, height: 20, child: Text('L')),
+              ),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('L'));
+        await tester.pumpAndSettle();
+
+        final tooltipContent = find.byKey(const Key('tooltip_content'));
+        expect(tooltipContent, findsOneWidget);
+
+        final tooltipBox = tester.getRect(tooltipContent);
+        expect(tooltipBox.left, greaterThanOrEqualTo(0));
+      });
+
+      testWidgets('tooltip near right edge shifts left to stay on screen', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        final widget = const Scaffold(
+          body: SizedBox(
+            width: 400,
+            height: 400,
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: WnTooltip(
+                message: 'This is a tooltip with long text',
+                child: SizedBox(width: 20, height: 20, child: Text('R')),
+              ),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('R'));
+        await tester.pumpAndSettle();
+
+        final tooltipContent = find.byKey(const Key('tooltip_content'));
+        expect(tooltipContent, findsOneWidget);
+
+        final tooltipBox = tester.getRect(tooltipContent);
+        expect(tooltipBox.right, lessThanOrEqualTo(400));
+      });
+
+      testWidgets('arrow remains pointing at target when tooltip shifts', (
+        WidgetTester tester,
+      ) async {
+        setUpTestView(tester);
+        final widget = const Scaffold(
+          body: SizedBox(
+            width: 400,
+            height: 400,
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: WnTooltip(
+                message: 'This is a tooltip with long text',
+                child: SizedBox(width: 20, height: 20, child: Text('L')),
+              ),
+            ),
+          ),
+        );
+        await mountWidget(widget, tester);
+        await tester.longPress(find.text('L'));
+        await tester.pumpAndSettle();
+
+        final arrow = find.byKey(const Key('tooltip_arrow'));
+        expect(arrow, findsOneWidget);
+
+        final arrowBox = tester.getRect(arrow);
+        final triggerBox = tester.getRect(find.text('L'));
+
+        final arrowCenterX = arrowBox.center.dx;
+        final triggerCenterX = triggerBox.center.dx;
+        expect((arrowCenterX - triggerCenterX).abs(), lessThanOrEqualTo(2));
       });
     });
 
