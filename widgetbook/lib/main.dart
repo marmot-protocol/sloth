@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/theme.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
@@ -30,7 +32,16 @@ class WidgetbookApp extends StatelessWidget {
               minTextAdapt: true,
               enableScaleWH: () => false,
               enableScaleText: () => false,
-              child: Theme(data: theme, child: child),
+              child: Localizations(
+                locale: const Locale('en'),
+                delegates: const [
+                  AppLocalizations.delegate,
+                  GlobalMaterialLocalizations.delegate,
+                  GlobalWidgetsLocalizations.delegate,
+                  GlobalCupertinoLocalizations.delegate,
+                ],
+                child: Theme(data: theme, child: child),
+              ),
             );
           },
         ),

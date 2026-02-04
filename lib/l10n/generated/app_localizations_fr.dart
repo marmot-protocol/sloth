@@ -505,4 +505,77 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get invalidNpub => 'Clé publique invalide. Veuillez réessayer.';
+
+  @override
+  String get timestampNow => 'Maintenant';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String get timestampYesterday => 'Hier';
+
+  @override
+  String get weekdayMonday => 'Lundi';
+
+  @override
+  String get weekdayTuesday => 'Mardi';
+
+  @override
+  String get weekdayWednesday => 'Mercredi';
+
+  @override
+  String get weekdayThursday => 'Jeudi';
+
+  @override
+  String get weekdayFriday => 'Vendredi';
+
+  @override
+  String get weekdaySaturday => 'Samedi';
+
+  @override
+  String get weekdaySunday => 'Dimanche';
+
+  @override
+  String get monthJanShort => 'Jan';
+
+  @override
+  String get monthFebShort => 'Fév';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Avr';
+
+  @override
+  String get monthMayShort => 'Mai';
+
+  @override
+  String get monthJunShort => 'Juin';
+
+  @override
+  String get monthJulShort => 'Juil';
+
+  @override
+  String get monthAugShort => 'Août';
+
+  @override
+  String get monthSepShort => 'Sep';
+
+  @override
+  String get monthOctShort => 'Oct';
+
+  @override
+  String get monthNovShort => 'Nov';
+
+  @override
+  String get monthDecShort => 'Déc';
 }

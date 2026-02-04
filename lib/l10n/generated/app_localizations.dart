@@ -995,6 +995,144 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Invalid public key. Please try again.'**
   String get invalidNpub;
+
+  /// Timestamp for events less than 60 seconds ago
+  ///
+  /// In en, this message translates to:
+  /// **'Now'**
+  String get timestampNow;
+
+  /// Timestamp for events 1-59 minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count}m'**
+  String timestampMinutes(int count);
+
+  /// Timestamp for events 1-12 hours ago
+  ///
+  /// In en, this message translates to:
+  /// **'{count}h'**
+  String timestampHours(int count);
+
+  /// Timestamp for events from yesterday
+  ///
+  /// In en, this message translates to:
+  /// **'Yesterday'**
+  String get timestampYesterday;
+
+  /// Monday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Monday'**
+  String get weekdayMonday;
+
+  /// Tuesday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Tuesday'**
+  String get weekdayTuesday;
+
+  /// Wednesday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Wednesday'**
+  String get weekdayWednesday;
+
+  /// Thursday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Thursday'**
+  String get weekdayThursday;
+
+  /// Friday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Friday'**
+  String get weekdayFriday;
+
+  /// Saturday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Saturday'**
+  String get weekdaySaturday;
+
+  /// Sunday weekday name
+  ///
+  /// In en, this message translates to:
+  /// **'Sunday'**
+  String get weekdaySunday;
+
+  /// January short name
+  ///
+  /// In en, this message translates to:
+  /// **'Jan'**
+  String get monthJanShort;
+
+  /// February short name
+  ///
+  /// In en, this message translates to:
+  /// **'Feb'**
+  String get monthFebShort;
+
+  /// March short name
+  ///
+  /// In en, this message translates to:
+  /// **'Mar'**
+  String get monthMarShort;
+
+  /// April short name
+  ///
+  /// In en, this message translates to:
+  /// **'Apr'**
+  String get monthAprShort;
+
+  /// May short name
+  ///
+  /// In en, this message translates to:
+  /// **'May'**
+  String get monthMayShort;
+
+  /// June short name
+  ///
+  /// In en, this message translates to:
+  /// **'Jun'**
+  String get monthJunShort;
+
+  /// July short name
+  ///
+  /// In en, this message translates to:
+  /// **'Jul'**
+  String get monthJulShort;
+
+  /// August short name
+  ///
+  /// In en, this message translates to:
+  /// **'Aug'**
+  String get monthAugShort;
+
+  /// September short name
+  ///
+  /// In en, this message translates to:
+  /// **'Sep'**
+  String get monthSepShort;
+
+  /// October short name
+  ///
+  /// In en, this message translates to:
+  /// **'Oct'**
+  String get monthOctShort;
+
+  /// November short name
+  ///
+  /// In en, this message translates to:
+  /// **'Nov'**
+  String get monthNovShort;
+
+  /// December short name
+  ///
+  /// In en, this message translates to:
+  /// **'Dec'**
+  String get monthDecShort;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
