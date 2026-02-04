@@ -89,11 +89,11 @@ BEGIN
     BEGIN
         BLOCK "040904e4"
         BEGIN
-            VALUE "CompanyName", "org.parres" "\0"
+            VALUE "CompanyName", "Internet Privacy Foundation" "\0"
             VALUE "FileDescription", "whitenoise" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
             VALUE "InternalName", "whitenoise" "\0"
-            VALUE "LegalCopyright", "Copyright (C) 2025 org.parres. All rights reserved." "\0"
+            VALUE "LegalCopyright", "Copyright (C) 2026 Internet Privacy Foundation. All rights reserved." "\0"
             VALUE "OriginalFilename", "whitenoise.exe" "\0"
             VALUE "ProductName", "White Noise" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"

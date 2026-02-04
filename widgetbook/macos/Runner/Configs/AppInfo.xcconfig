@@ -11,4 +11,4 @@ PRODUCT_NAME = whitenoise_widgetbook
 PRODUCT_BUNDLE_IDENTIFIER = org.parres.whitenoiseWidgetbook
 
 // The copyright displayed in application information
-PRODUCT_COPYRIGHT = Copyright © 2026 org.parres. All rights reserved.
+PRODUCT_COPYRIGHT = Copyright © 2026 Internet Privacy Foundation. All rights reserved.
