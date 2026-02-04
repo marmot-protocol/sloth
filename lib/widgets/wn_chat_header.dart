@@ -23,7 +23,6 @@ class WnChatHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
 
     return Row(
       children: [
@@ -47,7 +46,9 @@ class WnChatHeader extends StatelessWidget {
         Expanded(
           child: Text(
             displayName,
-            style: typography.semiBold16.copyWith(color: colors.backgroundContentPrimary),
+            style: context.typographyScaled.semiBold16.copyWith(
+              color: colors.backgroundContentPrimary,
+            ),
             overflow: TextOverflow.ellipsis,
           ),
         ),

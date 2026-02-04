@@ -23,7 +23,6 @@ class WnMenuItem extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final isHovered = useState(false);
     final isPressed = useState(false);
     final isActive = isHovered.value || isPressed.value;
@@ -57,7 +56,7 @@ class WnMenuItem extends HookWidget {
                   padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
                   child: Text(
                     label,
-                    style: typography.medium16.copyWith(color: contentColor),
+                    style: context.typographyScaled.medium16.copyWith(color: contentColor),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                   ),

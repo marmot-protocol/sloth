@@ -17,7 +17,6 @@ class WnEmojiPicker extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
 
     return Container(
       decoration: BoxDecoration(
@@ -60,7 +59,9 @@ class WnEmojiPicker extends StatelessWidget {
                   backgroundColor: colors.backgroundSecondary,
                   noRecents: Text(
                     'No recent emojis',
-                    style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
+                    style: context.typographyScaled.medium14.copyWith(
+                      color: colors.backgroundContentSecondary,
+                    ),
                   ),
                 ),
                 categoryViewConfig: CategoryViewConfig(
