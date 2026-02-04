@@ -261,6 +261,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Copia la tua chiave privata per ripristinare il tuo account su un altro dispositivo.';
 
   @override
+  String get publicKeyCopyError => 'Copia della chiave pubblica fallita. Riprova.';
+
+  @override
   String get noChatsYet => 'Ancora nessuna chat';
 
   @override

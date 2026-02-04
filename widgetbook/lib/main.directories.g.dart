@@ -30,6 +30,8 @@ import 'package:sloth_widgetbook/components/tooltip.dart'
     as _sloth_widgetbook_components_tooltip;
 import 'package:sloth_widgetbook/components/wn_avatar.dart'
     as _sloth_widgetbook_components_wn_avatar;
+import 'package:sloth_widgetbook/components/wn_copy_card.dart'
+    as _sloth_widgetbook_components_wn_copy_card;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
     as _sloth_widgetbook_foundations_semantic_colors;
 import 'package:sloth_widgetbook/introduction.dart'
@@ -53,8 +55,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'WnAvatarStory',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'All Variants',
-            builder: _sloth_widgetbook_components_wn_avatar.allVariants,
+            name: 'WnAvatarStory',
+            builder: _sloth_widgetbook_components_wn_avatar.wnAvatarShowcase,
           ),
         ],
       ),
@@ -73,6 +75,16 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Callout',
             builder: _sloth_widgetbook_components_feedback.wnCalloutShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnCopyCardStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'WnCopyCardStory',
+            builder:
+                _sloth_widgetbook_components_wn_copy_card.wnCopyCardShowcase,
           ),
         ],
       ),

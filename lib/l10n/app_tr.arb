@@ -79,6 +79,7 @@
   "signOutWarning": "White Noise'dan çıkış yaptığınızda, sohbetleriniz bu cihazdan silinecek ve başka bir cihazda geri yüklenemeyecektir.\n\nÖzel anahtarınızı yedeklemediyseniz, bu profili başka hiçbir Nostr hizmetinde kullanamazsınız.",
   "backUpPrivateKey": "Özel anahtarınızı yedekleyin",
   "copyPrivateKeyHint": "Hesabınızı başka bir cihazda geri yüklemek için özel anahtarınızı kopyalayın.",
+  "publicKeyCopyError": "Açık anahtar kopyalanamadı. Lütfen tekrar deneyin.",
   "noChatsYet": "Henüz sohbet yok",
   "startConversation": "Bir sohbet başlatın",
   "noMessagesYet": "Henüz mesaj yok",

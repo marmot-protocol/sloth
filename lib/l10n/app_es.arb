@@ -79,6 +79,7 @@
   "signOutWarning": "Cuando cierres sesión en White Noise, tus chats se eliminarán de este dispositivo y no podrán restaurarse en otro dispositivo.\n\nSi no has respaldado tu llave privada, no podrás usar este perfil en ningún otro servicio Nostr.",
   "backUpPrivateKey": "Respalda tu llave privada",
   "copyPrivateKeyHint": "Copia tu llave privada para restaurar tu cuenta en otro dispositivo.",
+  "publicKeyCopyError": "Error al copiar la llave pública. Por favor, inténtalo de nuevo.",
   "noChatsYet": "Aún no hay chats",
   "startConversation": "Inicia una conversación",
   "noMessagesYet": "Aún no hay mensajes",

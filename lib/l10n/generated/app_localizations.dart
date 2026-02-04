@@ -582,6 +582,12 @@ abstract class AppLocalizations {
   /// **'Copy your private key to restore your account on another device.'**
   String get copyPrivateKeyHint;
 
+  /// Error message when copying public key (npub) to clipboard fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to copy public key. Please try again.'**
+  String get publicKeyCopyError;
+
   /// Empty state title for chat list
   ///
   /// In en, this message translates to:

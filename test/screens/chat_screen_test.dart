@@ -63,7 +63,6 @@ class _MockApi extends MockWnApi {
   int _sendCallCount = 0;
   bool isDm = false;
   List<String> groupMembers = [];
-  final Map<String, String> pubkeyToNpub = {};
 
   @override
   void reset() {
@@ -80,7 +79,6 @@ class _MockApi extends MockWnApi {
     _sendCallCount = 0;
     isDm = false;
     groupMembers = [];
-    pubkeyToNpub.clear();
   }
 
   @override
@@ -180,13 +178,6 @@ class _MockApi extends MockWnApi {
     required String groupId,
   }) {
     return Future.value(groupMembers);
-  }
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    final npub = pubkeyToNpub[hexPubkey];
-    if (npub == null) throw Exception('Unknown pubkey: $hexPubkey');
-    return npub;
   }
 }
 
@@ -304,7 +295,6 @@ void main() {
       testWidgets('menu button navigates to chat info screen for DM', (tester) async {
         _api.isDm = true;
         _api.groupMembers = [_testPubkey, testPubkeyC];
-        _api.pubkeyToNpub[testPubkeyC] = 'npub1othermember';
         await pumpChatScreen(tester);
         await tester.tap(find.byKey(const Key('menu_button')));
         await tester.pumpAndSettle();

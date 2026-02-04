@@ -21,8 +21,8 @@ class WnAvatarStory extends StatelessWidget {
   }
 }
 
-@widgetbook.UseCase(name: 'All Variants', type: WnAvatarStory)
-Widget allVariants(BuildContext context) {
+@widgetbook.UseCase(name: 'Avatar', type: WnAvatarStory)
+Widget wnAvatarShowcase(BuildContext context) {
   final colors = context.colors;
 
   final displayName = context.knobs.stringOrNull(

@@ -181,5 +181,17 @@ void main() {
       expect(avatars[0].color, AvatarColor.violet);
       expect(avatars[1].color, AvatarColor.amber);
     });
+
+    testWidgets('displays formatted npub for first account', (tester) async {
+      await pumpSwitchProfileScreen(tester, testPubkeyA);
+      expect(find.textContaining(testNpubAFormatted), findsOneWidget);
+    });
+
+    testWidgets('displays formatted npub for second account', (tester) async {
+      await pumpSwitchProfileScreen(tester, testPubkeyA);
+      await tester.drag(find.byType(ListView), const Offset(0, -400));
+      await tester.pumpAndSettle();
+      expect(find.textContaining(testNpubBFormatted), findsOneWidget);
+    });
   });
 }

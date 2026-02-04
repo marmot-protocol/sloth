@@ -9,9 +9,10 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
+import 'package:sloth/widgets/wn_copy_card.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
-
+import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard, mockClipboardFailing;
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -27,7 +28,6 @@ class _MockApi extends MockWnApi {
   Exception? unfollowError;
   final followCalls = <({String account, String target})>[];
   final unfollowCalls = <({String account, String target})>[];
-  final Map<String, String> pubkeyToNpub = {};
   final Set<String> followingPubkeys = {};
 
   @override
@@ -68,13 +68,6 @@ class _MockApi extends MockWnApi {
   }
 
   @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    final npub = pubkeyToNpub[hexPubkey];
-    if (npub == null) throw Exception('Unknown pubkey');
-    return npub;
-  }
-
-  @override
   void reset() {
     super.reset();
     metadata = const FlutterMetadata(custom: {});
@@ -85,7 +78,6 @@ class _MockApi extends MockWnApi {
     unfollowError = null;
     followCalls.clear();
     unfollowCalls.clear();
-    pubkeyToNpub.clear();
     followingPubkeys.clear();
   }
 }
@@ -108,7 +100,6 @@ void main() {
     WidgetTester tester, {
     required String userPubkey,
   }) async {
-    _api.pubkeyToNpub[userPubkey] = 'npub1$userPubkey';
     await mountTestApp(
       tester,
       overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
@@ -161,9 +152,11 @@ void main() {
         expect(find.text('I love Nostr!'), findsOneWidget);
       });
 
-      testWidgets('displays public key section', (tester) async {
-        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
-        expect(find.text('Public key'), findsOneWidget);
+      testWidgets('shows pubkey copy card', (tester) async {
+        await pumpChatInfoScreen(tester, userPubkey: testPubkeyA);
+        final copyCard = tester.widget<WnCopyCard>(find.byType(WnCopyCard));
+        expect(copyCard.textToDisplay, testNpubAFormatted);
+        expect(copyCard.textToCopy, testNpubA);
       });
     });
 
@@ -312,13 +305,24 @@ void main() {
       });
 
       testWidgets('shows notice when public key is copied', (tester) async {
+        mockClipboard();
         await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
 
         await tester.tap(find.byKey(const Key('copy_button')));
         await tester.pump();
-        await tester.pump(const Duration(milliseconds: 300));
 
         expect(find.text('Public key copied to clipboard'), findsOneWidget);
+      });
+
+      testWidgets('shows error notice when public key copy fails', (tester) async {
+        mockClipboardFailing();
+        addTearDown(clearClipboardMock);
+        await pumpChatInfoScreen(tester, userPubkey: _otherPubkey);
+
+        await tester.tap(find.byKey(const Key('copy_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Failed to copy public key. Please try again.'), findsOneWidget);
       });
 
       testWidgets('shows error notice when follow action fails', (tester) async {

@@ -262,6 +262,10 @@ class AppLocalizationsDe extends AppLocalizations {
       'Kopiere deinen privaten Schlüssel, um dein Konto auf einem anderen Gerät wiederherzustellen.';
 
   @override
+  String get publicKeyCopyError =>
+      'Öffentlicher Schlüssel konnte nicht kopiert werden. Bitte erneut versuchen.';
+
+  @override
   String get noChatsYet => 'Noch keine Chats';
 
   @override

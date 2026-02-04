@@ -260,6 +260,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Hesabınızı başka bir cihazda geri yüklemek için özel anahtarınızı kopyalayın.';
 
   @override
+  String get publicKeyCopyError => 'Açık anahtar kopyalanamadı. Lütfen tekrar deneyin.';
+
+  @override
   String get noChatsYet => 'Henüz sohbet yok';
 
   @override

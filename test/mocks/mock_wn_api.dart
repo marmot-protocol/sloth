@@ -10,6 +10,8 @@ import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/api/users.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../test_helpers.dart' show testHexToNpub, testNpubToHex;
+
 class MockThemeMode implements rust_api.ThemeMode {
   final String mode;
   const MockThemeMode(this.mode);
@@ -36,6 +38,7 @@ class MockWnApi implements RustLibApi {
   String currentLanguage = 'system';
   bool shouldFailUpdateLanguage = false;
   bool shouldFailNpubConversion = false;
+  bool shouldFailHexFromNpub = false;
   List<Account> accounts = [];
   Completer<List<Account>>? getAccountsCompleter;
 
@@ -80,7 +83,19 @@ class MockWnApi implements RustLibApi {
     if (shouldFailNpubConversion) {
       throw Exception('Invalid hex pubkey');
     }
-    return 'npub1test${hexPubkey.substring(0, 10)}';
+    final npub = testHexToNpub[hexPubkey];
+    if (npub == null) throw Exception('Unknown hex pubkey: $hexPubkey');
+    return npub;
+  }
+
+  @override
+  String crateApiUtilsHexPubkeyFromNpub({required String npub}) {
+    if (shouldFailHexFromNpub) {
+      throw Exception('Invalid npub');
+    }
+    final hex = testNpubToHex[npub];
+    if (hex == null) throw Exception('Unknown npub: $npub');
+    return hex;
   }
 
   @override
@@ -267,6 +282,7 @@ class MockWnApi implements RustLibApi {
     currentLanguage = 'system';
     shouldFailUpdateLanguage = false;
     shouldFailNpubConversion = false;
+    shouldFailHexFromNpub = false;
     accounts = [];
     follows = [];
     getAccountsCompleter = null;

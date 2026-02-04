@@ -260,6 +260,9 @@ class AppLocalizationsRu extends AppLocalizations {
       'Скопируйте приватный ключ для восстановления аккаунта на другом устройстве.';
 
   @override
+  String get publicKeyCopyError => 'Не удалось скопировать публичный ключ. Попробуйте снова.';
+
+  @override
   String get noChatsYet => 'Пока нет чатов';
 
   @override

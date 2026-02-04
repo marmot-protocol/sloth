@@ -79,6 +79,7 @@
   "signOutWarning": "Wenn du dich bei White Noise abmeldest, werden deine Chats von diesem Gerät gelöscht und können auf einem anderen Gerät nicht wiederhergestellt werden.\n\nWenn du deinen privaten Schlüssel nicht gesichert hast, kannst du dieses Profil bei keinem anderen Nostr-Dienst verwenden.",
   "backUpPrivateKey": "Privaten Schlüssel sichern",
   "copyPrivateKeyHint": "Kopiere deinen privaten Schlüssel, um dein Konto auf einem anderen Gerät wiederherzustellen.",
+  "publicKeyCopyError": "Öffentlicher Schlüssel konnte nicht kopiert werden. Bitte erneut versuchen.",
   "noChatsYet": "Noch keine Chats",
   "startConversation": "Starte ein Gespräch",
   "noMessagesYet": "Noch keine Nachrichten",
