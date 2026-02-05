@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart' show useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:gap/gap.dart' show Gap;
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
 import 'package:sloth/hooks/use_android_signer.dart' show useAndroidSigner;
 import 'package:sloth/hooks/use_login.dart' show useLogin;

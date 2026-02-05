@@ -23,7 +23,6 @@ class SignOutScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
     final signerService = ref.watch(androidSignerServiceProvider);

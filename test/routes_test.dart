@@ -17,8 +17,6 @@ import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
-import 'package:sloth/src/rust/api/accounts.dart' show Account, AccountType, FlutterEvent;
-import 'package:sloth/src/rust/api/chat_list.dart';
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
