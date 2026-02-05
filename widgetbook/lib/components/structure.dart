@@ -221,184 +221,299 @@ class WnOverlayStory extends StatelessWidget {
 
 @widgetbook.UseCase(name: 'Overlay', type: WnOverlayStory)
 Widget wnOverlayShowcase(BuildContext context) {
-  return Scaffold(
-    backgroundColor: context.colors.backgroundPrimary,
-    body: ListView(
-      padding: const EdgeInsets.all(24),
-      children: [
-        Text(
-          'Playground',
-          style: TextStyle(
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
-            color: context.colors.backgroundContentPrimary,
-          ),
-        ),
-        const SizedBox(height: 8),
-        Text(
-          'Use the knobs panel to customize this overlay.',
-          style: TextStyle(
-            fontSize: 14,
-            color: context.colors.backgroundContentSecondary,
-          ),
-        ),
-        const SizedBox(height: 16),
-        Align(
-          alignment: Alignment.centerLeft,
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 375),
-            child: _InteractiveOverlay(context: context),
-          ),
-        ),
-        const SizedBox(height: 32),
-        Divider(color: context.colors.borderTertiary),
-        const SizedBox(height: 24),
-        _buildSection(
-          context,
-          'Blur Variants',
-          'Overlay blur can be adjusted with sigmaX and sigmaY values.',
-          [
-            _OverlayExample(
-              label: 'Light Blur (5, 5)',
-              child: _StaticOverlay(sigmaX: 5, sigmaY: 5),
-            ),
-            _OverlayExample(
-              label: 'Medium Blur (25, 25)',
-              child: _StaticOverlay(sigmaX: 25, sigmaY: 25),
-            ),
-            _OverlayExample(
-              label: 'Heavy Blur (50, 50)',
-              child: _StaticOverlay(sigmaX: 50, sigmaY: 50),
-            ),
-            _OverlayExample(
-              label: 'Directional X (50, 5)',
-              child: _StaticOverlay(sigmaX: 50, sigmaY: 5),
-            ),
-            _OverlayExample(
-              label: 'Directional Y (5, 50)',
-              child: _StaticOverlay(sigmaX: 5, sigmaY: 50),
-            ),
-          ],
-        ),
-      ],
-    ),
-  );
+  return _OverlayShowcase(context: context);
 }
 
-class _OverlayExample extends StatelessWidget {
-  const _OverlayExample({required this.label, required this.child});
-
-  final String label;
-  final Widget child;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 180,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-              color: context.colors.backgroundContentSecondary,
-            ),
-          ),
-          const SizedBox(height: 8),
-          child,
-        ],
-      ),
-    );
-  }
-}
-
-class _StaticOverlay extends StatelessWidget {
-  const _StaticOverlay({required this.sigmaX, required this.sigmaY});
-
-  final double sigmaX;
-  final double sigmaY;
-
-  @override
-  Widget build(BuildContext context) {
-    return SizedBox(
-      width: 160,
-      height: 120,
-      child: Stack(
-        children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.purple],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: const Center(
-              child: Text(
-                'Content',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-          ),
-          WnOverlay(sigmaX: sigmaX, sigmaY: sigmaY),
-        ],
-      ),
-    );
-  }
-}
-
-class _InteractiveOverlay extends StatelessWidget {
-  const _InteractiveOverlay({required this.context});
+class _OverlayShowcase extends StatelessWidget {
+  const _OverlayShowcase({required this.context});
 
   final BuildContext context;
 
   @override
   Widget build(BuildContext context) {
-    final sigmaX = this.context.knobs.double.slider(
-      label: 'Sigma X',
-      initialValue: 50,
-      min: 0,
-      max: 100,
+    final variant = this.context.knobs.object.dropdown<WnOverlayVariant>(
+      label: 'Variant',
+      options: WnOverlayVariant.values,
+      initialOption: WnOverlayVariant.heavy,
+      labelBuilder: (value) => value.name,
     );
 
-    final sigmaY = this.context.knobs.double.slider(
-      label: 'Sigma Y',
-      initialValue: 50,
-      min: 0,
-      max: 100,
+    final showOverlay = this.context.knobs.boolean(
+      label: 'Show Overlay',
+      initialValue: true,
     );
 
-    return SizedBox(
-      width: 300,
-      height: 200,
-      child: Stack(
+    return Scaffold(
+      backgroundColor: context.colors.backgroundPrimary,
+      body: Stack(
         children: [
-          Container(
-            decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [Colors.blue, Colors.purple, Colors.red],
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-              ),
-            ),
-            child: const Center(
-              child: Text(
-                'Background Content',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
+          _RealisticContent(colors: context.colors),
+          if (showOverlay) WnOverlay(variant: variant),
+          if (showOverlay)
+            Center(
+              child: Container(
+                margin: const EdgeInsets.all(24),
+                padding: const EdgeInsets.all(24),
+                decoration: BoxDecoration(
+                  color: context.colors.backgroundPrimary,
+                  borderRadius: BorderRadius.circular(16),
+                  boxShadow: [
+                    BoxShadow(
+                      color: context.colors.shadow.withValues(alpha: 0.15),
+                      blurRadius: 24,
+                      offset: const Offset(0, 8),
+                    ),
+                  ],
+                ),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Icon(
+                      Icons.lock_outline,
+                      size: 48,
+                      color: context.colors.backgroundContentSecondary,
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Modal Content',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        color: context.colors.backgroundContentPrimary,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      'This slate appears above the overlay.\nToggle "Show Overlay" to see the difference.',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: context.colors.backgroundContentSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      'Current variant: ${variant.name}',
+                      style: TextStyle(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w500,
+                        color: context.colors.backgroundContentTertiary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
+        ],
+      ),
+    );
+  }
+}
+
+class _RealisticContent extends StatelessWidget {
+  const _RealisticContent({required this.colors});
+
+  final SemanticColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return ListView(
+      padding: const EdgeInsets.all(16),
+      children: [
+        _buildHeader(),
+        const SizedBox(height: 24),
+        _buildChatList(),
+        const SizedBox(height: 24),
+        _buildActionButtons(),
+      ],
+    );
+  }
+
+  Widget _buildHeader() {
+    return Row(
+      children: [
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: colors.accent.blue.fill,
+            borderRadius: BorderRadius.circular(24),
           ),
-          WnOverlay(sigmaX: sigmaX, sigmaY: sigmaY),
+          child: Center(
+            child: Text(
+              'JD',
+              style: TextStyle(
+                color: colors.accent.blue.contentPrimary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'John Doe',
+                style: TextStyle(
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                  color: colors.backgroundContentPrimary,
+                ),
+              ),
+              Text(
+                'Online',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: colors.intentionSuccessContent,
+                ),
+              ),
+            ],
+          ),
+        ),
+        Icon(Icons.more_vert, color: colors.backgroundContentSecondary),
+      ],
+    );
+  }
+
+  Widget _buildChatList() {
+    final messages = [
+      _ChatMessage(
+        'Hey! How are you doing?',
+        '10:30 AM',
+        isMe: false,
+        colors: colors,
+      ),
+      _ChatMessage(
+        "I'm doing great, thanks for asking! Just working on some new features.",
+        '10:32 AM',
+        isMe: true,
+        colors: colors,
+      ),
+      _ChatMessage(
+        'That sounds exciting! What kind of features?',
+        '10:33 AM',
+        isMe: false,
+        colors: colors,
+      ),
+      _ChatMessage(
+        "We're adding overlay variants for better visual hierarchy in modals.",
+        '10:35 AM',
+        isMe: true,
+        colors: colors,
+      ),
+      _ChatMessage(
+        'Nice! The blur effect looks really smooth.',
+        '10:36 AM',
+        isMe: false,
+        colors: colors,
+      ),
+    ];
+
+    return Column(children: messages);
+  }
+
+  Widget _buildActionButtons() {
+    return Row(
+      children: [
+        Expanded(
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            decoration: BoxDecoration(
+              color: colors.fillSecondary,
+              borderRadius: BorderRadius.circular(24),
+            ),
+            child: Row(
+              children: [
+                Icon(
+                  Icons.emoji_emotions_outlined,
+                  color: colors.backgroundContentTertiary,
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: Text(
+                    'Type a message...',
+                    style: TextStyle(color: colors.backgroundContentTertiary),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+        const SizedBox(width: 8),
+        Container(
+          width: 48,
+          height: 48,
+          decoration: BoxDecoration(
+            color: colors.fillPrimary,
+            borderRadius: BorderRadius.circular(24),
+          ),
+          child: Icon(Icons.send, color: colors.fillContentPrimary),
+        ),
+      ],
+    );
+  }
+}
+
+class _ChatMessage extends StatelessWidget {
+  const _ChatMessage(
+    this.text,
+    this.time, {
+    required this.isMe,
+    required this.colors,
+  });
+
+  final String text;
+  final String time;
+  final bool isMe;
+  final SemanticColors colors;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        mainAxisAlignment: isMe
+            ? MainAxisAlignment.end
+            : MainAxisAlignment.start,
+        children: [
+          if (!isMe) const SizedBox(width: 40),
+          Flexible(
+            child: Container(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+              decoration: BoxDecoration(
+                color: isMe ? colors.fillPrimary : colors.fillSecondary,
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: Column(
+                crossAxisAlignment: isMe
+                    ? CrossAxisAlignment.end
+                    : CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    text,
+                    style: TextStyle(
+                      color: isMe
+                          ? colors.fillContentPrimary
+                          : colors.backgroundContentPrimary,
+                    ),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    time,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: isMe
+                          ? colors.fillContentPrimary.withValues(alpha: 0.7)
+                          : colors.backgroundContentTertiary,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          if (isMe) const SizedBox(width: 40),
         ],
       ),
     );

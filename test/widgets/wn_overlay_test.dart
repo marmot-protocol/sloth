@@ -39,40 +39,33 @@ void main() {
         final blur = backdropFilter.filter;
         expect(blur, isNotNull);
       });
+    });
 
-      testWidgets('applies custom sigmaX value', (tester) async {
-        await mountStackedWidget(const WnOverlay(sigmaX: 25.0), tester);
+    group('variant', () {
+      testWidgets('defaults to strong variant', (tester) async {
+        await mountStackedWidget(const WnOverlay(), tester);
 
         final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.sigmaX, 25.0);
+        expect(overlay.variant, WnOverlayVariant.heavy);
       });
 
-      testWidgets('applies custom sigmaY value', (tester) async {
-        await mountStackedWidget(const WnOverlay(sigmaY: 30.0), tester);
+      testWidgets('accepts light variant', (tester) async {
+        await mountStackedWidget(const WnOverlay(variant: WnOverlayVariant.light), tester);
 
         final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.sigmaY, 30.0);
+        expect(overlay.variant, WnOverlayVariant.light);
       });
 
-      testWidgets('applies both custom sigma values', (tester) async {
-        await mountStackedWidget(const WnOverlay(sigmaX: 40.0, sigmaY: 60.0), tester);
+      testWidgets('accepts heavy variant explicitly', (tester) async {
+        await mountStackedWidget(const WnOverlay(), tester);
 
         final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.sigmaX, 40.0);
-        expect(overlay.sigmaY, 60.0);
-      });
-
-      testWidgets('handles zero sigma values', (tester) async {
-        await mountStackedWidget(const WnOverlay(sigmaX: 0.0, sigmaY: 0.0), tester);
-
-        final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.sigmaX, 0.0);
-        expect(overlay.sigmaY, 0.0);
+        expect(overlay.variant, WnOverlayVariant.heavy);
       });
     });
 
     group('color', () {
-      testWidgets('uses overlayPrimary color from light theme', (tester) async {
+      testWidgets('heavy variant uses overlayPrimary color from light theme', (tester) async {
         await mountStackedWidget(const WnOverlay(), tester);
 
         final coloredBox = tester.widget<ColoredBox>(
@@ -81,7 +74,16 @@ void main() {
         expect(coloredBox.color, SemanticColors.light.overlayPrimary);
       });
 
-      testWidgets('uses overlayPrimary color from dark theme', (tester) async {
+      testWidgets('light variant uses overlaySecondary color from light theme', (tester) async {
+        await mountStackedWidget(const WnOverlay(variant: WnOverlayVariant.light), tester);
+
+        final coloredBox = tester.widget<ColoredBox>(
+          find.descendant(of: find.byType(WnOverlay), matching: find.byType(ColoredBox)),
+        );
+        expect(coloredBox.color, SemanticColors.light.overlaySecondary);
+      });
+
+      testWidgets('heavy variant uses overlayPrimary color from dark theme', (tester) async {
         await tester.pumpWidget(
           MaterialApp(
             theme: ThemeData.dark().copyWith(extensions: [SemanticColors.dark]),
@@ -96,21 +98,21 @@ void main() {
         );
         expect(coloredBox.color, SemanticColors.dark.overlayPrimary);
       });
-    });
 
-    group('widget properties', () {
-      testWidgets('exposes sigmaX property with default value', (tester) async {
-        await mountStackedWidget(const WnOverlay(), tester);
+      testWidgets('light variant uses overlaySecondary color from dark theme', (tester) async {
+        await tester.pumpWidget(
+          MaterialApp(
+            theme: ThemeData.dark().copyWith(extensions: [SemanticColors.dark]),
+            home: const Scaffold(
+              body: Stack(children: [WnOverlay(variant: WnOverlayVariant.light)]),
+            ),
+          ),
+        );
 
-        final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.sigmaX, 50.0);
-      });
-
-      testWidgets('exposes sigmaY property with default value', (tester) async {
-        await mountStackedWidget(const WnOverlay(), tester);
-
-        final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.sigmaY, 50.0);
+        final coloredBox = tester.widget<ColoredBox>(
+          find.descendant(of: find.byType(WnOverlay), matching: find.byType(ColoredBox)),
+        );
+        expect(coloredBox.color, SemanticColors.dark.overlaySecondary);
       });
     });
 
@@ -148,6 +150,20 @@ void main() {
         expect(find.text('Content'), findsOneWidget);
         expect(find.byType(Placeholder), findsOneWidget);
       });
+    });
+  });
+
+  group('WnOverlayVariant', () {
+    test('has heavy variant', () {
+      expect(WnOverlayVariant.heavy, isNotNull);
+    });
+
+    test('has light variant', () {
+      expect(WnOverlayVariant.light, isNotNull);
+    });
+
+    test('variants are distinct', () {
+      expect(WnOverlayVariant.heavy, isNot(WnOverlayVariant.light));
     });
   });
 }
