@@ -579,4 +579,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Dic';
+
+  @override
+  String get messageNotFound => 'Mensaje no encontrado';
+
+  @override
+  String get you => 'Tú';
 }

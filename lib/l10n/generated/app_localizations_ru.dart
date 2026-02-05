@@ -580,4 +580,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Дек';
+
+  @override
+  String get messageNotFound => 'Сообщение не найдено';
+
+  @override
+  String get you => 'Вы';
 }

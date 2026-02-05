@@ -170,5 +170,8 @@
   "monthSepShort": "Сен",
   "monthOctShort": "Окт",
   "monthNovShort": "Ноя",
-  "monthDecShort": "Дек"
+  "monthDecShort": "Дек",
+
+  "messageNotFound": "Сообщение не найдено",
+  "you": "Вы"
 }

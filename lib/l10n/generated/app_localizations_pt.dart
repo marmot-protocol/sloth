@@ -576,4 +576,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Dez';
+
+  @override
+  String get messageNotFound => 'Mensagem não encontrada';
+
+  @override
+  String get you => 'Você';
 }

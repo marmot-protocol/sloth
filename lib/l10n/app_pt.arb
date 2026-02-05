@@ -170,5 +170,8 @@
   "monthSepShort": "Set",
   "monthOctShort": "Out",
   "monthNovShort": "Nov",
-  "monthDecShort": "Dez"
+  "monthDecShort": "Dez",
+
+  "messageNotFound": "Mensagem não encontrada",
+  "you": "Você"
 }

@@ -578,4 +578,10 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Déc';
+
+  @override
+  String get messageNotFound => 'Message introuvable';
+
+  @override
+  String get you => 'Vous';
 }
