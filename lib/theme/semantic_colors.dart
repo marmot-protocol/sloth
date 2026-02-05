@@ -7,6 +7,7 @@ class _BaseColors {
 }
 
 class _BlackAlphaColors {
+  static const Color blackAlpha50 = Color(0x08000000);
   static const Color blackAlpha200 = Color(0x33000000);
   static const Color blackAlpha300 = Color(0x4D000000);
   static const Color blackAlpha500 = Color(0x80000000);
@@ -575,7 +576,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorBackground: _RedColors.red950,
     intentionErrorContent: _RedColors.red500,
     shadow: _BaseColors.black,
-    overlayPrimary: _BlackAlphaColors.blackAlpha500,
+    overlayPrimary: _BlackAlphaColors.blackAlpha50,
     overlaySecondary: _BlackAlphaColors.blackAlpha500,
     qrCode: _BaseColors.white,
     accent: _darkAccentColors,
