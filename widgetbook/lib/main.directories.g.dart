@@ -14,6 +14,8 @@ import 'package:sloth_widgetbook/components/buttons.dart'
     as _sloth_widgetbook_components_buttons;
 import 'package:sloth_widgetbook/components/feedback.dart'
     as _sloth_widgetbook_components_feedback;
+import 'package:sloth_widgetbook/components/filter_chip.dart'
+    as _sloth_widgetbook_components_filter_chip;
 import 'package:sloth_widgetbook/components/icons.dart'
     as _sloth_widgetbook_components_icons;
 import 'package:sloth_widgetbook/components/inputs.dart'
@@ -91,6 +93,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Copy Card',
             builder:
                 _sloth_widgetbook_components_wn_copy_card.wnCopyCardShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnFilterChipStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Filter Chip',
+            builder:
+                _sloth_widgetbook_components_filter_chip.wnFilterChipShowcase,
           ),
         ],
       ),
