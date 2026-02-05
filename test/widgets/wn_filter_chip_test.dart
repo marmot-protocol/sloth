@@ -168,13 +168,13 @@ void main() {
         await mountWidget(widget, tester);
 
         final gesture = await tester.createGesture(kind: PointerDeviceKind.mouse);
-        await gesture.addPointer(location: Offset.zero);
+        await gesture.addPointer(location: const Offset(-100, -100));
         addTearDown(gesture.removePointer);
 
         await gesture.moveTo(tester.getCenter(find.byType(WnFilterChip)));
         await tester.pump();
 
-        await gesture.moveTo(Offset.zero);
+        await gesture.moveTo(const Offset(-100, -100));
         await tester.pump();
 
         expect(find.text('Hoverable'), findsOneWidget);
