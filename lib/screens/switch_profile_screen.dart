@@ -7,10 +7,9 @@ import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
-import 'package:sloth/utils/formatting.dart';
 import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
 import 'package:sloth/widgets/wn_button.dart';
+import 'package:sloth/widgets/wn_profile_switcher_item.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
@@ -95,9 +94,10 @@ class SwitchProfileScreen extends HookConsumerWidget {
                               ),
                             ),
                           )
-                        : ListView.builder(
-                            padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        : ListView.separated(
+                            padding: EdgeInsets.zero,
                             itemCount: accountsList.length,
+                            separatorBuilder: (context, index) => Gap(8.h),
                             itemBuilder: (context, index) {
                               final account = accountsList[index];
                               final isCurrentAccount = account.pubkey == currentPubkey;
@@ -144,64 +144,16 @@ class _AccountTile extends HookConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final colors = context.colors;
-    final typography = context.typographyScaled;
     final metadataSnapshot = useUserMetadata(context, pubkey);
     final metadata = metadataSnapshot.data;
     final displayName = presentName(metadata);
 
-    return GestureDetector(
-      onTap: isSwitching ? null : onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 12.h),
-        child: Row(
-          children: [
-            WnAvatar(
-              pictureUrl: metadata?.picture,
-              displayName: displayName,
-              color: AvatarColor.fromPubkey(pubkey),
-            ),
-            SizedBox(width: 12.w),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  if (displayName != null)
-                    Text(
-                      displayName,
-                      style: typography.semiBold16.copyWith(
-                        color: colors.backgroundContentPrimary,
-                      ),
-                    ),
-                  Text(
-                    formatPublicKey(npubFromHex(pubkey) ?? pubkey),
-                    style: typography.medium12.copyWith(
-                      color: colors.backgroundContentSecondary,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            if (isCurrent)
-              Icon(
-                key: const Key('current_account_checkmark'),
-                Icons.check_circle,
-                color: colors.backgroundContentPrimary,
-                size: 24.w,
-              ),
-            if (isSwitching && !isCurrent)
-              SizedBox(
-                width: 24.w,
-                height: 24.w,
-                child: CircularProgressIndicator(
-                  strokeWidth: 2,
-                  color: colors.backgroundContentPrimary,
-                ),
-              ),
-          ],
-        ),
-      ),
+    return WnProfileSwitcherItem(
+      pubkey: pubkey,
+      displayName: displayName,
+      pictureUrl: metadata?.picture,
+      isSelected: isCurrent,
+      onTap: isSwitching ? () {} : onTap,
     );
   }
 }

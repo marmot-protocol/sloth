@@ -36,6 +36,8 @@ import 'package:sloth_widgetbook/components/wn_avatar.dart'
     as _sloth_widgetbook_components_wn_avatar;
 import 'package:sloth_widgetbook/components/wn_copy_card.dart'
     as _sloth_widgetbook_components_wn_copy_card;
+import 'package:sloth_widgetbook/components/wn_profile_switcher_item.dart'
+    as _sloth_widgetbook_components_wn_profile_switcher_item;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
     as _sloth_widgetbook_foundations_semantic_colors;
 import 'package:sloth_widgetbook/foundations/typography.dart'
@@ -175,6 +177,16 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Overlay',
             builder: _sloth_widgetbook_components_structure.wnOverlayShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnProfileSwitcherItemStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Profile Switcher Item',
+            builder: _sloth_widgetbook_components_wn_profile_switcher_item
+                .wnProfileSwitcherItemShowcase,
           ),
         ],
       ),

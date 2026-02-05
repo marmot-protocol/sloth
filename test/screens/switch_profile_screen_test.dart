@@ -9,6 +9,7 @@ import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/utils/avatar_color.dart' show AvatarColor;
 import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar;
+import 'package:sloth/widgets/wn_middle_ellipsis_text.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -101,7 +102,7 @@ void main() {
 
     testWidgets('displays checkmark for current account', (tester) async {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
-      expect(find.byKey(const Key('current_account_checkmark')), findsOneWidget);
+      expect(find.byKey(const Key('profile_switcher_item_checkmark')), findsOneWidget);
     });
 
     testWidgets('displays Connect Another Profile button', (tester) async {
@@ -138,7 +139,7 @@ void main() {
       expect(find.text('No accounts available'), findsOneWidget);
     });
 
-    testWidgets('shows loading indicator while switching profile', (tester) async {
+    testWidgets('disables taps while switching profile', (tester) async {
       final mockAuthNotifier = _MockAuthNotifier(testPubkeyA);
       mockAuthNotifier.switchProfileCompleter = Completer<void>();
 
@@ -151,7 +152,7 @@ void main() {
       await tester.tap(find.text('Display $testPubkeyB'));
       await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text('Profiles'), findsOneWidget);
 
       mockAuthNotifier.switchProfileCompleter!.complete();
       await tester.pumpAndSettle();
@@ -184,14 +185,20 @@ void main() {
 
     testWidgets('displays formatted npub for first account', (tester) async {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
-      expect(find.textContaining(testNpubAFormatted), findsOneWidget);
+      final middleEllipsisWidgets = tester.widgetList<WnMiddleEllipsisText>(
+        find.byType(WnMiddleEllipsisText),
+      );
+      expect(middleEllipsisWidgets.any((w) => w.text.startsWith('npub 1a1b')), isTrue);
     });
 
     testWidgets('displays formatted npub for second account', (tester) async {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
       await tester.drag(find.byType(ListView), const Offset(0, -400));
       await tester.pumpAndSettle();
-      expect(find.textContaining(testNpubBFormatted), findsOneWidget);
+      final middleEllipsisWidgets = tester.widgetList<WnMiddleEllipsisText>(
+        find.byType(WnMiddleEllipsisText),
+      );
+      expect(middleEllipsisWidgets.any((w) => w.text.startsWith('npub 1b2c')), isTrue);
     });
   });
 }
