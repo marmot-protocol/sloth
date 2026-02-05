@@ -574,4 +574,10 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Ara';
+
+  @override
+  String get messageNotFound => 'Mesaj bulunamadı';
+
+  @override
+  String get you => 'Siz';
 }

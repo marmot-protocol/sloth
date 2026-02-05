@@ -914,5 +914,15 @@
   "monthDecShort": "Dec",
   "@monthDecShort": {
     "description": "December short name"
+  },
+
+  "messageNotFound": "Message not found",
+  "@messageNotFound": {
+    "description": "Text shown in reply preview when the original message is deleted or not available"
+  },
+
+  "you": "You",
+  "@you": {
+    "description": "Label for the current user (e.g. in reply preview when replying to own message)"
   }
 }

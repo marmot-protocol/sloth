@@ -170,5 +170,8 @@
   "monthSepShort": "Eyl",
   "monthOctShort": "Eki",
   "monthNovShort": "Kas",
-  "monthDecShort": "Ara"
+  "monthDecShort": "Ara",
+
+  "messageNotFound": "Mesaj bulunamadı",
+  "you": "Siz"
 }
