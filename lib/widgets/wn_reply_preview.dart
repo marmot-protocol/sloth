@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/models/reply_preview.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/models/reply_preview.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 
 class WnReplyPreview extends StatelessWidget {
   const WnReplyPreview({

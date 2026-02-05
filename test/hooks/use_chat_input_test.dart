@@ -1,7 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/hooks/use_chat_input.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
-import 'package:whitenoise/hooks/use_chat_input.dart';
 import '../test_helpers.dart';
 
 ChatMessage _createTestMessage({String id = 'msg-1', String content = 'Test message'}) {

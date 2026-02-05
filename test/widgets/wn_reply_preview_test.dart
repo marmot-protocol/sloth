@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/models/reply_preview.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/widgets/wn_reply_preview.dart';
+import 'package:whitenoise/models/reply_preview.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import '../test_helpers.dart';
 
 ReplyPreview _replyData({

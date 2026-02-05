@@ -1,13 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
 import 'package:whitenoise/widgets/wn_message_reactions.dart';
+import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import '../test_helpers.dart';
+
+ReplyPreview _replyPreview({
+  String authorPubkey = testPubkeyB,
+  FlutterMetadata? authorMetadata,
+  String content = 'Original message content',
+  bool isNotFound = false,
+}) => (
+  authorPubkey: authorPubkey,
+  authorMetadata:
+      authorMetadata ??
+      const FlutterMetadata(displayName: 'Original Author', name: 'author', custom: {}),
+  content: content,
+  isNotFound: isNotFound,
+);
 
 ChatMessage _message({
   String content = 'Hello world',
   bool isDeleted = false,
+  bool isReply = false,
+  String? replyToId,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
   id: 'msg1',
@@ -15,7 +34,8 @@ ChatMessage _message({
   content: content,
   createdAt: DateTime(2024),
   tags: const [],
-  isReply: false,
+  isReply: isReply,
+  replyToId: replyToId,
   isDeleted: isDeleted,
   contentTokens: const [],
   reactions: reactions,
@@ -155,6 +175,82 @@ void main() {
         await tester.pump();
 
         expect(tappedEmoji, '👍');
+      });
+    });
+
+    group('reply preview', () {
+      testWidgets('shows reply preview when replyPreview is provided', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(isReply: true, replyToId: 'original-msg'),
+            isOwnMessage: false,
+            replyPreview: _replyPreview(),
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+        expect(find.text('Original Author'), findsOneWidget);
+        expect(find.text('Original message content'), findsOneWidget);
+      });
+
+      testWidgets('hides reply preview when replyPreview is null', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(isReply: true, replyToId: 'original-msg'),
+            isOwnMessage: false,
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnReplyPreview), findsNothing);
+      });
+
+      testWidgets('hides reply preview when replyPreview is null even with isReply', (
+        tester,
+      ) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(),
+            isOwnMessage: false,
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnReplyPreview), findsNothing);
+      });
+
+      testWidgets('shows reply preview with author from metadata', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(isReply: true, replyToId: 'original-msg'),
+            isOwnMessage: false,
+            replyPreview: _replyPreview(
+              authorMetadata: const FlutterMetadata(
+                displayName: 'Custom Author',
+                name: 'custom',
+                custom: {},
+              ),
+            ),
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+        expect(find.text('Custom Author'), findsOneWidget);
+      });
+
+      testWidgets('reply preview does not have cancel button', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(isReply: true, replyToId: 'original-msg'),
+            isOwnMessage: false,
+            replyPreview: _replyPreview(),
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('cancel_reply_button')), findsNothing);
       });
     });
   });
