@@ -98,7 +98,11 @@ class ShareProfileScreen extends HookConsumerWidget {
                               size: 256.w,
                               eyeStyle: QrEyeStyle(
                                 eyeShape: QrEyeShape.square,
-                                color: colors.backgroundContentPrimary,
+                                color: colors.qrCode,
+                              ),
+                              dataModuleStyle: QrDataModuleStyle(
+                                dataModuleShape: QrDataModuleShape.square,
+                                color: colors.qrCode,
                               ),
                             ),
                           ] else
