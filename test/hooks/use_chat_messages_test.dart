@@ -5,6 +5,7 @@ import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+
 import '../test_helpers.dart';
 
 ChatMessage _message(
