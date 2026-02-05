@@ -95,6 +95,13 @@ void main() {
       expect(find.text('Profiles'), findsOneWidget);
     });
 
+    testWidgets('tapping header back button goes back', (tester) async {
+      await pumpSwitchProfileScreen(tester, testPubkeyA);
+      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.pumpAndSettle();
+      expect(find.text('Profiles'), findsNothing);
+    });
+
     testWidgets('displays list of accounts', (tester) async {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
       expect(find.text('Display $testPubkeyA'), findsOneWidget);
