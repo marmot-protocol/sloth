@@ -41,6 +41,9 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 
+# Compiled Rust native libraries (built via `just build-android`)
+/android/app/src/main/jniLibs/
+
 # FVM Version Cache
 .fvm/
 
