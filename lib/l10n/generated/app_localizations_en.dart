@@ -500,6 +500,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get invalidNpub => 'Invalid public key. Please try again.';
 
   @override
+  String get you => 'You';
+
+  @override
   String get timestampNow => 'Now';
 
   @override

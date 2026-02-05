@@ -500,6 +500,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get invalidNpub => 'Geçersiz açık anahtar. Lütfen tekrar deneyin.';
 
   @override
+  String get you => 'Sen';
+
+  @override
   String get timestampNow => 'Şimdi';
 
   @override

@@ -506,6 +506,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get invalidNpub => 'Недействительный публичный ключ. Попробуйте снова.';
 
   @override
+  String get you => 'Вы';
+
+  @override
   String get timestampNow => 'Сейчас';
 
   @override

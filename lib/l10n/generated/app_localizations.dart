@@ -990,6 +990,12 @@ abstract class AppLocalizations {
   /// **'Invalid public key. Please try again.'**
   String get invalidNpub;
 
+  /// Prefix for messages sent by the user
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get you;
+
   /// Timestamp for events less than 60 seconds ago
   ///
   /// In en, this message translates to:

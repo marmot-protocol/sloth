@@ -171,5 +171,6 @@
   "monthNovShort": "Kas",
   "monthDecShort": "Ara",
   "loginWithSigner": "Signer ile giriş yap",
-  "signerConnectionError": "Signer'a bağlanılamadı. Lütfen tekrar deneyin."
+  "signerConnectionError": "Signer'a bağlanılamadı. Lütfen tekrar deneyin.",
+  "you": "Sen"
 }

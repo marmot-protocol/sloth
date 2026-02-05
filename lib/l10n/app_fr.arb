@@ -171,5 +171,6 @@
   "monthNovShort": "Nov",
   "monthDecShort": "Déc",
   "loginWithSigner": "Se connecter avec Signer",
-  "signerConnectionError": "Impossible de se connecter au signer. Veuillez réessayer."
+  "signerConnectionError": "Impossible de se connecter au signer. Veuillez réessayer.",
+  "you": "Vous"
 }

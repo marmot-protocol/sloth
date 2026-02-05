@@ -171,5 +171,6 @@
   "monthNovShort": "Ноя",
   "monthDecShort": "Дек",
   "loginWithSigner": "Войти через Signer",
-  "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова."
+  "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова.",
+  "you": "Вы"
 }

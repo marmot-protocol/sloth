@@ -511,6 +511,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get invalidNpub => 'Ungültiger öffentlicher Schlüssel. Bitte versuchen Sie es erneut.';
 
   @override
+  String get you => 'Du';
+
+  @override
   String get timestampNow => 'Jetzt';
 
   @override

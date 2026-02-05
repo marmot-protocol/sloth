@@ -504,6 +504,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidNpub => 'Clé publique invalide. Veuillez réessayer.';
 
   @override
+  String get you => 'Vous';
+
+  @override
   String get timestampNow => 'Maintenant';
 
   @override

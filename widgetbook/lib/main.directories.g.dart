@@ -10,46 +10,48 @@
 // **************************************************************************
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'package:whitenoise_widgetbook/components/buttons.dart'
-    as _whitenoise_widgetbook_components_buttons;
-import 'package:whitenoise_widgetbook/components/carousel_indicator.dart'
-    as _whitenoise_widgetbook_components_carousel_indicator;
-import 'package:whitenoise_widgetbook/components/chat_status.dart'
-    as _whitenoise_widgetbook_components_chat_status;
-import 'package:whitenoise_widgetbook/components/feedback.dart'
-    as _whitenoise_widgetbook_components_feedback;
-import 'package:whitenoise_widgetbook/components/filter_chip.dart'
-    as _whitenoise_widgetbook_components_filter_chip;
-import 'package:whitenoise_widgetbook/components/icons.dart'
-    as _whitenoise_widgetbook_components_icons;
-import 'package:whitenoise_widgetbook/components/inputs.dart'
-    as _whitenoise_widgetbook_components_inputs;
-import 'package:whitenoise_widgetbook/components/key_package_card.dart'
-    as _whitenoise_widgetbook_components_key_package_card;
-import 'package:whitenoise_widgetbook/components/list.dart'
-    as _whitenoise_widgetbook_components_list;
-import 'package:whitenoise_widgetbook/components/menu.dart'
-    as _whitenoise_widgetbook_components_menu;
-import 'package:whitenoise_widgetbook/components/spinner.dart'
-    as _whitenoise_widgetbook_components_spinner;
-import 'package:whitenoise_widgetbook/components/structure.dart'
-    as _whitenoise_widgetbook_components_structure;
-import 'package:whitenoise_widgetbook/components/timestamp.dart'
-    as _whitenoise_widgetbook_components_timestamp;
-import 'package:whitenoise_widgetbook/components/tooltip.dart'
-    as _whitenoise_widgetbook_components_tooltip;
-import 'package:whitenoise_widgetbook/components/wn_avatar.dart'
-    as _whitenoise_widgetbook_components_wn_avatar;
-import 'package:whitenoise_widgetbook/components/wn_copy_card.dart'
-    as _whitenoise_widgetbook_components_wn_copy_card;
-import 'package:whitenoise_widgetbook/components/wn_profile_switcher_item.dart'
-    as _whitenoise_widgetbook_components_wn_profile_switcher_item;
-import 'package:whitenoise_widgetbook/foundations/semantic_colors.dart'
-    as _whitenoise_widgetbook_foundations_semantic_colors;
-import 'package:whitenoise_widgetbook/foundations/typography.dart'
-    as _whitenoise_widgetbook_foundations_typography;
-import 'package:whitenoise_widgetbook/introduction.dart'
-    as _whitenoise_widgetbook_introduction;
+import 'package:sloth_widgetbook/components/buttons.dart'
+    as _sloth_widgetbook_components_buttons;
+import 'package:sloth_widgetbook/components/carousel_indicator.dart'
+    as _sloth_widgetbook_components_carousel_indicator;
+import 'package:sloth_widgetbook/components/chat_list_item.dart'
+    as _sloth_widgetbook_components_chat_list_item;
+import 'package:sloth_widgetbook/components/chat_status.dart'
+    as _sloth_widgetbook_components_chat_status;
+import 'package:sloth_widgetbook/components/feedback.dart'
+    as _sloth_widgetbook_components_feedback;
+import 'package:sloth_widgetbook/components/filter_chip.dart'
+    as _sloth_widgetbook_components_filter_chip;
+import 'package:sloth_widgetbook/components/icons.dart'
+    as _sloth_widgetbook_components_icons;
+import 'package:sloth_widgetbook/components/inputs.dart'
+    as _sloth_widgetbook_components_inputs;
+import 'package:sloth_widgetbook/components/key_package_card.dart'
+    as _sloth_widgetbook_components_key_package_card;
+import 'package:sloth_widgetbook/components/list.dart'
+    as _sloth_widgetbook_components_list;
+import 'package:sloth_widgetbook/components/menu.dart'
+    as _sloth_widgetbook_components_menu;
+import 'package:sloth_widgetbook/components/spinner.dart'
+    as _sloth_widgetbook_components_spinner;
+import 'package:sloth_widgetbook/components/structure.dart'
+    as _sloth_widgetbook_components_structure;
+import 'package:sloth_widgetbook/components/timestamp.dart'
+    as _sloth_widgetbook_components_timestamp;
+import 'package:sloth_widgetbook/components/tooltip.dart'
+    as _sloth_widgetbook_components_tooltip;
+import 'package:sloth_widgetbook/components/wn_avatar.dart'
+    as _sloth_widgetbook_components_wn_avatar;
+import 'package:sloth_widgetbook/components/wn_copy_card.dart'
+    as _sloth_widgetbook_components_wn_copy_card;
+import 'package:sloth_widgetbook/components/wn_profile_switcher_item.dart'
+    as _sloth_widgetbook_components_wn_profile_switcher_item;
+import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
+    as _sloth_widgetbook_foundations_semantic_colors;
+import 'package:sloth_widgetbook/foundations/typography.dart'
+    as _sloth_widgetbook_foundations_typography;
+import 'package:sloth_widgetbook/introduction.dart'
+    as _sloth_widgetbook_introduction;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
 
 final directories = <_widgetbook.WidgetbookNode>[
@@ -58,7 +60,7 @@ final directories = <_widgetbook.WidgetbookNode>[
     useCases: [
       _widgetbook.WidgetbookUseCase(
         name: 'Resources',
-        builder: _whitenoise_widgetbook_introduction.introduction,
+        builder: _sloth_widgetbook_introduction.introduction,
       ),
     ],
   ),
@@ -70,8 +72,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Avatar',
-            builder:
-                _whitenoise_widgetbook_components_wn_avatar.wnAvatarShowcase,
+            builder: _sloth_widgetbook_components_wn_avatar.wnAvatarShowcase,
           ),
         ],
       ),
@@ -80,7 +81,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Button',
-            builder: _whitenoise_widgetbook_components_buttons.wnButtonShowcase,
+            builder: _sloth_widgetbook_components_buttons.wnButtonShowcase,
           ),
         ],
       ),
@@ -89,8 +90,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Callout',
-            builder:
-                _whitenoise_widgetbook_components_feedback.wnCalloutShowcase,
+            builder: _sloth_widgetbook_components_feedback.wnCalloutShowcase,
           ),
         ],
       ),
@@ -99,8 +99,18 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Carousel Indicator',
-            builder: _whitenoise_widgetbook_components_carousel_indicator
+            builder: _sloth_widgetbook_components_carousel_indicator
                 .wnCarouselIndicatorShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnChatListItemStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Chat List Item',
+            builder: _sloth_widgetbook_components_chat_list_item
+                .wnChatListItemShowcase,
           ),
         ],
       ),
@@ -109,8 +119,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Chat Status',
-            builder: _whitenoise_widgetbook_components_chat_status
-                .wnChatStatusShowcase,
+            builder:
+                _sloth_widgetbook_components_chat_status.wnChatStatusShowcase,
           ),
         ],
       ),
@@ -119,8 +129,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Copy Card',
-            builder: _whitenoise_widgetbook_components_wn_copy_card
-                .wnCopyCardShowcase,
+            builder:
+                _sloth_widgetbook_components_wn_copy_card.wnCopyCardShowcase,
           ),
         ],
       ),
@@ -129,8 +139,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Filter Chip',
-            builder: _whitenoise_widgetbook_components_filter_chip
-                .wnFilterChipShowcase,
+            builder:
+                _sloth_widgetbook_components_filter_chip.wnFilterChipShowcase,
           ),
         ],
       ),
@@ -139,7 +149,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Icons',
-            builder: _whitenoise_widgetbook_components_icons.wnIconShowcase,
+            builder: _sloth_widgetbook_components_icons.wnIconShowcase,
           ),
         ],
       ),
@@ -148,8 +158,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Password Input',
-            builder: _whitenoise_widgetbook_components_inputs
-                .wnInputPasswordShowcase,
+            builder:
+                _sloth_widgetbook_components_inputs.wnInputPasswordShowcase,
           ),
         ],
       ),
@@ -158,7 +168,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Text Input',
-            builder: _whitenoise_widgetbook_components_inputs.wnInputShowcase,
+            builder: _sloth_widgetbook_components_inputs.wnInputShowcase,
           ),
         ],
       ),
@@ -167,8 +177,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Text Area',
-            builder: _whitenoise_widgetbook_components_inputs
-                .wnInputTextAreaShowcase,
+            builder:
+                _sloth_widgetbook_components_inputs.wnInputTextAreaShowcase,
           ),
         ],
       ),
@@ -177,7 +187,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Key Package Card',
-            builder: _whitenoise_widgetbook_components_key_package_card
+            builder: _sloth_widgetbook_components_key_package_card
                 .wnKeyPackageCardShowcase,
           ),
         ],
@@ -187,7 +197,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'List',
-            builder: _whitenoise_widgetbook_components_list.wnListShowcase,
+            builder: _sloth_widgetbook_components_list.wnListShowcase,
           ),
         ],
       ),
@@ -196,7 +206,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Menu Item',
-            builder: _whitenoise_widgetbook_components_menu.wnMenuItemShowcase,
+            builder: _sloth_widgetbook_components_menu.wnMenuItemShowcase,
           ),
         ],
       ),
@@ -205,7 +215,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Menu Container',
-            builder: _whitenoise_widgetbook_components_menu.wnMenuShowcase,
+            builder: _sloth_widgetbook_components_menu.wnMenuShowcase,
           ),
         ],
       ),
@@ -214,8 +224,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Overlay',
-            builder:
-                _whitenoise_widgetbook_components_structure.wnOverlayShowcase,
+            builder: _sloth_widgetbook_components_structure.wnOverlayShowcase,
           ),
         ],
       ),
@@ -224,7 +233,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Profile Switcher Item',
-            builder: _whitenoise_widgetbook_components_wn_profile_switcher_item
+            builder: _sloth_widgetbook_components_wn_profile_switcher_item
                 .wnProfileSwitcherItemShowcase,
           ),
         ],
@@ -234,7 +243,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Scroll Edge Effect',
-            builder: _whitenoise_widgetbook_components_structure
+            builder: _sloth_widgetbook_components_structure
                 .wnScrollEdgeEffectShowcase,
           ),
         ],
@@ -244,8 +253,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Separator',
-            builder:
-                _whitenoise_widgetbook_components_structure.wnSeparatorShowcase,
+            builder: _sloth_widgetbook_components_structure.wnSeparatorShowcase,
           ),
         ],
       ),
@@ -254,8 +262,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Spinner',
-            builder:
-                _whitenoise_widgetbook_components_spinner.wnSpinnerShowcase,
+            builder: _sloth_widgetbook_components_spinner.wnSpinnerShowcase,
           ),
         ],
       ),
@@ -264,8 +271,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Timestamp',
-            builder:
-                _whitenoise_widgetbook_components_timestamp.wnTimestampShowcase,
+            builder: _sloth_widgetbook_components_timestamp.wnTimestampShowcase,
           ),
         ],
       ),
@@ -274,8 +280,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Tooltip',
-            builder:
-                _whitenoise_widgetbook_components_tooltip.wnTooltipShowcase,
+            builder: _sloth_widgetbook_components_tooltip.wnTooltipShowcase,
           ),
         ],
       ),
@@ -289,8 +294,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Semantic Colors',
-            builder:
-                _whitenoise_widgetbook_foundations_semantic_colors.allColors,
+            builder: _sloth_widgetbook_foundations_semantic_colors.allColors,
           ),
         ],
       ),
@@ -299,8 +303,7 @@ final directories = <_widgetbook.WidgetbookNode>[
         useCases: [
           _widgetbook.WidgetbookUseCase(
             name: 'Typography',
-            builder:
-                _whitenoise_widgetbook_foundations_typography.allTypography,
+            builder: _sloth_widgetbook_foundations_typography.allTypography,
           ),
         ],
       ),

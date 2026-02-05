@@ -106,17 +106,17 @@ class WnChatListItem extends HookWidget {
                       children: [
                         Expanded(
                           child: RichText(
-                            maxLines: 1,
+                            maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              style: typography.medium14.copyWith(
+                              style: typography.medium14Compact.copyWith(
                                 color: colors.backgroundContentSecondary,
                               ),
                               children: [
                                 if (prefixSubtitle != null)
                                   TextSpan(
                                     text: prefixSubtitle,
-                                    style: typography.medium14.copyWith(
+                                    style: typography.medium14Compact.copyWith(
                                       color: colors.backgroundContentPrimary,
                                     ),
                                   ),

@@ -39,6 +39,12 @@ class WnChatStatus extends HookWidget {
       );
     }
 
+    final iconColor = switch (status) {
+      ChatStatusType.failed => colors.intentionErrorContent,
+      ChatStatusType.request => colors.intentionInfoContent,
+      _ => colors.backgroundContentSecondary,
+    };
+
     return SizedBox(
       key: const Key('chat_status_icon'),
       width: 18.w,
@@ -48,7 +54,7 @@ class WnChatStatus extends HookWidget {
           icon!,
           key: const Key('chat_status_wn_icon'),
           size: 18.r,
-          color: colors.backgroundContentSecondary,
+          color: iconColor,
         ),
       ),
     );
