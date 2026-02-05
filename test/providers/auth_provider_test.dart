@@ -495,51 +495,9 @@ void main() {
       });
     });
 
-    group('isUsingAndroidSigner', () {
-      test('returns false when not authenticated', () async {
-        await container.read(authProvider.future);
-        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
-        expect(result, isFalse);
-      });
-
-      test('returns false for local account', () async {
-        await container.read(authProvider.notifier).login('nsec123');
-        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
-        expect(result, isFalse);
-      });
-
-      test('returns true for external account', () async {
-        await container
-            .read(authProvider.notifier)
-            .loginWithAndroidSigner(
-              pubkey: testPubkeyA,
-              onDisconnect: () async {},
-            );
-        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
-        expect(result, isTrue);
-      });
-
-      test('returns false when getAccount fails', () async {
-        await container
-            .read(authProvider.notifier)
-            .loginWithAndroidSigner(
-              pubkey: testPubkeyA,
-              onDisconnect: () async {},
-            );
-        mockApi.getAccountError = const ApiError.whitenoise(message: 'Network error');
-        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
-        expect(result, isFalse);
-      });
-    });
-
     group('logout with Android signer', () {
-      test('calls onAndroidSignerDisconnect for external account', () async {
-        await container
-            .read(authProvider.notifier)
-            .loginWithAndroidSigner(
-              pubkey: testPubkeyA,
-              onDisconnect: () async {},
-            );
+      test('calls onAndroidSignerDisconnect when provided', () async {
+        await container.read(authProvider.notifier).login('nsec123');
         var disconnectCalled = false;
         await container
             .read(authProvider.notifier)
@@ -549,19 +507,6 @@ void main() {
               },
             );
         expect(disconnectCalled, isTrue);
-      });
-
-      test('does not call onAndroidSignerDisconnect for local account', () async {
-        await container.read(authProvider.notifier).login('nsec123');
-        var disconnectCalled = false;
-        await container
-            .read(authProvider.notifier)
-            .logout(
-              onAndroidSignerDisconnect: () async {
-                disconnectCalled = true;
-              },
-            );
-        expect(disconnectCalled, isFalse);
       });
 
       test('handles disconnect failure gracefully during logout', () async {

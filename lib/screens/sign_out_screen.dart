@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,7 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_android_signer.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/android_signer_service_provider.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
@@ -25,30 +26,14 @@ class SignOutScreen extends HookConsumerWidget {
     final colors = context.colors;
     final typography = context.typographyScaled;
     final pubkey = ref.watch(authProvider).value;
-    final (:state, :loadNsec) = useNsec(pubkey);
-    final signerService = ref.watch(androidSignerServiceProvider);
-    final androidSigner = useAndroidSigner(signerService);
+    final (:nsecState) = useNsec(pubkey);
+    final androidSigner = useAndroidSigner(
+      platformIsAndroid: Platform.isAndroid,
+      activePubkey: pubkey,
+    );
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
-    final isUsingExternalSigner = useState<bool?>(null);
     final noticeMessage = useState<String?>(null);
-
-    useEffect(() {
-      var disposed = false;
-      loadNsec();
-
-      Future<void> checkSignerType() async {
-        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
-        if (!disposed) {
-          isUsingExternalSigner.value = isExternal;
-        }
-      }
-
-      checkSignerType();
-      return () {
-        disposed = true;
-      };
-    }, [pubkey]);
 
     if (pubkey == null) {
       return const SizedBox.shrink();
@@ -71,7 +56,9 @@ class SignOutScreen extends HookConsumerWidget {
       final nextPubkey = await ref
           .read(authProvider.notifier)
           .logout(
-            onAndroidSignerDisconnect: androidSigner.disconnect,
+            onAndroidSignerDisconnect: nsecState.nsecStorage == NsecStorage.externalSigner
+                ? androidSigner.disconnect
+                : null,
           );
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) {
@@ -118,7 +105,7 @@ class SignOutScreen extends HookConsumerWidget {
                             description: context.l10n.signOutWarning,
                             type: CalloutType.warning,
                           ),
-                          if (isUsingExternalSigner.value == false) ...[
+                          if (nsecState.nsecStorage == NsecStorage.local) ...[
                             Gap(24.h),
                             Text(
                               context.l10n.backUpPrivateKey,
@@ -136,7 +123,7 @@ class SignOutScreen extends HookConsumerWidget {
                             Gap(16.h),
                             WnCopyableField(
                               label: context.l10n.privateKey,
-                              value: state.nsec ?? '',
+                              value: nsecState.nsec ?? '',
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,

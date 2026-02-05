@@ -189,20 +189,6 @@ class AuthNotifier extends AsyncNotifier<String?> {
     }
   }
 
-  /// Whether the current session is using an Android signer for signing.
-  Future<bool> isUsingAndroidSigner() async {
-    final pubkey = state.value;
-    if (pubkey == null) return false;
-
-    try {
-      final account = await accounts_api.getAccount(pubkey: pubkey);
-      return account.accountType == accounts_api.AccountType.external_;
-    } on ApiError catch (e) {
-      _logger.warning('Failed to read account type: ${e.message}');
-      return false;
-    }
-  }
-
   /// Create a new identity (signup).
   Future<String> signup() async {
     _logger.info('Signup started');
@@ -217,8 +203,9 @@ class AuthNotifier extends AsyncNotifier<String?> {
 
   /// Logout the current user.
   ///
-  /// If [onAndroidSignerDisconnect] is provided, it will be called to disconnect
-  /// from the Android signer if the current session is using one.
+  /// The caller is responsible for passing [onAndroidSignerDisconnect] only
+  /// when the current session uses an external signer (e.g. from [useNsec]).
+  /// If provided, it is invoked before clearing the session.
   Future<String?> logout({Future<void> Function()? onAndroidSignerDisconnect}) async {
     final pubkey = state.value;
     if (pubkey == null) return null;
@@ -226,12 +213,15 @@ class AuthNotifier extends AsyncNotifier<String?> {
     _logger.info('Logout started');
     final storage = ref.read(secureStorageProvider);
 
-    // Disconnect from Android signer if logged in via signer
-    if (await isUsingAndroidSigner() && onAndroidSignerDisconnect != null) {
+    if (onAndroidSignerDisconnect != null) {
       try {
         await onAndroidSignerDisconnect();
       } catch (e, st) {
-        _logger.warning('Error disconnecting Android signer during logout', e, st);
+        _logger.warning(
+          'Error disconnecting Android signer during logout',
+          e,
+          st,
+        );
       }
     }
 
