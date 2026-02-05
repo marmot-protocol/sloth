@@ -18,6 +18,8 @@ import 'package:sloth_widgetbook/components/icons.dart'
     as _sloth_widgetbook_components_icons;
 import 'package:sloth_widgetbook/components/inputs.dart'
     as _sloth_widgetbook_components_inputs;
+import 'package:sloth_widgetbook/components/key_package_card.dart'
+    as _sloth_widgetbook_components_key_package_card;
 import 'package:sloth_widgetbook/components/list.dart'
     as _sloth_widgetbook_components_list;
 import 'package:sloth_widgetbook/components/menu.dart'
@@ -127,6 +129,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Text Area',
             builder:
                 _sloth_widgetbook_components_inputs.wnInputTextAreaShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnKeyPackageCardStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Key Package Card',
+            builder: _sloth_widgetbook_components_key_package_card
+                .wnKeyPackageCardShowcase,
           ),
         ],
       ),

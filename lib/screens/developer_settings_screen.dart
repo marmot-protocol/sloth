@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' show useEffect, useState;
+import 'package:flutter_hooks/flutter_hooks.dart' show HookWidget, useEffect, useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_key_packages.dart';
@@ -9,7 +9,8 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/accounts.dart' show FlutterEvent;
 import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:sloth/widgets/wn_key_package_card.dart';
+import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 import 'package:sloth/widgets/wn_system_notice.dart';
@@ -188,7 +189,7 @@ class _ActionButtons extends StatelessWidget {
   }
 }
 
-class _KeyPackagesList extends StatelessWidget {
+class _KeyPackagesList extends HookWidget {
   const _KeyPackagesList({
     required this.packages,
     required this.onDelete,
@@ -203,6 +204,13 @@ class _KeyPackagesList extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typographyScaled;
+    final canScrollUp = useState(false);
+    final canScrollDown = useState(false);
+
+    void updateScrollState(ScrollMetrics metrics) {
+      canScrollUp.value = metrics.extentBefore > 0;
+      canScrollDown.value = metrics.extentAfter > 0;
+    }
 
     if (packages.isEmpty) {
       return Center(
@@ -215,81 +223,40 @@ class _KeyPackagesList extends StatelessWidget {
       );
     }
 
-    return ListView.separated(
-      itemCount: packages.length,
-      separatorBuilder: (_, _) => SizedBox(height: 8.h),
-      itemBuilder: (context, index) {
-        final package = packages[index];
-        return _KeyPackageTile(
-          package: package,
-          index: index,
-          onDelete: () => onDelete(package.id),
-          disabled: disabled,
-        );
+    return NotificationListener<ScrollMetricsNotification>(
+      onNotification: (notification) {
+        updateScrollState(notification.metrics);
+        return false;
       },
-    );
-  }
-}
-
-class _KeyPackageTile extends StatelessWidget {
-  const _KeyPackageTile({
-    required this.package,
-    required this.index,
-    required this.onDelete,
-    required this.disabled,
-  });
-
-  final FlutterEvent package;
-  final int index;
-  final VoidCallback onDelete;
-  final bool disabled;
-
-  @override
-  Widget build(BuildContext context) {
-    final colors = context.colors;
-    final typography = context.typographyScaled;
-
-    return Container(
-      padding: EdgeInsets.all(12.w),
-      decoration: BoxDecoration(
-        color: colors.backgroundPrimary,
-        borderRadius: BorderRadius.circular(8.r),
-        border: Border.all(color: colors.borderTertiary),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  context.l10n.packageNumber(index + 1),
-                  style: typography.semiBold14.copyWith(
-                    color: colors.backgroundContentPrimary,
-                  ),
-                ),
-                SizedBox(height: 4.h),
-                Text(
-                  package.id,
-                  style: typography.medium12.copyWith(
-                    color: colors.backgroundContentSecondary,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+      child: NotificationListener<ScrollNotification>(
+        onNotification: (notification) {
+          updateScrollState(notification.metrics);
+          return false;
+        },
+        child: Stack(
+          children: [
+            ListView.separated(
+              itemCount: packages.length,
+              separatorBuilder: (_, _) => SizedBox(height: 8.h),
+              itemBuilder: (context, index) {
+                final package = packages[index];
+                return WnKeyPackageCard(
+                  key: Key('key_package_card_${package.id}'),
+                  title: context.l10n.packageNumber(index + 1),
+                  packageId: package.id,
+                  createdAt: package.createdAt.toIso8601String(),
+                  onDelete: () => onDelete(package.id),
+                  deleteLabel: context.l10n.delete,
+                  disabled: disabled,
+                  deleteButtonKey: Key('delete_key_package_${package.id}'),
+                );
+              },
             ),
-          ),
-          IconButton(
-            key: Key('delete_key_package_${package.id}'),
-            onPressed: disabled ? null : onDelete,
-            icon: WnIcon(
-              WnIcons.trashCan,
-              size: 20.w,
-              color: disabled ? colors.backgroundContentTertiary : colors.fillDestructive,
-            ),
-          ),
-        ],
+            if (canScrollUp.value) WnScrollEdgeEffect.slateTop(color: colors.backgroundSecondary),
+            if (canScrollDown.value)
+              WnScrollEdgeEffect.slateBottom(color: colors.backgroundSecondary),
+          ],
+        ),
       ),
     );
   }
