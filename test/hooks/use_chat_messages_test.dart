@@ -1,8 +1,11 @@
 import 'dart:async';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+
 import '../test_helpers.dart';
 
 ChatMessage _message(
@@ -74,6 +77,16 @@ class _MockApi implements RustLibApi {
     return controller!.stream;
   }
 
+  FlutterMetadata? userMetadataResponse;
+
+  @override
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
+    required String pubkey,
+    required bool blockingDataSync,
+  }) => Future.value(
+    userMetadataResponse ?? const FlutterMetadata(displayName: 'Author', custom: {}),
+  );
+
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
@@ -90,6 +103,7 @@ void main() {
   setUp(() {
     _api.controller?.close();
     _api.controller = null;
+    _api.userMetadataResponse = null;
   });
 
   group('useChatMessages', () {
@@ -399,6 +413,69 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(getResult().getMessage(0).reactions.byEmoji, isEmpty);
+      });
+    });
+
+    group('getReplyPreview', () {
+      testWidgets('returns null when replyId is null', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pump();
+
+        expect(getResult().getReplyPreview(null), isNull);
+      });
+
+      testWidgets('returns isNotFound when message is missing', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pump();
+
+        final preview = getResult().getReplyPreview('unknown');
+        expect(preview, isNotNull);
+        expect(preview!.isNotFound, isTrue);
+        expect(preview.authorPubkey, '');
+        expect(preview.content, '');
+        expect(preview.authorMetadata, isNull);
+      });
+
+      testWidgets('returns isNotFound when message is deleted', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024)),
+          _message('m2', DateTime(2024, 1, 2), isDeleted: true),
+        ]);
+        await tester.pump();
+
+        final preview = getResult().getReplyPreview('m2');
+        expect(preview, isNotNull);
+        expect(preview!.isNotFound, isTrue);
+      });
+
+      testWidgets('returns preview when message is found', (tester) async {
+        const authorPubkey = testPubkeyB;
+        _api.userMetadataResponse = const FlutterMetadata(
+          displayName: 'Original Author',
+          name: 'author',
+          custom: {},
+        );
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024), pubkey: authorPubkey, content: 'Original content'),
+        ]);
+        await tester.pump();
+        getResult().getReplyPreview('m1');
+        await tester.pumpAndSettle();
+
+        final preview = getResult().getReplyPreview('m1');
+        expect(preview, isNotNull);
+        expect(preview!.isNotFound, isFalse);
+        expect(preview.authorPubkey, authorPubkey);
+        expect(preview.content, 'Original content');
+        expect(preview.authorMetadata?.displayName, 'Original Author');
       });
     });
   });

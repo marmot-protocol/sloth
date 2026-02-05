@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/users.dart' as users_api;
 
 typedef ChatMessagesResult = ({
   int messageCount,
@@ -9,12 +12,15 @@ typedef ChatMessagesResult = ({
   bool isLoading,
   String? latestMessageId,
   String? latestMessagePubkey,
+  ReplyPreview? Function(String? replyId) getReplyPreview,
 });
 
 ChatMessagesResult useChatMessages(String groupId) {
   final messageIds = useRef<List<String>>([]);
   final messagesById = useRef<Map<String, ChatMessage>>({});
   final indexById = useRef<Map<String, int>>({});
+  final authorsMetadataByPubkey = useRef<Map<String, FlutterMetadata>>({});
+  final loadingPubkeys = useRef<Set<String>>({});
 
   final stream = useMemoized(
     () => subscribeToGroupMessages(groupId: groupId).map((item) {
@@ -84,6 +90,53 @@ ChatMessagesResult useChatMessages(String groupId) {
     return messageIds.value.length - 1 - naturalIndex;
   }
 
+  ChatMessage? getMessageById(String messageId) {
+    return messagesById.value[messageId];
+  }
+
+  Future<void> fetchAuthorMetadata(String pubkey) async {
+    if (authorsMetadataByPubkey.value.containsKey(pubkey)) return;
+    if (loadingPubkeys.value.contains(pubkey)) return;
+
+    loadingPubkeys.value.add(pubkey);
+    try {
+      final metadata = await users_api.userMetadata(
+        pubkey: pubkey,
+        blockingDataSync: false,
+      );
+      authorsMetadataByPubkey.value[pubkey] = metadata;
+    } finally {
+      loadingPubkeys.value.remove(pubkey);
+    }
+  }
+
+  FlutterMetadata? getAuthorMetadata(String pubkey) {
+    final existingAuthorMetadata = authorsMetadataByPubkey.value[pubkey];
+    if (existingAuthorMetadata != null) return existingAuthorMetadata;
+
+    fetchAuthorMetadata(pubkey);
+    return null;
+  }
+
+  ReplyPreview? getReplyPreview(String? replyId) {
+    if (replyId == null) return null;
+    final message = getMessageById(replyId);
+    if (message == null || message.isDeleted) {
+      return (
+        authorPubkey: '',
+        authorMetadata: null,
+        content: '',
+        isNotFound: true,
+      );
+    }
+    return (
+      authorPubkey: message.pubkey,
+      authorMetadata: getAuthorMetadata(message.pubkey),
+      content: message.content,
+      isNotFound: false,
+    );
+  }
+
   return (
     messageCount: snapshot.data?.messageCount ?? 0,
     getMessage: getMessage,
@@ -91,5 +144,6 @@ ChatMessagesResult useChatMessages(String groupId) {
     isLoading: isLoading,
     latestMessageId: snapshot.data?.latestMessageId,
     latestMessagePubkey: snapshot.data?.latestMessagePubkey,
+    getReplyPreview: getReplyPreview,
   );
 }
