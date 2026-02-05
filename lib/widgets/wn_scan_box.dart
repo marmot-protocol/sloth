@@ -1,29 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:whitenoise/hooks/use_scan.dart';
-import 'package:whitenoise/l10n/l10n.dart';
-import 'package:whitenoise/theme.dart';
+import 'package:sloth/theme.dart';
 
-class WnScanBox extends HookWidget {
+class WnScanBox extends StatelessWidget {
   const WnScanBox({
     super.key,
     required this.onBarcodeDetected,
-    this.onError,
     this.width,
     this.height,
   });
 
   final void Function(String value) onBarcodeDetected;
-  final void Function(MobileScannerException error)? onError;
   final double? width;
   final double? height;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final (:controller, isProcessing: _) = useScan(onBarcodeDetected: onBarcodeDetected);
 
     return Container(
       width: width,
@@ -35,62 +29,14 @@ class WnScanBox extends HookWidget {
       child: ClipRRect(
         borderRadius: BorderRadius.circular(7.r),
         child: MobileScanner(
-          controller: controller,
-          errorBuilder: (context, error) {
-            onError?.call(error);
-            if (error.errorCode == MobileScannerErrorCode.permissionDenied) {
-              return _CameraPermissionDenied(colors: colors);
+          onDetect: (capture) {
+            if (capture.barcodes.isEmpty) return;
+            final barcode = capture.barcodes.first;
+            final rawValue = barcode.rawValue?.trim() ?? '';
+            if (rawValue.isNotEmpty) {
+              onBarcodeDetected(rawValue);
             }
-            return _ScannerError(colors: colors);
           },
-        ),
-      ),
-    );
-  }
-}
-
-class _CameraPermissionDenied extends StatelessWidget {
-  const _CameraPermissionDenied({required this.colors});
-
-  final SemanticColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = context.typographyScaled;
-    return Container(
-      color: colors.backgroundSecondary,
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Text(
-            context.l10n.cameraPermissionDenied,
-            textAlign: TextAlign.center,
-            style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class _ScannerError extends StatelessWidget {
-  const _ScannerError({required this.colors});
-
-  final SemanticColors colors;
-
-  @override
-  Widget build(BuildContext context) {
-    final typography = context.typographyScaled;
-    return Container(
-      color: colors.backgroundSecondary,
-      child: Center(
-        child: Padding(
-          padding: EdgeInsets.all(16.w),
-          child: Text(
-            context.l10n.somethingWentWrong,
-            textAlign: TextAlign.center,
-            style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
-          ),
         ),
       ),
     );
