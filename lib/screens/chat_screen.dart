@@ -8,6 +8,7 @@ import 'package:whitenoise/hooks/use_chat_input.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/hooks/use_chat_scroll.dart';
 import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/message_actions_screen.dart';
@@ -18,6 +19,7 @@ import 'package:whitenoise/widgets/wn_chat_header.dart';
 import 'package:whitenoise/widgets/wn_fade_overlay.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
@@ -40,6 +42,7 @@ class ChatScreen extends HookConsumerWidget {
       :isLoading,
       :latestMessageId,
       :latestMessagePubkey,
+      :getReplyPreview,
     ) = useChatMessages(
       groupId,
     );
@@ -68,8 +71,13 @@ class ChatScreen extends HookConsumerWidget {
       isLatestMessageOwn: latestMessagePubkey == pubkey,
     );
 
-    Future<void> sendMessage(String message) async {
-      await messageService.sendTextMessage(content: message);
+    Future<void> sendMessage(String message, ChatMessage? replyingTo) async {
+      await messageService.sendTextMessage(
+        content: message,
+        replyToMessageId: replyingTo?.id,
+        replyToMessagePubkey: replyingTo?.pubkey,
+        replyToMessageKind: replyingTo?.kind,
+      );
     }
 
     Future<void> toggleReaction(ChatMessage message, String emoji) {
@@ -96,6 +104,7 @@ class ChatScreen extends HookConsumerWidget {
           reactionId: reactionId,
           reactionPubkey: pubkey,
         ),
+        onReply: (msg) => input.setReplyingTo(msg),
       );
       if (context.mounted) FocusManager.instance.primaryFocus?.unfocus();
     }
@@ -164,6 +173,10 @@ class ChatScreen extends HookConsumerWidget {
                             itemBuilder: (context, index) {
                               final message = getMessage(index);
                               final isOwnMessage = message.pubkey == pubkey;
+                              final replyPreview = message.isReply
+                                  ? getReplyPreview(message.replyToId)
+                                  : null;
+
                               return WnMessageBubble(
                                 key: ValueKey(message.id),
                                 message: message,
@@ -171,6 +184,7 @@ class ChatScreen extends HookConsumerWidget {
                                 currentUserPubkey: pubkey,
                                 onLongPress: () => showMessageMenu(message),
                                 onReaction: (emoji) => toggleReaction(message, emoji),
+                                replyPreview: replyPreview,
                               );
                             },
                           ),
@@ -178,7 +192,13 @@ class ChatScreen extends HookConsumerWidget {
                         ],
                       ),
               ),
-              _ChatInput(input: input, onSend: sendMessage, onError: showNotice),
+              _ChatInput(
+                input: input,
+                currentUserPubkey: pubkey,
+                onSend: sendMessage,
+                onError: showNotice,
+                getReplyPreview: getReplyPreview,
+              ),
             ],
           ),
         ),
@@ -188,11 +208,19 @@ class ChatScreen extends HookConsumerWidget {
 }
 
 class _ChatInput extends StatelessWidget {
-  const _ChatInput({required this.input, required this.onSend, required this.onError});
+  const _ChatInput({
+    required this.input,
+    required this.currentUserPubkey,
+    required this.onSend,
+    required this.onError,
+    required this.getReplyPreview,
+  });
 
   final ChatInputState input;
-  final Future<void> Function(String message) onSend;
+  final String currentUserPubkey;
+  final Future<void> Function(String message, ChatMessage? replyingTo) onSend;
   final void Function(String message) onError;
+  final ReplyPreview? Function(String? replyId) getReplyPreview;
 
   @override
   Widget build(BuildContext context) {
@@ -203,7 +231,7 @@ class _ChatInput extends StatelessWidget {
       final text = input.controller.text.trim();
       if (text.isEmpty) return;
       try {
-        await onSend(text);
+        await onSend(text, input.replyingTo);
         input.clear();
       } catch (e, st) {
         _logger.severe('Failed to send message', e, st);
@@ -220,34 +248,52 @@ class _ChatInput extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
           Expanded(
-            child: TextField(
-              controller: input.controller,
-              focusNode: input.focusNode,
-              maxLines: 5,
-              minLines: 1,
-              textCapitalization: TextCapitalization.sentences,
-              style: typography.medium14.copyWith(
-                color: colors.backgroundContentPrimary,
+            child: Container(
+              decoration: BoxDecoration(
+                color: colors.backgroundTertiary,
+                borderRadius: BorderRadius.circular(8.r),
+                border: Border.all(color: colors.borderTertiary),
               ),
-              decoration: InputDecoration(
-                hintText: context.l10n.messagePlaceholder,
-                hintStyle: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
-                filled: true,
-                fillColor: colors.backgroundTertiary,
-                contentPadding: EdgeInsets.symmetric(
-                  horizontal: 14.w,
-                  vertical: 20.h,
-                ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(
-                    color: colors.borderTertiary,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (input.replyingTo != null) ...[
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(14.w, 8.h, 14.w, 0.h),
+                      child: WnReplyPreview(
+                        data: getReplyPreview(input.replyingTo!.id)!,
+                        currentUserPubkey: currentUserPubkey,
+                        onCancel: input.cancelReply,
+                      ),
+                    ),
+                  ],
+                  TextField(
+                    controller: input.controller,
+                    focusNode: input.focusNode,
+                    maxLines: 5,
+                    minLines: 1,
+                    textCapitalization: TextCapitalization.sentences,
+                    style: typography.medium14.copyWith(
+                      color: colors.backgroundContentPrimary,
+                    ),
+                    decoration: InputDecoration(
+                      hintText: context.l10n.messagePlaceholder,
+                      hintStyle: typography.medium14.copyWith(
+                        color: colors.backgroundContentTertiary,
+                      ),
+                      filled: true,
+                      fillColor: colors.backgroundTertiary,
+                      contentPadding: EdgeInsets.symmetric(
+                        horizontal: 14.w,
+                        vertical: 20.h,
+                      ),
+                      border: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                    ),
                   ),
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8.r),
-                  borderSide: BorderSide(color: colors.borderPrimary),
-                ),
+                ],
               ),
             ),
           ),
