@@ -6,7 +6,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:sloth/hooks/use_nsec.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/routes.dart';
 import 'package:sloth/theme.dart';
 import 'package:sloth/utils/formatting.dart';
@@ -25,27 +24,9 @@ class ProfileKeysScreen extends HookConsumerWidget {
     final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final npub = npubFromHex(pubkey);
-    final (:state, :loadNsec) = useNsec(pubkey);
+    final (:nsecState) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
-    final isUsingExternalSigner = useState<bool?>(null);
     final noticeMessage = useState<String?>(null);
-
-    useEffect(() {
-      var disposed = false;
-      loadNsec();
-
-      Future<void> checkSignerType() async {
-        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
-        if (!disposed) {
-          isUsingExternalSigner.value = isExternal;
-        }
-      }
-
-      checkSignerType();
-      return () {
-        disposed = true;
-      };
-    }, [pubkey]);
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
@@ -100,11 +81,11 @@ class ProfileKeysScreen extends HookConsumerWidget {
                               color: colors.backgroundContentSecondary,
                             ),
                           ),
-                          if (isUsingExternalSigner.value == false) ...[
+                          if (nsecState.nsecStorage == NsecStorage.local) ...[
                             Gap(36.h),
                             WnCopyableField(
                               label: context.l10n.privateKey,
-                              value: state.nsec ?? '',
+                              value: nsecState.nsec ?? '',
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,

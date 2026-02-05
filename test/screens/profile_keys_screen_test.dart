@@ -232,6 +232,14 @@ void main() {
       expect(find.text('Public key'), findsOneWidget);
     });
 
+    testWidgets('hides nsec field when nsec storage is not local', (tester) async {
+      mockApi.setAccountType(AccountType.external_);
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.byType(WnCopyableField), findsOneWidget);
+    });
+
     testWidgets('success notice auto-dismisses after timeout', (tester) async {
       await pumpProfileKeysScreen(tester);
       await tester.pumpAndSettle();
