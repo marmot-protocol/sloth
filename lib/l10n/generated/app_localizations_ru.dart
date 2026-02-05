@@ -644,4 +644,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signerErrorUnknown => 'Произошла ошибка с signer. Попробуйте снова.';
+
+  @override
+  String get messageNotFound => 'Сообщение не найдено';
 }

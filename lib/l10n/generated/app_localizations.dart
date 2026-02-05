@@ -1253,6 +1253,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error occurred with the signer. Please try again.'**
   String get signerErrorUnknown;
+
+  /// Text shown in reply preview when the original message is deleted or not available
+  ///
+  /// In en, this message translates to:
+  /// **'Message not found'**
+  String get messageNotFound;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

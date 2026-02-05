@@ -1002,5 +1002,10 @@
   "signerErrorUnknown": "An error occurred with the signer. Please try again.",
   "@signerErrorUnknown": {
     "description": "Android signer generic error message"
+  },
+
+  "messageNotFound": "Message not found",
+  "@messageNotFound": {
+    "description": "Text shown in reply preview when the original message is deleted or not available"
   }
 }

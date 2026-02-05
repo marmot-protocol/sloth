@@ -637,4 +637,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get signerErrorUnknown => 'Signer ile bir hata oluştu. Lütfen tekrar deneyin.';
+
+  @override
+  String get messageNotFound => 'Mesaj bulunamadı';
 }

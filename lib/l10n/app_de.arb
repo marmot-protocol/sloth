@@ -190,5 +190,6 @@
   "signerErrorRequestInProgress": "Eine andere Anfrage wird gerade bearbeitet. Warte bitte.",
   "signerErrorNoActivity": "Signer konnte nicht gestartet werden. Bitte versuch es erneut.",
   "signerErrorLaunchError": "Signer-App konnte nicht gestartet werden.",
-  "signerErrorUnknown": "Ein Fehler ist beim Signer aufgetreten. Bitte versuch es erneut."
+  "signerErrorUnknown": "Ein Fehler ist beim Signer aufgetreten. Bitte versuch es erneut.",
+  "messageNotFound": "Nachricht nicht gefunden"
 }
