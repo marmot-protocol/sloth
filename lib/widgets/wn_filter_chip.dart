@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:sloth/theme.dart';
 
 enum WnFilterChipVariant { standard, elevated }
 
-class WnFilterChip extends StatefulWidget {
+class WnFilterChip extends HookWidget {
   const WnFilterChip({
     super.key,
     required this.label,
@@ -19,26 +20,19 @@ class WnFilterChip extends StatefulWidget {
   final WnFilterChipVariant variant;
 
   @override
-  State<WnFilterChip> createState() => _WnFilterChipState();
-}
-
-class _WnFilterChipState extends State<WnFilterChip> {
-  bool _isHovered = false;
-
-  @override
   Widget build(BuildContext context) {
+    final hover = useState(false);
     final colors = context.colors;
-    final typography = context.typographyScaled;
 
-    final backgroundColor = _getBackgroundColor(colors);
-    final borderColor = _getBorderColor(colors);
-    final boxShadow = _getBoxShadow(colors);
+    final backgroundColor = _getBackgroundColor(colors, selected, hover.value);
+    final borderColor = _getBorderColor(colors, selected);
+    final boxShadow = _getBoxShadow(colors, variant);
 
     return MouseRegion(
-      onEnter: (_) => setState(() => _isHovered = true),
-      onExit: (_) => setState(() => _isHovered = false),
+      onEnter: (_) => hover.value = true,
+      onExit: (_) => hover.value = false,
       child: GestureDetector(
-        onTap: () => widget.onSelected(!widget.selected),
+        onTap: () => onSelected(!selected),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 150),
           height: 32.h,
@@ -54,8 +48,8 @@ class _WnFilterChipState extends State<WnFilterChip> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                widget.label,
-                style: typography.medium14.copyWith(
+                label,
+                style: context.typographyScaled.medium14.copyWith(
                   color: colors.fillContentSecondary,
                   letterSpacing: 0.4.sp,
                 ),
@@ -67,33 +61,33 @@ class _WnFilterChipState extends State<WnFilterChip> {
     );
   }
 
-  Color _getBackgroundColor(SemanticColors colors) {
-    if (widget.selected || _isHovered) {
+  Color _getBackgroundColor(SemanticColors colors, bool selected, bool isHovered) {
+    if (selected || isHovered) {
       return colors.fillTertiaryActive;
     }
     return colors.backgroundPrimary;
   }
 
-  Color _getBorderColor(SemanticColors colors) {
-    if (widget.selected) {
+  Color _getBorderColor(SemanticColors colors, bool selected) {
+    if (selected) {
       return colors.borderSecondary;
     }
     return colors.borderTertiary;
   }
 
-  List<BoxShadow>? _getBoxShadow(SemanticColors colors) {
-    if (widget.variant == WnFilterChipVariant.elevated) {
+  List<BoxShadow>? _getBoxShadow(SemanticColors colors, WnFilterChipVariant variant) {
+    if (variant == WnFilterChipVariant.elevated) {
       return [
         BoxShadow(
           color: colors.shadow.withValues(alpha: 0.1),
           offset: const Offset(0, 1),
-          blurRadius: 3,
+          blurRadius: 3.r,
         ),
         BoxShadow(
           color: colors.shadow.withValues(alpha: 0.1),
           offset: const Offset(0, 1),
-          blurRadius: 2,
-          spreadRadius: -1,
+          blurRadius: 2.r,
+          spreadRadius: (-1).r,
         ),
       ];
     }
