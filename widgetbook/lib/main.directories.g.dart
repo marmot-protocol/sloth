@@ -12,6 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:whitenoise_widgetbook/components/buttons.dart'
     as _whitenoise_widgetbook_components_buttons;
+import 'package:whitenoise_widgetbook/components/carousel_indicator.dart'
+    as _whitenoise_widgetbook_components_carousel_indicator;
 import 'package:whitenoise_widgetbook/components/chat_status.dart'
     as _whitenoise_widgetbook_components_chat_status;
 import 'package:whitenoise_widgetbook/components/feedback.dart'
@@ -87,6 +89,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Callout',
             builder:
                 _whitenoise_widgetbook_components_feedback.wnCalloutShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnCarouselIndicatorStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Carousel Indicator',
+            builder: _whitenoise_widgetbook_components_carousel_indicator
+                .wnCarouselIndicatorShowcase,
           ),
         ],
       ),
