@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart' show useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -6,8 +8,6 @@ import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, Wid
 import 'package:sloth/hooks/use_android_signer.dart' show useAndroidSigner;
 import 'package:sloth/hooks/use_login.dart' show useLogin;
 import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/android_signer_service_provider.dart'
-    show androidSignerServiceProvider;
 import 'package:sloth/providers/auth_provider.dart' show authProvider;
 import 'package:sloth/routes.dart' show Routes;
 import 'package:sloth/services/android_signer_service.dart' show AndroidSignerException;
@@ -19,7 +19,9 @@ import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
 
 class LoginScreen extends HookConsumerWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({super.key, this.platformIsAndroidOverride});
+
+  final bool? platformIsAndroidOverride;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,8 +29,12 @@ class LoginScreen extends HookConsumerWidget {
     final (:controller, :state, :paste, :submit, :clearError) = useLogin(
       (nsec) => ref.read(authProvider.notifier).login(nsec),
     );
-    final signerService = ref.watch(androidSignerServiceProvider);
-    final androidSigner = useAndroidSigner(signerService);
+    final platformIsAndroid = platformIsAndroidOverride ?? Platform.isAndroid;
+    final activePubkey = ref.watch(authProvider).value;
+    final androidSigner = useAndroidSigner(
+      platformIsAndroid: platformIsAndroid,
+      activePubkey: activePubkey,
+    );
     final signerError = useState<String?>(null);
     final isSignerLoading = useState(false);
 

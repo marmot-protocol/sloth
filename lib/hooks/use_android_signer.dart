@@ -6,13 +6,6 @@ import 'package:sloth/services/android_signer_service.dart';
 
 final _logger = Logger('useAndroidSigner');
 
-/// Hook for managing Android signer (NIP-55) integration.
-///
-/// Provides ephemeral state for signer availability, connection status,
-/// and methods to connect/disconnect from the Android signer.
-///
-/// [service] is the [AndroidSignerService] instance to use. Callers should
-/// resolve this from [androidSignerServiceProvider] in their widget.
 ({
   bool isAvailable,
   bool isConnecting,
@@ -20,12 +13,19 @@ final _logger = Logger('useAndroidSigner');
   Future<String> Function() connect,
   Future<void> Function() disconnect,
 })
-useAndroidSigner(AndroidSignerService service) {
+useAndroidSigner({
+  required bool platformIsAndroid,
+  required String? activePubkey,
+}) {
   final isAvailable = useState(false);
   final isConnecting = useState(false);
   final error = useState<String?>(null);
 
-  // Check signer availability on mount
+  final service = useMemoized(
+    () => AndroidSignerService(platformIsAndroid: platformIsAndroid),
+    [activePubkey],
+  );
+
   useEffect(() {
     var disposed = false;
 
@@ -47,7 +47,7 @@ useAndroidSigner(AndroidSignerService service) {
     return () {
       disposed = true;
     };
-  }, const []);
+  }, [service]);
 
   /// Connect to the Android signer.
   ///

@@ -1,94 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/hooks/use_android_signer.dart';
 import 'package:sloth/services/android_signer_service.dart';
 
+import '../mocks/mock_android_signer_channel.dart';
 import '../test_helpers.dart';
-
-class MockAndroidSignerService implements AndroidSignerService {
-  @override
-  bool get platformIsAndroid => false;
-
-  bool _isAvailable = false;
-  String? _pubkeyToReturn;
-  Exception? _errorToThrow;
-  Exception? _isAvailableError;
-  bool getPublicKeyCalled = false;
-
-  void setAvailable(bool value) => _isAvailable = value;
-  void setPubkeyToReturn(String value) => _pubkeyToReturn = value;
-  void setErrorToThrow(Exception? value) => _errorToThrow = value;
-  void setIsAvailableError(Exception? value) => _isAvailableError = value;
-
-  @override
-  Future<bool> isAvailable() async {
-    if (_isAvailableError != null) throw _isAvailableError!;
-    return _isAvailable;
-  }
-
-  @override
-  Future<String> getPublicKey({List<SignerPermission>? permissions}) async {
-    getPublicKeyCalled = true;
-    if (_errorToThrow != null) throw _errorToThrow!;
-    return _pubkeyToReturn ?? testPubkeyA;
-  }
-
-  @override
-  Future<AndroidSignerResponse> signEvent({
-    required String eventJson,
-    String? id,
-    String? currentUser,
-  }) async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> nip04Encrypt({
-    required String plaintext,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> nip04Decrypt({
-    required String encryptedText,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> nip44Encrypt({
-    required String plaintext,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String> nip44Decrypt({
-    required String encryptedText,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async {
-    throw UnimplementedError();
-  }
-
-  @override
-  Future<String?> getSignerPackageName() async => null;
-
-  @override
-  Future<void> setSignerPackageName(String packageName) async {}
-}
 
 typedef AndroidSignerHookResult = ({
   bool isAvailable,
@@ -99,14 +17,22 @@ typedef AndroidSignerHookResult = ({
 });
 
 class _TestHookWidget extends HookWidget {
-  const _TestHookWidget({required this.service, required this.onBuild});
+  const _TestHookWidget({
+    required this.platformIsAndroid,
+    required this.activePubkey,
+    required this.onBuild,
+  });
 
-  final AndroidSignerService service;
+  final bool platformIsAndroid;
+  final String? activePubkey;
   final void Function(AndroidSignerHookResult) onBuild;
 
   @override
   Widget build(BuildContext context) {
-    final result = useAndroidSigner(service);
+    final result = useAndroidSigner(
+      platformIsAndroid: platformIsAndroid,
+      activePubkey: activePubkey,
+    );
     onBuild(result);
     return const SizedBox();
   }
@@ -114,21 +40,28 @@ class _TestHookWidget extends HookWidget {
 
 void main() {
   group('useAndroidSigner', () {
-    late MockAndroidSignerService mockService;
+    late dynamic mockChannel;
 
     setUp(() {
-      mockService = MockAndroidSignerService();
+      mockChannel = mockAndroidSignerChannel();
     });
 
-    Future<AndroidSignerHookResult Function()> mountAndroidSignerHook(
-      WidgetTester tester,
-    ) async {
+    tearDown(() {
+      mockChannel.reset();
+    });
+
+    Future<AndroidSignerHookResult Function()> mountHook(
+      WidgetTester tester, {
+      bool platformIsAndroid = false,
+      String? activePubkey,
+    }) async {
       late AndroidSignerHookResult result;
       setUpTestView(tester);
       await tester.pumpWidget(
         MaterialApp(
           home: _TestHookWidget(
-            service: mockService,
+            platformIsAndroid: platformIsAndroid,
+            activePubkey: activePubkey,
             onBuild: (r) => result = r,
           ),
         ),
@@ -136,45 +69,57 @@ void main() {
       return () => result;
     }
 
-    testWidgets('initially has isAvailable false', (tester) async {
-      final getResult = await mountAndroidSignerHook(tester);
+    testWidgets('initially has isAvailable false when not Android', (tester) async {
+      final getResult = await mountHook(tester);
+      await tester.pumpAndSettle();
       expect(getResult().isAvailable, isFalse);
     });
 
     testWidgets('sets isAvailable true when signer is available', (tester) async {
-      mockService.setAvailable(true);
-      final getResult = await mountAndroidSignerHook(tester);
+      mockChannel.setResult('isExternalSignerInstalled', true);
+      final getResult = await mountHook(tester, platformIsAndroid: true);
       await tester.pumpAndSettle();
       expect(getResult().isAvailable, isTrue);
     });
 
-    testWidgets('sets isAvailable false when isAvailable throws', (tester) async {
-      mockService.setIsAvailableError(Exception('Platform error'));
-      final getResult = await mountAndroidSignerHook(tester);
+    testWidgets('sets isAvailable false when isAvailable returns false (PlatformException)', (
+      tester,
+    ) async {
+      mockChannel.setException(
+        'isExternalSignerInstalled',
+        PlatformException(code: 'ERROR', message: 'Platform error'),
+      );
+      final getResult = await mountHook(tester, platformIsAndroid: true);
+      await tester.pumpAndSettle();
+      expect(getResult().isAvailable, isFalse);
+    });
+
+    testWidgets('sets isAvailable false when service throws non PlatformException', (tester) async {
+      mockChannel.setError('isExternalSignerInstalled', StateError('channel failed'));
+      final getResult = await mountHook(tester, platformIsAndroid: true);
       await tester.pumpAndSettle();
       expect(getResult().isAvailable, isFalse);
     });
 
     testWidgets('connect calls getPublicKey on service', (tester) async {
-      mockService.setAvailable(true);
-      mockService.setPubkeyToReturn(testPubkeyA);
-
-      final getResult = await mountAndroidSignerHook(tester);
+      mockChannel.setResult('isExternalSignerInstalled', true);
+      mockChannel.setResult('getPublicKey', {'result': testPubkeyA});
+      final getResult = await mountHook(tester, platformIsAndroid: true);
       await tester.pumpAndSettle();
 
       final pubkey = await getResult().connect();
 
-      expect(mockService.getPublicKeyCalled, isTrue);
       expect(pubkey, testPubkeyA);
+      expect(mockChannel.log.any((c) => c.method == 'getPublicKey'), isTrue);
     });
 
     testWidgets('connect rethrows exception from service', (tester) async {
-      mockService.setAvailable(true);
-      mockService.setErrorToThrow(
-        const AndroidSignerException('USER_REJECTED', 'User rejected'),
+      mockChannel.setResult('isExternalSignerInstalled', true);
+      mockChannel.setException(
+        'getPublicKey',
+        PlatformException(code: 'USER_REJECTED', message: 'User rejected'),
       );
-
-      final getResult = await mountAndroidSignerHook(tester);
+      final getResult = await mountHook(tester, platformIsAndroid: true);
       await tester.pumpAndSettle();
 
       expect(
@@ -184,10 +129,12 @@ void main() {
     });
 
     testWidgets('sets error when connect throws non-AndroidSignerException', (tester) async {
-      mockService.setAvailable(true);
-      mockService.setErrorToThrow(Exception('Generic error'));
-
-      final getResult = await mountAndroidSignerHook(tester);
+      mockChannel.setResult('isExternalSignerInstalled', true);
+      mockChannel.setException(
+        'getPublicKey',
+        PlatformException(code: 'UNKNOWN', message: 'Generic error'),
+      );
+      final getResult = await mountHook(tester, platformIsAndroid: true);
       await tester.pumpAndSettle();
 
       try {
@@ -199,10 +146,12 @@ void main() {
     });
 
     testWidgets('disconnect resets error state', (tester) async {
-      mockService.setAvailable(true);
-      mockService.setErrorToThrow(Exception('Generic error'));
-
-      final getResult = await mountAndroidSignerHook(tester);
+      mockChannel.setResult('isExternalSignerInstalled', true);
+      mockChannel.setException(
+        'getPublicKey',
+        PlatformException(code: 'UNKNOWN', message: 'Generic error'),
+      );
+      final getResult = await mountHook(tester, platformIsAndroid: true);
       await tester.pumpAndSettle();
 
       try {
