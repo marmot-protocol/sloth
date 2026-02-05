@@ -1,7 +1,7 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-const _channelName = 'com.example.sloth/android_signer';
+const _channelName = 'org.parres.whitenoise/android_signer';
 
 ({
   void Function(String, Object?) setResult,

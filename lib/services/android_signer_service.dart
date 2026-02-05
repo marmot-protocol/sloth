@@ -98,7 +98,7 @@ class AndroidSignerException implements Exception {
 /// It uses platform channels to communicate with the native Android code
 /// that handles intents and content resolvers.
 class AndroidSignerService {
-  static const _channel = MethodChannel('com.example.sloth/android_signer');
+  static const _channel = MethodChannel('org.parres.whitenoise/android_signer');
 
   const AndroidSignerService({required this.platformIsAndroid});
 
