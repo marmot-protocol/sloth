@@ -96,13 +96,13 @@ class ShareProfileScreen extends HookConsumerWidget {
                             QrImageView(
                               data: npub,
                               size: 256.w,
-                              eyeStyle: const QrEyeStyle(
+                              eyeStyle: QrEyeStyle(
                                 eyeShape: QrEyeShape.square,
-                                color: Colors.white,
+                                color: colors.qrCode,
                               ),
-                              dataModuleStyle: const QrDataModuleStyle(
+                              dataModuleStyle: QrDataModuleStyle(
                                 dataModuleShape: QrDataModuleShape.square,
-                                color: Colors.white,
+                                color: colors.qrCode,
                               ),
                             ),
                           ] else
