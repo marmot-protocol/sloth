@@ -42,11 +42,12 @@ class WnChatStatus extends HookWidget {
     return SizedBox(
       key: const Key('chat_status_icon'),
       width: 18.w,
-      height: 18.w,
+      height: 18.h,
       child: Center(
         child: WnIcon(
           icon!,
-          size: 18.w,
+          key: const Key('chat_status_wn_icon'),
+          size: 18.r,
           color: colors.backgroundContentSecondary,
         ),
       ),
@@ -69,19 +70,16 @@ class _UnreadCountBadge extends StatelessWidget {
     final displayText = count > 99 ? '99+' : count.toString();
     final digitCount = displayText.length;
 
-    final double width;
-    if (digitCount == 1) {
-      width = 18.w;
-    } else if (digitCount == 2) {
-      width = 28.w;
-    } else {
-      width = 35.w;
-    }
+    final width = switch (digitCount) {
+      1 => 18.w,
+      2 => 28.w,
+      _ => 35.w,
+    };
 
     return Container(
       key: const Key('unread_count_container'),
       width: width,
-      height: 18.w,
+      height: 18.h,
       decoration: BoxDecoration(
         color: colors.fillPrimary,
         borderRadius: BorderRadius.circular(999.r),

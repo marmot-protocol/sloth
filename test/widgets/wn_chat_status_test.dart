@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart' show Key;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/widgets/wn_chat_status.dart';
-import 'package:sloth/widgets/wn_icon.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {
@@ -11,7 +10,7 @@ void main() {
         await mountWidget(const WnChatStatus(status: ChatStatusType.sent), tester);
 
         expect(find.byKey(const Key('chat_status_icon')), findsOneWidget);
-        expect(find.byType(WnIcon), findsOneWidget);
+        expect(find.byKey(const Key('chat_status_wn_icon')), findsOneWidget);
       });
 
       testWidgets('displays checkmark_outline icon for delivered status', (
@@ -20,28 +19,28 @@ void main() {
         await mountWidget(const WnChatStatus(status: ChatStatusType.delivered), tester);
 
         expect(find.byKey(const Key('chat_status_icon')), findsOneWidget);
-        expect(find.byType(WnIcon), findsOneWidget);
+        expect(find.byKey(const Key('chat_status_wn_icon')), findsOneWidget);
       });
 
       testWidgets('displays checkmark_filled icon for read status', (WidgetTester tester) async {
         await mountWidget(const WnChatStatus(status: ChatStatusType.read), tester);
 
         expect(find.byKey(const Key('chat_status_icon')), findsOneWidget);
-        expect(find.byType(WnIcon), findsOneWidget);
+        expect(find.byKey(const Key('chat_status_wn_icon')), findsOneWidget);
       });
 
       testWidgets('displays error icon for failed status', (WidgetTester tester) async {
         await mountWidget(const WnChatStatus(status: ChatStatusType.failed), tester);
 
         expect(find.byKey(const Key('chat_status_icon')), findsOneWidget);
-        expect(find.byType(WnIcon), findsOneWidget);
+        expect(find.byKey(const Key('chat_status_wn_icon')), findsOneWidget);
       });
 
       testWidgets('displays add_filled icon for request status', (WidgetTester tester) async {
         await mountWidget(const WnChatStatus(status: ChatStatusType.request), tester);
 
         expect(find.byKey(const Key('chat_status_icon')), findsOneWidget);
-        expect(find.byType(WnIcon), findsOneWidget);
+        expect(find.byKey(const Key('chat_status_wn_icon')), findsOneWidget);
       });
     });
 
@@ -133,7 +132,7 @@ void main() {
         await mountWidget(const WnChatStatus(status: ChatStatusType.sent), tester);
 
         expect(find.byType(WnChatStatus), findsOneWidget);
-        expect(find.byType(WnIcon), findsOneWidget);
+        expect(find.byKey(const Key('chat_status_wn_icon')), findsOneWidget);
       });
 
       testWidgets('unread count has container with text', (WidgetTester tester) async {
