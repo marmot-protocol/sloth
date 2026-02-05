@@ -8,7 +8,7 @@
 PRODUCT_NAME = whitenoise_widgetbook
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = org.parres.whitenoiseWidgetbook
+PRODUCT_BUNDLE_IDENTIFIER = dev.ipf.whitenoiseWidgetbook
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 Internet Privacy Foundation. All rights reserved.
