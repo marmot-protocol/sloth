@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/screens/chat_list_screen.dart';
-import 'package:sloth/screens/home_screen.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_copyable_field.dart' show WnCopyableField;
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/chat_list_screen.dart';
+import 'package:whitenoise/screens/home_screen.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_copyable_field.dart' show WnCopyableField;
+import 'package:whitenoise/widgets/wn_icon.dart';
 
 import '../mocks/mock_clipboard.dart' show mockClipboard;
 import '../mocks/mock_secure_storage.dart';

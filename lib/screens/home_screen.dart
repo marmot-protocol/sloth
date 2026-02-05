@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart' show SvgPicture;
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
-import 'package:sloth/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
-import 'package:sloth/widgets/wn_slate.dart' show WnSlate;
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
+import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
+import 'package:whitenoise/widgets/wn_slate.dart' show WnSlate;
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});

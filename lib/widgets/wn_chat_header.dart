@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 
 class WnChatHeader extends StatelessWidget {
   const WnChatHeader({

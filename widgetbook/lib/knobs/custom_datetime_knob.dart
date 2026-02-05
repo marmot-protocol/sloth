@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:sloth_widgetbook/utils/format_datetime_for_display.dart';
+import 'package:whitenoise_widgetbook/utils/format_datetime_for_display.dart';
 import 'package:widgetbook/widgetbook.dart';
 
 enum _DateTimeOption {

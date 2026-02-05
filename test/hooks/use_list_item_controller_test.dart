@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' show Key;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_list_item.dart';
+import 'package:whitenoise/widgets/wn_list_item.dart';
 
 import '../test_helpers.dart' show mountWidget;
 

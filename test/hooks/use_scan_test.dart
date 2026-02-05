@@ -3,7 +3,7 @@ import 'dart:ui' show AppLifecycleState;
 import 'package:flutter/widgets.dart' show SizedBox;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sloth/hooks/use_scan.dart';
+import 'package:whitenoise/hooks/use_scan.dart';
 import '../mocks/mock_scanner_service.dart';
 import '../test_helpers.dart' show mountHook;
 

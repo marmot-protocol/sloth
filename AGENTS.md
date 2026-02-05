@@ -2,9 +2,8 @@
 
 ## Project Overview
 
-Sloth is a playground messaging app for experimenting with the [whitenoise Rust crate](https://github.com/marmot-protocol/whitenoise-rs), which implements secure messaging using the [Marmot Protocol](https://github.com/marmot-protocol/marmot) with MLS (Messaging Layer Security) and Nostr.
+This is a secure messaging app that uses the [whitenoise Rust crate](https://github.com/marmot-protocol/whitenoise-rs), which implements secure messaging using the [Marmot Protocol](https://github.com/marmot-protocol/marmot) with MLS (Messaging Layer Security) and Nostr.
 
-**Why "Sloth"?** Sloths are slow but efficient, and you can find them in Costa Rica.
 
 ## Architecture
 
@@ -50,7 +49,7 @@ After running, you'll be working in `trees/issue-42-fix-login/` on that branch.
 ## Directory Structure
 
 ```text
-sloth/
+whitenoise/
 ├── lib/                    # Flutter/Dart source code
 │   ├── main.dart           # App entry point
 │   ├── routes.dart         # Route definitions (go_router)
@@ -191,7 +190,7 @@ rust tests...       ✓
 
 ### Avoid StatefulWidget
 
-- In line with rules number 6 & 7 below in the [Sloth Mode Philosphy](#sloth-mode-philosophy), we should avoid the use of StatefulWidgets. Prefer to use providers (shared app-wide state) or hooks (widget-local state) instead.
+- In line with rules number 6 & 7 below in the [Development philosophy](#development-philosophy), we should avoid the use of StatefulWidgets. Prefer to use providers (shared app-wide state) or hooks (widget-local state) instead.
 
 ## Testing
 
@@ -210,7 +209,7 @@ rust tests...       ✓
 - Prefer `find.byKey()` over `find.byIcon()` - add keys to icons in widgets and use `find.byKey(const Key('icon_name'))` in tests
 - Use valid 64-char hex strings for pubkeys in tests (see `test_helpers.dart` for examples), not dummy values like `'abc'` or `'test-pubkey'`
 
-## Sloth Mode Philosophy
+## Development philosophy
 
 Follow these principles when writing code:
 

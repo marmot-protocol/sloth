@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/hooks/use_system_notice.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/hooks/use_system_notice.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../test_helpers.dart';
 

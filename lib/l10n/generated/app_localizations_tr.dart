@@ -234,7 +234,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get bitcoinSilentPayment => 'Bitcoin Sessiz Ödeme';
 
   @override
-  String get copiedToClipboardThankYou => 'Panoya kopyalandı. Teşekkürler! 🦥';
+  String get copiedToClipboardThankYou => 'Panoya kopyalandı. Teşekkürler!';
 
   @override
   String get shareProfileTitle => 'Profili paylaş';
@@ -343,20 +343,17 @@ class AppLocalizationsTr extends AppLocalizations {
   }
 
   @override
-  String get ohNo => 'Ah hayır!';
-
-  @override
   String get goBack => 'Geri dön';
 
   @override
   String get reportError => 'Hata bildir';
 
   @override
-  String get slothsWorking => 'Tembel hayvanlar çalışıyor';
+  String get workInProgress => 'Bunun üzerinde çalışıyoruz';
 
   @override
   String get wipMessage =>
-      'Tembel hayvanlar bu özellik üzerinde çalışıyor. Tembel hayvanların daha hızlı gitmesini istiyorsanız, lütfen White Noise\'a bağış yapın';
+      'Bu özellik üzerinde çalışıyoruz. Geliştirmeyi desteklemek için lütfen White Noise\'a bağış yapın';
 
   @override
   String get donate => 'Bağış yap';

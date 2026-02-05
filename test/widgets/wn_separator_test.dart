@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_separator.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_separator.dart';
 
 import '../test_helpers.dart' show mountWidget;
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/hooks/use_chat_scroll.dart';
+import 'package:whitenoise/hooks/use_chat_scroll.dart';
 
 const _withinBottomThreshold = 40.0;
 

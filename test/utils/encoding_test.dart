@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/utils/encoding.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/utils/encoding.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';

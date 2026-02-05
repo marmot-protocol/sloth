@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'
     show BoxDecoration, Colors, Container, IgnorePointer, Key, LinearGradient, Positioned;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_scroll_edge_effect.dart'
+import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart'
     show ScrollEdgeEffectType, ScrollEdgePosition, WnScrollEdgeEffect;
 import '../test_helpers.dart' show mountStackedWidget;
 

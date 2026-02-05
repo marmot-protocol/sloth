@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_message_reactions.dart';
+import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_message_reactions.dart';
 
 class WnMessageBubble extends StatelessWidget {
   final ChatMessage message;

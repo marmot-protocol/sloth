@@ -2,7 +2,7 @@ import 'package:flutter/gestures.dart' show PointerDeviceKind;
 import 'package:flutter/material.dart'
     show Align, Alignment, Center, Colors, Key, Scaffold, SizedBox, Text;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_tooltip.dart'
+import 'package:whitenoise/widgets/wn_tooltip.dart'
     show ArrowPainter, WnTooltip, WnTooltipPosition, WnTooltipTriggerMode;
 import '../test_helpers.dart' show mountWidget, setUpTestView;
 

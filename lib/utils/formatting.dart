@@ -1,4 +1,4 @@
-export 'package:sloth/utils/encoding.dart' show npubFromHex;
+export 'package:whitenoise/utils/encoding.dart' show npubFromHex;
 
 String formatPublicKey(String publicKey) {
   return publicKey

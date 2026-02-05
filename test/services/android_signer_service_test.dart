@@ -1,6 +1,6 @@
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/services/android_signer_service.dart';
+import 'package:whitenoise/services/android_signer_service.dart';
 
 import '../mocks/mock_android_signer_channel.dart';
 import '../test_helpers.dart';
@@ -80,13 +80,13 @@ void main() {
     test('fromMap creates response with all fields', () {
       final response = AndroidSignerResponse.fromMap({
         'result': 'test_result',
-        'package': 'com.example.signer',
+        'package': 'org.parres.whitenoise.signer',
         'event': '{"id":"abc"}',
         'id': 'request_id',
       });
 
       expect(response.result, 'test_result');
-      expect(response.packageName, 'com.example.signer');
+      expect(response.packageName, 'org.parres.whitenoise.signer');
       expect(response.event, '{"id":"abc"}');
       expect(response.id, 'request_id');
     });
@@ -103,13 +103,13 @@ void main() {
     test('toString returns formatted string', () {
       const response = AndroidSignerResponse(
         result: 'test_result',
-        packageName: 'com.example.signer',
+        packageName: 'org.parres.whitenoise.signer',
         id: 'req_id',
       );
 
       expect(
         response.toString(),
-        'AndroidSignerResponse(result: test_result, package: com.example.signer, id: req_id)',
+        'AndroidSignerResponse(result: test_result, package: org.parres.whitenoise.signer, id: req_id)',
       );
     });
   });

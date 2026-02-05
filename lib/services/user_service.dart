@@ -1,7 +1,7 @@
 import 'package:logging/logging.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/users.dart' as users_api;
-import 'package:sloth/src/rust/api/users.dart' show User;
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/users.dart' as users_api;
+import 'package:whitenoise/src/rust/api/users.dart' show User;
 
 final _logger = Logger('UserService');
 

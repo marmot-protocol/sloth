@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart' show Key, Locale, MaterialApp, Widget;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/widgets/wn_scan_box.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/widgets/wn_scan_box.dart';
 import '../mocks/mock_scanner_service.dart';
 import '../test_helpers.dart' show mountWidget;
 

@@ -1,14 +1,14 @@
 import 'dart:async';
 
-import 'package:sloth/src/rust/api.dart' as rust_api;
-import 'package:sloth/src/rust/api/accounts.dart';
-import 'package:sloth/src/rust/api/chat_list.dart';
-import 'package:sloth/src/rust/api/error.dart';
-import 'package:sloth/src/rust/api/groups.dart';
-import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/api/users.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/src/rust/api.dart' as rust_api;
+import 'package:whitenoise/src/rust/api/accounts.dart';
+import 'package:whitenoise/src/rust/api/chat_list.dart';
+import 'package:whitenoise/src/rust/api/error.dart';
+import 'package:whitenoise/src/rust/api/groups.dart';
+import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/users.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 import '../test_helpers.dart' show testHexToNpub, testNpubToHex;
 

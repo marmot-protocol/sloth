@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/l10n/generated/app_localizations.dart';
-import 'package:sloth/theme.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
+import 'package:whitenoise/theme.dart';
 
 class WnTimestamp extends StatelessWidget {
   const WnTimestamp({

@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sloth/services/scanner_service.dart';
+import 'package:whitenoise/services/scanner_service.dart';
 
 class MockScannerService implements ScannerService {
   MockScannerService() : _controller = MobileScannerController(formats: [BarcodeFormat.qrCode]);

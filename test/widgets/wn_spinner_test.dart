@@ -13,7 +13,7 @@ import 'package:flutter/material.dart'
         TextButton,
         Transform;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_spinner.dart';
+import 'package:whitenoise/widgets/wn_spinner.dart';
 import '../test_helpers.dart' show mountWidget;
 
 double _extractRotationAngle(Matrix4 matrix) {

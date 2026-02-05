@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/android_signer_service_provider.dart';
-import 'package:sloth/services/android_signer_service.dart';
+import 'package:whitenoise/providers/android_signer_service_provider.dart';
+import 'package:whitenoise/services/android_signer_service.dart';
 
 import '../test_helpers.dart';
 

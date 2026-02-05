@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_timestamp.dart';
-import 'package:sloth_widgetbook/knobs/custom_datetime_knob.dart';
-import 'package:sloth_widgetbook/utils/format_datetime_for_display.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_timestamp.dart';
+import 'package:whitenoise_widgetbook/knobs/custom_datetime_knob.dart';
+import 'package:whitenoise_widgetbook/utils/format_datetime_for_display.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_user_metadata.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/formatting.dart';
-import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_menu.dart';
-import 'package:sloth/widgets/wn_menu_item.dart';
-import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/hooks/use_user_metadata.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/formatting.dart';
+import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_menu.dart';
+import 'package:whitenoise/widgets/wn_menu_item.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
 class SettingsScreen extends HookConsumerWidget {
   const SettingsScreen({super.key});

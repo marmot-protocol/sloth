@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' show Key;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_chat_status.dart';
+import 'package:whitenoise/widgets/wn_chat_status.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/utils/metadata.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/utils/metadata.dart';
 
 void main() {
   group('presentName', () {

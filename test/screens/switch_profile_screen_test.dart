@@ -3,12 +3,12 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/src/rust/api/accounts.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/utils/avatar_color.dart' show AvatarColor;
-import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar;
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/utils/avatar_color.dart' show AvatarColor;
+import 'package:whitenoise/widgets/wn_avatar.dart' show WnAvatar;
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -93,6 +93,13 @@ void main() {
     testWidgets('displays Profiles title', (tester) async {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
       expect(find.text('Profiles'), findsOneWidget);
+    });
+
+    testWidgets('tapping header back button goes back', (tester) async {
+      await pumpSwitchProfileScreen(tester, testPubkeyA);
+      await tester.tap(find.byKey(const Key('slate_close_button')));
+      await tester.pumpAndSettle();
+      expect(find.text('Profiles'), findsNothing);
     });
 
     testWidgets('displays list of accounts', (tester) async {
