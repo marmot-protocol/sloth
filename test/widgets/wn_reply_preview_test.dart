@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+<<<<<<< HEAD
 import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/widgets/wn_reply_preview.dart';
+=======
+import 'package:sloth/models/reply_preview.dart';
+import 'package:sloth/src/rust/api/metadata.dart';
+import 'package:sloth/widgets/wn_reply_preview.dart';
+>>>>>>> c9274ca8 (feat: add reply preview widget)
 import '../test_helpers.dart';
 
 ReplyPreview _replyData({
