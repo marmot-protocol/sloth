@@ -786,6 +786,11 @@
     "description": "Error message when scanned npub is invalid"
   },
 
+  "you": "You",
+  "@you": {
+    "description": "Prefix for messages sent by the user"
+  },
+
   "timestampNow": "Now",
   "@timestampNow": {
     "description": "Timestamp for events less than 60 seconds ago"

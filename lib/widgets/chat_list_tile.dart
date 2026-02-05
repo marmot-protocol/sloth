@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:whitenoise/l10n/l10n.dart';
-import 'package:whitenoise/providers/locale_provider.dart';
-import 'package:whitenoise/routes.dart' show Routes;
-import 'package:whitenoise/services/user_service.dart';
-import 'package:whitenoise/src/rust/api/chat_list.dart' show ChatSummary;
-import 'package:whitenoise/src/rust/api/groups.dart' show GroupType;
-import 'package:whitenoise/theme.dart';
-import 'package:whitenoise/utils/metadata.dart';
-import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:sloth/l10n/l10n.dart';
+import 'package:sloth/providers/account_pubkey_provider.dart';
+import 'package:sloth/providers/locale_provider.dart';
+import 'package:sloth/routes.dart' show Routes;
+import 'package:sloth/services/user_service.dart';
+import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
+import 'package:sloth/src/rust/api/groups.dart' show GroupType;
+import 'package:sloth/utils/metadata.dart';
+import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:sloth/widgets/wn_chat_list_item.dart';
+import 'package:sloth/widgets/wn_chat_status.dart';
 
 class ChatListTile extends HookConsumerWidget {
   final ChatSummary chatSummary;
@@ -22,7 +24,7 @@ class ChatListTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final formatters = ref.watch(localeFormattersProvider);
-    final colors = context.colors;
+    final myPubkey = ref.watch(accountPubkeyProvider);
     final isDm = chatSummary.groupType == GroupType.directMessage;
     final isPending = chatSummary.pendingConfirmation;
     final hasWelcomer = chatSummary.welcomerPubkey != null;
@@ -80,31 +82,35 @@ class ChatListTile extends HookConsumerWidget {
     final timestamp = chatSummary.lastMessage?.createdAt ?? chatSummary.createdAt;
     final formattedTime = formatters.formatRelativeTime(timestamp, context.l10n);
 
-    final typography = context.typographyScaled;
+    // Determine status
+    ChatStatusType? status;
+    final unreadCount = chatSummary.unreadCount.toInt();
+    if (isPending) {
+      status = ChatStatusType.request;
+    } else if (unreadCount > 0) {
+      status = ChatStatusType.unreadCount;
+    }
 
-    return ListTile(
+    // Prefix "You: " logic
+    String? prefixSubtitle;
+    if (!isPending && chatSummary.lastMessage?.author == myPubkey) {
+      prefixSubtitle = '${context.l10n.you}: ';
+    }
+
+    return WnChatListItem(
+      key: ValueKey(chatSummary.mlsGroupId),
       onTap: isPending
           ? () => Routes.pushToInvite(context, chatSummary.mlsGroupId)
           : () => Routes.goToChat(context, chatSummary.mlsGroupId),
-      leading: WnAvatar(
-        pictureUrl: pictureUrl,
-        displayName: avatarName,
-        color: AvatarColor.fromPubkey(chatSummary.mlsGroupId),
-      ),
-      title: Text(
-        title,
-        style: typography.medium14.copyWith(color: colors.backgroundContentPrimary),
-      ),
-      subtitle: Text(
-        subtitle,
-        style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
-        maxLines: 1,
-        overflow: TextOverflow.ellipsis,
-      ),
-      trailing: Text(
-        formattedTime,
-        style: typography.medium12.copyWith(color: colors.backgroundContentTertiary),
-      ),
+      title: title,
+      subtitle: subtitle,
+      timestamp: formattedTime,
+      avatarUrl: pictureUrl,
+      avatarName: avatarName,
+      avatarColor: AvatarColor.fromPubkey(chatSummary.mlsGroupId),
+      status: status,
+      unreadCount: unreadCount,
+      prefixSubtitle: prefixSubtitle,
     );
   }
 }

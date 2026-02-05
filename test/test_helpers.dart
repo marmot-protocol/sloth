@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show Consumer, ProviderScope;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart' show WidgetTester, addTearDown;
 import 'package:whitenoise/l10n/generated/app_localizations.dart';
@@ -105,9 +105,14 @@ class _HookTestWidget<T> extends HookWidget {
   }
 }
 
-Future<void> mountWidget(Widget child, WidgetTester tester) async {
+Future<void> mountWidget(
+  Widget child,
+  WidgetTester tester, {
+  List overrides = const [],
+}) async {
   setUpTestView(tester);
   final widget = ProviderScope(
+    overrides: overrides.cast(),
     child: ScreenUtilInit(
       designSize: testDesignSize,
       builder: (_, _) {
