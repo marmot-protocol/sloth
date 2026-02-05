@@ -17,19 +17,13 @@ import 'package:sloth/screens/login_screen.dart';
 import 'package:sloth/screens/settings_screen.dart';
 import 'package:sloth/screens/signup_screen.dart';
 import 'package:sloth/screens/user_search_screen.dart';
-<<<<<<< HEAD
-=======
 import 'package:sloth/src/rust/api/accounts.dart' show Account, AccountType, FlutterEvent;
 import 'package:sloth/src/rust/api/chat_list.dart';
->>>>>>> 756f9d0 (fix issue where signer sometimes didn't get loaded on app restarts)
 import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
-<<<<<<< HEAD
 import 'mocks/mock_wn_api.dart';
-=======
 
->>>>>>> 756f9d0 (fix issue where signer sometimes didn't get loaded on app restarts)
 import 'test_helpers.dart';
 
 class _MockRustLibApi extends MockWnApi {
@@ -61,73 +55,6 @@ class _MockRustLibApi extends MockWnApi {
       state: GroupState.active,
     );
   }
-<<<<<<< HEAD
-=======
-
-  @override
-  Future<bool> crateApiGroupsGroupIsDirectMessageType({
-    required Group that,
-    required String accountPubkey,
-  }) async {
-    return false;
-  }
-
-  @override
-  Future<String?> crateApiGroupsGetGroupImagePath({
-    required String accountPubkey,
-    required String groupId,
-  }) async {
-    return null;
-  }
-
-  @override
-  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
-    required String pubkey,
-    required String groupId,
-  }) async {
-    return [];
-  }
-
-  @override
-  Stream<ChatListStreamItem> crateApiChatListSubscribeToChatList({
-    required String accountPubkey,
-  }) {
-    return Stream.value(const ChatListStreamItem.initialSnapshot(items: []));
-  }
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
-  Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) async {
-    return [];
-  }
-
-  @override
-  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
-    return Account(
-      pubkey: pubkey,
-      accountType: AccountType.local,
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-    );
-  }
-
-  @override
-  Future<List<FlutterEvent>> crateApiAccountsAccountKeyPackages({
-    required String accountPubkey,
-  }) async {
-    return [];
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) {
-    final methodName = invocation.memberName.toString();
-    throw UnimplementedError('_MockRustLibApi.$methodName is not implemented');
-  }
->>>>>>> 756f9d0 (fix issue where signer sometimes didn't get loaded on app restarts)
 }
 
 class _AuthenticatedAuthNotifier extends AuthNotifier {
