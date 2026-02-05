@@ -386,7 +386,7 @@ class _RealisticContent extends StatelessWidget {
         colors: colors,
       ),
       _ChatMessage(
-        "I'm doing great, thanks for asking! Just working on some new features.",
+        'I\'m doing great, thanks for asking! Just working on some new features.',
         '10:32 AM',
         isMe: true,
         colors: colors,
@@ -398,7 +398,7 @@ class _RealisticContent extends StatelessWidget {
         colors: colors,
       ),
       _ChatMessage(
-        "We're adding overlay variants for better visual hierarchy in modals.",
+        'We\'re adding overlay variants for better visual hierarchy in modals.',
         '10:35 AM',
         isMe: true,
         colors: colors,
