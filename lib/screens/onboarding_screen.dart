@@ -40,9 +40,7 @@ class OnboardingScreen extends ConsumerWidget {
                     children: [
                       Text(
                         context.l10n.startConversationHint,
-                        style: TextStyle(
-                          fontSize: 14.sp,
-                          fontWeight: FontWeight.w400,
+                        style: context.typographyScaled.medium14.copyWith(
                           color: colors.backgroundContentTertiary,
                         ),
                       ),

@@ -44,11 +44,7 @@ class WnSlateNavigationHeader extends StatelessWidget {
               child: Center(
                 child: Text(
                   title,
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16.sp,
-                    height: 22 / 16,
-                    letterSpacing: 0.2.sp,
+                  style: context.typographyScaled.semiBold16.copyWith(
                     color: colors.backgroundContentPrimary,
                   ),
                   overflow: TextOverflow.ellipsis,

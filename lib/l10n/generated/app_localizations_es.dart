@@ -260,6 +260,10 @@ class AppLocalizationsEs extends AppLocalizations {
       'Copia tu llave privada para restaurar tu cuenta en otro dispositivo.';
 
   @override
+  String get publicKeyCopyError =>
+      'Error al copiar la llave pública. Por favor, inténtalo de nuevo.';
+
+  @override
   String get noChatsYet => 'Aún no hay chats';
 
   @override
@@ -500,4 +504,86 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Algo salió mal';
+
+  @override
+  String get scanNpub => 'Escanear código QR';
+
+  @override
+  String get scanNpubHint => 'Escanea el código QR de un contacto.';
+
+  @override
+  String get invalidNpub => 'Clave pública inválida. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get timestampNow => 'Ahora';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String get timestampYesterday => 'Ayer';
+
+  @override
+  String get weekdayMonday => 'Lunes';
+
+  @override
+  String get weekdayTuesday => 'Martes';
+
+  @override
+  String get weekdayWednesday => 'Miércoles';
+
+  @override
+  String get weekdayThursday => 'Jueves';
+
+  @override
+  String get weekdayFriday => 'Viernes';
+
+  @override
+  String get weekdaySaturday => 'Sábado';
+
+  @override
+  String get weekdaySunday => 'Domingo';
+
+  @override
+  String get monthJanShort => 'Ene';
+
+  @override
+  String get monthFebShort => 'Feb';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Abr';
+
+  @override
+  String get monthMayShort => 'May';
+
+  @override
+  String get monthJunShort => 'Jun';
+
+  @override
+  String get monthJulShort => 'Jul';
+
+  @override
+  String get monthAugShort => 'Ago';
+
+  @override
+  String get monthSepShort => 'Sep';
+
+  @override
+  String get monthOctShort => 'Oct';
+
+  @override
+  String get monthNovShort => 'Nov';
+
+  @override
+  String get monthDecShort => 'Dic';
 }

@@ -14,6 +14,7 @@ import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_chat_header.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class ChatInviteScreen extends HookConsumerWidget {
   final String mlsGroupId;
@@ -23,11 +24,21 @@ class ChatInviteScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
 
     final isAccepting = useState(false);
     final isDeclining = useState(false);
     final isProcessing = isAccepting.value || isDeclining.value;
+    final noticeMessage = useState<String?>(null);
+
+    void showNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final groupAvatarSnapshot = useChatAvatar(pubkey, mlsGroupId);
 
@@ -55,9 +66,7 @@ class ChatInviteScreen extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToAcceptInvitation(e.toString()))),
-          );
+          showNotice(context.l10n.failedToAcceptInvitation(e.toString()));
         }
       } finally {
         if (context.mounted) isAccepting.value = false;
@@ -76,9 +85,7 @@ class ChatInviteScreen extends HookConsumerWidget {
         }
       } catch (e) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToDeclineInvitation(e.toString()))),
-          );
+          showNotice(context.l10n.failedToDeclineInvitation(e.toString()));
         }
       } finally {
         if (context.mounted) isDeclining.value = false;
@@ -90,6 +97,13 @@ class ChatInviteScreen extends HookConsumerWidget {
       body: SafeArea(
         child: Column(
           children: [
+            if (noticeMessage.value != null)
+              WnSystemNotice(
+                key: ValueKey(noticeMessage.value),
+                title: noticeMessage.value!,
+                type: WnSystemNoticeType.error,
+                onDismiss: dismissNotice,
+              ),
             Column(
               children: [
                 WnChatHeader(
@@ -109,9 +123,7 @@ class ChatInviteScreen extends HookConsumerWidget {
                 SizedBox(height: 16.h),
                 Text(
                   groupAvatarSnapshot.data?.displayName ?? '',
-                  style: TextStyle(
-                    fontSize: 18.sp,
-                    fontWeight: FontWeight.w600,
+                  style: typography.semiBold18.copyWith(
                     color: colors.backgroundContentPrimary,
                   ),
                   textAlign: TextAlign.center,
@@ -130,9 +142,8 @@ class ChatInviteScreen extends HookConsumerWidget {
                   ? Center(
                       child: Text(
                         context.l10n.invitedToSecureChat,
-                        style: TextStyle(
+                        style: typography.medium14.copyWith(
                           color: colors.backgroundContentTertiary,
-                          fontSize: 14.sp,
                         ),
                       ),
                     )

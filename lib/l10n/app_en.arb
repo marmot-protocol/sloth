@@ -183,7 +183,7 @@
 
   "publicKeyCopied": "Public key copied to clipboard",
   "@publicKeyCopied": {
-    "description": "Snackbar message when public key is copied"
+    "description": "System notice message when public key is copied"
   },
 
   "publicKeyDescription": "Your public key is your identifier on Nostr. Share it so others can find, recognize, and connect with you.",
@@ -198,7 +198,7 @@
 
   "privateKeyCopied": "Private key copied to clipboard",
   "@privateKeyCopied": {
-    "description": "Snackbar message when private key is copied"
+    "description": "System notice message when private key is copied"
   },
 
   "privateKeyDescription": "Your private key works like a secret password that grants access to your Nostr identity.",
@@ -268,7 +268,7 @@
 
   "profileUpdatedSuccessfully": "Profile updated successfully",
   "@profileUpdatedSuccessfully": {
-    "description": "Snackbar message when profile is updated"
+    "description": "System notice message when profile is updated"
   },
 
   "errorLoadingProfile": "Error loading profile: {error}",
@@ -368,7 +368,7 @@
 
   "copiedToClipboardThankYou": "Copied to clipboard. Thank you! 🦥",
   "@copiedToClipboardThankYou": {
-    "description": "Snackbar message when donation address is copied"
+    "description": "System notice message when donation address is copied"
   },
 
   "shareProfileTitle": "Share profile",
@@ -404,6 +404,11 @@
   "copyPrivateKeyHint": "Copy your private key to restore your account on another device.",
   "@copyPrivateKeyHint": {
     "description": "Hint for copying private key"
+  },
+
+  "publicKeyCopyError": "Failed to copy public key. Please try again.",
+  "@publicKeyCopyError": {
+    "description": "Error message when copying public key (npub) to clipboard fails"
   },
 
   "noChatsYet": "No chats yet",
@@ -778,5 +783,145 @@
   "somethingWentWrong": "Something went wrong",
   "@somethingWentWrong": {
     "description": "Generic error message"
+  },
+
+"scanNpub": "Scan QR code",
+  "@scanNpub": {
+    "description": "Title for scan npub screen"
+  },
+
+  "scanNpubHint": "Scan a contact's QR code.",
+  "@scanNpubHint": {
+    "description": "Hint text on scan npub screen"
+  },
+
+  "invalidNpub": "Invalid public key. Please try again.",
+  "@invalidNpub": {
+    "description": "Error message when scanned npub is invalid"
+  },
+
+  "timestampNow": "Now",
+  "@timestampNow": {
+    "description": "Timestamp for events less than 60 seconds ago"
+  },
+
+  "timestampMinutes": "{count}m",
+  "@timestampMinutes": {
+    "description": "Timestamp for events 1-59 minutes ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "timestampHours": "{count}h",
+  "@timestampHours": {
+    "description": "Timestamp for events 1-12 hours ago",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+
+  "timestampYesterday": "Yesterday",
+  "@timestampYesterday": {
+    "description": "Timestamp for events from yesterday"
+  },
+
+  "weekdayMonday": "Monday",
+  "@weekdayMonday": {
+    "description": "Monday weekday name"
+  },
+
+  "weekdayTuesday": "Tuesday",
+  "@weekdayTuesday": {
+    "description": "Tuesday weekday name"
+  },
+
+  "weekdayWednesday": "Wednesday",
+  "@weekdayWednesday": {
+    "description": "Wednesday weekday name"
+  },
+
+  "weekdayThursday": "Thursday",
+  "@weekdayThursday": {
+    "description": "Thursday weekday name"
+  },
+
+  "weekdayFriday": "Friday",
+  "@weekdayFriday": {
+    "description": "Friday weekday name"
+  },
+
+  "weekdaySaturday": "Saturday",
+  "@weekdaySaturday": {
+    "description": "Saturday weekday name"
+  },
+
+  "weekdaySunday": "Sunday",
+  "@weekdaySunday": {
+    "description": "Sunday weekday name"
+  },
+
+  "monthJanShort": "Jan",
+  "@monthJanShort": {
+    "description": "January short name"
+  },
+
+  "monthFebShort": "Feb",
+  "@monthFebShort": {
+    "description": "February short name"
+  },
+
+  "monthMarShort": "Mar",
+  "@monthMarShort": {
+    "description": "March short name"
+  },
+
+  "monthAprShort": "Apr",
+  "@monthAprShort": {
+    "description": "April short name"
+  },
+
+  "monthMayShort": "May",
+  "@monthMayShort": {
+    "description": "May short name"
+  },
+
+  "monthJunShort": "Jun",
+  "@monthJunShort": {
+    "description": "June short name"
+  },
+
+  "monthJulShort": "Jul",
+  "@monthJulShort": {
+    "description": "July short name"
+  },
+
+  "monthAugShort": "Aug",
+  "@monthAugShort": {
+    "description": "August short name"
+  },
+
+  "monthSepShort": "Sep",
+  "@monthSepShort": {
+    "description": "September short name"
+  },
+
+  "monthOctShort": "Oct",
+  "@monthOctShort": {
+    "description": "October short name"
+  },
+
+  "monthNovShort": "Nov",
+  "@monthNovShort": {
+    "description": "November short name"
+  },
+
+  "monthDecShort": "Dec",
+  "@monthDecShort": {
+    "description": "December short name"
   }
 }

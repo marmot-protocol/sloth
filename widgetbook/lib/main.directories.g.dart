@@ -18,16 +18,26 @@ import 'package:sloth_widgetbook/components/icons.dart'
     as _sloth_widgetbook_components_icons;
 import 'package:sloth_widgetbook/components/inputs.dart'
     as _sloth_widgetbook_components_inputs;
+import 'package:sloth_widgetbook/components/list.dart'
+    as _sloth_widgetbook_components_list;
 import 'package:sloth_widgetbook/components/menu.dart'
     as _sloth_widgetbook_components_menu;
 import 'package:sloth_widgetbook/components/spinner.dart'
     as _sloth_widgetbook_components_spinner;
 import 'package:sloth_widgetbook/components/structure.dart'
     as _sloth_widgetbook_components_structure;
+import 'package:sloth_widgetbook/components/timestamp.dart'
+    as _sloth_widgetbook_components_timestamp;
+import 'package:sloth_widgetbook/components/tooltip.dart'
+    as _sloth_widgetbook_components_tooltip;
 import 'package:sloth_widgetbook/components/wn_avatar.dart'
     as _sloth_widgetbook_components_wn_avatar;
+import 'package:sloth_widgetbook/components/wn_copy_card.dart'
+    as _sloth_widgetbook_components_wn_copy_card;
 import 'package:sloth_widgetbook/foundations/semantic_colors.dart'
     as _sloth_widgetbook_foundations_semantic_colors;
+import 'package:sloth_widgetbook/foundations/typography.dart'
+    as _sloth_widgetbook_foundations_typography;
 import 'package:sloth_widgetbook/introduction.dart'
     as _sloth_widgetbook_introduction;
 import 'package:widgetbook/widgetbook.dart' as _widgetbook;
@@ -49,8 +59,8 @@ final directories = <_widgetbook.WidgetbookNode>[
         name: 'WnAvatarStory',
         useCases: [
           _widgetbook.WidgetbookUseCase(
-            name: 'All Variants',
-            builder: _sloth_widgetbook_components_wn_avatar.allVariants,
+            name: 'Avatar',
+            builder: _sloth_widgetbook_components_wn_avatar.wnAvatarShowcase,
           ),
         ],
       ),
@@ -69,6 +79,16 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Callout',
             builder: _sloth_widgetbook_components_feedback.wnCalloutShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnCopyCardStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Copy Card',
+            builder:
+                _sloth_widgetbook_components_wn_copy_card.wnCopyCardShowcase,
           ),
         ],
       ),
@@ -107,6 +127,15 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Text Area',
             builder:
                 _sloth_widgetbook_components_inputs.wnInputTextAreaShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnListStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'List',
+            builder: _sloth_widgetbook_components_list.wnListShowcase,
           ),
         ],
       ),
@@ -165,6 +194,24 @@ final directories = <_widgetbook.WidgetbookNode>[
           ),
         ],
       ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnTimestampStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Timestamp',
+            builder: _sloth_widgetbook_components_timestamp.wnTimestampShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnTooltipStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Tooltip',
+            builder: _sloth_widgetbook_components_tooltip.wnTooltipShowcase,
+          ),
+        ],
+      ),
     ],
   ),
   _widgetbook.WidgetbookFolder(
@@ -176,6 +223,15 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Semantic Colors',
             builder: _sloth_widgetbook_foundations_semantic_colors.allColors,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'TypographyStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Typography',
+            builder: _sloth_widgetbook_foundations_typography.allTypography,
           ),
         ],
       ),

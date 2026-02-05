@@ -5,6 +5,7 @@ import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:sloth/hooks/use_follow_actions.dart';
+import 'package:sloth/hooks/use_system_notice.dart';
 import 'package:sloth/hooks/use_user_has_key_package.dart';
 import 'package:sloth/hooks/use_user_metadata.dart';
 import 'package:sloth/l10n/l10n.dart';
@@ -15,7 +16,7 @@ import 'package:sloth/theme.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:sloth/widgets/wn_system_notice.dart' show WnSystemNotice;
 import 'package:sloth/widgets/wn_user_profile_card.dart';
 
 final _logger = Logger('StartChatScreen');
@@ -33,15 +34,8 @@ class StartChatScreen extends HookConsumerWidget {
     final metadataSnapshot = useUserMetadata(context, userPubkey);
     final keyPackageSnapshot = useUserHasKeyPackage(userPubkey);
     final isStartingChat = useState(false);
-    final noticeMessage = useState<String?>(null);
-
-    void showCopiedNotice(String message) {
-      noticeMessage.value = message;
-    }
-
-    void dismissNotice() {
-      noticeMessage.value = null;
-    }
+    final (:noticeMessage, :noticeType, :showErrorNotice, :showSuccessNotice, :dismissNotice) =
+        useSystemNotice();
 
     final followState = useFollowActions(
       accountPubkey: accountPubkey,
@@ -75,9 +69,7 @@ class StartChatScreen extends HookConsumerWidget {
       } catch (e) {
         _logger.severe('Failed to start chat: $e');
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToStartChat)),
-          );
+          showErrorNotice(context.l10n.failedToStartChat);
         }
       } finally {
         if (context.mounted) {
@@ -91,9 +83,7 @@ class StartChatScreen extends HookConsumerWidget {
         await followState.toggleFollow();
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToUpdateFollow)),
-          );
+          showErrorNotice(context.l10n.failedToUpdateFollow);
         }
       }
     }
@@ -113,10 +103,11 @@ class StartChatScreen extends HookConsumerWidget {
                   title: context.l10n.startNewChat,
                   onNavigate: () => Routes.goBack(context),
                 ),
-                systemNotice: noticeMessage.value != null
+                systemNotice: noticeMessage != null
                     ? WnSystemNotice(
-                        key: ValueKey(noticeMessage.value),
-                        title: noticeMessage.value!,
+                        key: ValueKey(noticeMessage),
+                        title: noticeMessage,
+                        type: noticeType,
                         onDismiss: dismissNotice,
                       )
                     : null,
@@ -140,7 +131,9 @@ class StartChatScreen extends HookConsumerWidget {
                         WnUserProfileCard(
                           userPubkey: userPubkey,
                           metadata: metadata,
-                          onPublicKeyCopied: () => showCopiedNotice(context.l10n.publicKeyCopied),
+                          onPublicKeyCopied: () => showSuccessNotice(context.l10n.publicKeyCopied),
+                          onPublicKeyCopyError: () =>
+                              showErrorNotice(context.l10n.publicKeyCopyError),
                         ),
                         Gap(24.h),
                         if (hasKeyPackage) ...[
@@ -168,8 +161,7 @@ class StartChatScreen extends HookConsumerWidget {
                           Text(
                             key: const Key('user_not_on_whitenoise'),
                             context.l10n.userNotOnWhiteNoise,
-                            style: TextStyle(
-                              fontSize: 14.sp,
+                            style: context.typographyScaled.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                             textAlign: TextAlign.center,

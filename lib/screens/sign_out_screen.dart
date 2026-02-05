@@ -23,6 +23,7 @@ class SignOutScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(authProvider).value;
     final (:state, :loadNsec) = useNsec(pubkey);
     final signerService = ref.watch(androidSignerServiceProvider);
@@ -121,18 +122,14 @@ class SignOutScreen extends HookConsumerWidget {
                             Gap(24.h),
                             Text(
                               context.l10n.backUpPrivateKey,
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w600,
+                              style: typography.semiBold16.copyWith(
                                 color: colors.backgroundContentPrimary,
                               ),
                             ),
                             Gap(8.h),
                             Text(
                               context.l10n.copyPrivateKeyHint,
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                fontWeight: FontWeight.w500,
+                              style: typography.medium14.copyWith(
                                 color: colors.backgroundContentSecondary,
                               ),
                             ),

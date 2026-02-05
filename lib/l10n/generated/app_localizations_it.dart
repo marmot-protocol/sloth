@@ -261,6 +261,9 @@ class AppLocalizationsIt extends AppLocalizations {
       'Copia la tua chiave privata per ripristinare il tuo account su un altro dispositivo.';
 
   @override
+  String get publicKeyCopyError => 'Copia della chiave pubblica fallita. Riprova.';
+
+  @override
   String get noChatsYet => 'Ancora nessuna chat';
 
   @override
@@ -496,4 +499,86 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Qualcosa è andato storto';
+
+  @override
+  String get scanNpub => 'Scansiona codice QR';
+
+  @override
+  String get scanNpubHint => 'Scansiona il codice QR di un contatto.';
+
+  @override
+  String get invalidNpub => 'Chiave pubblica non valida. Riprova.';
+
+  @override
+  String get timestampNow => 'Ora';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String get timestampYesterday => 'Ieri';
+
+  @override
+  String get weekdayMonday => 'Lunedì';
+
+  @override
+  String get weekdayTuesday => 'Martedì';
+
+  @override
+  String get weekdayWednesday => 'Mercoledì';
+
+  @override
+  String get weekdayThursday => 'Giovedì';
+
+  @override
+  String get weekdayFriday => 'Venerdì';
+
+  @override
+  String get weekdaySaturday => 'Sabato';
+
+  @override
+  String get weekdaySunday => 'Domenica';
+
+  @override
+  String get monthJanShort => 'Gen';
+
+  @override
+  String get monthFebShort => 'Feb';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Apr';
+
+  @override
+  String get monthMayShort => 'Mag';
+
+  @override
+  String get monthJunShort => 'Giu';
+
+  @override
+  String get monthJulShort => 'Lug';
+
+  @override
+  String get monthAugShort => 'Ago';
+
+  @override
+  String get monthSepShort => 'Set';
+
+  @override
+  String get monthOctShort => 'Ott';
+
+  @override
+  String get monthNovShort => 'Nov';
+
+  @override
+  String get monthDecShort => 'Dic';
 }

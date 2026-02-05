@@ -5,13 +5,13 @@ import 'package:gap/gap.dart';
 import 'package:sloth/l10n/l10n.dart';
 import 'package:sloth/src/rust/api/messages.dart' show ChatMessage;
 import 'package:sloth/theme.dart';
-import 'package:sloth/theme/semantic_colors.dart';
 import 'package:sloth/widgets/wn_button.dart';
 import 'package:sloth/widgets/wn_emoji_picker.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_slate.dart';
 import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 class MessageActionsScreen extends HookWidget {
   const MessageActionsScreen({
@@ -66,6 +66,15 @@ class MessageActionsScreen extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final showEmojiPicker = useState(false);
+    final noticeMessage = useState<String?>(null);
+
+    void showNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     final isOwnMessage = message.pubkey == pubkey;
     final userReactionIds = Map.fromEntries(
@@ -78,16 +87,12 @@ class MessageActionsScreen extends HookWidget {
     Future<void> handleDelete() async {
       try {
         await onDelete?.call();
+        if (context.mounted) Navigator.of(context).pop();
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(context.l10n.failedToDeleteMessage),
-            ),
-          );
+          showNotice(context.l10n.failedToDeleteMessage);
         }
       }
-      if (context.mounted) Navigator.of(context).pop();
     }
 
     Future<void> handleReaction(String emoji) async {
@@ -98,25 +103,28 @@ class MessageActionsScreen extends HookWidget {
         } else {
           await onAddReaction(emoji);
         }
+        if (context.mounted) Navigator.of(context).pop();
       } catch (_) {
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text(
-                reactionId != null
-                    ? context.l10n.failedToRemoveReaction
-                    : context.l10n.failedToSendReaction,
-              ),
-            ),
+          showNotice(
+            reactionId != null
+                ? context.l10n.failedToRemoveReaction
+                : context.l10n.failedToSendReaction,
           );
         }
       }
-      if (context.mounted) Navigator.of(context).pop();
     }
 
     return SafeArea(
       child: Column(
         children: [
+          if (noticeMessage.value != null)
+            WnSystemNotice(
+              key: ValueKey(noticeMessage.value),
+              title: noticeMessage.value!,
+              type: WnSystemNoticeType.error,
+              onDismiss: dismissNotice,
+            ),
           Expanded(
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 16.h),
@@ -281,7 +289,7 @@ class _ReactionButton extends StatelessWidget {
             : null,
         child: Text(
           emoji,
-          style: TextStyle(fontSize: 20.sp),
+          style: context.typographyScaled.medium20,
         ),
       ),
     );

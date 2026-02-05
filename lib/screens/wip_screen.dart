@@ -14,6 +14,7 @@ class WipScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
@@ -33,19 +34,15 @@ class WipScreen extends StatelessWidget {
                 children: [
                   Text(
                     '🦥',
-                    style: TextStyle(
+                    style: typography.semiBold60.copyWith(
                       color: colors.backgroundContentPrimary,
-                      fontSize: 56.sp,
-                      fontWeight: FontWeight.w600,
                     ),
                     textAlign: TextAlign.center,
                   ),
                   Text(
                     context.l10n.wipMessage,
-                    style: TextStyle(
+                    style: typography.medium14.copyWith(
                       color: colors.backgroundContentTertiary,
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
                     ),
                     textAlign: TextAlign.center,
                   ),

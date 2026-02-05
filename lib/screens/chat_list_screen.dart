@@ -40,6 +40,7 @@ class ChatListScreen extends HookConsumerWidget {
     bool isLoading,
   ) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     if (isLoading && chatList.isEmpty) {
       return Center(
@@ -54,16 +55,16 @@ class ChatListScreen extends HookConsumerWidget {
           children: [
             Text(
               context.l10n.noChatsYet,
-              style: TextStyle(
+              style: typography.medium18.copyWith(
                 color: colors.backgroundContentPrimary,
-                fontSize: 18,
-                fontWeight: FontWeight.w500,
               ),
             ),
             const SizedBox(height: 8),
             Text(
               context.l10n.startConversation,
-              style: TextStyle(color: colors.backgroundContentTertiary, fontSize: 14),
+              style: typography.medium14.copyWith(
+                color: colors.backgroundContentTertiary,
+              ),
               textAlign: TextAlign.center,
             ),
           ],

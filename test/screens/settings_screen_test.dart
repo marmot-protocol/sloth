@@ -95,6 +95,11 @@ void main() {
       expect(find.text('Test Display Name'), findsOneWidget);
     });
 
+    testWidgets('displays formatted pubkey under display name', (tester) async {
+      await pumpSettingsScreen(tester);
+      expect(find.text(testNpubAFormatted), findsOneWidget);
+    });
+
     testWidgets('tapping close icon returns to previous screen', (tester) async {
       await pumpSettingsScreen(tester);
       await tester.tap(find.byKey(const Key('slate_close_button')));

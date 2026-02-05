@@ -20,6 +20,7 @@ class SwitchProfileScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final currentPubkey = ref.watch(authProvider).value;
     final (:accounts, :state, :switchTo) = useAccounts(context, ref, currentPubkey);
 
@@ -77,9 +78,8 @@ class SwitchProfileScreen extends HookConsumerWidget {
                       padding: EdgeInsets.symmetric(horizontal: 16.w),
                       child: Text(
                         state.error!,
-                        style: TextStyle(
+                        style: typography.medium14.copyWith(
                           color: colors.fillDestructive,
-                          fontSize: 14.sp,
                         ),
                       ),
                     ),
@@ -90,9 +90,7 @@ class SwitchProfileScreen extends HookConsumerWidget {
                         ? Center(
                             child: Text(
                               'No accounts available',
-                              style: TextStyle(
-                                fontSize: 16.sp,
-                                fontWeight: FontWeight.w500,
+                              style: typography.medium16.copyWith(
                                 color: colors.backgroundContentSecondary,
                               ),
                             ),
@@ -147,6 +145,7 @@ class _AccountTile extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final metadataSnapshot = useUserMetadata(context, pubkey);
     final metadata = metadataSnapshot.data;
     final displayName = presentName(metadata);
@@ -171,17 +170,13 @@ class _AccountTile extends HookConsumerWidget {
                   if (displayName != null)
                     Text(
                       displayName,
-                      style: TextStyle(
-                        fontSize: 16.sp,
-                        fontWeight: FontWeight.w600,
+                      style: typography.semiBold16.copyWith(
                         color: colors.backgroundContentPrimary,
                       ),
                     ),
                   Text(
                     formatPublicKey(npubFromHex(pubkey) ?? pubkey),
-                    style: TextStyle(
-                      fontSize: 12.sp,
-                      fontWeight: FontWeight.w500,
+                    style: typography.medium12.copyWith(
                       color: colors.backgroundContentSecondary,
                     ),
                   ),

@@ -29,7 +29,6 @@ class _MockApi extends MockWnApi {
   final Map<String, User> userByPubkey = {};
   final Map<String, User> blockingUserByPubkey = {};
   final Map<String, String> npubToPubkey = {};
-  final Map<String, String> pubkeyToNpub = {};
   final Set<String> errorPubkeys = {};
   Completer<User>? userCompleter;
   final userCalls = <({String pubkey, bool blocking})>[];
@@ -65,20 +64,12 @@ class _MockApi extends MockWnApi {
   }
 
   @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    final npub = pubkeyToNpub[hexPubkey];
-    if (npub == null) throw Exception('Unknown pubkey');
-    return npub;
-  }
-
-  @override
   void reset() {
     super.reset();
     followsCompleter = null;
     userByPubkey.clear();
     blockingUserByPubkey.clear();
     npubToPubkey.clear();
-    pubkeyToNpub.clear();
     errorPubkeys.clear();
     userCompleter = null;
     userCalls.clear();
@@ -135,8 +126,8 @@ void main() {
     group('with follows', () {
       setUp(() {
         api.follows = [
-          _userFactory('follow1', displayName: 'Alice'),
-          _userFactory('follow2', displayName: 'Bob'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
         ];
       });
 
@@ -145,8 +136,8 @@ void main() {
         await tester.pump();
 
         expect(getState().users.length, 2);
-        expect(getState().users[0].pubkey, 'follow1');
-        expect(getState().users[1].pubkey, 'follow2');
+        expect(getState().users[0].pubkey, testPubkeyA);
+        expect(getState().users[1].pubkey, testPubkeyB);
       });
 
       testWidgets('calls follows API with correct accountPubkey', (tester) async {
@@ -179,32 +170,29 @@ void main() {
       });
 
       group('when query is valid npub', () {
-        const validNpub = 'npub1abc123';
-        const hexPubkey = 'hex123';
-
         setUp(() {
-          api.npubToPubkey[validNpub] = hexPubkey;
-          api.userByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Found User');
+          api.npubToPubkey[testNpubC] = testPubkeyC;
+          api.userByPubkey[testPubkeyC] = _userFactory(testPubkeyC, displayName: 'Found User');
         });
 
         testWidgets('returns searched user in users list', (tester) async {
-          await pump(tester, searchQuery: validNpub);
+          await pump(tester, searchQuery: testNpubC);
           await tester.pump();
 
           expect(getState().users.length, 1);
-          expect(getState().users[0].pubkey, hexPubkey);
+          expect(getState().users[0].pubkey, testPubkeyC);
           expect(getState().users[0].metadata.displayName, 'Found User');
         });
 
         testWidgets('isLoading is true while fetching', (tester) async {
           api.userCompleter = Completer();
-          await pump(tester, searchQuery: validNpub);
+          await pump(tester, searchQuery: testNpubC);
 
           expect(getState().isLoading, isTrue);
         });
 
         testWidgets('does not retry with blocking when metadata is complete', (tester) async {
-          await pump(tester, searchQuery: validNpub);
+          await pump(tester, searchQuery: testNpubC);
           await tester.pump();
 
           expect(api.userCalls.length, 1);
@@ -212,10 +200,13 @@ void main() {
         });
 
         testWidgets('retries with blocking when metadata is incomplete', (tester) async {
-          api.userByPubkey[hexPubkey] = _userFactory(hexPubkey);
-          api.blockingUserByPubkey[hexPubkey] = _userFactory(hexPubkey, displayName: 'Synced User');
+          api.userByPubkey[testPubkeyC] = _userFactory(testPubkeyC);
+          api.blockingUserByPubkey[testPubkeyC] = _userFactory(
+            testPubkeyC,
+            displayName: 'Synced User',
+          );
 
-          await pump(tester, searchQuery: validNpub);
+          await pump(tester, searchQuery: testNpubC);
           await tester.pump();
 
           expect(api.userCalls.length, 2);
@@ -225,9 +216,9 @@ void main() {
         });
 
         testWidgets('returns empty list when getUser throws', (tester) async {
-          api.errorPubkeys.add(hexPubkey);
+          api.errorPubkeys.add(testPubkeyC);
 
-          await pump(tester, searchQuery: validNpub);
+          await pump(tester, searchQuery: testNpubC);
           await tester.pump();
 
           expect(getState().users, isEmpty);
@@ -239,13 +230,10 @@ void main() {
     group('partial npub search', () {
       setUp(() {
         api.follows = [
-          _userFactory('pub1', displayName: 'Alice'),
-          _userFactory('pub2', displayName: 'Bob'),
-          _userFactory('pub3', displayName: 'Charlie'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
+          _userFactory(testPubkeyC, displayName: 'Charlie'),
         ];
-        api.pubkeyToNpub['pub1'] = 'npub1alice111111111111111111111111111111111111111111111111111';
-        api.pubkeyToNpub['pub2'] = 'npub1bob22222222222222222222222222222222222222222222222222222';
-        api.pubkeyToNpub['pub3'] = 'npub1alice333333333333333333333333333333333333333333333333333';
       });
 
       testWidgets('returns all follows for partial npub1 prefix queries', (tester) async {
@@ -267,18 +255,18 @@ void main() {
       });
 
       testWidgets('filters follows by npub prefix', (tester) async {
-        await pump(tester, searchQuery: 'npub1ali');
+        await pump(tester, searchQuery: 'npub1a1b');
         await tester.pump();
 
-        expect(getState().users.length, 2);
-        expect(getState().users.map((u) => u.pubkey), containsAll(['pub1', 'pub3']));
+        expect(getState().users.length, 1);
+        expect(getState().users[0].pubkey, testPubkeyA);
       });
 
       testWidgets('filters follows case-insensitively', (tester) async {
-        await pump(tester, searchQuery: 'NPUB1ALI');
+        await pump(tester, searchQuery: 'NPUB1A1B');
         await tester.pump();
 
-        expect(getState().users.length, 2);
+        expect(getState().users.length, 1);
       });
 
       testWidgets('returns empty list when no matches', (tester) async {
@@ -298,17 +286,15 @@ void main() {
 
       testWidgets('excludes follows with invalid pubkeys', (tester) async {
         api.follows = [
-          _userFactory('valid_pub', displayName: 'Alice'),
+          _userFactory(testPubkeyA, displayName: 'Alice'),
           _userFactory('invalid_pub', displayName: 'Bob'),
         ];
-        api.pubkeyToNpub['valid_pub'] =
-            'npub1alice111111111111111111111111111111111111111111111111111';
 
-        await pump(tester, searchQuery: 'npub1ali');
+        await pump(tester, searchQuery: 'npub1a1b');
         await tester.pump();
 
         expect(getState().users.length, 1);
-        expect(getState().users[0].pubkey, 'valid_pub');
+        expect(getState().users[0].pubkey, testPubkeyA);
       });
     });
   });

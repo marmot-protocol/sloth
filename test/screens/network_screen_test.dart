@@ -6,6 +6,7 @@ import 'package:sloth/routes.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/relays.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:sloth/widgets/wn_tooltip.dart';
 
 import '../mocks/mock_relay_type.dart';
 import '../mocks/mock_secure_storage.dart';
@@ -158,10 +159,10 @@ void main() {
         await pumpNetworkScreen(tester);
         final tooltipFinder = find.ancestor(
           of: find.byKey(const Key('info_icon_my_relays')),
-          matching: find.byType(Tooltip),
+          matching: find.byType(WnTooltip),
         );
         expect(tooltipFinder, findsOneWidget);
-        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        final tooltip = tester.widget<WnTooltip>(tooltipFinder);
         expect(
           tooltip.message,
           'Relays you have defined for use across all your Nostr applications.',
@@ -172,10 +173,10 @@ void main() {
         await pumpNetworkScreen(tester);
         final tooltipFinder = find.ancestor(
           of: find.byKey(const Key('info_icon_inbox_relays')),
-          matching: find.byType(Tooltip),
+          matching: find.byType(WnTooltip),
         );
         expect(tooltipFinder, findsOneWidget);
-        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        final tooltip = tester.widget<WnTooltip>(tooltipFinder);
         expect(
           tooltip.message,
           'Relays used to receive invitations and start secure conversations with new users.',
@@ -186,29 +187,49 @@ void main() {
         await pumpNetworkScreen(tester);
         final tooltipFinder = find.ancestor(
           of: find.byKey(const Key('info_icon_key_package_relays')),
-          matching: find.byType(Tooltip),
+          matching: find.byType(WnTooltip),
         );
         expect(tooltipFinder, findsOneWidget);
-        final tooltip = tester.widget<Tooltip>(tooltipFinder);
+        final tooltip = tester.widget<WnTooltip>(tooltipFinder);
         expect(
           tooltip.message,
           'Relays that store your secure key so others can invite you to encrypted conversations.',
         );
       });
 
-      testWidgets('all tooltips use tap trigger mode', (tester) async {
+      testWidgets('first tooltip uses bottom position, others use top', (tester) async {
         await pumpNetworkScreen(tester);
-        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
-        for (final tooltip in tooltips) {
-          expect(tooltip.triggerMode, TooltipTriggerMode.tap);
-        }
+
+        final myRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_my_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(myRelaysTooltip.position, WnTooltipPosition.bottom);
+
+        final inboxRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_inbox_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(inboxRelaysTooltip.position, WnTooltipPosition.top);
+
+        final keyPackageRelaysTooltip = tester.widget<WnTooltip>(
+          find.ancestor(
+            of: find.byKey(const Key('info_icon_key_package_relays')),
+            matching: find.byType(WnTooltip),
+          ),
+        );
+        expect(keyPackageRelaysTooltip.position, WnTooltipPosition.top);
       });
 
-      testWidgets('all tooltips have one minute show duration', (tester) async {
+      testWidgets('all tooltips use tap trigger mode', (tester) async {
         await pumpNetworkScreen(tester);
-        final tooltips = tester.widgetList<Tooltip>(find.byType(Tooltip));
+        final tooltips = tester.widgetList<WnTooltip>(find.byType(WnTooltip));
         for (final tooltip in tooltips) {
-          expect(tooltip.showDuration, const Duration(minutes: 1));
+          expect(tooltip.triggerMode, WnTooltipTriggerMode.tap);
         }
       });
     });
@@ -259,7 +280,7 @@ void main() {
     });
 
     group('relay list', () {
-      testWidgets('displays relay tiles when relays exist', (tester) async {
+      testWidgets('displays relay items when relays exist', (tester) async {
         mockApi.normalRelays = [
           Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
           Relay(url: 'wss://relay2.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
@@ -276,7 +297,31 @@ void main() {
         expect(find.text('No relays configured'), findsNWidgets(2));
       });
 
-      testWidgets('deletes relay when delete button is tapped and confirmed', (tester) async {
+      testWidgets('shows success icon for connected relays', (tester) async {
+        mockApi.normalRelays = [
+          Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        mockApi.relayStatuses = [('wss://relay1.com', 'connected')];
+
+        await pumpNetworkScreen(tester);
+
+        expect(find.byKey(const Key('relay_item_normal_wss://relay1.com')), findsOneWidget);
+        expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
+      });
+
+      testWidgets('shows error icon for disconnected relays', (tester) async {
+        mockApi.normalRelays = [
+          Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+        ];
+        mockApi.relayStatuses = [('wss://relay1.com', 'disconnected')];
+
+        await pumpNetworkScreen(tester);
+
+        expect(find.byKey(const Key('relay_item_normal_wss://relay1.com')), findsOneWidget);
+        expect(find.byKey(const Key('list_item_type_icon')), findsOneWidget);
+      });
+
+      testWidgets('removes relay when Remove action is tapped', (tester) async {
         mockApi.normalRelays = [
           Relay(url: 'wss://relay1.com', createdAt: DateTime.now(), updatedAt: DateTime.now()),
         ];
@@ -285,14 +330,10 @@ void main() {
 
         expect(find.text('wss://relay1.com'), findsOneWidget);
 
-        final deleteButton = find.byKey(const Key('delete_relay_wss://relay1.com'));
-        expect(deleteButton, findsOneWidget);
-        await tester.tap(deleteButton);
-        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('list_item_menu_button')).first);
+        await tester.pump();
 
-        expect(find.text('Remove Relay?'), findsOneWidget);
-
-        await tester.tap(find.byKey(const Key('confirm_delete_button')));
+        await tester.tap(find.text('Remove'));
         await tester.pumpAndSettle();
 
         expect(mockApi.removedRelays.contains('wss://relay1.com'), isTrue);

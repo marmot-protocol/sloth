@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 enum WnIcons {
   addCircle('add_circle'),
   addEmoji('add_emoji'),
+  addFilled('add_filled'),
   addLarge('add_large'),
   appearance('appearance'),
   apple('apple'),

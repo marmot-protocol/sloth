@@ -45,6 +45,7 @@ class WnDropdownSelector<T> extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     final dropdownHeight = size == WnDropdownSize.small ? 44.h : 56.h;
     final itemHeight = size == WnDropdownSize.small ? 44.h : 48.h;
@@ -128,13 +129,7 @@ class WnDropdownSelector<T> extends HookWidget {
           padding: EdgeInsets.only(left: 2.w),
           child: Text(
             label,
-            style: TextStyle(
-              fontSize: 14.sp,
-              color: labelColor,
-              fontWeight: FontWeight.w500,
-              letterSpacing: 0.4.sp,
-              height: 20 / 14,
-            ),
+            style: typography.medium14.copyWith(color: labelColor),
           ),
         ),
         Gap(4.h),
@@ -177,13 +172,7 @@ class WnDropdownSelector<T> extends HookWidget {
                               padding: EdgeInsets.all(8.w),
                               child: Text(
                                 displayLabel,
-                                style: TextStyle(
-                                  fontSize: 14.sp,
-                                  fontWeight: FontWeight.w500,
-                                  color: textColor,
-                                  letterSpacing: 0.4.sp,
-                                  height: 20 / 14,
-                                ),
+                                style: typography.medium14.copyWith(color: textColor),
                               ),
                             ),
                           ),
@@ -218,11 +207,7 @@ class WnDropdownSelector<T> extends HookWidget {
             padding: EdgeInsets.only(left: 2.w),
             child: Text(
               helperText!,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                letterSpacing: 0.4.sp,
-                height: 20 / 14,
+              style: typography.medium14.copyWith(
                 color: isError
                     ? colors.backgroundContentDestructive
                     : colors.backgroundContentSecondary,
@@ -407,6 +392,7 @@ class _DropdownItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final backgroundColor = isSelected ? colors.backgroundTertiary : colors.backgroundPrimary;
     final textColor = isSelected
         ? colors.backgroundContentPrimary
@@ -429,13 +415,7 @@ class _DropdownItem extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: 8.h),
                 child: Text(
                   label,
-                  style: TextStyle(
-                    fontSize: 14.sp,
-                    fontWeight: FontWeight.w500,
-                    color: textColor,
-                    letterSpacing: 0.4.sp,
-                    height: 20 / 14,
-                  ),
+                  style: typography.medium14.copyWith(color: textColor),
                   overflow: TextOverflow.ellipsis,
                 ),
               ),

@@ -22,6 +22,7 @@ class SettingsScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(authProvider).value;
     final metadataSnapshot = useUserMetadata(context, pubkey);
 
@@ -66,12 +67,8 @@ class SettingsScreen extends HookConsumerWidget {
                             if (displayName != null)
                               Text(
                                 displayName,
-                                style: TextStyle(
-                                  fontSize: 16.sp,
-                                  fontWeight: FontWeight.w500,
+                                style: typography.medium16.copyWith(
                                   color: colors.backgroundContentPrimary,
-                                  height: 22 / 16,
-                                  letterSpacing: 0.2.sp,
                                 ),
                               ),
                             SizedBox(height: 4.h),
@@ -80,12 +77,8 @@ class SettingsScreen extends HookConsumerWidget {
                                 npubFromHex(pubkey) ?? pubkey,
                               ),
                               maxLines: 2,
-                              style: TextStyle(
-                                fontSize: 12.sp,
-                                fontWeight: FontWeight.w500,
+                              style: typography.medium12.copyWith(
                                 color: colors.backgroundContentSecondary,
-                                height: 16 / 12,
-                                letterSpacing: 0.6.sp,
                               ),
                             ),
                           ],

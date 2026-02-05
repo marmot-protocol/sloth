@@ -12,6 +12,7 @@ import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/messages.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -63,7 +64,6 @@ class _MockApi extends MockWnApi {
   int _sendCallCount = 0;
   bool isDm = false;
   List<String> groupMembers = [];
-  final Map<String, String> pubkeyToNpub = {};
 
   @override
   void reset() {
@@ -80,7 +80,6 @@ class _MockApi extends MockWnApi {
     _sendCallCount = 0;
     isDm = false;
     groupMembers = [];
-    pubkeyToNpub.clear();
   }
 
   @override
@@ -180,13 +179,6 @@ class _MockApi extends MockWnApi {
     required String groupId,
   }) {
     return Future.value(groupMembers);
-  }
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    final npub = pubkeyToNpub[hexPubkey];
-    if (npub == null) throw Exception('Unknown pubkey: $hexPubkey');
-    return npub;
   }
 }
 
@@ -304,7 +296,6 @@ void main() {
       testWidgets('menu button navigates to chat info screen for DM', (tester) async {
         _api.isDm = true;
         _api.groupMembers = [_testPubkey, testPubkeyC];
-        _api.pubkeyToNpub[testPubkeyC] = 'npub1othermember';
         await pumpChatScreen(tester);
         await tester.tap(find.byKey(const Key('menu_button')));
         await tester.pumpAndSettle();
@@ -359,10 +350,21 @@ void main() {
           expect(textField.controller!.text, 'Hello');
         });
 
-        testWidgets('shows error snackbar', (tester) async {
+        testWidgets('shows system notice', (tester) async {
           await attemptSend(tester);
 
+          expect(find.byType(WnSystemNotice), findsOneWidget);
           expect(find.text('Failed to send message. Please try again.'), findsOneWidget);
+        });
+
+        testWidgets('dismisses notice after auto-hide duration', (tester) async {
+          await attemptSend(tester);
+          expect(find.byType(WnSystemNotice), findsOneWidget);
+
+          await tester.pump(const Duration(seconds: 3));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(WnSystemNotice), findsNothing);
         });
       });
     });
@@ -636,7 +638,7 @@ void main() {
           expect(tags[0].vec, ['e', 'msg_to_delete']);
         });
 
-        testWidgets('shows error snackbar when deletion fails', (tester) async {
+        testWidgets('shows system notice when deletion fails', (tester) async {
           _api.deleteError = Exception('Network error');
           _api.initialMessages = [
             _message('m1', DateTime(2024), pubkey: _testPubkey),
@@ -649,8 +651,9 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(_api.deletionCalls.length, 0);
+          expect(find.byType(WnSystemNotice), findsOneWidget);
           expect(find.text('Failed to delete message. Please try again.'), findsOneWidget);
-          expect(find.byType(MessageActionsScreen), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsOneWidget);
         });
       });
 
@@ -726,7 +729,7 @@ void main() {
           expect(find.byType(MessageActionsScreen), findsNothing);
         });
 
-        testWidgets('shows error snackbar when reaction fails', (tester) async {
+        testWidgets('shows system notice when reaction fails', (tester) async {
           _api.reactionError = Exception('Network error');
           _api.initialMessages = [
             _message('m1', DateTime(2024)),
@@ -739,8 +742,9 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(_api.reactionCalls.length, 0);
+          expect(find.byType(WnSystemNotice), findsOneWidget);
           expect(find.text('Failed to send reaction. Please try again.'), findsOneWidget);
-          expect(find.byType(MessageActionsScreen), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsOneWidget);
         });
       });
 
@@ -799,7 +803,7 @@ void main() {
           expect(find.byType(MessageActionsScreen), findsNothing);
         });
 
-        testWidgets('shows error snackbar when reaction removal fails', (tester) async {
+        testWidgets('shows system notice when reaction removal fails', (tester) async {
           _api.deleteError = Exception('Network error');
           _api.initialMessages = [
             _message('m1', DateTime(2024), reactions: ownReaction('❤', 'reaction_1')),
@@ -811,8 +815,9 @@ void main() {
           await tester.pumpAndSettle();
 
           expect(_api.deletionCalls.length, 0);
+          expect(find.byType(WnSystemNotice), findsOneWidget);
           expect(find.text('Failed to remove reaction. Please try again.'), findsOneWidget);
-          expect(find.byType(MessageActionsScreen), findsNothing);
+          expect(find.byType(MessageActionsScreen), findsOneWidget);
         });
       });
     });

@@ -260,6 +260,9 @@ class AppLocalizationsEn extends AppLocalizations {
       'Copy your private key to restore your account on another device.';
 
   @override
+  String get publicKeyCopyError => 'Failed to copy public key. Please try again.';
+
+  @override
   String get noChatsYet => 'No chats yet';
 
   @override
@@ -495,4 +498,86 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get scanNpub => 'Scan QR code';
+
+  @override
+  String get scanNpubHint => 'Scan a contact\'s QR code.';
+
+  @override
+  String get invalidNpub => 'Invalid public key. Please try again.';
+
+  @override
+  String get timestampNow => 'Now';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}m';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}h';
+  }
+
+  @override
+  String get timestampYesterday => 'Yesterday';
+
+  @override
+  String get weekdayMonday => 'Monday';
+
+  @override
+  String get weekdayTuesday => 'Tuesday';
+
+  @override
+  String get weekdayWednesday => 'Wednesday';
+
+  @override
+  String get weekdayThursday => 'Thursday';
+
+  @override
+  String get weekdayFriday => 'Friday';
+
+  @override
+  String get weekdaySaturday => 'Saturday';
+
+  @override
+  String get weekdaySunday => 'Sunday';
+
+  @override
+  String get monthJanShort => 'Jan';
+
+  @override
+  String get monthFebShort => 'Feb';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Apr';
+
+  @override
+  String get monthMayShort => 'May';
+
+  @override
+  String get monthJunShort => 'Jun';
+
+  @override
+  String get monthJulShort => 'Jul';
+
+  @override
+  String get monthAugShort => 'Aug';
+
+  @override
+  String get monthSepShort => 'Sep';
+
+  @override
+  String get monthOctShort => 'Oct';
+
+  @override
+  String get monthNovShort => 'Nov';
+
+  @override
+  String get monthDecShort => 'Dec';
 }

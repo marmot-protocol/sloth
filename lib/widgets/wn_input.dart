@@ -29,6 +29,7 @@ class WnInput extends HookWidget {
     this.size = WnInputSize.size56,
     this.onChanged,
     this.textInputAction,
+    this.leadingIcon,
     this.inlineAction,
     this.trailingAction,
     this.focusNode,
@@ -46,6 +47,7 @@ class WnInput extends HookWidget {
   final WnInputSize size;
   final ValueChanged<String>? onChanged;
   final TextInputAction? textInputAction;
+  final Widget? leadingIcon;
   final Widget? inlineAction;
   final Widget? trailingAction;
   final FocusNode? focusNode;
@@ -62,17 +64,18 @@ class WnInput extends HookWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       mainAxisSize: MainAxisSize.min,
       children: [
-        if (label != null) _buildLabel(colors),
-        _buildInputRow(colors, isFocused, isHovered),
+        if (label != null) _buildLabel(context, colors),
+        _buildInputRow(context, colors, isFocused, isHovered),
         if (_hasError)
-          _buildErrorText(colors)
+          _buildErrorText(context, colors)
         else if (helperText != null)
-          _buildHelperText(colors),
+          _buildHelperText(context, colors),
       ],
     );
   }
 
-  Widget _buildLabel(SemanticColors colors) {
+  Widget _buildLabel(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     return Padding(
       padding: EdgeInsets.only(left: 2.w),
       child: Row(
@@ -82,13 +85,7 @@ class WnInput extends HookWidget {
             padding: EdgeInsets.symmetric(vertical: 4.h),
             child: Text(
               label!,
-              style: TextStyle(
-                fontSize: 14.sp,
-                fontWeight: FontWeight.w500,
-                color: colors.backgroundContentPrimary,
-                height: 20 / 14,
-                letterSpacing: 0.4.sp,
-              ),
+              style: typography.medium14.copyWith(color: colors.backgroundContentPrimary),
             ),
           ),
           if (labelHelpIcon != null)
@@ -114,13 +111,14 @@ class WnInput extends HookWidget {
   }
 
   Widget _buildInputRow(
+    BuildContext context,
     SemanticColors colors,
     ValueNotifier<bool> isFocused,
     ValueNotifier<bool> isHovered,
   ) {
     return Row(
       children: [
-        Expanded(child: _buildInputField(colors, isFocused, isHovered)),
+        Expanded(child: _buildInputField(context, colors, isFocused, isHovered)),
         if (trailingAction != null) ...[
           Gap(6.w),
           IgnorePointer(
@@ -145,10 +143,12 @@ class WnInput extends HookWidget {
   }
 
   Widget _buildInputField(
+    BuildContext context,
     SemanticColors colors,
     ValueNotifier<bool> isFocused,
     ValueNotifier<bool> isHovered,
   ) {
+    final typography = context.typographyScaled;
     final fieldHeight = size.height.h;
     final inlineActionWidth = size == WnInputSize.size44 ? 36.w : 48.w;
     final inlineActionHeight = size == WnInputSize.size44 ? 36.h : 48.h;
@@ -169,6 +169,19 @@ class WnInput extends HookWidget {
         ),
         child: Row(
           children: [
+            if (leadingIcon != null)
+              Padding(
+                key: const Key('leading_icon_wrapper'),
+                padding: EdgeInsets.only(left: 16.r),
+                child: IgnorePointer(
+                  ignoring: !enabled,
+                  child: SizedBox(
+                    width: 16.r,
+                    height: 16.r,
+                    child: leadingIcon,
+                  ),
+                ),
+              ),
             Expanded(
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -183,25 +196,17 @@ class WnInput extends HookWidget {
                     readOnly: readOnly,
                     onChanged: onChanged,
                     textInputAction: textInputAction,
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.w500,
+                    style: typography.medium14.copyWith(
                       color: enabled
                           ? (_hasError
                                 ? colors.backgroundContentDestructive
                                 : colors.backgroundContentPrimary)
                           : colors.backgroundContentTertiary,
-                      height: 20 / 14,
-                      letterSpacing: 0.4.sp,
                     ),
                     decoration: InputDecoration(
                       hintText: placeholder,
-                      hintStyle: TextStyle(
-                        fontSize: 14.sp,
-                        fontWeight: FontWeight.w500,
+                      hintStyle: typography.medium14.copyWith(
                         color: colors.backgroundContentSecondary,
-                        height: 20 / 14,
-                        letterSpacing: 0.4.sp,
                       ),
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.zero,
@@ -228,29 +233,24 @@ class WnInput extends HookWidget {
     );
   }
 
-  TextStyle get _baseInfoTextStyle => TextStyle(
-    fontSize: 14.sp,
-    fontWeight: FontWeight.w500,
-    height: 20 / 14,
-    letterSpacing: 0.4.sp,
-  );
-
-  Widget _buildHelperText(SemanticColors colors) {
+  Widget _buildHelperText(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     return Padding(
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         helperText!,
-        style: _baseInfoTextStyle.copyWith(color: colors.backgroundContentSecondary),
+        style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
       ),
     );
   }
 
-  Widget _buildErrorText(SemanticColors colors) {
+  Widget _buildErrorText(BuildContext context, SemanticColors colors) {
+    final typography = context.typographyScaled;
     return Padding(
       padding: EdgeInsets.only(left: 2.w, top: 4.h),
       child: Text(
         errorText!,
-        style: _baseInfoTextStyle.copyWith(color: colors.backgroundContentDestructive),
+        style: typography.medium14.copyWith(color: colors.backgroundContentDestructive),
       ),
     );
   }

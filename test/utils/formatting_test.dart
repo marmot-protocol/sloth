@@ -1,48 +1,21 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/utils/formatting.dart';
 
-class _MockApi implements RustLibApi {
-  bool shouldThrow = false;
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    if (shouldThrow) {
-      throw Exception('Invalid hex pubkey');
-    }
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
-
 void main() {
-  late _MockApi mockApi;
-
-  setUpAll(() {
-    mockApi = _MockApi();
-    RustLib.initMock(api: mockApi);
-  });
-
-  setUp(() {
-    mockApi.shouldThrow = false;
-  });
-
   group('formatPublicKey', () {
-    test('adds space every 5 chars', () {
-      expect(formatPublicKey('abcdefghij'), 'abcde fghij ');
+    test('adds space every 4 chars', () {
+      expect(formatPublicKey('abcdefghijkl'), 'abcd efgh ijkl');
     });
 
     test('leaves remainder without trailing space', () {
-      expect(formatPublicKey('abcdefgh'), 'abcde fgh');
+      expect(formatPublicKey('abcdefghij'), 'abcd efgh ij');
     });
 
     test('returns empty for empty input', () {
       expect(formatPublicKey(''), '');
     });
 
-    test('returns unchanged if less than 5 chars', () {
+    test('returns unchanged if less than 4 chars', () {
       expect(formatPublicKey('abc'), 'abc');
     });
   });

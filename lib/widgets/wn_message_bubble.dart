@@ -56,9 +56,8 @@ class WnMessageBubble extends StatelessWidget {
                 ),
                 child: Text(
                   message.content,
-                  style: TextStyle(
+                  style: context.typographyScaled.medium14.copyWith(
                     color: isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary,
-                    fontSize: 14.sp,
                   ),
                 ),
               ),

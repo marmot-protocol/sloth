@@ -19,6 +19,7 @@ import 'package:sloth/widgets/wn_fade_overlay.dart';
 import 'package:sloth/widgets/wn_icon.dart';
 import 'package:sloth/widgets/wn_message_bubble.dart';
 import 'package:sloth/widgets/wn_slate.dart';
+import 'package:sloth/widgets/wn_system_notice.dart';
 
 final _logger = Logger('ChatScreen');
 
@@ -30,6 +31,7 @@ class ChatScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final (
       :messageCount,
@@ -48,6 +50,16 @@ class ChatScreen extends HookConsumerWidget {
       () => MessageService(pubkey: pubkey, groupId: groupId),
       [pubkey, groupId],
     );
+
+    final noticeMessage = useState<String?>(null);
+
+    void showNotice(String message) {
+      noticeMessage.value = message;
+    }
+
+    void dismissNotice() {
+      noticeMessage.value = null;
+    }
 
     useChatScroll(
       scrollController: scrollController,
@@ -95,6 +107,13 @@ class ChatScreen extends HookConsumerWidget {
         body: SafeArea(
           child: Column(
             children: [
+              if (noticeMessage.value != null)
+                WnSystemNotice(
+                  key: ValueKey(noticeMessage.value),
+                  title: noticeMessage.value!,
+                  type: WnSystemNoticeType.error,
+                  onDismiss: dismissNotice,
+                ),
               WnSlate(
                 padding: EdgeInsets.symmetric(vertical: 14.h),
                 header: WnChatHeader(
@@ -123,9 +142,8 @@ class ChatScreen extends HookConsumerWidget {
                     ? Center(
                         child: Text(
                           context.l10n.noMessagesYet,
-                          style: TextStyle(
+                          style: typography.medium14.copyWith(
                             color: colors.backgroundContentTertiary,
-                            fontSize: 14.sp,
                           ),
                         ),
                       )
@@ -159,7 +177,7 @@ class ChatScreen extends HookConsumerWidget {
                         ],
                       ),
               ),
-              _ChatInput(input: input, onSend: sendMessage),
+              _ChatInput(input: input, onSend: sendMessage, onError: showNotice),
             ],
           ),
         ),
@@ -169,14 +187,16 @@ class ChatScreen extends HookConsumerWidget {
 }
 
 class _ChatInput extends StatelessWidget {
-  const _ChatInput({required this.input, required this.onSend});
+  const _ChatInput({required this.input, required this.onSend, required this.onError});
 
   final ChatInputState input;
   final Future<void> Function(String message) onSend;
+  final void Function(String message) onError;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     Future<void> handleSend() async {
       final text = input.controller.text.trim();
@@ -187,9 +207,7 @@ class _ChatInput extends StatelessWidget {
       } catch (e, st) {
         _logger.severe('Failed to send message', e, st);
         if (context.mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(context.l10n.failedToSendMessage)),
-          );
+          onError(context.l10n.failedToSendMessage);
         }
       }
     }
@@ -207,13 +225,12 @@ class _ChatInput extends StatelessWidget {
               maxLines: 5,
               minLines: 1,
               textCapitalization: TextCapitalization.sentences,
-              style: TextStyle(
-                fontSize: 14.sp,
+              style: typography.medium14.copyWith(
                 color: colors.backgroundContentPrimary,
               ),
               decoration: InputDecoration(
                 hintText: context.l10n.messagePlaceholder,
-                hintStyle: TextStyle(color: colors.backgroundContentTertiary),
+                hintStyle: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
                 filled: true,
                 fillColor: colors.backgroundTertiary,
                 contentPadding: EdgeInsets.symmetric(

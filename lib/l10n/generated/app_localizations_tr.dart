@@ -260,6 +260,9 @@ class AppLocalizationsTr extends AppLocalizations {
       'Hesabınızı başka bir cihazda geri yüklemek için özel anahtarınızı kopyalayın.';
 
   @override
+  String get publicKeyCopyError => 'Açık anahtar kopyalanamadı. Lütfen tekrar deneyin.';
+
+  @override
   String get noChatsYet => 'Henüz sohbet yok';
 
   @override
@@ -495,4 +498,86 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Bir şeyler yanlış gitti';
+
+  @override
+  String get scanNpub => 'QR kodu tara';
+
+  @override
+  String get scanNpubHint => 'Bir kişinin QR kodunu tarayın.';
+
+  @override
+  String get invalidNpub => 'Geçersiz açık anahtar. Lütfen tekrar deneyin.';
+
+  @override
+  String get timestampNow => 'Şimdi';
+
+  @override
+  String timestampMinutes(int count) {
+    return '${count}dk';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '${count}sa';
+  }
+
+  @override
+  String get timestampYesterday => 'Dün';
+
+  @override
+  String get weekdayMonday => 'Pazartesi';
+
+  @override
+  String get weekdayTuesday => 'Salı';
+
+  @override
+  String get weekdayWednesday => 'Çarşamba';
+
+  @override
+  String get weekdayThursday => 'Perşembe';
+
+  @override
+  String get weekdayFriday => 'Cuma';
+
+  @override
+  String get weekdaySaturday => 'Cumartesi';
+
+  @override
+  String get weekdaySunday => 'Pazar';
+
+  @override
+  String get monthJanShort => 'Oca';
+
+  @override
+  String get monthFebShort => 'Şub';
+
+  @override
+  String get monthMarShort => 'Mar';
+
+  @override
+  String get monthAprShort => 'Nis';
+
+  @override
+  String get monthMayShort => 'May';
+
+  @override
+  String get monthJunShort => 'Haz';
+
+  @override
+  String get monthJulShort => 'Tem';
+
+  @override
+  String get monthAugShort => 'Ağu';
+
+  @override
+  String get monthSepShort => 'Eyl';
+
+  @override
+  String get monthOctShort => 'Eki';
+
+  @override
+  String get monthNovShort => 'Kas';
+
+  @override
+  String get monthDecShort => 'Ara';
 }

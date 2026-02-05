@@ -16,11 +16,6 @@ import '../test_helpers.dart';
 
 class _MockApi extends MockWnApi {
   @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
@@ -116,14 +111,17 @@ void main() {
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
     });
 
-    testWidgets('dismisses notice after copying private key', (tester) async {
+    testWidgets('dismisses notice after auto-hide duration', (tester) async {
       await pumpSignOutScreen(tester);
       await tester.pumpAndSettle();
-      final copyButton = find.byKey(const Key('copy_button'));
-      await tester.tap(copyButton);
+      await tester.tap(find.byKey(const Key('copy_button')));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
-      await tester.pumpAndSettle(const Duration(seconds: 3));
+
+      await tester.pump(const Duration(seconds: 3));
+      await tester.pumpAndSettle();
+
       expect(find.text('Private key copied to clipboard'), findsNothing);
     });
 

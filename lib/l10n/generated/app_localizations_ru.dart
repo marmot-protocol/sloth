@@ -260,6 +260,9 @@ class AppLocalizationsRu extends AppLocalizations {
       'Скопируйте приватный ключ для восстановления аккаунта на другом устройстве.';
 
   @override
+  String get publicKeyCopyError => 'Не удалось скопировать публичный ключ. Попробуйте снова.';
+
+  @override
   String get noChatsYet => 'Пока нет чатов';
 
   @override
@@ -501,4 +504,86 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get somethingWentWrong => 'Что-то пошло не так';
+
+  @override
+  String get scanNpub => 'Сканировать QR-код';
+
+  @override
+  String get scanNpubHint => 'Отсканируйте QR-код контакта.';
+
+  @override
+  String get invalidNpub => 'Недействительный публичный ключ. Попробуйте снова.';
+
+  @override
+  String get timestampNow => 'Сейчас';
+
+  @override
+  String timestampMinutes(int count) {
+    return '$countм';
+  }
+
+  @override
+  String timestampHours(int count) {
+    return '$countч';
+  }
+
+  @override
+  String get timestampYesterday => 'Вчера';
+
+  @override
+  String get weekdayMonday => 'Понедельник';
+
+  @override
+  String get weekdayTuesday => 'Вторник';
+
+  @override
+  String get weekdayWednesday => 'Среда';
+
+  @override
+  String get weekdayThursday => 'Четверг';
+
+  @override
+  String get weekdayFriday => 'Пятница';
+
+  @override
+  String get weekdaySaturday => 'Суббота';
+
+  @override
+  String get weekdaySunday => 'Воскресенье';
+
+  @override
+  String get monthJanShort => 'Янв';
+
+  @override
+  String get monthFebShort => 'Фев';
+
+  @override
+  String get monthMarShort => 'Мар';
+
+  @override
+  String get monthAprShort => 'Апр';
+
+  @override
+  String get monthMayShort => 'Май';
+
+  @override
+  String get monthJunShort => 'Июн';
+
+  @override
+  String get monthJulShort => 'Июл';
+
+  @override
+  String get monthAugShort => 'Авг';
+
+  @override
+  String get monthSepShort => 'Сен';
+
+  @override
+  String get monthOctShort => 'Окт';
+
+  @override
+  String get monthNovShort => 'Ноя';
+
+  @override
+  String get monthDecShort => 'Дек';
 }

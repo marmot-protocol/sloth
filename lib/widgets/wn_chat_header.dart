@@ -46,10 +46,8 @@ class WnChatHeader extends StatelessWidget {
         Expanded(
           child: Text(
             displayName,
-            style: TextStyle(
+            style: context.typographyScaled.semiBold16.copyWith(
               color: colors.backgroundContentPrimary,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.w600,
             ),
             overflow: TextOverflow.ellipsis,
           ),

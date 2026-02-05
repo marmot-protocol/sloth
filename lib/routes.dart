@@ -19,6 +19,7 @@ import 'package:sloth/screens/login_screen.dart' show LoginScreen;
 import 'package:sloth/screens/network_screen.dart' show NetworkScreen;
 import 'package:sloth/screens/onboarding_screen.dart' show OnboardingScreen;
 import 'package:sloth/screens/profile_keys_screen.dart' show ProfileKeysScreen;
+import 'package:sloth/screens/scan_npub_screen.dart' show ScanNpubScreen;
 import 'package:sloth/screens/scan_nsec_screen.dart' show ScanNsecScreen;
 import 'package:sloth/screens/settings_screen.dart' show SettingsScreen;
 import 'package:sloth/screens/share_profile_screen.dart' show ShareProfileScreen;
@@ -34,6 +35,7 @@ abstract final class Routes {
   static const _home = '/';
   static const _login = '/login';
   static const _scanNsec = '/scan-nsec';
+  static const _scanNpub = '/scan-npub';
   static const _signup = '/signup';
   static const _chatList = '/chats';
   static const _settings = '/settings';
@@ -90,6 +92,13 @@ abstract final class Routes {
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
             child: const ScanNsecScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _scanNpub,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const ScanNpubScreen(),
           ),
         ),
         GoRoute(
@@ -289,6 +298,10 @@ abstract final class Routes {
 
   static Future<String?> pushToScanNsec(BuildContext context) async {
     return GoRouter.of(context).push<String>(_scanNsec);
+  }
+
+  static void pushToScanNpub(BuildContext context) {
+    GoRouter.of(context).push(_scanNpub);
   }
 
   static void goToChatList(BuildContext context) {

@@ -2,70 +2,45 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'package:sloth/utils/encoding.dart';
 
-class _MockApi implements RustLibApi {
-  bool shouldThrowNpubFromHex = false;
-  bool shouldThrowHexFromNpub = false;
-
-  @override
-  String crateApiUtilsNpubFromHexPubkey({required String hexPubkey}) {
-    if (shouldThrowNpubFromHex) {
-      throw Exception('Invalid hex pubkey');
-    }
-    return 'npub1test${hexPubkey.substring(0, 10)}';
-  }
-
-  @override
-  String crateApiUtilsHexPubkeyFromNpub({required String npub}) {
-    if (shouldThrowHexFromNpub) {
-      throw Exception('Invalid npub');
-    }
-    return 'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890';
-  }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
-}
+import '../mocks/mock_wn_api.dart';
+import '../test_helpers.dart';
 
 void main() {
-  late _MockApi mockApi;
+  late MockWnApi mockApi;
 
   setUpAll(() {
-    mockApi = _MockApi();
+    mockApi = MockWnApi();
     RustLib.initMock(api: mockApi);
   });
 
   setUp(() {
-    mockApi.shouldThrowNpubFromHex = false;
-    mockApi.shouldThrowHexFromNpub = false;
+    mockApi.reset();
   });
 
   group('npubFromHex', () {
     test('returns npub string for valid hex pubkey', () {
-      final result = npubFromHex(
-        'abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890',
-      );
+      final result = npubFromHex(testPubkeyA);
       expect(result, isNotNull);
-      expect(result, startsWith('npub1'));
-      expect(result, contains('abcdef1234'));
+      expect(result, testNpubA);
     });
 
     test('returns null when API throws error', () {
-      mockApi.shouldThrowNpubFromHex = true;
-      final result = npubFromHex('invalid_pubkey');
+      mockApi.shouldFailNpubConversion = true;
+      final result = npubFromHex(testPubkeyA);
       expect(result, isNull);
     });
   });
 
   group('hexFromNpub', () {
     test('returns hex string for valid npub', () {
-      final result = hexFromNpub('npub1abc123');
+      final result = hexFromNpub(testNpubA);
       expect(result, isNotNull);
-      expect(result, hasLength(64));
+      expect(result, testPubkeyA);
     });
 
     test('returns null when API throws error', () {
-      mockApi.shouldThrowHexFromNpub = true;
-      final result = hexFromNpub('invalid_npub');
+      mockApi.shouldFailHexFromNpub = true;
+      final result = hexFromNpub(testNpubA);
       expect(result, isNull);
     });
   });

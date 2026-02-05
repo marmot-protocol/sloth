@@ -5,7 +5,7 @@ import 'package:sloth/widgets/wn_icon.dart';
 
 enum WnButtonType { primary, outline, ghost, overlay, destructive }
 
-enum WnButtonSize { large, medium, small }
+enum WnButtonSize { large, medium, small, xsmall }
 
 class WnButton extends StatelessWidget {
   const WnButton({
@@ -128,17 +128,19 @@ class WnButton extends StatelessWidget {
     required BorderSide borderSide,
   }) {
     final verticalPadding = _getVerticalPadding();
+    final horizontalPadding = _getHorizontalPadding();
+    final borderRadius = _getBorderRadius();
     final iconSize = _getIconSize();
     final fontSize = _getFontSize();
-    final iconPadding = size == WnButtonSize.small ? 4.w : 8.w;
+    final iconPadding = (size == WnButtonSize.small || size == WnButtonSize.xsmall) ? 4.w : 8.w;
 
     return FilledButton(
       onPressed: (loading || disabled) ? null : onPressed,
       style: FilledButton.styleFrom(
-        padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: 8.w),
+        padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: horizontalPadding),
         backgroundColor: backgroundColor,
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(8.r),
+          borderRadius: BorderRadius.circular(borderRadius),
           side: borderSide,
         ),
         overlayColor: overlayColor,
@@ -150,7 +152,7 @@ class WnButton extends StatelessWidget {
   }
 
   Widget _buildLoadingIndicator(Color color) {
-    final indicatorSize = size == WnButtonSize.small ? 14.w : 18.w;
+    final indicatorSize = (size == WnButtonSize.small || size == WnButtonSize.xsmall) ? 14.w : 18.w;
     return SizedBox.square(
       dimension: indicatorSize,
       child: CircularProgressIndicator(
@@ -165,16 +167,12 @@ class WnButton extends StatelessWidget {
   Widget _buildContent(Color contentColor, double iconSize, double fontSize, double iconPadding) {
     return LayoutBuilder(
       builder: (context, constraints) {
+        final typography = context.typographyScaled;
         final isBounded = constraints.maxWidth.isFinite;
+        final baseStyle = size == WnButtonSize.small ? typography.medium12 : typography.medium14;
         final textWidget = Text(
           text,
-          style: TextStyle(
-            fontWeight: FontWeight.w500,
-            fontSize: fontSize,
-            color: contentColor,
-            letterSpacing: 0.4,
-            height: 20 / 14,
-          ),
+          style: baseStyle.copyWith(color: contentColor),
           overflow: TextOverflow.ellipsis,
         );
 
@@ -212,6 +210,25 @@ class WnButton extends StatelessWidget {
       WnButtonSize.large => 18.h,
       WnButtonSize.medium => 12.h,
       WnButtonSize.small => 6.h,
+      WnButtonSize.xsmall => 0.h,
+    };
+  }
+
+  double _getHorizontalPadding() {
+    return switch (size) {
+      WnButtonSize.large => 8.w,
+      WnButtonSize.medium => 8.w,
+      WnButtonSize.small => 8.w,
+      WnButtonSize.xsmall => 12.w,
+    };
+  }
+
+  double _getBorderRadius() {
+    return switch (size) {
+      WnButtonSize.large => 8.r,
+      WnButtonSize.medium => 8.r,
+      WnButtonSize.small => 8.r,
+      WnButtonSize.xsmall => 6.r,
     };
   }
 
@@ -220,6 +237,7 @@ class WnButton extends StatelessWidget {
       WnButtonSize.large => 18.w,
       WnButtonSize.medium => 18.w,
       WnButtonSize.small => 16.w,
+      WnButtonSize.xsmall => 16.w,
     };
   }
 
@@ -228,6 +246,7 @@ class WnButton extends StatelessWidget {
       WnButtonSize.large => 14.sp,
       WnButtonSize.medium => 14.sp,
       WnButtonSize.small => 12.sp,
+      WnButtonSize.xsmall => 14.sp,
     };
   }
 }

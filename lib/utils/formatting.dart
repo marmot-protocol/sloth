@@ -1,10 +1,12 @@
 export 'package:sloth/utils/encoding.dart' show npubFromHex;
 
 String formatPublicKey(String publicKey) {
-  return publicKey.replaceAllMapped(
-    RegExp(r'.{5}'),
-    (match) => '${match.group(0)} ',
-  );
+  return publicKey
+      .replaceAllMapped(
+        RegExp(r'.{4}'),
+        (match) => '${match.group(0)} ',
+      )
+      .trimRight();
 }
 
 String? formatInitials(String? displayName) {

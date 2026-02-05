@@ -14,3 +14,20 @@ String? Function() mockClipboard() {
   );
   return () => content;
 }
+
+void mockClipboardFailing() {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    SystemChannels.platform,
+    (call) async {
+      if (call.method == 'Clipboard.setData') throw Exception('clipboard error');
+      return null;
+    },
+  );
+}
+
+void clearClipboardMock() {
+  TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger.setMockMethodCallHandler(
+    SystemChannels.platform,
+    null,
+  );
+}

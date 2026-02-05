@@ -32,14 +32,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Add start chat and chat info screens with follow/unfollow [PR #96](https://github.com/marmot-protocol/sloth/pull/96)
 - Avatar colors [PR #108](https://github.com/marmot-protocol/sloth/pull/108), [PR #137](https://github.com/marmot-protocol/sloth/pull/137)
 - Scan QR for nsec [PR #164](https://github.com/marmot-protocol/sloth/pull/164)
+- Copy card [PR #157](https://github.com/marmot-protocol/sloth/pull/157)
+- Scan QR for npub [PR #175](https://github.com/marmot-protocol/sloth/pull/175)
 
 ### Changed
 
+- Replace all snackbars with system notice [PR #168](https://github.com/marmot-protocol/sloth/pull/168)
 - Use large size for login and signup buttons [PR #165](https://github.com/marmot-protocol/sloth/pull/165)
 - Change hooks that received refs to receive data [PR #27](https://github.com/marmot-protocol/sloth/pull/27)
 - Update chat list using streams [PR #36](https://github.com/marmot-protocol/sloth/pull/36)
 - Use Rust as source of truth for locale settings, properly persist "System" language preference [PR #109](https://github.com/marmot-protocol/sloth/pull/109)
 - Implement isFollowingUser method [PR #132](https://github.com/marmot-protocol/sloth/pull/132)
+- Npub formatting [PR #157](https://github.com/marmot-protocol/sloth/pull/157)
 
 ### Deprecated
 

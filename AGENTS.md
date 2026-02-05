@@ -183,10 +183,10 @@ rust tests...       ✓
 ### Responsive Sizing with flutter_screenutil
 
 - Use `flutter_screenutil` for all size values to ensure responsive layouts across devices
-- Use `.w` for width-based values: `20.w`, `100.w`
-- Use `.h` for height-based values: `16.h`, `40.h`
-- Use `.sp` for font sizes: `14.sp`, `16.sp`
-- Use `.r` for radius values: `8.r`, `12.r`
+- Use `.w` for width values, e.g. `20.w`
+- Use `.h` for height values, e.g. `16.h`
+- Use `.sp` for font size and letter spacing, e.g. `14.sp`
+- Use `.r` for radius values, e.g. `8.r`
 - Apply to: padding, margins, gaps, icon sizes, font sizes, border radius, container dimensions
 
 ### Avoid StatefulWidget
@@ -250,7 +250,7 @@ Screen (watches providers)
 **CRITICAL: You MUST run `just precommit` before EVERY commit. No exceptions.**
 
 1. Run `just precommit` and ensure it passes completely
-2. Coverage meets 80% minimum
+2. Coverage meets 95% minimum
 3. Update `CHANGELOG.md` for any user-facing changes
 4. Follow existing code patterns and naming conventions
 

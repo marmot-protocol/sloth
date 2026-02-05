@@ -10,33 +10,28 @@ class WnSearchField extends StatelessWidget {
     this.controller,
     this.onChanged,
     this.autofocus = false,
+    this.onScan,
   });
 
   final String placeholder;
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final bool autofocus;
+  final VoidCallback? onScan;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final typography = context.typographyScaled;
 
     return TextField(
       controller: controller,
       autofocus: autofocus,
       onChanged: onChanged,
-      style: TextStyle(
-        fontSize: 14.sp,
-        fontWeight: FontWeight.w500,
-        color: colors.backgroundContentPrimary,
-      ),
+      style: typography.medium14.copyWith(color: colors.backgroundContentPrimary),
       decoration: InputDecoration(
         hintText: placeholder,
-        hintStyle: TextStyle(
-          fontSize: 14.sp,
-          fontWeight: FontWeight.w500,
-          color: colors.backgroundContentTertiary,
-        ),
+        hintStyle: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
         prefixIcon: Padding(
           padding: EdgeInsets.only(left: 14.w, right: 10.w),
           child: WnIcon(
@@ -47,6 +42,21 @@ class WnSearchField extends StatelessWidget {
           ),
         ),
         prefixIconConstraints: const BoxConstraints(),
+        suffixIcon: onScan != null
+            ? GestureDetector(
+                key: const Key('scan_button'),
+                onTap: onScan,
+                child: Padding(
+                  padding: EdgeInsets.only(right: 14.w),
+                  child: WnIcon(
+                    WnIcons.scan,
+                    size: 20.sp,
+                    color: colors.backgroundContentTertiary,
+                  ),
+                ),
+              )
+            : null,
+        suffixIconConstraints: const BoxConstraints(),
         filled: true,
         fillColor: colors.backgroundTertiary,
         contentPadding: EdgeInsets.symmetric(

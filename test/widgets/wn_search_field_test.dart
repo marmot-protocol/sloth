@@ -58,5 +58,30 @@ void main() {
         expect(field.focusNode.hasFocus, isTrue);
       });
     });
+
+    group('with onScan', () {
+      testWidgets('displays scan button when onScan is provided', (tester) async {
+        await mountWidget(
+          WnSearchField(placeholder: 'Search', onScan: () {}),
+          tester,
+        );
+        expect(find.byKey(const Key('scan_button')), findsOneWidget);
+      });
+
+      testWidgets('does not display scan button when onScan is null', (tester) async {
+        await mountWidget(const WnSearchField(placeholder: 'Search'), tester);
+        expect(find.byKey(const Key('scan_button')), findsNothing);
+      });
+
+      testWidgets('calls onScan when scan button is tapped', (tester) async {
+        var scanCalled = false;
+        await mountWidget(
+          WnSearchField(placeholder: 'Search', onScan: () => scanCalled = true),
+          tester,
+        );
+        await tester.tap(find.byKey(const Key('scan_button')));
+        expect(scanCalled, isTrue);
+      });
+    });
   });
 }
