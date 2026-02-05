@@ -12,6 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:sloth_widgetbook/components/buttons.dart'
     as _sloth_widgetbook_components_buttons;
+import 'package:sloth_widgetbook/components/chat_status.dart'
+    as _sloth_widgetbook_components_chat_status;
 import 'package:sloth_widgetbook/components/feedback.dart'
     as _sloth_widgetbook_components_feedback;
 import 'package:sloth_widgetbook/components/icons.dart'
@@ -81,6 +83,16 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Callout',
             builder: _sloth_widgetbook_components_feedback.wnCalloutShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnChatStatusStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Chat Status',
+            builder:
+                _sloth_widgetbook_components_chat_status.wnChatStatusShowcase,
           ),
         ],
       ),
