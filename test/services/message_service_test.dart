@@ -94,6 +94,114 @@ void main() {
 
       expect(mockApi.sentMessages.first.kind, 9);
     });
+
+    test('sends message without tags when no reply params', () async {
+      await service.sendTextMessage(content: 'Hello');
+
+      expect(mockApi.sentMessages.first.tags, isNull);
+    });
+  });
+
+  group('sendTextMessage (reply)', () {
+    const testReplyId = 'reply_msg_id';
+    const testReplyPubkey = testPubkeyB;
+    const testReplyKind = 9;
+
+    test('sends message once when reply params provided', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+        replyToMessagePubkey: testReplyPubkey,
+        replyToMessageKind: testReplyKind,
+      );
+
+      expect(mockApi.sentMessages.length, 1);
+    });
+
+    test('calls API with content when replying', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+        replyToMessagePubkey: testReplyPubkey,
+        replyToMessageKind: testReplyKind,
+      );
+
+      expect(mockApi.sentMessages.first.message, 'Reply content');
+    });
+
+    test('calls API with text message kind (9) when replying', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+        replyToMessagePubkey: testReplyPubkey,
+        replyToMessageKind: testReplyKind,
+      );
+
+      expect(mockApi.sentMessages.first.kind, 9);
+    });
+
+    test('sends e tag with reply message id', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+        replyToMessagePubkey: testReplyPubkey,
+        replyToMessageKind: testReplyKind,
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[0].vec, ['e', testReplyId]);
+    });
+
+    test('sends p tag with reply message pubkey', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+        replyToMessagePubkey: testReplyPubkey,
+        replyToMessageKind: testReplyKind,
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[1].vec, ['p', testReplyPubkey, '']);
+    });
+
+    test('sends k tag with reply message kind', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+        replyToMessagePubkey: testReplyPubkey,
+        replyToMessageKind: testReplyKind,
+      );
+
+      final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
+      expect(tags[2].vec, ['k', testReplyKind.toString()]);
+    });
+
+    test('sends no tags when only replyToMessageId provided', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageId: testReplyId,
+      );
+
+      expect(mockApi.sentMessages.first.tags, isNull);
+    });
+
+    test('sends no tags when only replyToMessagePubkey provided', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessagePubkey: testReplyPubkey,
+      );
+
+      expect(mockApi.sentMessages.first.tags, isNull);
+    });
+
+    test('sends no tags when only replyToMessageKind provided', () async {
+      await service.sendTextMessage(
+        content: 'Reply content',
+        replyToMessageKind: testReplyKind,
+      );
+
+      expect(mockApi.sentMessages.first.tags, isNull);
+    });
   });
 
   group('deleteTextMessage', () {

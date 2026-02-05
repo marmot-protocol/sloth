@@ -13,13 +13,27 @@ class MessageService {
 
   Future<void> sendTextMessage({
     required String content,
+    String? replyToMessageId,
+    String? replyToMessagePubkey,
+    int? replyToMessageKind,
   }) async {
     _logger.info('Sending text message to group $groupId');
+
+    final tags =
+        (replyToMessageId != null && replyToMessagePubkey != null && replyToMessageKind != null)
+        ? await _eventReferenceTags(
+            eventId: replyToMessageId,
+            eventPubkey: replyToMessagePubkey,
+            eventKind: replyToMessageKind,
+          )
+        : null;
+
     await messages_api.sendMessageToGroup(
       pubkey: pubkey,
       groupId: groupId,
       message: content,
       kind: NostrEventKinds.chatMessage,
+      tags: tags,
     );
     _logger.info('Message sent successfully');
   }
