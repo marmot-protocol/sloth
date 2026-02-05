@@ -170,5 +170,7 @@
   "monthSepShort": "Сен",
   "monthOctShort": "Окт",
   "monthNovShort": "Ноя",
-  "monthDecShort": "Дек"
+  "monthDecShort": "Дек",
+  "loginWithSigner": "Войти через Signer",
+  "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова."
 }

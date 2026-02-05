@@ -170,5 +170,7 @@
   "monthSepShort": "Eyl",
   "monthOctShort": "Eki",
   "monthNovShort": "Kas",
-  "monthDecShort": "Ara"
+  "monthDecShort": "Ara",
+  "loginWithSigner": "Signer ile giriş yap",
+  "signerConnectionError": "Signer'a bağlanılamadı. Lütfen tekrar deneyin."
 }

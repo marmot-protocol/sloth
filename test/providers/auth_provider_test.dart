@@ -4,12 +4,15 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:sloth/providers/auth_provider.dart';
 import 'package:sloth/providers/is_adding_account_provider.dart';
+import 'package:sloth/services/android_signer_service.dart';
 import 'package:sloth/src/rust/api/accounts.dart';
 import 'package:sloth/src/rust/api/error.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 
+import '../mocks/mock_android_signer_channel.dart';
 import '../mocks/mock_secure_storage.dart';
+import '../test_helpers.dart';
 
 class _MockRustLibApi implements RustLibApi {
   var metadataCompleter = Completer<FlutterMetadata>();
@@ -19,6 +22,16 @@ class _MockRustLibApi implements RustLibApi {
   Object? getAccountError;
   Object? getAccountsError;
   List<Account> allAccounts = [];
+  Map<String, AccountType> accountTypes = {};
+  bool loginWithSignerCalled = false;
+  String? loginWithSignerPubkey;
+  Object? loginWithSignerError;
+  bool registerExternalSignerCalled = false;
+  FutureOr<String> Function(String)? signEventCallback;
+  FutureOr<String> Function(String, String)? nip04EncryptCallback;
+  FutureOr<String> Function(String, String)? nip04DecryptCallback;
+  FutureOr<String> Function(String, String)? nip44EncryptCallback;
+  FutureOr<String> Function(String, String)? nip44DecryptCallback;
 
   @override
   Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
@@ -28,20 +41,77 @@ class _MockRustLibApi implements RustLibApi {
     if (!existingAccounts.contains(pubkey)) {
       throw const ApiError.whitenoise(message: 'Account not found');
     }
-    return Account(pubkey: pubkey, createdAt: DateTime.now(), updatedAt: DateTime.now());
+    return Account(
+      pubkey: pubkey,
+      accountType: accountTypes[pubkey] ?? AccountType.local,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<Account> crateApiSignerLoginWithExternalSignerAndCallbacks({
+    required String pubkey,
+    required FutureOr<String> Function(String) signEvent,
+    required FutureOr<String> Function(String, String) nip04Encrypt,
+    required FutureOr<String> Function(String, String) nip04Decrypt,
+    required FutureOr<String> Function(String, String) nip44Encrypt,
+    required FutureOr<String> Function(String, String) nip44Decrypt,
+  }) async {
+    loginWithSignerCalled = true;
+    loginWithSignerPubkey = pubkey;
+    signEventCallback = signEvent;
+    nip04EncryptCallback = nip04Encrypt;
+    nip04DecryptCallback = nip04Decrypt;
+    nip44EncryptCallback = nip44Encrypt;
+    nip44DecryptCallback = nip44Decrypt;
+    if (loginWithSignerError != null) {
+      throw loginWithSignerError!;
+    }
+    existingAccounts.add(pubkey);
+    accountTypes[pubkey] = AccountType.external_;
+    return Account(
+      pubkey: pubkey,
+      accountType: AccountType.external_,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<void> crateApiSignerRegisterExternalSigner({
+    required String pubkey,
+    required FutureOr<String> Function(String) signEvent,
+    required FutureOr<String> Function(String, String) nip04Encrypt,
+    required FutureOr<String> Function(String, String) nip04Decrypt,
+    required FutureOr<String> Function(String, String) nip44Encrypt,
+    required FutureOr<String> Function(String, String) nip44Decrypt,
+  }) async {
+    registerExternalSignerCalled = true;
+    signEventCallback = signEvent;
+    nip04EncryptCallback = nip04Encrypt;
+    nip04DecryptCallback = nip04Decrypt;
+    nip44EncryptCallback = nip44Encrypt;
+    nip44DecryptCallback = nip44Decrypt;
   }
 
   @override
   Future<Account> crateApiAccountsCreateIdentity() async {
-    existingAccounts.add('created_pubkey');
-    return Account(pubkey: 'created_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now());
+    existingAccounts.add(testPubkeyC);
+    return Account(
+      pubkey: testPubkeyC,
+      accountType: AccountType.local,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
   }
 
   @override
   Future<Account> crateApiAccountsLogin({required String nsecOrHexPrivkey}) async {
-    existingAccounts.add('logged_in_pubkey');
+    existingAccounts.add(testPubkeyB);
     return Account(
-      pubkey: 'logged_in_pubkey',
+      pubkey: testPubkeyB,
+      accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );
@@ -79,6 +149,7 @@ void main() {
   late MockSecureStorage mockStorage;
 
   setUpAll(() {
+    TestWidgetsFlutterBinding.ensureInitialized();
     mockApi = _MockRustLibApi();
     RustLib.initMock(api: mockApi);
   });
@@ -91,6 +162,16 @@ void main() {
     mockApi.getAccountError = null;
     mockApi.getAccountsError = null;
     mockApi.allAccounts = [];
+    mockApi.accountTypes = {};
+    mockApi.loginWithSignerCalled = false;
+    mockApi.loginWithSignerPubkey = null;
+    mockApi.loginWithSignerError = null;
+    mockApi.registerExternalSignerCalled = false;
+    mockApi.signEventCallback = null;
+    mockApi.nip04EncryptCallback = null;
+    mockApi.nip04DecryptCallback = null;
+    mockApi.nip44EncryptCallback = null;
+    mockApi.nip44DecryptCallback = null;
     mockStorage = MockSecureStorage();
     container = ProviderContainer(
       overrides: [secureStorageProvider.overrideWithValue(mockStorage)],
@@ -162,12 +243,12 @@ void main() {
     group('login', () {
       test('sets state to pubkey', () async {
         await container.read(authProvider.notifier).login('nsec123');
-        expect(container.read(authProvider).value, 'logged_in_pubkey');
+        expect(container.read(authProvider).value, testPubkeyB);
       });
 
       test('fetches account metadata without awaiting', () async {
         await container.read(authProvider.notifier).login('nsec123');
-        expect(mockApi.metadataCalledWithPubkey, 'logged_in_pubkey');
+        expect(mockApi.metadataCalledWithPubkey, testPubkeyB);
         expect(mockApi.metadataCompleter.isCompleted, isFalse);
       });
 
@@ -182,7 +263,7 @@ void main() {
     group('signup', () {
       test('returns created pubkey', () async {
         final pubkey = await container.read(authProvider.notifier).signup();
-        expect(pubkey, 'created_pubkey');
+        expect(pubkey, testPubkeyC);
       });
 
       test('resets isAddingAccountProvider to false', () async {
@@ -209,7 +290,7 @@ void main() {
       test('calls Rust API logout', () async {
         await container.read(authProvider.notifier).login('nsec123');
         await container.read(authProvider.notifier).logout();
-        expect(mockApi.logoutCalledWithPubkey, 'logged_in_pubkey');
+        expect(mockApi.logoutCalledWithPubkey, testPubkeyB);
       });
 
       test('does nothing when not authenticated', () async {
@@ -223,7 +304,12 @@ void main() {
         await container.read(authProvider.notifier).login('nsec123');
         mockApi.existingAccounts.add('other_pubkey');
         mockApi.allAccounts = [
-          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(
+            accountType: AccountType.local,
+            pubkey: 'other_pubkey',
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
         expect(nextPubkey, 'other_pubkey');
@@ -233,14 +319,24 @@ void main() {
 
       test('filters out logged-out account when switching', () async {
         await container.read(authProvider.notifier).login('nsec123');
-        mockApi.existingAccounts.add('other_pubkey');
+        mockApi.existingAccounts.add(testPubkeyD);
         mockApi.allAccounts = [
-          Account(pubkey: 'logged_in_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
-          Account(pubkey: 'other_pubkey', createdAt: DateTime.now(), updatedAt: DateTime.now()),
+          Account(
+            accountType: AccountType.local,
+            pubkey: testPubkeyB,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
+          Account(
+            accountType: AccountType.local,
+            pubkey: testPubkeyD,
+            createdAt: DateTime.now(),
+            updatedAt: DateTime.now(),
+          ),
         ];
         final nextPubkey = await container.read(authProvider.notifier).logout();
-        expect(nextPubkey, 'other_pubkey');
-        expect(container.read(authProvider).value, 'other_pubkey');
+        expect(nextPubkey, testPubkeyD);
+        expect(container.read(authProvider).value, testPubkeyD);
       });
 
       test('returns null when no other accounts', () async {
@@ -278,6 +374,325 @@ void main() {
         await container.read(authProvider.notifier).switchProfile('nonexistent');
         expect(container.read(authProvider).value, isNull);
         expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
+      });
+    });
+
+    group('loginWithAndroidSigner', () {
+      test('sets state to pubkey on success', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        expect(container.read(authProvider).value, testPubkeyA);
+      });
+
+      test('calls Rust API loginWithExternalSignerAndCallbacks', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        expect(mockApi.loginWithSignerCalled, isTrue);
+        expect(mockApi.loginWithSignerPubkey, testPubkeyA);
+      });
+
+      test('fetches metadata without awaiting', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        expect(mockApi.metadataCalledWithPubkey, testPubkeyA);
+        expect(mockApi.metadataCompleter.isCompleted, isFalse);
+      });
+
+      test('resets isAddingAccountProvider to false', () async {
+        container.read(isAddingAccountProvider.notifier).set(true);
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        expect(container.read(isAddingAccountProvider), false);
+      });
+
+      test('calls onDisconnect when ApiError is thrown', () async {
+        mockApi.loginWithSignerError = const ApiError.whitenoise(message: 'Test error');
+        var disconnectCalled = false;
+
+        await expectLater(
+          () => container
+              .read(authProvider.notifier)
+              .loginWithAndroidSigner(
+                pubkey: testPubkeyA,
+                onDisconnect: () async {
+                  disconnectCalled = true;
+                },
+              ),
+          throwsA(isA<ApiError>()),
+        );
+        expect(disconnectCalled, isTrue);
+      });
+
+      test('calls onDisconnect when AndroidSignerException is thrown', () async {
+        mockApi.loginWithSignerError = const AndroidSignerException(
+          'USER_REJECTED',
+          'User rejected',
+        );
+        var disconnectCalled = false;
+
+        await expectLater(
+          () => container
+              .read(authProvider.notifier)
+              .loginWithAndroidSigner(
+                pubkey: testPubkeyA,
+                onDisconnect: () async {
+                  disconnectCalled = true;
+                },
+              ),
+          throwsA(isA<AndroidSignerException>()),
+        );
+        expect(disconnectCalled, isTrue);
+      });
+
+      test('calls onDisconnect when unexpected error is thrown', () async {
+        mockApi.loginWithSignerError = Exception('Unexpected error');
+        var disconnectCalled = false;
+
+        await expectLater(
+          () => container
+              .read(authProvider.notifier)
+              .loginWithAndroidSigner(
+                pubkey: testPubkeyA,
+                onDisconnect: () async {
+                  disconnectCalled = true;
+                },
+              ),
+          throwsA(isA<Exception>()),
+        );
+        expect(disconnectCalled, isTrue);
+      });
+
+      test('handles disconnect failure gracefully', () async {
+        mockApi.loginWithSignerError = const ApiError.whitenoise(message: 'Test error');
+
+        await expectLater(
+          () => container
+              .read(authProvider.notifier)
+              .loginWithAndroidSigner(
+                pubkey: testPubkeyA,
+                onDisconnect: () async {
+                  throw Exception('Disconnect failed');
+                },
+              ),
+          throwsA(isA<ApiError>()),
+        );
+      });
+    });
+
+    group('isUsingAndroidSigner', () {
+      test('returns false when not authenticated', () async {
+        await container.read(authProvider.future);
+        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
+        expect(result, isFalse);
+      });
+
+      test('returns false for local account', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
+        expect(result, isFalse);
+      });
+
+      test('returns true for external account', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
+        expect(result, isTrue);
+      });
+
+      test('returns false when getAccount fails', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        mockApi.getAccountError = const ApiError.whitenoise(message: 'Network error');
+        final result = await container.read(authProvider.notifier).isUsingAndroidSigner();
+        expect(result, isFalse);
+      });
+    });
+
+    group('logout with Android signer', () {
+      test('calls onAndroidSignerDisconnect for external account', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        var disconnectCalled = false;
+        await container
+            .read(authProvider.notifier)
+            .logout(
+              onAndroidSignerDisconnect: () async {
+                disconnectCalled = true;
+              },
+            );
+        expect(disconnectCalled, isTrue);
+      });
+
+      test('does not call onAndroidSignerDisconnect for local account', () async {
+        await container.read(authProvider.notifier).login('nsec123');
+        var disconnectCalled = false;
+        await container
+            .read(authProvider.notifier)
+            .logout(
+              onAndroidSignerDisconnect: () async {
+                disconnectCalled = true;
+              },
+            );
+        expect(disconnectCalled, isFalse);
+      });
+
+      test('handles disconnect failure gracefully during logout', () async {
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        await container
+            .read(authProvider.notifier)
+            .logout(
+              onAndroidSignerDisconnect: () async {
+                throw Exception('Disconnect failed');
+              },
+            );
+        expect(container.read(authProvider).value, isNull);
+      });
+    });
+
+    group('build with external account', () {
+      test('re-registers external signer callbacks', () async {
+        mockApi.existingAccounts.add(testPubkeyA);
+        mockApi.accountTypes[testPubkeyA] = AccountType.external_;
+        await mockStorage.write(key: 'active_account_pubkey', value: testPubkeyA);
+
+        await container.read(authProvider.future);
+
+        expect(mockApi.registerExternalSignerCalled, isTrue);
+      });
+
+      test('does not re-register for local account', () async {
+        mockApi.existingAccounts.add(testPubkeyA);
+        mockApi.accountTypes[testPubkeyA] = AccountType.local;
+        await mockStorage.write(key: 'active_account_pubkey', value: testPubkeyA);
+
+        await container.read(authProvider.future);
+
+        expect(mockApi.registerExternalSignerCalled, isFalse);
+      });
+    });
+
+    group('signer callbacks from _createSignerCallbacks', () {
+      late dynamic mockAndroidSigner;
+
+      setUp(() {
+        mockAndroidSigner = mockAndroidSignerChannel();
+      });
+
+      tearDown(() {
+        mockAndroidSigner.reset();
+      });
+
+      test('signEvent returns signed event when signer returns event', () async {
+        mockAndroidSigner.setResult('signEvent', {'event': 'signed_event_json'});
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        final result = await mockApi.signEventCallback!('{}');
+        expect(result, 'signed_event_json');
+      });
+
+      test('signEvent throws NO_EVENT when signer returns signature but no event', () async {
+        mockAndroidSigner.setResult('signEvent', {'result': 'sig_without_event'});
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        expect(
+          () => mockApi.signEventCallback!('{}'),
+          throwsA(
+            isA<AndroidSignerException>().having(
+              (e) => e.code,
+              'code',
+              'NO_EVENT',
+            ),
+          ),
+        );
+      });
+
+      test('nip04Encrypt returns ciphertext from signer', () async {
+        mockAndroidSigner.setResult('nip04Encrypt', {'result': 'encrypted'});
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        final result = await mockApi.nip04EncryptCallback!('plain', testPubkeyB);
+        expect(result, 'encrypted');
+      });
+
+      test('nip04Decrypt returns plaintext from signer', () async {
+        mockAndroidSigner.setResult('nip04Decrypt', {'result': 'decrypted'});
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        final result = await mockApi.nip04DecryptCallback!('cipher', testPubkeyB);
+        expect(result, 'decrypted');
+      });
+
+      test('nip44Encrypt returns ciphertext from signer', () async {
+        mockAndroidSigner.setResult('nip44Encrypt', {'result': 'enc44'});
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        final result = await mockApi.nip44EncryptCallback!('plain', testPubkeyB);
+        expect(result, 'enc44');
+      });
+
+      test('nip44Decrypt returns plaintext from signer', () async {
+        mockAndroidSigner.setResult('nip44Decrypt', {'result': 'dec44'});
+        await container
+            .read(authProvider.notifier)
+            .loginWithAndroidSigner(
+              pubkey: testPubkeyA,
+              onDisconnect: () async {},
+            );
+        final result = await mockApi.nip44DecryptCallback!('cipher', testPubkeyB);
+        expect(result, 'dec44');
       });
     });
   });

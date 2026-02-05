@@ -24,6 +24,7 @@ class _MockApi extends MockWnApi {
   Future<Account> crateApiAccountsCreateIdentity() async {
     return Account(
       pubkey: testPubkeyA,
+      accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );

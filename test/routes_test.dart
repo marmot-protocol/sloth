@@ -21,6 +21,7 @@ import 'package:sloth/src/rust/api/groups.dart';
 import 'package:sloth/src/rust/api/metadata.dart';
 import 'package:sloth/src/rust/frb_generated.dart';
 import 'mocks/mock_wn_api.dart';
+
 import 'test_helpers.dart';
 
 class _MockRustLibApi extends MockWnApi {
