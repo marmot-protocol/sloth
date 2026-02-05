@@ -21,6 +21,7 @@ class MessageActionsScreen extends HookWidget {
     required this.onAddReaction,
     required this.onRemoveReaction,
     this.onDelete,
+    this.onReply,
   });
 
   final ChatMessage message;
@@ -28,6 +29,7 @@ class MessageActionsScreen extends HookWidget {
   final Future<void> Function(String emoji) onAddReaction;
   final Future<void> Function(String reactionId) onRemoveReaction;
   final Future<void> Function()? onDelete;
+  final void Function(ChatMessage message)? onReply;
 
   static Future<void> show(
     BuildContext context, {
@@ -36,6 +38,7 @@ class MessageActionsScreen extends HookWidget {
     required Future<void> Function(String emoji) onAddReaction,
     required Future<void> Function(String reactionId) onRemoveReaction,
     Future<void> Function()? onDelete,
+    void Function(ChatMessage message)? onReply,
   }) {
     final colors = context.colors;
 
@@ -51,6 +54,7 @@ class MessageActionsScreen extends HookWidget {
             onAddReaction: onAddReaction,
             onRemoveReaction: onRemoveReaction,
             onDelete: onDelete,
+            onReply: onReply,
           );
         },
         transitionsBuilder: (_, animation, _, child) {
@@ -142,6 +146,12 @@ class MessageActionsScreen extends HookWidget {
                     onReaction: handleReaction,
                     onEmojiPicker: () => showEmojiPicker.value = !showEmojiPicker.value,
                     selectedEmojis: selectedEmojis,
+                    onReply: onReply != null
+                        ? () {
+                            onReply!(message);
+                            Navigator.of(context).pop();
+                          }
+                        : null,
                   ),
                 ],
               ),
@@ -169,6 +179,7 @@ class MessageActionsModal extends StatelessWidget {
     required this.currentUserPubkey,
     this.onDelete,
     this.selectedEmojis = const {},
+    this.onReply,
   });
 
   final ChatMessage message;
@@ -179,6 +190,7 @@ class MessageActionsModal extends StatelessWidget {
   final String currentUserPubkey;
   final VoidCallback? onDelete;
   final Set<String> selectedEmojis;
+  final VoidCallback? onReply;
 
   static const List<String> reactions = [
     '❤',
@@ -239,12 +251,13 @@ class MessageActionsModal extends StatelessWidget {
               ],
             ),
             SizedBox(height: 16.h),
-            WnButton(
-              key: const Key('reply_button'),
-              text: context.l10n.reply,
-              type: WnButtonType.outline,
-              onPressed: onClose,
-            ),
+            if (onReply != null)
+              WnButton(
+                key: const Key('reply_button'),
+                text: context.l10n.reply,
+                type: WnButtonType.outline,
+                onPressed: onReply,
+              ),
             if (onDelete != null) ...[
               Gap(8.h),
               WnButton(

@@ -66,7 +66,24 @@ void main() {
     });
 
     group('Reply button', () {
-      testWidgets('is visible', (tester) async {
+      testWidgets('is visible when onReply is provided', (tester) async {
+        await mountWidget(
+          MessageActionsModal(
+            message: _createTestMessage(),
+            isOwnMessage: false,
+            onClose: () {},
+            onReaction: (_) {},
+            onEmojiPicker: () {},
+            currentUserPubkey: 'test-pubkey',
+            onReply: () {},
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_button')), findsOneWidget);
+      });
+
+      testWidgets('is hidden when onReply is null', (tester) async {
         await mountWidget(
           MessageActionsModal(
             message: _createTestMessage(),
@@ -79,19 +96,20 @@ void main() {
           tester,
         );
 
-        expect(find.byKey(const Key('reply_button')), findsOneWidget);
+        expect(find.byKey(const Key('reply_button')), findsNothing);
       });
 
-      testWidgets('calls onClose when tapped', (tester) async {
-        var closeCalled = false;
+      testWidgets('calls onReply when tapped', (tester) async {
+        var replyCalled = false;
         await mountWidget(
           MessageActionsModal(
             message: _createTestMessage(),
             isOwnMessage: false,
-            onClose: () => closeCalled = true,
+            onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
             currentUserPubkey: 'test-pubkey',
+            onReply: () => replyCalled = true,
           ),
           tester,
         );
@@ -99,7 +117,7 @@ void main() {
         await tester.tap(find.byKey(const Key('reply_button')));
         await tester.pumpAndSettle();
 
-        expect(closeCalled, isTrue);
+        expect(replyCalled, isTrue);
       });
     });
 
