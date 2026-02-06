@@ -1,21 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart' show useState;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart' show HookConsumerWidget, WidgetRef;
-import 'package:whitenoise/hooks/use_android_signer.dart' show useAndroidSigner;
-import 'package:whitenoise/hooks/use_login.dart' show useLogin;
+import 'package:whitenoise/hooks/use_login_with_android_signer.dart' show useLoginWithAndroidSigner;
+import 'package:whitenoise/hooks/use_login_with_nsec.dart' show useLoginWithNsec;
 import 'package:whitenoise/l10n/l10n.dart';
-import 'package:whitenoise/providers/android_signer_service_provider.dart'
-    show androidSignerServiceProvider;
 import 'package:whitenoise/providers/auth_provider.dart' show authProvider;
 import 'package:whitenoise/routes.dart' show Routes;
-import 'package:whitenoise/services/android_signer_service.dart' show AndroidSignerException;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_input_password.dart' show WnInputPassword;
 import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart'
+    show WnSystemNotice, WnSystemNoticeType, WnSystemNoticeVariant;
+
+String _signerErrorL10n(String code, AppLocalizations l10n) {
+  switch (code) {
+    case 'USER_REJECTED':
+      return l10n.signerErrorUserRejected;
+    case 'NOT_CONNECTED':
+      return l10n.signerErrorNotConnected;
+    case 'NO_SIGNER':
+      return l10n.signerErrorNoSigner;
+    case 'NO_RESPONSE':
+      return l10n.signerErrorNoResponse;
+    case 'NO_PUBKEY':
+      return l10n.signerErrorNoPubkey;
+    case 'NO_RESULT':
+      return l10n.signerErrorNoResult;
+    case 'NO_EVENT':
+      return l10n.signerErrorNoEvent;
+    case 'REQUEST_IN_PROGRESS':
+      return l10n.signerErrorRequestInProgress;
+    case 'NO_ACTIVITY':
+      return l10n.signerErrorNoActivity;
+    case 'LAUNCH_ERROR':
+      return l10n.signerErrorLaunchError;
+    case 'CONNECTION_ERROR':
+      return l10n.signerConnectionError;
+    default:
+      return l10n.signerErrorUnknown;
+  }
+}
 
 class LoginScreen extends HookConsumerWidget {
   const LoginScreen({super.key});
@@ -23,16 +50,26 @@ class LoginScreen extends HookConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
-    final (:controller, :state, :paste, :submit, :clearError) = useLogin(
-      (nsec) => ref.read(authProvider.notifier).login(nsec),
+    final (
+      :nsecInputController,
+      :loginWithNsecState,
+      :pasteNsec,
+      :submitLoginWithNsec,
+      :clearLoginWithNsecError,
+    ) = useLoginWithNsec(
+      (nsec) => ref.read(authProvider.notifier).loginWithNsec(nsec),
     );
-    final signerService = ref.watch(androidSignerServiceProvider);
-    final androidSigner = useAndroidSigner(signerService);
-    final signerError = useState<String?>(null);
-    final isSignerLoading = useState(false);
+    final (
+      :isAndroidSignerAvailable,
+      :loginWithAndroidSignerState,
+      :submitLoginWithAndroidSigner,
+      :clearLoginWithAndroidSignerError,
+    ) = useLoginWithAndroidSigner(
+      (pubkey) => ref.read(authProvider.notifier).loginWithAndroidSigner(pubkey: pubkey),
+    );
 
     Future<void> onSubmit() async {
-      final success = await submit();
+      final success = await submitLoginWithNsec();
       if (success && context.mounted) {
         Routes.goToChatList(context);
       }
@@ -41,44 +78,27 @@ class LoginScreen extends HookConsumerWidget {
     Future<void> onScan() async {
       final scannedValue = await Routes.pushToScanNsec(context);
       if (scannedValue != null && scannedValue.isNotEmpty) {
-        controller.text = scannedValue;
-        clearError();
+        nsecInputController.text = scannedValue;
+        clearLoginWithNsecError();
       }
     }
 
-    Future<void> onAndroidSignerLogin() async {
-      final signerConnectionErrorMessage = context.l10n.signerConnectionError;
-      signerError.value = null;
-      clearError();
-      isSignerLoading.value = true;
-      try {
-        final pubkey = await androidSigner.connect();
-        await ref
-            .read(authProvider.notifier)
-            .loginWithAndroidSigner(
-              pubkey: pubkey,
-              onDisconnect: androidSigner.disconnect,
-            );
-        if (context.mounted) {
-          Routes.goToChatList(context);
-        }
-      } on AndroidSignerException catch (e) {
-        signerError.value = e.userFriendlyMessage;
-      } catch (_) {
-        signerError.value = signerConnectionErrorMessage;
-      } finally {
-        isSignerLoading.value = false;
+    Future<void> onAndroidSignerSubmit() async {
+      clearLoginWithNsecError();
+      final success = await submitLoginWithAndroidSigner();
+      if (success && context.mounted) {
+        Routes.goToChatList(context);
       }
     }
 
-    final anyLoading = state.isLoading || isSignerLoading.value;
+    final isLoginLoading = loginWithNsecState.isLoading || loginWithAndroidSignerState.isLoading;
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          WnPixelsLayer(isAnimating: anyLoading),
+          WnPixelsLayer(isAnimating: isLoginLoading),
           Positioned.fill(
             child: GestureDetector(
               key: const Key('login_background'),
@@ -96,6 +116,18 @@ class LoginScreen extends HookConsumerWidget {
                     type: WnSlateNavigationType.back,
                     onNavigate: () => Routes.goBack(context),
                   ),
+                  systemNotice: loginWithAndroidSignerState.error != null
+                      ? WnSystemNotice(
+                          key: ValueKey(loginWithAndroidSignerState.error),
+                          title: _signerErrorL10n(
+                            loginWithAndroidSignerState.error!,
+                            context.l10n,
+                          ),
+                          type: WnSystemNoticeType.error,
+                          variant: WnSystemNoticeVariant.dismissible,
+                          onDismiss: clearLoginWithAndroidSignerError,
+                        )
+                      : null,
                   child: Padding(
                     padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
                     child: Column(
@@ -106,36 +138,45 @@ class LoginScreen extends HookConsumerWidget {
                         WnInputPassword(
                           label: context.l10n.enterPrivateKey,
                           placeholder: context.l10n.nsecPlaceholder,
-                          controller: controller,
-                          autofocus: true,
-                          errorText: state.error,
-                          onChanged: (_) => clearError(),
-                          onPaste: paste,
+                          controller: nsecInputController,
+                          errorText: loginWithNsecState.error,
+                          onChanged: (_) => clearLoginWithNsecError(),
+                          onPaste: pasteNsec,
                           onScan: onScan,
                         ),
-                        WnButton(
-                          key: const Key('login_button'),
-                          text: context.l10n.login,
-                          onPressed: onSubmit,
-                          loading: state.isLoading,
+                        ListenableBuilder(
+                          listenable: nsecInputController,
+                          builder: (context, _) {
+                            final signerPrimary =
+                                isAndroidSignerAvailable && nsecInputController.text.trim().isEmpty;
+                            return Column(
+                              spacing: 8.h,
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                WnButton(
+                                  key: const Key('login_button'),
+                                  text: context.l10n.login,
+                                  type: signerPrimary ? WnButtonType.outline : WnButtonType.primary,
+                                  onPressed: onSubmit,
+                                  loading: loginWithNsecState.isLoading,
+                                  disabled: loginWithAndroidSignerState.isLoading,
+                                ),
+                                if (isAndroidSignerAvailable)
+                                  WnButton(
+                                    key: const Key('android_signer_login_button'),
+                                    text: context.l10n.loginWithSigner,
+                                    type: signerPrimary
+                                        ? WnButtonType.primary
+                                        : WnButtonType.outline,
+                                    onPressed: onAndroidSignerSubmit,
+                                    loading: loginWithAndroidSignerState.isLoading,
+                                    disabled: loginWithNsecState.isLoading,
+                                  ),
+                              ],
+                            );
+                          },
                         ),
-                        if (androidSigner.isAvailable) ...[
-                          WnButton(
-                            key: const Key('android_signer_login_button'),
-                            text: context.l10n.loginWithSigner,
-                            type: WnButtonType.outline,
-                            onPressed: onAndroidSignerLogin,
-                            loading: androidSigner.isConnecting,
-                            disabled: state.isLoading,
-                          ),
-                          if (signerError.value != null) ...[
-                            Text(
-                              signerError.value!,
-                              textAlign: TextAlign.center,
-                              style: context.typographyScaled.medium12,
-                            ),
-                          ],
-                        ],
                       ],
                     ),
                   ),
