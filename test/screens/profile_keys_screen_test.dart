@@ -16,13 +16,21 @@ import '../test_helpers.dart';
 
 class _MockApi extends MockWnApi {
   AccountType _accountType = AccountType.local;
+  bool _exportNsecThrows = false;
 
   void setAccountType(AccountType type) {
     _accountType = type;
   }
 
+  void setExportNsecThrows(bool value) {
+    _exportNsecThrows = value;
+  }
+
   @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
+    if (_exportNsecThrows) {
+      throw Exception('Export error');
+    }
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
 
@@ -55,6 +63,7 @@ void main() {
 
   setUp(() {
     mockApi.setAccountType(AccountType.local);
+    mockApi.setExportNsecThrows(false);
   });
 
   Future<void> pumpProfileKeysScreen(WidgetTester tester) async {
@@ -230,6 +239,39 @@ void main() {
       final copyableFields = find.byType(WnCopyableField);
       expect(copyableFields, findsOneWidget);
       expect(find.text('Public key'), findsOneWidget);
+    });
+
+    testWidgets('displays external signer callout title when nsec storage is external', (
+      tester,
+    ) async {
+      mockApi.setAccountType(AccountType.external_);
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Private key is stored in external signer'), findsOneWidget);
+    });
+
+    testWidgets('displays external signer callout description when nsec storage is external', (
+      tester,
+    ) async {
+      mockApi.setAccountType(AccountType.external_);
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.text(
+          'Your private key isn\'t available in White Noise. Open your signer to view or manage it.',
+        ),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('shows error notice when private key fails to load', (tester) async {
+      mockApi.setExportNsecThrows(true);
+      await pumpProfileKeysScreen(tester);
+      await tester.pumpAndSettle();
+
+      expect(find.text('Could not load private key. Please try again.'), findsOneWidget);
     });
 
     testWidgets('success notice auto-dismisses after timeout', (tester) async {

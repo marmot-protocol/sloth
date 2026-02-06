@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:whitenoise/hooks/use_nsec.dart';
+import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
-import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/utils/formatting.dart';
@@ -14,7 +14,8 @@ import 'package:whitenoise/widgets/wn_callout.dart';
 import 'package:whitenoise/widgets/wn_copyable_field.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
-import 'package:whitenoise/widgets/wn_system_notice.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart'
+    show WnSystemNotice, WnSystemNoticeType, WnSystemNoticeVariant;
 
 class ProfileKeysScreen extends HookConsumerWidget {
   const ProfileKeysScreen({super.key});
@@ -25,38 +26,22 @@ class ProfileKeysScreen extends HookConsumerWidget {
     final typography = context.typographyScaled;
     final pubkey = ref.watch(accountPubkeyProvider);
     final npub = npubFromHex(pubkey);
-    final (:state, :loadNsec) = useNsec(pubkey);
+    final (:nsecState) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
-    final noticeMessage = useState<String?>(null);
-    final isUsingExternalSigner = useState<bool?>(null);
+    final (:noticeMessage, :noticeType, :showSuccessNotice, :showErrorNotice, :dismissNotice) =
+        useSystemNotice();
 
     useEffect(() {
-      var disposed = false;
-      loadNsec();
-
-      Future<void> checkSignerType() async {
-        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
-        if (!disposed) {
-          isUsingExternalSigner.value = isExternal;
-        }
+      if (nsecState.error != null) {
+        Future.microtask(() => showErrorNotice('failedToLoadPrivateKey'));
+      } else {
+        dismissNotice();
       }
-
-      checkSignerType();
-      return () {
-        disposed = true;
-      };
-    }, [pubkey]);
+      return null;
+    }, [nsecState.error]);
 
     void togglePrivateKeyVisibility() {
       obscurePrivateKey.value = !obscurePrivateKey.value;
-    }
-
-    void showCopiedNotice(String message) {
-      noticeMessage.value = message;
-    }
-
-    void dismissNotice() {
-      noticeMessage.value = null;
     }
 
     return Scaffold(
@@ -70,10 +55,14 @@ class ProfileKeysScreen extends HookConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
-            systemNotice: noticeMessage.value != null
+            systemNotice: noticeMessage != null
                 ? WnSystemNotice(
-                    key: ValueKey(noticeMessage.value),
-                    title: noticeMessage.value!,
+                    key: ValueKey(noticeMessage),
+                    title: _noticeMessageL10n(context, noticeMessage),
+                    type: noticeType,
+                    variant: noticeType == WnSystemNoticeType.error
+                        ? WnSystemNoticeVariant.dismissible
+                        : WnSystemNoticeVariant.temporary,
                     onDismiss: dismissNotice,
                   )
                 : null,
@@ -91,26 +80,26 @@ class ProfileKeysScreen extends HookConsumerWidget {
                           WnCopyableField(
                             label: context.l10n.publicKey,
                             value: npub ?? '',
-                            onCopied: () => showCopiedNotice(context.l10n.publicKeyCopied),
+                            onCopied: () => showSuccessNotice('publicKeyCopied'),
                           ),
-                          Gap(12.h),
+                          Gap(4.h),
                           Text(
                             context.l10n.publicKeyDescription,
                             style: typography.medium14.copyWith(
                               color: colors.backgroundContentSecondary,
                             ),
                           ),
-                          if (isUsingExternalSigner.value == false) ...[
+                          if (nsecState.nsecStorage == NsecStorage.local) ...[
                             Gap(36.h),
                             WnCopyableField(
                               label: context.l10n.privateKey,
-                              value: state.nsec ?? '',
+                              value: nsecState.nsec ?? '',
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,
-                              onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
+                              onCopied: () => showSuccessNotice('privateKeyCopied'),
                             ),
-                            Gap(10.h),
+                            Gap(4.h),
                             Text(
                               context.l10n.privateKeyDescription,
                               style: context.typographyScaled.medium14.copyWith(
@@ -122,6 +111,13 @@ class ProfileKeysScreen extends HookConsumerWidget {
                               title: context.l10n.keepPrivateKeySecure,
                               description: context.l10n.privateKeyWarning,
                               type: CalloutType.warning,
+                            ),
+                          ] else if (nsecState.nsecStorage == NsecStorage.externalSigner) ...[
+                            Gap(12.h),
+                            WnCallout(
+                              title: context.l10n.nsecOnExternalSigner,
+                              description: context.l10n.nsecOnExternalSignerDescription,
+                              type: CalloutType.info,
                             ),
                           ],
                           Gap(24.h),
@@ -136,5 +132,19 @@ class ProfileKeysScreen extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+String _noticeMessageL10n(BuildContext context, String key) {
+  final l10n = context.l10n;
+  switch (key) {
+    case 'failedToLoadPrivateKey':
+      return l10n.failedToLoadPrivateKey;
+    case 'publicKeyCopied':
+      return l10n.publicKeyCopied;
+    case 'privateKeyCopied':
+      return l10n.privateKeyCopied;
+    default:
+      return key;
   }
 }
