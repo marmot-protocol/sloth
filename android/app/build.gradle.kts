@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.example.sloth"
+    namespace = "org.parres.whitenoise"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -20,8 +20,7 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.example.sloth"
+        applicationId = "org.parres.whitenoise"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdk = flutter.minSdkVersion
@@ -36,12 +35,11 @@ android {
         create("staging") {
             dimension = "environment"
             applicationIdSuffix = ".staging"
-            resValue("string", "app_name", "Sloth staging")
+            resValue("string", "app_name", "White Noise staging")
         }
         create("production") {
             dimension = "environment"
-            applicationIdSuffix = ".production"
-            resValue("string", "app_name", "Sloth production")
+            resValue("string", "app_name", "White Noise")
         }
     }
 

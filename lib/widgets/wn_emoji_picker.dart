@@ -1,8 +1,8 @@
 import 'package:emoji_picker_flutter/emoji_picker_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 
 class WnEmojiPicker extends StatelessWidget {
   const WnEmojiPicker({

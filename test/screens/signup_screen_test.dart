@@ -3,17 +3,17 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData, Consumer, ProviderScope;
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/l10n/generated/app_localizations.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/providers/is_adding_account_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/screens/chat_list_screen.dart';
-import 'package:sloth/screens/home_screen.dart';
-import 'package:sloth/screens/onboarding_screen.dart';
-import 'package:sloth/src/rust/api/accounts.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/providers/is_adding_account_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/chat_list_screen.dart';
+import 'package:whitenoise/screens/home_screen.dart';
+import 'package:whitenoise/screens/onboarding_screen.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -24,6 +24,7 @@ class _MockApi extends MockWnApi {
   Future<Account> crateApiAccountsCreateIdentity() async {
     return Account(
       pubkey: testPubkeyA,
+      accountType: AccountType.local,
       createdAt: DateTime.now(),
       updatedAt: DateTime.now(),
     );

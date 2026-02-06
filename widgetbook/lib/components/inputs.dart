@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_input.dart';
-import 'package:sloth/widgets/wn_input_password.dart';
-import 'package:sloth/widgets/wn_input_text_area.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_input.dart';
+import 'package:whitenoise/widgets/wn_input_password.dart';
+import 'package:whitenoise/widgets/wn_input_text_area.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

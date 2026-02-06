@@ -16,7 +16,7 @@ class Introduction extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               const Text(
-                'Sloth Design System',
+                'White Noise Design System',
                 style: TextStyle(
                   fontSize: 32,
                   fontWeight: FontWeight.bold,
@@ -25,7 +25,7 @@ class Introduction extends StatelessWidget {
               ),
               const SizedBox(height: 12),
               const Text(
-                'Browse components, foundations, and design tokens used in the Sloth messaging app.',
+                'Browse components, foundations, and design tokens used in the White Noise messaging app.',
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFF666666),

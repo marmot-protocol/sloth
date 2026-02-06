@@ -3,7 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:image_picker_platform_interface/image_picker_platform_interface.dart';
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
-import 'package:sloth/hooks/use_image_picker.dart';
+import 'package:whitenoise/hooks/use_image_picker.dart';
 
 class MockImagePickerPlatform extends ImagePickerPlatform with MockPlatformInterfaceMixin {
   XFile? imageToReturn;

@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_accounts.dart';
-import 'package:sloth/hooks/use_user_metadata.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_profile_switcher_item.dart';
-import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/hooks/use_accounts.dart';
+import 'package:whitenoise/hooks/use_user_metadata.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_profile_switcher_item.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
 class SwitchProfileScreen extends HookConsumerWidget {
   const SwitchProfileScreen({super.key});

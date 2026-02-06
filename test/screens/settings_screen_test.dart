@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/screens/app_settings_screen.dart';
-import 'package:sloth/screens/chat_list_screen.dart';
-import 'package:sloth/screens/developer_settings_screen.dart';
-import 'package:sloth/screens/donate_screen.dart';
-import 'package:sloth/screens/edit_profile_screen.dart';
-import 'package:sloth/screens/network_screen.dart';
-import 'package:sloth/screens/profile_keys_screen.dart';
-import 'package:sloth/screens/share_profile_screen.dart';
-import 'package:sloth/screens/sign_out_screen.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/app_settings_screen.dart';
+import 'package:whitenoise/screens/chat_list_screen.dart';
+import 'package:whitenoise/screens/developer_settings_screen.dart';
+import 'package:whitenoise/screens/donate_screen.dart';
+import 'package:whitenoise/screens/edit_profile_screen.dart';
+import 'package:whitenoise/screens/network_screen.dart';
+import 'package:whitenoise/screens/profile_keys_screen.dart';
+import 'package:whitenoise/screens/share_profile_screen.dart';
+import 'package:whitenoise/screens/sign_out_screen.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -50,7 +50,7 @@ class _MockAuthNotifier extends AuthNotifier {
   }
 
   @override
-  Future<String?> logout() async {
+  Future<String?> logout({Future<void> Function()? onAndroidSignerDisconnect}) async {
     logoutCalled = true;
     return null;
   }

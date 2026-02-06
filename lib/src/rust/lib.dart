@@ -8,6 +8,9 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 
 import 'frb_generated.dart';
 
+// Rust type: RustOpaqueMoi<flutter_rust_bridge::for_generated::RustAutoOpaqueInner<PublicKey>>
+abstract class PublicKey implements RustOpaqueInterface {}
+
 class U8Array12 extends NonGrowableListView<int> {
   static const arraySize = 12;
 

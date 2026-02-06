@@ -2,9 +2,9 @@ import 'dart:ui' show PointerDeviceKind;
 
 import 'package:flutter/material.dart' show BoxDecoration, Container, EditableText, Key, TextField;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/theme/semantic_colors.dart' show SemanticColors;
-import 'package:sloth/widgets/wn_icon.dart' show WnIcon, WnIcons;
-import 'package:sloth/widgets/wn_input.dart';
+import 'package:whitenoise/theme/semantic_colors.dart' show SemanticColors;
+import 'package:whitenoise/widgets/wn_icon.dart' show WnIcon, WnIcons;
+import 'package:whitenoise/widgets/wn_input.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

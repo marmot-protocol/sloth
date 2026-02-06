@@ -1,7 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
+import 'package:whitenoise/theme.dart';
 
 class WnOverlay extends StatelessWidget {
   const WnOverlay({

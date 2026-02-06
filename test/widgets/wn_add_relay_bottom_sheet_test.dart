@@ -2,8 +2,8 @@ import 'package:flutter/material.dart'
     show FilledButton, Key, Locale, MaterialApp, Scaffold, Builder, ElevatedButton, Text, TextField;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/l10n/generated/app_localizations.dart';
-import 'package:sloth/widgets/wn_add_relay_bottom_sheet.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
+import 'package:whitenoise/widgets/wn_add_relay_bottom_sheet.dart';
 import '../test_helpers.dart';
 
 void main() {

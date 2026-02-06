@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/utils/mime_type.dart' show getMimeType;
+import 'package:whitenoise/utils/mime_type.dart' show getMimeType;
 
 void main() {
   group('getMimeType', () {

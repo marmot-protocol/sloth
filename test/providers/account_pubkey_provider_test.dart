@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/providers/auth_provider.dart';
+import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
 
 import '../test_helpers.dart';
 

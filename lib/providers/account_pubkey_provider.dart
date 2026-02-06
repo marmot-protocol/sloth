@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sloth/providers/auth_provider.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
 
 class AccountPubkeyNotifier extends Notifier<String> {
   @override

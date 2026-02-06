@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_auth_buttons_container.dart';
-import 'package:sloth/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_auth_buttons_container.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
 import '../test_helpers.dart';
 
 void main() {

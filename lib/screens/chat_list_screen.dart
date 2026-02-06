@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_chat_list.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/chat_list_tile.dart';
-import 'package:sloth/widgets/wn_account_bar.dart';
-import 'package:sloth/widgets/wn_slate.dart';
+import 'package:whitenoise/hooks/use_chat_list.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/src/rust/api/chat_list.dart' show ChatSummary;
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/chat_list_tile.dart';
+import 'package:whitenoise/widgets/wn_account_bar.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
 
 class ChatListScreen extends HookConsumerWidget {
   const ChatListScreen({super.key});

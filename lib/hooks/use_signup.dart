@@ -1,6 +1,6 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/services/profile_service.dart' show ProfileService;
+import 'package:whitenoise/services/profile_service.dart' show ProfileService;
 
 final _logger = Logger('useSignup');
 

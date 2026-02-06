@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 import '../test_helpers.dart';
 
 void main() {

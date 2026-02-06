@@ -71,7 +71,7 @@
   "donateDescription": "Als gemeinnützige Organisation existiert White Noise ausschließlich für deine Privatsphäre und Freiheit, nicht für Profit. Deine Unterstützung hält uns unabhängig und kompromisslos.",
   "lightningAddress": "Lightning-Adresse",
   "bitcoinSilentPayment": "Bitcoin Silent Payment",
-  "copiedToClipboardThankYou": "In Zwischenablage kopiert. Danke! 🦥",
+  "copiedToClipboardThankYou": "In Zwischenablage kopiert. Danke!",
   "shareProfileTitle": "Profil teilen",
   "scanToConnect": "Zum Verbinden scannen",
   "signOutTitle": "Abmelden",
@@ -104,11 +104,10 @@
   "keyPackagesDeleted": "Alle Schlüsselpakete gelöscht",
   "keyPackageDeleted": "Schlüsselpaket gelöscht",
   "packageNumber": "Paket {number}",
-  "ohNo": "Oh nein!",
   "goBack": "Zurück",
   "reportError": "Fehler melden",
-  "slothsWorking": "Faultiere arbeiten",
-  "wipMessage": "Faultiere arbeiten an dieser Funktion. Wenn du möchtest, dass die Faultiere schneller sind, spende bitte an White Noise",
+  "workInProgress": "Wir arbeiten daran",
+  "wipMessage": "Wir arbeiten an dieser Funktion. Um die Entwicklung zu unterstützen, spende bitte an White Noise",
   "donate": "Spenden",
   "addRelay": "Relay hinzufügen",
   "enterRelayAddress": "Relay-Adresse eingeben",
@@ -170,5 +169,7 @@
   "monthSepShort": "Sep",
   "monthOctShort": "Okt",
   "monthNovShort": "Nov",
-  "monthDecShort": "Dez"
+  "monthDecShort": "Dez",
+  "loginWithSigner": "Mit Signer anmelden",
+  "signerConnectionError": "Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut."
 }

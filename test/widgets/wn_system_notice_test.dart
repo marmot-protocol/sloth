@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_button.dart';
-import 'package:sloth/widgets/wn_icon.dart' show WnIcon, WnIcons;
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_icon.dart' show WnIcon, WnIcons;
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../test_helpers.dart';
 

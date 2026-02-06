@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_list.dart';
-import 'package:sloth/widgets/wn_list_item.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_list.dart';
+import 'package:whitenoise/widgets/wn_list_item.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

@@ -71,7 +71,7 @@
   "donateDescription": "Kar amacı gütmeyen bir kuruluş olarak White Noise, yalnızca gizliliğiniz ve özgürlüğünüz için var, kar için değil. Desteğiniz bizi bağımsız ve taviz vermeden tutar.",
   "lightningAddress": "Lightning Adresi",
   "bitcoinSilentPayment": "Bitcoin Sessiz Ödeme",
-  "copiedToClipboardThankYou": "Panoya kopyalandı. Teşekkürler! 🦥",
+  "copiedToClipboardThankYou": "Panoya kopyalandı. Teşekkürler!",
   "shareProfileTitle": "Profili paylaş",
   "scanToConnect": "Bağlanmak için tarayın",
   "signOutTitle": "Çıkış yap",
@@ -104,11 +104,10 @@
   "keyPackagesDeleted": "Tüm anahtar paketleri silindi",
   "keyPackageDeleted": "Anahtar paketi silindi",
   "packageNumber": "Paket {number}",
-  "ohNo": "Ah hayır!",
   "goBack": "Geri dön",
   "reportError": "Hata bildir",
-  "slothsWorking": "Tembel hayvanlar çalışıyor",
-  "wipMessage": "Tembel hayvanlar bu özellik üzerinde çalışıyor. Tembel hayvanların daha hızlı gitmesini istiyorsanız, lütfen White Noise'a bağış yapın",
+  "workInProgress": "Bunun üzerinde çalışıyoruz",
+  "wipMessage": "Bu özellik üzerinde çalışıyoruz. Geliştirmeyi desteklemek için lütfen White Noise'a bağış yapın",
   "donate": "Bağış yap",
   "addRelay": "Röle Ekle",
   "enterRelayAddress": "Röle adresini girin",
@@ -170,5 +169,7 @@
   "monthSepShort": "Eyl",
   "monthOctShort": "Eki",
   "monthNovShort": "Kas",
-  "monthDecShort": "Ara"
+  "monthDecShort": "Ara",
+  "loginWithSigner": "Signer ile giriş yap",
+  "signerConnectionError": "Signer'a bağlanılamadı. Lütfen tekrar deneyin."
 }

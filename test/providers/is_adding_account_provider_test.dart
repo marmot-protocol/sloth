@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/providers/is_adding_account_provider.dart';
+import 'package:whitenoise/providers/is_adding_account_provider.dart';
 
 void main() {
   late ProviderContainer container;

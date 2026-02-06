@@ -3,10 +3,10 @@ import 'dart:ui' as ui;
 
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/theme/semantic_colors.dart' show SemanticColors;
-import 'package:sloth/utils/avatar_color.dart' show AvatarColor;
-import 'package:sloth/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
-import 'package:sloth/widgets/wn_icon.dart' show WnIcon;
+import 'package:whitenoise/theme/semantic_colors.dart' show SemanticColors;
+import 'package:whitenoise/utils/avatar_color.dart' show AvatarColor;
+import 'package:whitenoise/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
+import 'package:whitenoise/widgets/wn_icon.dart' show WnIcon;
 
 import '../test_helpers.dart' show mountWidget;
 

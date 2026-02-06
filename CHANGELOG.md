@@ -44,6 +44,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Use Rust as source of truth for locale settings, properly persist "System" language preference [PR #109](https://github.com/marmot-protocol/sloth/pull/109)
 - Implement isFollowingUser method [PR #132](https://github.com/marmot-protocol/sloth/pull/132)
 - Npub formatting [PR #157](https://github.com/marmot-protocol/sloth/pull/157)
+- Migrate to whitenoise app bundle id [PR #163](https://github.com/marmot-protocol/sloth/pull/163)
 
 ### Deprecated
 

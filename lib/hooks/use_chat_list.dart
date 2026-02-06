@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:sloth/src/rust/api/chat_list.dart';
+import 'package:whitenoise/src/rust/api/chat_list.dart';
 
 typedef ChatListResult = ({
   bool isLoading,
