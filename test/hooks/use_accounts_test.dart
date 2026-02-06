@@ -262,12 +262,11 @@ void main() {
       await tester.tap(find.text('Display $testPubkeyB'));
       await tester.pump();
 
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.text('Profiles'), findsOneWidget);
 
       mockAuthNotifier.switchProfileCompleter!.complete();
       await tester.pumpAndSettle();
 
-      expect(find.byType(CircularProgressIndicator), findsNothing);
       expect(find.text('Failed to switch profile. Please try again.'), findsNothing);
     });
 

@@ -12,6 +12,8 @@
 // ignore_for_file: no_leading_underscores_for_library_prefixes
 import 'package:whitenoise_widgetbook/components/buttons.dart'
     as _whitenoise_widgetbook_components_buttons;
+import 'package:whitenoise_widgetbook/components/carousel_indicator.dart'
+    as _whitenoise_widgetbook_components_carousel_indicator;
 import 'package:whitenoise_widgetbook/components/chat_status.dart'
     as _whitenoise_widgetbook_components_chat_status;
 import 'package:whitenoise_widgetbook/components/feedback.dart'
@@ -40,6 +42,8 @@ import 'package:whitenoise_widgetbook/components/wn_avatar.dart'
     as _whitenoise_widgetbook_components_wn_avatar;
 import 'package:whitenoise_widgetbook/components/wn_copy_card.dart'
     as _whitenoise_widgetbook_components_wn_copy_card;
+import 'package:whitenoise_widgetbook/components/wn_profile_switcher_item.dart'
+    as _whitenoise_widgetbook_components_wn_profile_switcher_item;
 import 'package:whitenoise_widgetbook/foundations/semantic_colors.dart'
     as _whitenoise_widgetbook_foundations_semantic_colors;
 import 'package:whitenoise_widgetbook/foundations/typography.dart'
@@ -87,6 +91,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Callout',
             builder:
                 _whitenoise_widgetbook_components_feedback.wnCalloutShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnCarouselIndicatorStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Carousel Indicator',
+            builder: _whitenoise_widgetbook_components_carousel_indicator
+                .wnCarouselIndicatorShowcase,
           ),
         ],
       ),
@@ -202,6 +216,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Overlay',
             builder:
                 _whitenoise_widgetbook_components_structure.wnOverlayShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnProfileSwitcherItemStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Profile Switcher Item',
+            builder: _whitenoise_widgetbook_components_wn_profile_switcher_item
+                .wnProfileSwitcherItemShowcase,
           ),
         ],
       ),
