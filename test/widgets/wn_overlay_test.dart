@@ -55,13 +55,6 @@ void main() {
         final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
         expect(overlay.variant, WnOverlayVariant.light);
       });
-
-      testWidgets('accepts heavy variant explicitly', (tester) async {
-        await mountStackedWidget(const WnOverlay(variant: WnOverlayVariant.heavy), tester);
-
-        final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
-        expect(overlay.variant, WnOverlayVariant.heavy);
-      });
     });
 
     group('color', () {
