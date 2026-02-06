@@ -13,6 +13,7 @@ import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
 import 'package:whitenoise/widgets/wn_account_bar.dart';
+import 'package:whitenoise/widgets/wn_chat_list.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -105,6 +106,12 @@ void main() {
       await pumpChatListScreen(tester);
 
       expect(find.byType(WnSlate), findsOneWidget);
+    });
+
+    testWidgets('displays chat list', (tester) async {
+      await pumpChatListScreen(tester);
+
+      expect(find.byType(WnChatList), findsOneWidget);
     });
 
     testWidgets('tapping avatar navigates to settings', (tester) async {
