@@ -286,6 +286,25 @@ Widget allColors(BuildContext context) {
         ),
         const SizedBox(height: 24),
         _buildColorSection(
+          'Overlay',
+          [
+            _ColorPairItem(
+              semanticName: 'Overlay Primary',
+              lightColor: light.overlayPrimary,
+              darkColor: dark.overlayPrimary,
+            ),
+            _ColorPairItem(
+              semanticName: 'Overlay Secondary',
+              lightColor: light.overlaySecondary,
+              darkColor: dark.overlaySecondary,
+            ),
+          ],
+          description:
+              'Overlay colors. Use for backdrops and overlay surfaces to separate Slate '
+              'from background content and keep focus on it.',
+        ),
+        const SizedBox(height: 24),
+        _buildColorSection(
           'Accent',
           [
             ..._accentColorItems('Blue', light.accent.blue, dark.accent.blue),

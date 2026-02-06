@@ -7,6 +7,7 @@ class _BaseColors {
 }
 
 class _BlackAlphaColors {
+  static const Color blackAlpha50 = Color(0x0D000000);
   static const Color blackAlpha200 = Color(0x33000000);
   static const Color blackAlpha300 = Color(0x4D000000);
   static const Color blackAlpha500 = Color(0x80000000);
@@ -430,6 +431,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color intentionErrorContent;
   final Color shadow;
   final Color overlayPrimary;
+  final Color overlaySecondary;
   final Color qrCode;
   final SemanticAccentColors accent;
 
@@ -477,6 +479,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.intentionErrorContent,
     required this.shadow,
     required this.overlayPrimary,
+    required this.overlaySecondary,
     required this.qrCode,
     required this.accent,
   });
@@ -525,6 +528,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorContent: _RedColors.red600,
     shadow: _BaseColors.black,
     overlayPrimary: _WhiteAlphaColors.whiteAlpha500,
+    overlaySecondary: _WhiteAlphaColors.whiteAlpha500,
     qrCode: _NeutralColors.neutral950,
     accent: _lightAccentColors,
   );
@@ -572,7 +576,8 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     intentionErrorBackground: _RedColors.red950,
     intentionErrorContent: _RedColors.red500,
     shadow: _BaseColors.black,
-    overlayPrimary: _BlackAlphaColors.blackAlpha500,
+    overlayPrimary: _BlackAlphaColors.blackAlpha50,
+    overlaySecondary: _BlackAlphaColors.blackAlpha500,
     qrCode: _BaseColors.white,
     accent: _darkAccentColors,
   );
@@ -622,6 +627,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? intentionErrorContent,
     Color? shadow,
     Color? overlayPrimary,
+    Color? overlaySecondary,
     Color? qrCode,
     SemanticAccentColors? accent,
   }) {
@@ -671,6 +677,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       intentionErrorContent: intentionErrorContent ?? this.intentionErrorContent,
       shadow: shadow ?? this.shadow,
       overlayPrimary: overlayPrimary ?? this.overlayPrimary,
+      overlaySecondary: overlaySecondary ?? this.overlaySecondary,
       qrCode: qrCode ?? this.qrCode,
       accent: accent ?? this.accent,
     );
@@ -779,6 +786,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       intentionErrorContent: Color.lerp(intentionErrorContent, other.intentionErrorContent, t)!,
       shadow: Color.lerp(shadow, other.shadow, t)!,
       overlayPrimary: Color.lerp(overlayPrimary, other.overlayPrimary, t)!,
+      overlaySecondary: Color.lerp(overlaySecondary, other.overlaySecondary, t)!,
       qrCode: Color.lerp(qrCode, other.qrCode, t)!,
       accent: SemanticAccentColors.lerp(accent, other.accent, t),
     );
