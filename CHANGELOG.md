@@ -34,6 +34,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Scan QR for nsec [PR #164](https://github.com/marmot-protocol/sloth/pull/164)
 - Copy card [PR #157](https://github.com/marmot-protocol/sloth/pull/157)
 - Scan QR for npub [PR #175](https://github.com/marmot-protocol/sloth/pull/175)
+- Android signer (NIP-55) support [PR #48](https://github.com/marmot-protocol/sloth/pull/48)
 
 ### Changed
 
