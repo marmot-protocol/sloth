@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:whitenoise/hooks/use_nsec.dart';
-import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 
-import '../mocks/mock_account_pubkey_notifier.dart';
+import '../test_helpers.dart';
 
 class _MockApi implements RustLibApi {
   bool shouldThrow = false;
+  bool shouldThrowGetAccount = false;
+  AccountType accountType = AccountType.local;
 
   @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
@@ -20,33 +21,25 @@ class _MockApi implements RustLibApi {
   }
 
   @override
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
+    if (shouldThrowGetAccount) {
+      throw Exception('getAccount failed');
+    }
+    return Account(
+      pubkey: pubkey,
+      accountType: accountType,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
-late ({
-  NsecState state,
-  Future<void> Function() loadNsec,
-})
-result;
+late ({NsecState nsecState}) result;
 
-Future<void> _pump(WidgetTester tester, List overrides) async {
-  await tester.pumpWidget(
-    ProviderScope(
-      overrides: [...overrides],
-      child: MaterialApp(
-        home: HookConsumer(
-          builder: (context, ref, _) {
-            final pubkey = ref.read(accountPubkeyProvider);
-            result = useNsec(pubkey);
-            return const SizedBox();
-          },
-        ),
-      ),
-    ),
-  );
-}
-
-Future<void> _pumpWithNullablePubkey(WidgetTester tester, String? pubkey) async {
+Future<void> _pump(WidgetTester tester, String? pubkey) async {
   await tester.pumpWidget(
     MaterialApp(
       home: HookBuilder(
@@ -61,7 +54,6 @@ Future<void> _pumpWithNullablePubkey(WidgetTester tester, String? pubkey) async 
 
 void main() {
   late _MockApi mockApi;
-  late List overrides;
 
   setUpAll(() {
     mockApi = _MockApi();
@@ -70,9 +62,8 @@ void main() {
 
   setUp(() {
     mockApi.shouldThrow = false;
-    overrides = [
-      accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
-    ];
+    mockApi.shouldThrowGetAccount = false;
+    mockApi.accountType = AccountType.local;
   });
 
   group('NsecState', () {
@@ -91,111 +82,113 @@ void main() {
   });
 
   group('useNsec', () {
-    testWidgets('initial state has no nsec', (tester) async {
-      await _pump(tester, overrides);
-      await tester.pump();
+    testWidgets('initial state with pubkey is already loading nsec', (tester) async {
+      await _pump(tester, testPubkeyA);
 
-      expect(result.state.nsec, isNull);
-      expect(result.state.isLoading, isFalse);
-      expect(result.state.error, isNull);
+      expect(result.nsecState.isLoading, isTrue);
     });
 
     testWidgets('loadNsec loads nsec successfully', (tester) async {
-      await _pump(tester, overrides);
-      await tester.pump();
-
-      await result.loadNsec();
+      await _pump(tester, testPubkeyA);
       await tester.pumpAndSettle();
 
-      expect(result.state.nsec, startsWith('nsec1'));
-      expect(result.state.isLoading, isFalse);
-      expect(result.state.error, isNull);
+      expect(result.nsecState.nsec, startsWith('nsec1'));
+      expect(result.nsecState.isLoading, isFalse);
+      expect(result.nsecState.error, isNull);
+      expect(result.nsecState.nsecStorage, NsecStorage.local);
     });
 
     testWidgets('loadNsec handles errors', (tester) async {
       mockApi.shouldThrow = true;
-      await _pump(tester, overrides);
-      await tester.pump();
-
-      await result.loadNsec();
+      await _pump(tester, testPubkeyA);
       await tester.pumpAndSettle();
 
-      expect(result.state.nsec, isNull);
-      expect(result.state.isLoading, isFalse);
-      expect(result.state.error, isNotNull);
+      expect(result.nsecState.nsec, isNull);
+      expect(result.nsecState.isLoading, isFalse);
+      expect(result.nsecState.error, equals('nsec_load_failed'));
     });
 
     testWidgets('state is cleared when pubkey changes', (tester) async {
-      final testOverrides = [
-        accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
-      ];
-
-      await tester.pumpWidget(
-        ProviderScope(
-          overrides: [...testOverrides],
-          child: MaterialApp(
-            home: HookConsumer(
-              builder: (context, ref, _) {
-                final pubkey = ref.watch(accountPubkeyProvider);
-                result = useNsec(pubkey);
-                return const SizedBox();
-              },
-            ),
-          ),
-        ),
-      );
-      await tester.pump();
-
-      await result.loadNsec();
+      await _pump(tester, testPubkeyA);
       await tester.pumpAndSettle();
 
-      expect(result.state.nsec, isNotNull);
-      expect(result.state.nsec, startsWith('nsec1'));
+      expect(result.nsecState.nsec, isNotNull);
+      expect(result.nsecState.nsec, startsWith('nsec1'));
+      expect(result.nsecState.nsecStorage, NsecStorage.local);
 
-      final element = tester.element(find.byType(HookConsumer));
-      final container = ProviderScope.containerOf(element);
-      final notifier = container.read(accountPubkeyProvider.notifier) as MockAccountPubkeyNotifier;
-      notifier.update('new_pubkey');
+      await _pump(tester, testPubkeyB);
       await tester.pumpAndSettle();
 
-      expect(result.state.nsec, isNull);
-      expect(result.state.isLoading, isFalse);
-      expect(result.state.error, isNull);
+      expect(result.nsecState.nsec, startsWith('nsec1testb2c3d4e5f6'));
+      expect(result.nsecState.isLoading, isFalse);
+      expect(result.nsecState.error, isNull);
     });
 
     testWidgets('handles null pubkey gracefully', (tester) async {
-      await _pumpWithNullablePubkey(tester, null);
+      await _pump(tester, null);
       await tester.pump();
 
-      expect(result.state.nsec, isNull);
-      expect(result.state.isLoading, isFalse);
-      expect(result.state.error, isNull);
+      expect(result.nsecState.nsec, isNull);
+      expect(result.nsecState.isLoading, isFalse);
+      expect(result.nsecState.error, isNull);
+      expect(result.nsecState.nsecStorage, isNull);
     });
 
     testWidgets('loadNsec is no-op when pubkey is null', (tester) async {
-      await _pumpWithNullablePubkey(tester, null);
-      await tester.pump();
-
-      await result.loadNsec();
+      await _pump(tester, null);
       await tester.pumpAndSettle();
 
-      expect(result.state.nsec, isNull);
-      expect(result.state.isLoading, isFalse);
-      expect(result.state.error, isNull);
+      expect(result.nsecState.nsec, isNull);
+      expect(result.nsecState.isLoading, isFalse);
+      expect(result.nsecState.error, isNull);
     });
 
     testWidgets('nsec remains null when error occurs on fresh state', (tester) async {
       mockApi.shouldThrow = true;
-      await _pump(tester, overrides);
-      await tester.pump();
-
-      expect(result.state.nsec, isNull);
-
-      await result.loadNsec();
+      await _pump(tester, testPubkeyA);
       await tester.pumpAndSettle();
 
-      expect(result.state.nsec, isNull);
-      expect(result.state.error, isNotNull);
+      expect(result.nsecState.nsec, isNull);
+      expect(result.nsecState.error, equals('nsec_load_failed'));
+    });
+
+    testWidgets('storage is local after effect settles when not external signer', (tester) async {
+      await _pump(tester, testPubkeyA);
+      await tester.pumpAndSettle();
+
+      expect(result.nsecState.nsecStorage, NsecStorage.local);
+    });
+
+    testWidgets('storage is externalSigner when using external signer', (tester) async {
+      mockApi.accountType = AccountType.external_;
+      await _pump(tester, testPubkeyA);
+      await tester.pumpAndSettle();
+
+      expect(result.nsecState.nsecStorage, NsecStorage.externalSigner);
+      expect(result.nsecState.nsec, isNull);
+    });
+
+    testWidgets('does not load nsec when storage is externalSigner', (tester) async {
+      mockApi.accountType = AccountType.external_;
+      await _pump(tester, testPubkeyA);
+      await tester.pumpAndSettle();
+
+      expect(result.nsecState.nsecStorage, NsecStorage.externalSigner);
+      expect(result.nsecState.nsec, isNull);
+      expect(result.nsecState.isLoading, isFalse);
+    });
+
+    testWidgets('falls back to local and completes when getAccount throws non-ApiError', (
+      tester,
+    ) async {
+      mockApi.shouldThrowGetAccount = true;
+      await _pump(tester, testPubkeyA);
+      await tester.pumpAndSettle();
+
+      expect(result.nsecState.isLoading, isFalse);
+      expect(result.nsecState.nsecStorage, NsecStorage.local);
+      expect(result.nsecState.nsec, startsWith('nsec1'));
+      expect(result.nsecState.error, isNull);
     });
   });
 }
