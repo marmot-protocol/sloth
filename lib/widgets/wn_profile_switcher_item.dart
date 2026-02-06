@@ -27,6 +27,7 @@ class WnProfileSwitcherItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typographyScaled;
+    final formattedPubkey = formatPublicKey(npubFromHex(pubkey) ?? pubkey);
 
     final backgroundColor = isSelected ? colors.fillTertiaryActive : colors.fillTertiary;
 
@@ -63,14 +64,14 @@ class WnProfileSwitcherItem extends StatelessWidget {
                     )
                   else
                     WnMiddleEllipsisText(
-                      text: formatPublicKey(npubFromHex(pubkey) ?? pubkey),
+                      text: formattedPubkey,
                       style: typography.medium16.copyWith(
                         color: colors.backgroundContentPrimary,
                       ),
                     ),
                   Gap(4.h),
                   WnMiddleEllipsisText(
-                    text: formatPublicKey(npubFromHex(pubkey) ?? pubkey),
+                    text: formattedPubkey,
                     style: typography.medium12.copyWith(
                       color: colors.backgroundContentSecondary,
                     ),
