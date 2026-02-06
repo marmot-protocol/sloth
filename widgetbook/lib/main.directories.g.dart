@@ -42,6 +42,8 @@ import 'package:whitenoise_widgetbook/components/wn_avatar.dart'
     as _whitenoise_widgetbook_components_wn_avatar;
 import 'package:whitenoise_widgetbook/components/wn_copy_card.dart'
     as _whitenoise_widgetbook_components_wn_copy_card;
+import 'package:whitenoise_widgetbook/components/wn_profile_switcher_item.dart'
+    as _whitenoise_widgetbook_components_wn_profile_switcher_item;
 import 'package:whitenoise_widgetbook/foundations/semantic_colors.dart'
     as _whitenoise_widgetbook_foundations_semantic_colors;
 import 'package:whitenoise_widgetbook/foundations/typography.dart'
@@ -214,6 +216,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Overlay',
             builder:
                 _whitenoise_widgetbook_components_structure.wnOverlayShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnProfileSwitcherItemStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Profile Switcher Item',
+            builder: _whitenoise_widgetbook_components_wn_profile_switcher_item
+                .wnProfileSwitcherItemShowcase,
           ),
         ],
       ),
