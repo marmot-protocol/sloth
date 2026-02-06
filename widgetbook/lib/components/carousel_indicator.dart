@@ -62,7 +62,7 @@ Widget wnCarouselIndicatorShowcase(BuildContext context) {
           alignment: Alignment.centerLeft,
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 375),
-            child: _InteractiveCarouselIndicator(context: context),
+            child: const _InteractiveCarouselIndicator(),
           ),
         ),
         const SizedBox(height: 32),
@@ -374,19 +374,17 @@ class _CarouselContextExample extends StatelessWidget {
 }
 
 class _InteractiveCarouselIndicator extends StatelessWidget {
-  const _InteractiveCarouselIndicator({required this.context});
-
-  final BuildContext context;
+  const _InteractiveCarouselIndicator();
 
   @override
   Widget build(BuildContext context) {
-    final itemCount = this.context.knobs.int.slider(
+    final itemCount = context.knobs.int.slider(
       label: 'Item Count',
       min: 1,
       max: 10,
       initialValue: 5,
     );
-    final activeIndex = this.context.knobs.int.slider(
+    final activeIndex = context.knobs.int.slider(
       label: 'Active Index',
       min: 0,
       max: itemCount - 1,

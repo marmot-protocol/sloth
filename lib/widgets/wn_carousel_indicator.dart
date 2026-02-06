@@ -108,7 +108,7 @@ class _WnCarouselIndicatorItem extends StatelessWidget {
           builder: (context, color, _) => DecoratedBox(
             decoration: BoxDecoration(
               color: color,
-              borderRadius: BorderRadius.circular(4.h),
+              borderRadius: BorderRadius.circular(4.r),
             ),
           ),
         ),
