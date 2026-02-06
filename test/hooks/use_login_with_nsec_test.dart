@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:whitenoise/hooks/use_login.dart';
+import 'package:whitenoise/hooks/use_login_with_nsec.dart';
 import '../mocks/mock_clipboard_paste.dart';
 import '../test_helpers.dart';
 
@@ -11,7 +11,7 @@ class _TestWidget extends HookWidget {
   final Future<void> Function(String) loginCallback;
   final void Function(
     TextEditingController controller,
-    LoginState state,
+    LoginWithNsecState state,
     Future<void> Function() paste,
     Future<bool> Function() submit,
     void Function() clearError,
@@ -25,7 +25,13 @@ class _TestWidget extends HookWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (:controller, :state, :paste, :submit, :clearError) = useLogin(
+    final (
+      nsecInputController: controller,
+      loginWithNsecState: state,
+      pasteNsec: paste,
+      submitLoginWithNsec: submit,
+      clearLoginWithNsecError: clearError,
+    ) = useLoginWithNsec(
       loginCallback,
     );
     onBuild(controller, state, paste, submit, clearError);
@@ -43,7 +49,7 @@ class _TestWidget extends HookWidget {
 }
 
 void main() {
-  group('useLogin', () {
+  group('useLoginWithNsec', () {
     testWidgets('initializes with empty controller', (tester) async {
       late TextEditingController capturedController;
 
@@ -127,7 +133,7 @@ void main() {
         bool loginCalled = false;
         late Completer<void> loginCompleter;
         late Future<bool> Function() capturedSubmit;
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
 
         final widget = _TestWidget(
           loginCallback: (_) async {
@@ -159,7 +165,7 @@ void main() {
 
       testWidgets('sets error message on failure', (tester) async {
         late Future<bool> Function() capturedSubmit;
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
 
         final widget = _TestWidget(
           loginCallback: (_) async {
@@ -239,7 +245,7 @@ void main() {
       testWidgets('clears error when pasting', (tester) async {
         late Future<void> Function() capturedPaste;
         late Future<bool> Function() capturedSubmit;
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
 
         final widget = _TestWidget(
           loginCallback: (_) async {
@@ -309,7 +315,7 @@ void main() {
       });
 
       testWidgets('shows error when clipboard contains only whitespace', (tester) async {
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
         late Future<void> Function() capturedPaste;
 
         final widget = _TestWidget(
@@ -330,7 +336,7 @@ void main() {
       });
 
       testWidgets('shows error when clipboard is empty string', (tester) async {
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
         late Future<void> Function() capturedPaste;
 
         final widget = _TestWidget(
@@ -351,7 +357,7 @@ void main() {
       });
 
       testWidgets('handles clipboard exception gracefully', (tester) async {
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
         late Future<void> Function() capturedPaste;
 
         final widget = _TestWidget(
@@ -376,7 +382,7 @@ void main() {
       testWidgets('clears error', (tester) async {
         late Future<bool> Function() capturedSubmit;
         late void Function() capturedClearError;
-        late LoginState capturedState;
+        late LoginWithNsecState capturedState;
 
         final widget = _TestWidget(
           loginCallback: (_) async {
