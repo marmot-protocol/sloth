@@ -142,6 +142,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Don\'t share your private key publicly, and use it only to log in to other Nostr apps.';
 
   @override
+  String get nsecOnExternalSigner => 'Private key is stored in external signer';
+
+  @override
+  String get nsecOnExternalSignerDescription =>
+      'Your private key isn\'t available in White Noise. Open your signer to view or manage it.';
+
+  @override
   String get editProfileTitle => 'Edit profile';
 
   @override
@@ -187,6 +194,9 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profileLoadError => 'Unable to load profile. Please try again.';
+
+  @override
+  String get failedToLoadPrivateKey => 'Could not load private key. Please try again.';
 
   @override
   String get profileSaveError => 'Unable to save profile. Please try again.';
@@ -250,7 +260,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.';
+      'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.';
+
+  @override
+  String get signOutWarningBackupKey =>
+      'If you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.';
 
   @override
   String get backUpPrivateKey => 'Back up your private key';
@@ -589,4 +603,38 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get filterArchive => 'Archive';
+
+  @override
+  String get signerErrorUserRejected => 'Login cancelled';
+
+  @override
+  String get signerErrorNotConnected => 'Not connected to signer. Please try again.';
+
+  @override
+  String get signerErrorNoSigner =>
+      'No signer app found. Please install a NIP-55 compatible signer.';
+
+  @override
+  String get signerErrorNoResponse => 'No response from signer. Please try again.';
+
+  @override
+  String get signerErrorNoPubkey => 'Unable to get public key from signer.';
+
+  @override
+  String get signerErrorNoResult => 'Signer did not return a result.';
+
+  @override
+  String get signerErrorNoEvent => 'Signer did not return a signed event.';
+
+  @override
+  String get signerErrorRequestInProgress => 'Another request is in progress. Please wait.';
+
+  @override
+  String get signerErrorNoActivity => 'Unable to launch signer. Please try again.';
+
+  @override
+  String get signerErrorLaunchError => 'Failed to launch signer app.';
+
+  @override
+  String get signerErrorUnknown => 'An error occurred with the signer. Please try again.';
 }

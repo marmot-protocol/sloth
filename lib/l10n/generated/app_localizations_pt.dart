@@ -142,6 +142,13 @@ class AppLocalizationsPt extends AppLocalizations {
       'Não compartilhe sua chave privada publicamente e use-a apenas para entrar em outros apps Nostr.';
 
   @override
+  String get nsecOnExternalSigner => 'A chave privada está armazenada em um assinador externo';
+
+  @override
+  String get nsecOnExternalSignerDescription =>
+      'Sua chave privada não está disponível no White Noise. Abra seu assinador para visualizá-la ou gerenciá-la.';
+
+  @override
   String get editProfileTitle => 'Editar perfil';
 
   @override
@@ -187,6 +194,10 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get profileLoadError => 'Não foi possível carregar o perfil. Por favor, tente novamente.';
+
+  @override
+  String get failedToLoadPrivateKey =>
+      'Não foi possível carregar a chave privada. Por favor, tente novamente.';
 
   @override
   String get profileSaveError => 'Não foi possível salvar o perfil. Por favor, tente novamente.';
@@ -250,7 +261,11 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'Quando você sair do White Noise, suas conversas serão excluídas deste dispositivo e não poderão ser restauradas em outro dispositivo.\n\nSe você não fez backup da sua chave privada, não poderá usar este perfil em nenhum outro serviço Nostr.';
+      'Quando você sair do White Noise, suas conversas serão excluídas deste dispositivo e não poderão ser restauradas em outro dispositivo.';
+
+  @override
+  String get signOutWarningBackupKey =>
+      'Se você não fez backup da sua chave privada, não poderá usar este perfil em nenhum outro serviço Nostr.';
 
   @override
   String get backUpPrivateKey => 'Faça backup da sua chave privada';
@@ -592,4 +607,39 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get filterArchive => 'Arquivo';
+
+  @override
+  String get signerErrorUserRejected => 'Login cancelado';
+
+  @override
+  String get signerErrorNotConnected => 'Não conectado ao signer. Por favor, tente novamente.';
+
+  @override
+  String get signerErrorNoSigner =>
+      'Nenhum app de signer encontrado. Instale um signer compatível com NIP-55.';
+
+  @override
+  String get signerErrorNoResponse => 'Sem resposta do signer. Por favor, tente novamente.';
+
+  @override
+  String get signerErrorNoPubkey => 'Não foi possível obter a chave pública do signer.';
+
+  @override
+  String get signerErrorNoResult => 'O signer não retornou um resultado.';
+
+  @override
+  String get signerErrorNoEvent => 'O signer não retornou um evento assinado.';
+
+  @override
+  String get signerErrorRequestInProgress => 'Outra solicitação em andamento. Por favor, aguarde.';
+
+  @override
+  String get signerErrorNoActivity =>
+      'Não foi possível iniciar o signer. Por favor, tente novamente.';
+
+  @override
+  String get signerErrorLaunchError => 'Falha ao iniciar o app do signer.';
+
+  @override
+  String get signerErrorUnknown => 'Ocorreu um erro com o signer. Por favor, tente novamente.';
 }

@@ -142,6 +142,13 @@ class AppLocalizationsEs extends AppLocalizations {
       'No compartas tu llave privada públicamente y úsala solo para iniciar sesión en otros servicios de Nostr.';
 
   @override
+  String get nsecOnExternalSigner => 'La llave privada está almacenada en un firmante externo';
+
+  @override
+  String get nsecOnExternalSignerDescription =>
+      'Tu llave privada no está disponible en White Noise. Abre tu firmante para verla o gestionarla.';
+
+  @override
   String get editProfileTitle => 'Editar perfil';
 
   @override
@@ -187,6 +194,10 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get profileLoadError => 'No se pudo cargar el perfil. Por favor, inténtelo de nuevo.';
+
+  @override
+  String get failedToLoadPrivateKey =>
+      'No se pudo cargar la llave privada. Por favor, inténtelo de nuevo.';
 
   @override
   String get profileSaveError => 'No se pudo guardar el perfil. Por favor, inténtelo de nuevo.';
@@ -250,7 +261,11 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'Cuando cierres sesión en White Noise, tus chats se eliminarán de este dispositivo y no podrán restaurarse en otro dispositivo.\n\nSi no has respaldado tu llave privada, no podrás usar este perfil en ningún otro servicio Nostr.';
+      'Cuando cierres sesión en White Noise, tus chats se eliminarán de este dispositivo y no podrán restaurarse en otro dispositivo.';
+
+  @override
+  String get signOutWarningBackupKey =>
+      'Si no has respaldado tu llave privada, no podrás usar este perfil en ningún otro servicio Nostr.';
 
   @override
   String get backUpPrivateKey => 'Respalda tu llave privada';
@@ -487,7 +502,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get scanNsec => 'Escanear código QR';
 
   @override
-  String get scanNsecHint => 'Escanea el código QR de tu clave privada para iniciar sesión.';
+  String get scanNsecHint => 'Escanea el código QR de tu llave privada para iniciar sesión.';
 
   @override
   String get cameraPermissionDenied => 'Permiso de cámara denegado';
@@ -502,7 +517,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get scanNpubHint => 'Escanea el código QR de un contacto.';
 
   @override
-  String get invalidNpub => 'Clave pública inválida. Por favor, inténtalo de nuevo.';
+  String get invalidNpub => 'Llave pública inválida. Por favor, inténtalo de nuevo.';
 
   @override
   String get you => 'Tú';
@@ -595,4 +610,38 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get filterArchive => 'Archivados';
+
+  @override
+  String get signerErrorUserRejected => 'Inicio de sesión cancelado';
+
+  @override
+  String get signerErrorNotConnected => 'No conectado al signer. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get signerErrorNoSigner =>
+      'No se encontró ninguna app de signer. Instala un signer compatible con NIP-55.';
+
+  @override
+  String get signerErrorNoResponse => 'El signer no respondió. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get signerErrorNoPubkey => 'No se pudo obtener la llave pública del signer.';
+
+  @override
+  String get signerErrorNoResult => 'El signer no devolvió un resultado.';
+
+  @override
+  String get signerErrorNoEvent => 'El signer no devolvió un evento firmado.';
+
+  @override
+  String get signerErrorRequestInProgress => 'Hay otra solicitud en curso. Por favor, espera.';
+
+  @override
+  String get signerErrorNoActivity => 'No se pudo abrir el signer. Por favor, inténtalo de nuevo.';
+
+  @override
+  String get signerErrorLaunchError => 'Error al abrir la app del signer.';
+
+  @override
+  String get signerErrorUnknown => 'Ocurrió un error con el signer. Por favor, inténtalo de nuevo.';
 }

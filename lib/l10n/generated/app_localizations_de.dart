@@ -142,6 +142,13 @@ class AppLocalizationsDe extends AppLocalizations {
       'Teile deinen privaten Schlüssel nicht öffentlich und verwende ihn nur zum Anmelden bei anderen Nostr-Apps.';
 
   @override
+  String get nsecOnExternalSigner => 'Privater Schlüssel ist im externen Signer gespeichert';
+
+  @override
+  String get nsecOnExternalSignerDescription =>
+      'Dein privater Schlüssel ist in White Noise nicht verfügbar. Öffne deinen Signer, um ihn anzusehen oder zu verwalten.';
+
+  @override
   String get editProfileTitle => 'Profil bearbeiten';
 
   @override
@@ -188,6 +195,10 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get profileLoadError =>
       'Profil konnte nicht geladen werden. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get failedToLoadPrivateKey =>
+      'Privater Schlüssel konnte nicht geladen werden. Bitte versuchen Sie es erneut.';
 
   @override
   String get profileSaveError =>
@@ -252,7 +263,11 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'Wenn du dich bei White Noise abmeldest, werden deine Chats von diesem Gerät gelöscht und können auf einem anderen Gerät nicht wiederhergestellt werden.\n\nWenn du deinen privaten Schlüssel nicht gesichert hast, kannst du dieses Profil bei keinem anderen Nostr-Dienst verwenden.';
+      'Wenn du dich bei White Noise abmeldest, werden deine Chats von diesem Gerät gelöscht und können auf einem anderen Gerät nicht wiederhergestellt werden.';
+
+  @override
+  String get signOutWarningBackupKey =>
+      'Wenn du deinen privaten Schlüssel nicht gesichert hast, kannst du dieses Profil bei keinem anderen Nostr-Dienst verwenden.';
 
   @override
   String get backUpPrivateKey => 'Privaten Schlüssel sichern';
@@ -591,7 +606,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get signerConnectionError =>
-      'Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.';
+      'Verbindung zum Signer fehlgeschlagen. Bitte versuch es erneut.';
 
   @override
   String get search => 'Suche';
@@ -601,4 +616,42 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get filterArchive => 'Archiv';
+
+  @override
+  String get signerErrorUserRejected => 'Anmeldung abgebrochen';
+
+  @override
+  String get signerErrorNotConnected => 'Nicht mit dem Signer verbunden. Bitte versuch es erneut.';
+
+  @override
+  String get signerErrorNoSigner =>
+      'Keine Signer-App gefunden. Bitte installiere einen NIP-55-kompatiblen Signer.';
+
+  @override
+  String get signerErrorNoResponse => 'Keine Antwort vom Signer. Bitte versuch es erneut.';
+
+  @override
+  String get signerErrorNoPubkey =>
+      'Öffentlicher Schlüssel konnte nicht vom Signer abgerufen werden.';
+
+  @override
+  String get signerErrorNoResult => 'Der Signer hat kein Ergebnis zurückgegeben.';
+
+  @override
+  String get signerErrorNoEvent => 'Der Signer hat kein signiertes Event zurückgegeben.';
+
+  @override
+  String get signerErrorRequestInProgress =>
+      'Eine andere Anfrage wird gerade bearbeitet. Warte bitte.';
+
+  @override
+  String get signerErrorNoActivity =>
+      'Signer konnte nicht gestartet werden. Bitte versuch es erneut.';
+
+  @override
+  String get signerErrorLaunchError => 'Signer-App konnte nicht gestartet werden.';
+
+  @override
+  String get signerErrorUnknown =>
+      'Ein Fehler ist beim Signer aufgetreten. Bitte versuch es erneut.';
 }

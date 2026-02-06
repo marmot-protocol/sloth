@@ -142,6 +142,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Не делитесь приватным ключом публично и используйте его только для входа в другие приложения Nostr.';
 
   @override
+  String get nsecOnExternalSigner => 'Закрытый ключ хранится во внешнем приложении';
+
+  @override
+  String get nsecOnExternalSignerDescription =>
+      'Ваш закрытый ключ недоступен в White Noise. Откройте ваше приложение для подписи, чтобы просмотреть или управлять им.';
+
+  @override
   String get editProfileTitle => 'Редактировать профиль';
 
   @override
@@ -186,6 +193,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get profileLoadError => 'Не удалось загрузить профиль. Пожалуйста, попробуйте снова.';
+
+  @override
+  String get failedToLoadPrivateKey =>
+      'Не удалось загрузить приватный ключ. Пожалуйста, попробуйте снова.';
 
   @override
   String get profileSaveError => 'Не удалось сохранить профиль. Пожалуйста, попробуйте снова.';
@@ -250,7 +261,11 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'Когда вы выходите из White Noise, ваши чаты будут удалены с этого устройства и не могут быть восстановлены на другом устройстве.\n\nЕсли вы не сделали резервную копию приватного ключа, вы не сможете использовать этот профиль в любом другом сервисе Nostr.';
+      'Когда вы выходите из White Noise, ваши чаты будут удалены с этого устройства и не могут быть восстановлены на другом устройстве.';
+
+  @override
+  String get signOutWarningBackupKey =>
+      'Если вы не сделали резервную копию приватного ключа, вы не сможете использовать этот профиль в любом другом сервисе Nostr.';
 
   @override
   String get backUpPrivateKey => 'Сделайте резервную копию приватного ключа';
@@ -595,4 +610,38 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get filterArchive => 'Архив';
+
+  @override
+  String get signerErrorUserRejected => 'Вход отменён';
+
+  @override
+  String get signerErrorNotConnected => 'Нет подключения к signer. Попробуйте снова.';
+
+  @override
+  String get signerErrorNoSigner =>
+      'Приложение signer не найдено. Установите совместимый с NIP-55 signer.';
+
+  @override
+  String get signerErrorNoResponse => 'Нет ответа от signer. Попробуйте снова.';
+
+  @override
+  String get signerErrorNoPubkey => 'Не удалось получить публичный ключ от signer.';
+
+  @override
+  String get signerErrorNoResult => 'Signer не вернул результат.';
+
+  @override
+  String get signerErrorNoEvent => 'Signer не вернул подписанное событие.';
+
+  @override
+  String get signerErrorRequestInProgress => 'Выполняется другой запрос. Подождите.';
+
+  @override
+  String get signerErrorNoActivity => 'Не удалось запустить signer. Попробуйте снова.';
+
+  @override
+  String get signerErrorLaunchError => 'Не удалось запустить приложение signer.';
+
+  @override
+  String get signerErrorUnknown => 'Произошла ошибка с signer. Попробуйте снова.';
 }

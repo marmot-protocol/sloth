@@ -366,6 +366,18 @@ abstract class AppLocalizations {
   /// **'Don\'t share your private key publicly, and use it only to log in to other Nostr apps.'**
   String get privateKeyWarning;
 
+  /// Title when private key is on external signer
+  ///
+  /// In en, this message translates to:
+  /// **'Private key is stored in external signer'**
+  String get nsecOnExternalSigner;
+
+  /// Description when private key is on external signer
+  ///
+  /// In en, this message translates to:
+  /// **'Your private key isn\'t available in White Noise. Open your signer to view or manage it.'**
+  String get nsecOnExternalSignerDescription;
+
   /// Edit profile screen title
   ///
   /// In en, this message translates to:
@@ -449,6 +461,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to load profile. Please try again.'**
   String get profileLoadError;
+
+  /// User-friendly error when nsec/private key fails to load
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load private key. Please try again.'**
+  String get failedToLoadPrivateKey;
 
   /// User-friendly error when profile fails to save
   ///
@@ -564,11 +582,17 @@ abstract class AppLocalizations {
   /// **'Are you sure you want to sign out?'**
   String get signOutConfirmation;
 
-  /// Sign out warning message
+  /// Sign out warning first paragraph (chats deleted)
   ///
   /// In en, this message translates to:
-  /// **'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.'**
+  /// **'When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.'**
   String get signOutWarning;
+
+  /// Sign out warning second paragraph (back up key, shown only for local storage)
+  ///
+  /// In en, this message translates to:
+  /// **'If you haven\'t backed up your private key, you won\'t be able to use this profile on any other Nostr service.'**
+  String get signOutWarningBackupKey;
 
   /// Back up private key section title
   ///
@@ -1163,6 +1187,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archive'**
   String get filterArchive;
+
+  /// Android signer error when user rejects the request
+  ///
+  /// In en, this message translates to:
+  /// **'Login cancelled'**
+  String get signerErrorUserRejected;
+
+  /// Android signer error when not connected
+  ///
+  /// In en, this message translates to:
+  /// **'Not connected to signer. Please try again.'**
+  String get signerErrorNotConnected;
+
+  /// Android signer error when no signer app is installed
+  ///
+  /// In en, this message translates to:
+  /// **'No signer app found. Please install a NIP-55 compatible signer.'**
+  String get signerErrorNoSigner;
+
+  /// Android signer error when signer does not respond
+  ///
+  /// In en, this message translates to:
+  /// **'No response from signer. Please try again.'**
+  String get signerErrorNoResponse;
+
+  /// Android signer error when public key is not returned
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to get public key from signer.'**
+  String get signerErrorNoPubkey;
+
+  /// Android signer error when signer returns no result
+  ///
+  /// In en, this message translates to:
+  /// **'Signer did not return a result.'**
+  String get signerErrorNoResult;
+
+  /// Android signer error when signed event is not returned
+  ///
+  /// In en, this message translates to:
+  /// **'Signer did not return a signed event.'**
+  String get signerErrorNoEvent;
+
+  /// Android signer error when a request is already in progress
+  ///
+  /// In en, this message translates to:
+  /// **'Another request is in progress. Please wait.'**
+  String get signerErrorRequestInProgress;
+
+  /// Android signer error when signer cannot be launched
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to launch signer. Please try again.'**
+  String get signerErrorNoActivity;
+
+  /// Android signer error when launch fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to launch signer app.'**
+  String get signerErrorLaunchError;
+
+  /// Android signer generic error message
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred with the signer. Please try again.'**
+  String get signerErrorUnknown;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
