@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart' show ScrollDirection;
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -29,8 +28,12 @@ class WnChatList extends HookWidget {
     final colors = context.colors;
     final canScrollUp = useState(false);
     final hasHeader = header != null && headerHeight > 0;
-    final headerReveal = useState(0.0);
+    final headerRevealController = useAnimationController(
+      duration: const Duration(milliseconds: 200),
+    );
+    final headerRevealAnimation = useAnimation(headerRevealController);
     final headerOpen = useState(false);
+    final isAnimatingClosed = useRef(false);
     final peakReveal = useRef(0.0);
     final scrollController = useScrollController();
 
@@ -80,11 +83,36 @@ class WnChatList extends HookWidget {
 
       if (!hasHeader) return false;
 
+      if (isAnimatingClosed.value) {
+        if (notification is ScrollEndNotification) {
+          isAnimatingClosed.value = false;
+        }
+        return false;
+      }
+
       if (headerOpen.value) {
-        if (notification is UserScrollNotification &&
-            notification.direction == ScrollDirection.reverse) {
-          headerOpen.value = false;
-          headerReveal.value = 0.0;
+        if (notification is ScrollUpdateNotification) {
+          final pixels = notification.metrics.pixels;
+          if (pixels > 0 && notification.dragDetails != null) {
+            final reveal = (1.0 - pixels / headerHeight).clamp(0.0, 1.0);
+            headerRevealController.value = reveal;
+            if (reveal <= 0.7) {
+              headerOpen.value = false;
+              isAnimatingClosed.value = true;
+              headerRevealController.animateTo(0.0, curve: Curves.easeOut).then((_) {
+                isAnimatingClosed.value = false;
+              });
+              WidgetsBinding.instance.addPostFrameCallback((_) {
+                if (!scrollController.hasClients) return;
+                scrollController.animateTo(
+                  0,
+                  duration: const Duration(milliseconds: 200),
+                  curve: Curves.easeOut,
+                );
+              });
+              return false;
+            }
+          }
         }
         return false;
       }
@@ -93,22 +121,26 @@ class WnChatList extends HookWidget {
         final pixels = notification.metrics.pixels;
         if (pixels < 0) {
           final reveal = (-pixels / headerHeight).clamp(0.0, 1.0);
-          headerReveal.value = reveal;
+          headerRevealController.value = reveal;
           if (reveal > peakReveal.value) {
             peakReveal.value = reveal;
           }
           if (peakReveal.value >= 0.5 && notification.dragDetails != null) {
             headerOpen.value = true;
-            headerReveal.value = 1.0;
-            peakReveal.value = 0.0;
+            headerRevealController.animateTo(1.0, curve: Curves.easeOut);
+            peakReveal.value = 1.0;
             WidgetsBinding.instance.addPostFrameCallback((_) {
               if (!scrollController.hasClients) return;
-              scrollController.jumpTo(0);
+              scrollController.animateTo(
+                0,
+                duration: const Duration(milliseconds: 200),
+                curve: Curves.easeOut,
+              );
             });
             return false;
           }
-        } else if (headerReveal.value > 0) {
-          headerReveal.value = 0.0;
+        } else if (headerRevealController.value > 0) {
+          headerRevealController.value = 0.0;
         }
       }
 
@@ -121,7 +153,7 @@ class WnChatList extends HookWidget {
               duration: const Duration(milliseconds: 200),
               curve: Curves.easeOut,
             );
-            headerReveal.value = 0.0;
+            headerRevealController.animateTo(0.0, curve: Curves.easeOut);
           });
         }
         peakReveal.value = 0.0;
@@ -130,7 +162,7 @@ class WnChatList extends HookWidget {
       return false;
     }
 
-    final headerOffset = hasHeader && headerOpen.value ? headerHeight : 0.0;
+    final headerOffset = hasHeader ? headerHeight * headerRevealAnimation : 0.0;
 
     return NotificationListener<ScrollMetricsNotification>(
       onNotification: (notification) {
@@ -155,7 +187,7 @@ class WnChatList extends HookWidget {
               itemCount: itemCount,
               itemBuilder: itemBuilder,
             ),
-            if (hasHeader && (headerOpen.value || headerReveal.value > 0))
+            if (hasHeader && (headerOpen.value || headerRevealAnimation > 0))
               Positioned(
                 key: const Key('chat_list_header'),
                 top: topPadding,
@@ -164,7 +196,7 @@ class WnChatList extends HookWidget {
                 child: ClipRect(
                   child: Align(
                     alignment: Alignment.topCenter,
-                    heightFactor: headerReveal.value.clamp(0.0, 1.0),
+                    heightFactor: headerRevealAnimation.clamp(0.0, 1.0),
                     child: header,
                   ),
                 ),
