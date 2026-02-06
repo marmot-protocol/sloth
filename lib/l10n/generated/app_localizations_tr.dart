@@ -580,4 +580,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Signer\'a bağlanılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archive';
 }

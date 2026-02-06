@@ -581,4 +581,13 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Impossibile connettersi al signer. Riprova.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archive';
 }

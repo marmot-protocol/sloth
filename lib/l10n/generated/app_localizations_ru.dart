@@ -586,4 +586,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archive';
 }

@@ -592,4 +592,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get signerConnectionError =>
       'Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archive';
 }

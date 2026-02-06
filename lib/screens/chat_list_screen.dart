@@ -7,9 +7,11 @@ import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
 import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
+import 'package:whitenoise/widgets/wn_search_and_filters.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 
 const _slateHeight = 80;
+const _searchAndFiltersHeight = 108;
 
 class ChatListScreen extends HookConsumerWidget {
   const ChatListScreen({super.key});
@@ -32,6 +34,8 @@ class ChatListScreen extends HookConsumerWidget {
             itemCount: chatList.length,
             isLoading: isLoading,
             topPadding: safeAreaTop + _slateHeight.h,
+            header: const WnSearchAndFilters(),
+            headerHeight: _searchAndFiltersHeight.h,
             itemBuilder: (context, index) {
               final chatSummary = chatList[index];
               return ChatListTile(

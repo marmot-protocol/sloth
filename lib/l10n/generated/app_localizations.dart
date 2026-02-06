@@ -1145,6 +1145,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Unable to connect to signer. Please try again.'**
   String get signerConnectionError;
+
+  /// Search placeholder text
+  ///
+  /// In en, this message translates to:
+  /// **'Search'**
+  String get search;
+
+  /// Chat list filter chip for chats
+  ///
+  /// In en, this message translates to:
+  /// **'Chats'**
+  String get filterChats;
+
+  /// Chat list filter chip for archived chats
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get filterArchive;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

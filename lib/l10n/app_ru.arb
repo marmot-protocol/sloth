@@ -172,5 +172,8 @@
   "monthDecShort": "Дек",
   "loginWithSigner": "Войти через Signer",
   "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова.",
-  "you": "Вы"
+  "you": "Вы",
+  "search": "Search",
+  "filterChats": "Chats",
+  "filterArchive": "Archive"
 }

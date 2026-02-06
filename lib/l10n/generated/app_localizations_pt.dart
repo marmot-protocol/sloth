@@ -583,4 +583,13 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get signerConnectionError =>
       'Não foi possível conectar ao signer. Por favor, tente novamente.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archive';
 }

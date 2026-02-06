@@ -172,5 +172,8 @@
   "monthDecShort": "Dez",
   "loginWithSigner": "Mit Signer anmelden",
   "signerConnectionError": "Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.",
-  "you": "Du"
+  "you": "Du",
+  "search": "Search",
+  "filterChats": "Chats",
+  "filterArchive": "Archive"
 }

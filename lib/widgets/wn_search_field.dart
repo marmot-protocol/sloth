@@ -58,7 +58,7 @@ class WnSearchField extends StatelessWidget {
             : null,
         suffixIconConstraints: const BoxConstraints(),
         filled: true,
-        fillColor: colors.backgroundTertiary,
+        fillColor: colors.backgroundPrimary,
         contentPadding: EdgeInsets.symmetric(
           vertical: 12.h,
           horizontal: 14.w,

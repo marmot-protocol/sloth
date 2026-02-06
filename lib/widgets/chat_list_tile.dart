@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/account_pubkey_provider.dart';
-import 'package:sloth/providers/locale_provider.dart';
-import 'package:sloth/routes.dart' show Routes;
-import 'package:sloth/services/user_service.dart';
-import 'package:sloth/src/rust/api/chat_list.dart' show ChatSummary;
-import 'package:sloth/src/rust/api/groups.dart' show GroupType;
-import 'package:sloth/utils/metadata.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_chat_list_item.dart';
-import 'package:sloth/widgets/wn_chat_status.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/providers/locale_provider.dart';
+import 'package:whitenoise/routes.dart' show Routes;
+import 'package:whitenoise/services/user_service.dart';
+import 'package:whitenoise/src/rust/api/chat_list.dart' show ChatSummary;
+import 'package:whitenoise/src/rust/api/groups.dart' show GroupType;
+import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_chat_list_item.dart';
+import 'package:whitenoise/widgets/wn_chat_status.dart';
 
 class ChatListTile extends HookConsumerWidget {
   final ChatSummary chatSummary;

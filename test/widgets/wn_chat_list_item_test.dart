@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_chat_list_item.dart';
-import 'package:sloth/widgets/wn_chat_status.dart';
-import 'package:sloth/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_chat_list_item.dart';
+import 'package:whitenoise/widgets/wn_chat_status.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 
 import '../test_helpers.dart';
 

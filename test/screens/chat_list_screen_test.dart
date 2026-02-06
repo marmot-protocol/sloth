@@ -14,6 +14,7 @@ import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
 import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
+import 'package:whitenoise/widgets/wn_search_and_filters.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -112,6 +113,30 @@ void main() {
       await pumpChatListScreen(tester);
 
       expect(find.byType(WnChatList), findsOneWidget);
+    });
+
+    testWidgets('search and filters hidden initially', (tester) async {
+      _api.initialChats = [
+        _chatSummary(id: testPubkeyA, pendingConfirmation: false),
+      ];
+      await pumpChatListScreen(tester);
+
+      expect(find.byType(WnSearchAndFilters), findsNothing);
+    });
+
+    testWidgets('search and filters appear on pull down', (tester) async {
+      _api.initialChats = [
+        _chatSummary(id: testPubkeyA, pendingConfirmation: false),
+      ];
+      await pumpChatListScreen(tester);
+
+      final gesture = await tester.startGesture(const Offset(200, 400));
+      await gesture.moveBy(const Offset(0, 200));
+      await tester.pump();
+
+      expect(find.byType(WnSearchAndFilters), findsOneWidget);
+      await gesture.up();
+      await tester.pumpAndSettle();
     });
 
     testWidgets('tapping avatar navigates to settings', (tester) async {

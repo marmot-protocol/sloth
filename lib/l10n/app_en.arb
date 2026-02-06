@@ -924,5 +924,20 @@
   "signerConnectionError": "Unable to connect to signer. Please try again.",
   "@signerConnectionError": {
     "description": "Error message when connection to external signer fails"
+  },
+
+  "search": "Search",
+  "@search": {
+    "description": "Search placeholder text"
+  },
+
+  "filterChats": "Chats",
+  "@filterChats": {
+    "description": "Chat list filter chip for chats"
+  },
+
+  "filterArchive": "Archive",
+  "@filterArchive": {
+    "description": "Chat list filter chip for archived chats"
   }
 }

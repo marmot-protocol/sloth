@@ -172,5 +172,8 @@
   "monthDecShort": "Dic",
   "loginWithSigner": "Iniciar sesión con Signer",
   "signerConnectionError": "No se pudo conectar al signer. Por favor, inténtalo de nuevo.",
-  "you": "Tú"
+  "you": "Tú",
+  "search": "Search",
+  "filterChats": "Chats",
+  "filterArchive": "Archive"
 }

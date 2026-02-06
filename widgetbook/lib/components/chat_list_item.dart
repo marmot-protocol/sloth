@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_chat_list_item.dart';
-import 'package:sloth/widgets/wn_chat_status.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_chat_list_item.dart';
+import 'package:whitenoise/widgets/wn_chat_status.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

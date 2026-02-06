@@ -108,6 +108,160 @@ void main() {
       });
     });
 
+    group('header', () {
+      testWidgets('header is hidden initially', (tester) async {
+        await mountWidget(
+          const WnChatList(
+            itemCount: 3,
+            itemBuilder: _textBuilder,
+            header: Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('chat_list_header')), findsNothing);
+      });
+
+      testWidgets('header appears when pulling down', (tester) async {
+        await mountWidget(
+          WnChatList(
+            itemCount: 50,
+            itemBuilder: (context, index) => SizedBox(
+              height: 76,
+              child: Text('Item $index'),
+            ),
+            header: const Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.startGesture(const Offset(200, 300));
+        await gesture.moveBy(const Offset(0, 200));
+        await tester.pump();
+
+        expect(find.byKey(const Key('chat_list_header')), findsOneWidget);
+        expect(find.text('Header'), findsOneWidget);
+        await gesture.up();
+        await tester.pumpAndSettle();
+      });
+
+      testWidgets('header snaps back to hidden on partial pull', (tester) async {
+        await mountWidget(
+          WnChatList(
+            itemCount: 50,
+            itemBuilder: (context, index) => SizedBox(
+              height: 76,
+              child: Text('Item $index'),
+            ),
+            header: const Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.startGesture(const Offset(200, 300));
+        await gesture.moveBy(const Offset(0, 50));
+        await tester.pump();
+
+        expect(find.byKey(const Key('chat_list_header')), findsOneWidget);
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('chat_list_header')), findsNothing);
+      });
+
+      testWidgets('header stays open after pulling past threshold', (tester) async {
+        await mountWidget(
+          WnChatList(
+            itemCount: 50,
+            itemBuilder: (context, index) => SizedBox(
+              height: 76,
+              child: Text('Item $index'),
+            ),
+            header: const Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.startGesture(const Offset(200, 300));
+        await gesture.moveBy(const Offset(0, 200));
+        await tester.pump();
+
+        expect(find.byKey(const Key('chat_list_header')), findsOneWidget);
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('chat_list_header')), findsOneWidget);
+
+        final align = tester.widget<Align>(
+          find.ancestor(of: find.text('Header'), matching: find.byType(Align)),
+        );
+        expect(align.heightFactor, 1.0);
+      });
+
+      testWidgets('header dismisses when scrolling up while open', (tester) async {
+        await mountWidget(
+          WnChatList(
+            itemCount: 50,
+            itemBuilder: (context, index) => SizedBox(
+              height: 76,
+              child: Text('Item $index'),
+            ),
+            header: const Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.startGesture(const Offset(200, 300));
+        await gesture.moveBy(const Offset(0, 200));
+        await tester.pump();
+        await gesture.up();
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('chat_list_header')), findsOneWidget);
+
+        await tester.drag(find.byKey(const Key('chat_list')), const Offset(0, -300));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('chat_list_header')), findsNothing);
+      });
+
+      testWidgets('does not render header when header is null', (tester) async {
+        await mountWidget(
+          const WnChatList(itemCount: 3, itemBuilder: _textBuilder),
+          tester,
+        );
+        await tester.pump();
+
+        expect(find.byKey(const Key('chat_list_header')), findsNothing);
+      });
+
+      testWidgets('does not render header when headerHeight is 0', (tester) async {
+        await mountWidget(
+          const WnChatList(
+            itemCount: 3,
+            itemBuilder: _textBuilder,
+            header: Text('Header'),
+          ),
+          tester,
+        );
+        await tester.pump();
+
+        expect(find.byKey(const Key('chat_list_header')), findsNothing);
+      });
+    });
+
     group('scroll edge effect', () {
       testWidgets('does not show scroll edge effect at top initially', (tester) async {
         await mountWidget(

@@ -580,4 +580,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Unable to connect to signer. Please try again.';
+
+  @override
+  String get search => 'Search';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archive';
 }

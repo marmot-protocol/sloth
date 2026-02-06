@@ -3,7 +3,7 @@ description: Widget catalog for Whitenoise app design review
 publish_to: 'none'
 
 environment:
-  sdk: ^3.10.3 
+  sdk: ^3.10.3
   flutter: ">=3.38.4 <4.0.0"
 
 dependencies:
@@ -34,8 +34,8 @@ flutter:
   fonts:
     - family: Manrope
       fonts:
-        - asset: assets/fonts/Manrope-Regular.ttf
-          weight: 400
+        - asset: assets/fonts/Manrope-Medium.ttf
+          weight: 500
         - asset: assets/fonts/Manrope-SemiBold.ttf
           weight: 600
         - asset: assets/fonts/Manrope-Bold.ttf
