@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' show EditableText, Key, TextField, TextEditingController;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_search_field.dart' show WnSearchField;
+import 'package:whitenoise/widgets/wn_search_field.dart' show WnSearchField;
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

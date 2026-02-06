@@ -3,11 +3,11 @@ import 'dart:async' show Completer, unawaited;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:sloth/hooks/use_accounts.dart';
-import 'package:sloth/providers/auth_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/src/rust/api/accounts.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/hooks/use_accounts.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -163,11 +163,13 @@ void main() {
       late AsyncSnapshot<List<Account>> capturedAccounts;
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -232,11 +234,13 @@ void main() {
       mockAuthNotifier.switchProfileCompleter = Completer<void>();
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -274,11 +278,13 @@ void main() {
       mockAuthNotifier.shouldThrowOnSwitch = true;
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
@@ -322,11 +328,13 @@ void main() {
       mockAuthNotifier.shouldThrowOnSwitch = true;
       mockApi.accounts = [
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),
         ),
         Account(
+          accountType: AccountType.local,
           pubkey: testPubkeyB,
           createdAt: DateTime.now(),
           updatedAt: DateTime.now(),

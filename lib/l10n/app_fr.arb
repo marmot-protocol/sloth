@@ -71,7 +71,7 @@
   "donateDescription": "En tant qu'organisation à but non lucratif, White Noise existe uniquement pour votre vie privée et votre liberté, pas pour le profit. Votre soutien nous maintient indépendants et sans compromis.",
   "lightningAddress": "Adresse Lightning",
   "bitcoinSilentPayment": "Paiement Silencieux Bitcoin",
-  "copiedToClipboardThankYou": "Copié dans le presse-papiers. Merci ! 🦥",
+  "copiedToClipboardThankYou": "Copié dans le presse-papiers. Merci !",
   "shareProfileTitle": "Partager le profil",
   "scanToConnect": "Scanner pour se connecter",
   "signOutTitle": "Déconnexion",
@@ -104,11 +104,10 @@
   "keyPackagesDeleted": "Tous les paquets de clés supprimés",
   "keyPackageDeleted": "Paquet de clés supprimé",
   "packageNumber": "Paquet {number}",
-  "ohNo": "Oh non !",
   "goBack": "Retour",
   "reportError": "Signaler une erreur",
-  "slothsWorking": "Paresseux au travail",
-  "wipMessage": "Les paresseux travaillent sur cette fonctionnalité. Si vous voulez que les paresseux aillent plus vite, faites un don à White Noise",
+  "workInProgress": "Nous y travaillons",
+  "wipMessage": "Nous travaillons sur cette fonctionnalité. Pour soutenir le développement, faites un don à White Noise",
   "donate": "Faire un don",
   "addRelay": "Ajouter un Relais",
   "enterRelayAddress": "Entrez l'adresse du relais",
@@ -170,5 +169,7 @@
   "monthSepShort": "Sep",
   "monthOctShort": "Oct",
   "monthNovShort": "Nov",
-  "monthDecShort": "Déc"
+  "monthDecShort": "Déc",
+  "loginWithSigner": "Se connecter avec Signer",
+  "signerConnectionError": "Impossible de se connecter au signer. Veuillez réessayer."
 }

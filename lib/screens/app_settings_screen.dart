@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/l10n/l10n.dart';
-import 'package:sloth/providers/locale_provider.dart';
-import 'package:sloth/providers/theme_provider.dart';
-import 'package:sloth/routes.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_dropdown_selector.dart';
-import 'package:sloth/widgets/wn_slate.dart';
-import 'package:sloth/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/locale_provider.dart';
+import 'package:whitenoise/providers/theme_provider.dart';
+import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
 class AppSettingsScreen extends ConsumerWidget {
   const AppSettingsScreen({super.key});

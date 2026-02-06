@@ -537,7 +537,7 @@ abstract class AppLocalizations {
   /// System notice message when donation address is copied
   ///
   /// In en, this message translates to:
-  /// **'Copied to clipboard. Thank you! 🦥'**
+  /// **'Copied to clipboard. Thank you!'**
   String get copiedToClipboardThankYou;
 
   /// Share profile screen title
@@ -732,12 +732,6 @@ abstract class AppLocalizations {
   /// **'Package {number}'**
   String packageNumber(int number);
 
-  /// Error screen exclamation
-  ///
-  /// In en, this message translates to:
-  /// **'Oh no!'**
-  String get ohNo;
-
   /// Go back button text
   ///
   /// In en, this message translates to:
@@ -753,13 +747,13 @@ abstract class AppLocalizations {
   /// WIP screen title
   ///
   /// In en, this message translates to:
-  /// **'Sloths working'**
-  String get slothsWorking;
+  /// **'We\'re working on this'**
+  String get workInProgress;
 
   /// WIP screen message
   ///
   /// In en, this message translates to:
-  /// **'Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise'**
+  /// **'We\'re working on this feature. To support development, please donate to White Noise'**
   String get wipMessage;
 
   /// Donate button text
@@ -1133,6 +1127,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Dec'**
   String get monthDecShort;
+
+  /// Button text to login using an external signer app
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Signer'**
+  String get loginWithSigner;
+
+  /// Error message when connection to external signer fails
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to connect to signer. Please try again.'**
+  String get signerConnectionError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

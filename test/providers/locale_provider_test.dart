@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:sloth/l10n/generated/app_localizations_en.dart';
-import 'package:sloth/providers/locale_provider.dart';
-import 'package:sloth/src/rust/api.dart' as rust_api;
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/l10n/generated/app_localizations_en.dart';
+import 'package:whitenoise/providers/locale_provider.dart';
+import 'package:whitenoise/src/rust/api.dart' as rust_api;
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 import '../mocks/mock_wn_api.dart';
 

@@ -1,10 +1,15 @@
-# Sloth 🦥
+# White Noise
 
-A playground messaging app for experimenting with the [whitenoise rust crate 🦀](https://github.com/marmot-protocol/whitenoise-rs), which uses the [marmot protocol 🦫](https://github.com/marmot-protocol/marmot) to build secure messaging with MLS and Nostr
+A secure, private, and decentralized chat app using the [marmot protocol 🦫](https://github.com/marmot-protocol/marmot) to build secure messaging with MLS and Nostr
 
+## 📱 Supported Platforms
 
-**Why sloth?**
-Cause sloths are slow but efficient, and you can find them in Costa Rica 🤙
+- ✅ **Android** - Fully supported
+- ✅ **iOS** - Fully supported
+- ⏳ **macOS** - Not supported yet
+- ⏳ **Windows** - Not supported yet
+- ⏳ **Linux** - Not supported yet
+- ⏳ **Web** - Not supported yet
 
 ## Structure
 
@@ -69,18 +74,18 @@ genhtml coverage/lcov.info -o coverage/html
 ```
 
 
-## Sloth mode 🦥
-- Sloths know complexity is bad, very bad.
-- Sloths work hard to keep this app thin. 
-- Sloths test their code.
-- Sloths delete dead code. Commented code is dead code.
-- Sloths use the White Noise Rust crate 🦀 as the source of truth.
-- Sloths avoid caching in flutter side. Sloths remember that White Noise crate already persists data in a local DB.
-- Sloths put shared app state in providers.
-- Sloths put ephemeral widget state in hooks.
-- Sloths pass data to hooks, not widget refs.
-- Sloths let screens watch providers and pass data to hooks.
-- Sloths don't add code comments unless strictly necessary. Instead, they make big effort on writing code that is self-explanatory.
+## Development philosophy
+- We keep complexity low.
+- We keep the app thin.
+- We test our code.
+- We delete dead code. Commented code is dead code.
+- We use the Whitenoise Rust crate as the source of truth.
+- We avoid caching in Flutter; the Whitenoise crate already persists data in a local DB.
+- We put shared app state in providers.
+- We put ephemeral widget state in hooks.
+- We pass data to hooks, not widget refs.
+- We let screens watch providers and pass data to hooks.
+- We avoid comments unless strictly necessary and write self-explanatory code.
 
 ## 📚 Resources
 - [Flutter Docs](https://docs.flutter.dev/)

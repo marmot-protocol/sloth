@@ -2,14 +2,14 @@ import 'dart:async' show Completer;
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/hooks/use_route_refresh.dart';
-import 'package:sloth/hooks/use_user_metadata.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/hooks/use_route_refresh.dart';
+import 'package:whitenoise/hooks/use_user_metadata.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 const _emptyMetadata = FlutterMetadata(custom: {});
 
-const _slothMetadata = FlutterMetadata(
+const _testMetadata = FlutterMetadata(
   name: 'Sloth',
   displayName: 'sloth',
   about: 'I live in costa rica',
@@ -99,11 +99,11 @@ class _MockApi implements RustLibApi {
       case _MockMode.loading:
         return Completer<FlutterMetadata>().future;
       case _MockMode.success:
-        return Future.value(_slothMetadata);
+        return Future.value(_testMetadata);
       case _MockMode.error:
         return Future.error(Exception('fail'));
       case _MockMode.emptyThenSuccess:
-        return blockingDataSync ? Future.value(_slothMetadata) : Future.value(_emptyMetadata);
+        return blockingDataSync ? Future.value(_testMetadata) : Future.value(_emptyMetadata);
     }
   }
 
@@ -137,7 +137,7 @@ void main() {
           await _mountHook(tester, 'pk1');
           await tester.pump();
 
-          expect(getResult().data, equals(_slothMetadata));
+          expect(getResult().data, equals(_testMetadata));
         });
 
         testWidgets('does not refetch when rebuilt with same pubkey', (tester) async {
@@ -176,7 +176,7 @@ void main() {
           await _mountHook(tester, 'pk1');
           await tester.pump();
 
-          expect(getResult().data, equals(_slothMetadata));
+          expect(getResult().data, equals(_testMetadata));
         });
       });
     });

@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sloth/services/scanner_service.dart';
+import 'package:whitenoise/services/scanner_service.dart';
 import '../mocks/mock_mobile_scanner_controller.dart';
 
 void main() {

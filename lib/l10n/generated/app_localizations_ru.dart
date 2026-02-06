@@ -234,7 +234,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get bitcoinSilentPayment => 'Тихий Платёж Bitcoin';
 
   @override
-  String get copiedToClipboardThankYou => 'Скопировано в буфер обмена. Спасибо! 🦥';
+  String get copiedToClipboardThankYou => 'Скопировано в буфер обмена. Спасибо!';
 
   @override
   String get shareProfileTitle => 'Поделиться профилем';
@@ -343,20 +343,17 @@ class AppLocalizationsRu extends AppLocalizations {
   }
 
   @override
-  String get ohNo => 'О нет!';
-
-  @override
   String get goBack => 'Назад';
 
   @override
   String get reportError => 'Сообщить об ошибке';
 
   @override
-  String get slothsWorking => 'Ленивцы работают';
+  String get workInProgress => 'Мы работаем над этим';
 
   @override
   String get wipMessage =>
-      'Ленивцы работают над этой функцией. Если хотите, чтобы ленивцы работали быстрее, пожертвуйте White Noise';
+      'Мы работаем над этой функцией. Чтобы поддержать разработку, пожертвуйте на проект White Noise';
 
   @override
   String get donate => 'Пожертвовать';
@@ -580,4 +577,10 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get monthDecShort => 'Дек';
+
+  @override
+  String get loginWithSigner => 'Войти через Signer';
+
+  @override
+  String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
 }

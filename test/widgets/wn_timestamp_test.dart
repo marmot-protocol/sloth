@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart' show FontWeight, Key, Text, TextOverflow;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_timestamp.dart';
+import 'package:whitenoise/widgets/wn_timestamp.dart';
 import '../test_helpers.dart' show mountWidget;
 
 void main() {

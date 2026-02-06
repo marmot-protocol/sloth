@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:sloth/theme.dart';
-import 'package:sloth/widgets/wn_overlay.dart';
-import 'package:sloth/widgets/wn_scroll_edge_effect.dart';
-import 'package:sloth/widgets/wn_separator.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_overlay.dart';
+import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart';
+import 'package:whitenoise/widgets/wn_separator.dart';
 import 'package:widgetbook/widgetbook.dart';
 import 'package:widgetbook_annotation/widgetbook_annotation.dart' as widgetbook;
 

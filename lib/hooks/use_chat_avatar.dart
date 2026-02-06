@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
-import 'package:sloth/src/rust/api/groups.dart' as groups_api;
-import 'package:sloth/src/rust/api/users.dart' as users_api;
-import 'package:sloth/utils/metadata.dart';
+import 'package:whitenoise/src/rust/api/groups.dart' as groups_api;
+import 'package:whitenoise/src/rust/api/users.dart' as users_api;
+import 'package:whitenoise/utils/metadata.dart';
 
 final _logger = Logger('useChatAvatar');
 

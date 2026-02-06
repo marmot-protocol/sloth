@@ -1,5 +1,5 @@
 import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 ({
   String? noticeMessage,

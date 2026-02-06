@@ -2,7 +2,7 @@ import 'dart:ui' show Color;
 
 import 'package:flutter/foundation.dart' show immutable;
 import 'package:logging/logging.dart';
-import 'package:sloth/theme/semantic_colors.dart';
+import 'package:whitenoise/theme/semantic_colors.dart';
 
 final _logger = Logger('AvatarColor');
 

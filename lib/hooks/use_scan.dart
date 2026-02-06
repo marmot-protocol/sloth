@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
-import 'package:sloth/services/scanner_service.dart';
+import 'package:whitenoise/services/scanner_service.dart';
 
 ({
   MobileScannerController controller,

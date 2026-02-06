@@ -366,7 +366,7 @@
     "description": "Bitcoin silent payment label"
   },
 
-  "copiedToClipboardThankYou": "Copied to clipboard. Thank you! 🦥",
+  "copiedToClipboardThankYou": "Copied to clipboard. Thank you!",
   "@copiedToClipboardThankYou": {
     "description": "System notice message when donation address is copied"
   },
@@ -551,11 +551,6 @@
     }
   },
 
-  "ohNo": "Oh no!",
-  "@ohNo": {
-    "description": "Error screen exclamation"
-  },
-
   "goBack": "Go back",
   "@goBack": {
     "description": "Go back button text"
@@ -566,12 +561,12 @@
     "description": "Report error button text"
   },
 
-  "slothsWorking": "Sloths working",
-  "@slothsWorking": {
+  "workInProgress": "We're working on this",
+  "@workInProgress": {
     "description": "WIP screen title"
   },
 
-  "wipMessage": "Sloths are working on this feature. If you want sloths to go faster, please donate to White Noise",
+  "wipMessage": "We're working on this feature. To support development, please donate to White Noise",
   "@wipMessage": {
     "description": "WIP screen message"
   },
@@ -914,5 +909,15 @@
   "monthDecShort": "Dec",
   "@monthDecShort": {
     "description": "December short name"
+  },
+  
+  "loginWithSigner": "Login with Signer",
+  "@loginWithSigner": {
+    "description": "Button text to login using an external signer app"
+  },
+
+  "signerConnectionError": "Unable to connect to signer. Please try again.",
+  "@signerConnectionError": {
+    "description": "Error message when connection to external signer fails"
   }
 }

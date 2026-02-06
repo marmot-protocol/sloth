@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/hooks/use_chat_avatar.dart';
-import 'package:sloth/src/rust/api/groups.dart';
-import 'package:sloth/src/rust/api/metadata.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/hooks/use_chat_avatar.dart';
+import 'package:whitenoise/src/rust/api/groups.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 import '../test_helpers.dart';
 
 const _pubkey = 'my_pubkey';

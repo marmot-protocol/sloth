@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_dropdown_selector.dart';
+import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
 
 import '../test_helpers.dart';
 

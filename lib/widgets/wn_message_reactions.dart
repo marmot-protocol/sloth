@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:sloth/src/rust/api/messages.dart' show EmojiReaction;
-import 'package:sloth/theme.dart';
+import 'package:whitenoise/src/rust/api/messages.dart' show EmojiReaction;
+import 'package:whitenoise/theme.dart';
 
 class WnMessageReactions extends StatelessWidget {
   static const int maxVisibleReactions = 3;

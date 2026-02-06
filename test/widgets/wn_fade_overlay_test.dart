@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart'
     show BoxDecoration, Colors, Container, IgnorePointer, Key, LinearGradient, Positioned;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/widgets/wn_fade_overlay.dart' show WnFadeOverlay;
+import 'package:whitenoise/widgets/wn_fade_overlay.dart' show WnFadeOverlay;
 import '../test_helpers.dart' show mountStackedWidget;
 
 void main() {

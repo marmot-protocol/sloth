@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/screens/login_screen.dart';
-import 'package:sloth/screens/signup_screen.dart';
+import 'package:whitenoise/screens/login_screen.dart';
+import 'package:whitenoise/screens/signup_screen.dart';
 
 import '../test_helpers.dart';
 

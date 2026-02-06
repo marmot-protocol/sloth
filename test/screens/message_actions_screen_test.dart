@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/l10n/generated/app_localizations.dart';
-import 'package:sloth/screens/message_actions_screen.dart';
-import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/widgets/wn_message_bubble.dart';
-import 'package:sloth/widgets/wn_system_notice.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
+import 'package:whitenoise/screens/message_actions_screen.dart';
+import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 import '../test_helpers.dart';
 
 ChatMessage _createTestMessage({

@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:sloth/services/message_service.dart';
-import 'package:sloth/src/rust/api/messages.dart';
-import 'package:sloth/src/rust/frb_generated.dart';
+import 'package:whitenoise/services/message_service.dart';
+import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 import '../test_helpers.dart';
 
