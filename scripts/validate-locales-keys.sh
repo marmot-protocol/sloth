@@ -1,6 +1,8 @@
 #!/bin/bash
 set -eo pipefail
 
+export LC_ALL=C
+
 TEMPLATE="${1:-lib/l10n/app_en.arb}"
 ERRORS=0
 MISSING_COUNT=0
