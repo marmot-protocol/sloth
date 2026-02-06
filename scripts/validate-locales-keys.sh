@@ -1,6 +1,9 @@
 #!/bin/bash
 set -eo pipefail
 
+# Use C locale for consistent sorting across different environments
+export LC_ALL=C
+
 TEMPLATE="${1:-lib/l10n/app_en.arb}"
 ERRORS=0
 MISSING_COUNT=0

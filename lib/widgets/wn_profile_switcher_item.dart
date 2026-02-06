@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart' show Gap;
-import 'package:sloth/theme.dart';
-import 'package:sloth/utils/formatting.dart';
-import 'package:sloth/widgets/wn_avatar.dart';
-import 'package:sloth/widgets/wn_icon.dart';
-import 'package:sloth/widgets/wn_middle_ellipsis_text.dart';
+import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/formatting.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_middle_ellipsis_text.dart';
 
 class WnProfileSwitcherItem extends StatelessWidget {
   const WnProfileSwitcherItem({
