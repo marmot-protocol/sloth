@@ -300,7 +300,8 @@ Widget allColors(BuildContext context) {
             ),
           ],
           description:
-              'Overlay colors. Use for backdrops and overlay surfaces to separate Slate from background content and keep focus on it.',
+              'Overlay colors. Use for backdrops and overlay surfaces to separate Slate '
+              'from background content and keep focus on it.',
         ),
         const SizedBox(height: 24),
         _buildColorSection(

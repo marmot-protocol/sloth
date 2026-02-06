@@ -7,7 +7,7 @@ class _BaseColors {
 }
 
 class _BlackAlphaColors {
-  static const Color blackAlpha50 = Color(0x08000000);
+  static const Color blackAlpha50 = Color(0x0D000000);
   static const Color blackAlpha200 = Color(0x33000000);
   static const Color blackAlpha300 = Color(0x4D000000);
   static const Color blackAlpha500 = Color(0x80000000);
