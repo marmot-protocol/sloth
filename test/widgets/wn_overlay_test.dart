@@ -42,7 +42,7 @@ void main() {
     });
 
     group('variant', () {
-      testWidgets('defaults to strong variant', (tester) async {
+      testWidgets('defaults to heavy variant', (tester) async {
         await mountStackedWidget(const WnOverlay(), tester);
 
         final overlay = tester.widget<WnOverlay>(find.byType(WnOverlay));
