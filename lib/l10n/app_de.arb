@@ -173,7 +173,7 @@
   "loginWithSigner": "Mit Signer anmelden",
   "signerConnectionError": "Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.",
   "you": "Du",
-  "search": "Search",
+  "search": "Suche",
   "filterChats": "Chats",
-  "filterArchive": "Archive"
+  "filterArchive": "Archiv"
 }

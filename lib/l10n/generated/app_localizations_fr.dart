@@ -586,11 +586,11 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signerConnectionError => 'Impossible de se connecter au signer. Veuillez réessayer.';
 
   @override
-  String get search => 'Search';
+  String get search => 'Rechercher';
 
   @override
-  String get filterChats => 'Chats';
+  String get filterChats => 'Discussions';
 
   @override
-  String get filterArchive => 'Archive';
+  String get filterArchive => 'Archives';
 }

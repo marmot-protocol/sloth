@@ -40,7 +40,9 @@ ChatSummary _chatSummary({
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
           mlsGroupId: testGroupId,
-          author: lastMessageAuthor ?? 'author',
+          author:
+              lastMessageAuthor ??
+              '0000000000000000000000000000000000000000000000000000000000000000',
           content: lastMessageContent,
           createdAt: DateTime(2024),
           mediaAttachmentCount: BigInt.zero,
@@ -66,7 +68,7 @@ final _api = _MockApi();
 
 class MockAccountPubkeyNotifier extends AccountPubkeyNotifier {
   @override
-  String build() => 'my-pubkey';
+  String build() => testPubkeyA;
 }
 
 void main() {
@@ -240,7 +242,7 @@ void main() {
           tester,
           _chatSummary(
             lastMessageContent: 'Hello world',
-            lastMessageAuthor: 'my-pubkey',
+            lastMessageAuthor: testPubkeyA,
           ),
         );
 

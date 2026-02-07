@@ -588,11 +588,11 @@ class AppLocalizationsRu extends AppLocalizations {
   String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
 
   @override
-  String get search => 'Search';
+  String get search => 'Поиск';
 
   @override
-  String get filterChats => 'Chats';
+  String get filterChats => 'Чаты';
 
   @override
-  String get filterArchive => 'Archive';
+  String get filterArchive => 'Архив';
 }

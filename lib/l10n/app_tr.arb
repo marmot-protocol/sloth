@@ -173,7 +173,7 @@
   "loginWithSigner": "Signer ile giriş yap",
   "signerConnectionError": "Signer'a bağlanılamadı. Lütfen tekrar deneyin.",
   "you": "Sen",
-  "search": "Search",
-  "filterChats": "Chats",
-  "filterArchive": "Archive"
+  "search": "Ara",
+  "filterChats": "Sohbetler",
+  "filterArchive": "Arşiv"
 }

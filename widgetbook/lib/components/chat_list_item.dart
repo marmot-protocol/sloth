@@ -169,7 +169,9 @@ Widget wnChatListItemShowcase(BuildContext context) {
             WnChatListItem(
               title: 'Long Message (from you)',
               subtitle:
-                  'This is a much longer message that should wrap onto two lines before truncating with ellipsis',
+                  'This is a much longer message that should'
+                  ' wrap onto two lines before truncating'
+                  ' with ellipsis',
               timestamp: '7m',
               status: ChatStatusType.sent,
               prefixSubtitle: 'You: ',
@@ -178,7 +180,9 @@ Widget wnChatListItemShowcase(BuildContext context) {
             WnChatListItem(
               title: 'Long Message (from them)',
               subtitle:
-                  'This is a much longer message that should wrap onto two lines before truncating with ellipsis',
+                  'This is a much longer message that should'
+                  ' wrap onto two lines before truncating'
+                  ' with ellipsis',
               timestamp: '8m',
               status: ChatStatusType.unreadCount,
               unreadCount: 1,

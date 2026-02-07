@@ -18,7 +18,6 @@ class WnChatListItem extends HookWidget {
     this.status,
     this.unreadCount,
     this.notificationOff = false,
-    this.isTyping = false,
     this.onTap,
     this.isSelected = false,
     this.prefixSubtitle,
@@ -33,7 +32,6 @@ class WnChatListItem extends HookWidget {
   final ChatStatusType? status;
   final int? unreadCount;
   final bool notificationOff;
-  final bool isTyping;
   final VoidCallback? onTap;
   final bool isSelected;
   final String? prefixSubtitle;

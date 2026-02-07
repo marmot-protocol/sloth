@@ -594,11 +594,11 @@ class AppLocalizationsDe extends AppLocalizations {
       'Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.';
 
   @override
-  String get search => 'Search';
+  String get search => 'Suche';
 
   @override
   String get filterChats => 'Chats';
 
   @override
-  String get filterArchive => 'Archive';
+  String get filterArchive => 'Archiv';
 }

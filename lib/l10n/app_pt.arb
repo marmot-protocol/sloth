@@ -173,7 +173,7 @@
   "loginWithSigner": "Entrar com Signer",
   "signerConnectionError": "Não foi possível conectar ao signer. Por favor, tente novamente.",
   "you": "Você",
-  "search": "Search",
-  "filterChats": "Chats",
-  "filterArchive": "Archive"
+  "search": "Pesquisar",
+  "filterChats": "Conversas",
+  "filterArchive": "Arquivo"
 }

@@ -82,7 +82,6 @@ class ChatListTile extends HookConsumerWidget {
     final timestamp = chatSummary.lastMessage?.createdAt ?? chatSummary.createdAt;
     final formattedTime = formatters.formatRelativeTime(timestamp, context.l10n);
 
-    // Determine status
     ChatStatusType? status;
     final unreadCount = chatSummary.unreadCount.toInt();
     if (isPending) {
@@ -91,7 +90,6 @@ class ChatListTile extends HookConsumerWidget {
       status = ChatStatusType.unreadCount;
     }
 
-    // Prefix "You: " logic
     String? prefixSubtitle;
     if (!isPending && chatSummary.lastMessage?.author == myPubkey) {
       prefixSubtitle = '${context.l10n.you}: ';

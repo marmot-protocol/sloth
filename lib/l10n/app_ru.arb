@@ -173,7 +173,7 @@
   "loginWithSigner": "Войти через Signer",
   "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова.",
   "you": "Вы",
-  "search": "Search",
-  "filterChats": "Chats",
-  "filterArchive": "Archive"
+  "search": "Поиск",
+  "filterChats": "Чаты",
+  "filterArchive": "Архив"
 }

@@ -583,11 +583,11 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signerConnectionError => 'Impossibile connettersi al signer. Riprova.';
 
   @override
-  String get search => 'Search';
+  String get search => 'Cerca';
 
   @override
-  String get filterChats => 'Chats';
+  String get filterChats => 'Chat';
 
   @override
-  String get filterArchive => 'Archive';
+  String get filterArchive => 'Archivio';
 }
