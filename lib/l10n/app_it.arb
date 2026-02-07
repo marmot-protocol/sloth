@@ -171,5 +171,9 @@
   "monthNovShort": "Nov",
   "monthDecShort": "Dic",
   "loginWithSigner": "Accedi con Signer",
-  "signerConnectionError": "Impossibile connettersi al signer. Riprova."
+  "signerConnectionError": "Impossibile connettersi al signer. Riprova.",
+  "you": "Tu",
+  "search": "Cerca",
+  "filterChats": "Chat",
+  "filterArchive": "Archivio"
 }

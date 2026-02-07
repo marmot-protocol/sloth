@@ -511,6 +511,9 @@ class AppLocalizationsDe extends AppLocalizations {
   String get invalidNpub => 'Ungültiger öffentlicher Schlüssel. Bitte versuchen Sie es erneut.';
 
   @override
+  String get you => 'Du';
+
+  @override
   String get timestampNow => 'Jetzt';
 
   @override
@@ -589,4 +592,13 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get signerConnectionError =>
       'Verbindung zum Signer fehlgeschlagen. Bitte versuchen Sie es erneut.';
+
+  @override
+  String get search => 'Suche';
+
+  @override
+  String get filterChats => 'Chats';
+
+  @override
+  String get filterArchive => 'Archiv';
 }

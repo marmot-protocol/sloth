@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart' show EditableText, Key, TextField, TextEditingController;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/theme/semantic_colors.dart' show SemanticColors;
 import 'package:whitenoise/widgets/wn_search_field.dart' show WnSearchField;
 import '../test_helpers.dart' show mountWidget;
 
@@ -8,6 +9,13 @@ void main() {
     testWidgets('displays placeholder', (tester) async {
       await mountWidget(const WnSearchField(placeholder: 'Search users'), tester);
       expect(find.text('Search users'), findsOneWidget);
+    });
+
+    testWidgets('has backgroundPrimary fill color', (tester) async {
+      await mountWidget(const WnSearchField(placeholder: 'Search'), tester);
+      final textField = tester.widget<TextField>(find.byType(TextField));
+      final decoration = textField.decoration!;
+      expect(decoration.fillColor, SemanticColors.light.backgroundPrimary);
     });
 
     testWidgets('displays search icon', (tester) async {

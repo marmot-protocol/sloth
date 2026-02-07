@@ -14,6 +14,8 @@ import 'package:whitenoise_widgetbook/components/buttons.dart'
     as _whitenoise_widgetbook_components_buttons;
 import 'package:whitenoise_widgetbook/components/carousel_indicator.dart'
     as _whitenoise_widgetbook_components_carousel_indicator;
+import 'package:whitenoise_widgetbook/components/chat_list_item.dart'
+    as _whitenoise_widgetbook_components_chat_list_item;
 import 'package:whitenoise_widgetbook/components/chat_status.dart'
     as _whitenoise_widgetbook_components_chat_status;
 import 'package:whitenoise_widgetbook/components/feedback.dart'
@@ -101,6 +103,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Carousel Indicator',
             builder: _whitenoise_widgetbook_components_carousel_indicator
                 .wnCarouselIndicatorShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnChatListItemStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Chat List Item',
+            builder: _whitenoise_widgetbook_components_chat_list_item
+                .wnChatListItemShowcase,
           ),
         ],
       ),

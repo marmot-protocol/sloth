@@ -786,6 +786,11 @@
     "description": "Error message when scanned npub is invalid"
   },
 
+  "you": "You",
+  "@you": {
+    "description": "Prefix for messages sent by the user"
+  },
+
   "timestampNow": "Now",
   "@timestampNow": {
     "description": "Timestamp for events less than 60 seconds ago"
@@ -919,5 +924,20 @@
   "signerConnectionError": "Unable to connect to signer. Please try again.",
   "@signerConnectionError": {
     "description": "Error message when connection to external signer fails"
+  },
+
+  "search": "Search",
+  "@search": {
+    "description": "Search placeholder text"
+  },
+
+  "filterChats": "Chats",
+  "@filterChats": {
+    "description": "Chat list filter chip for chats"
+  },
+
+  "filterArchive": "Archive",
+  "@filterArchive": {
+    "description": "Chat list filter chip for archived chats"
   }
 }

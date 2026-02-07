@@ -5,6 +5,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:whitenoise/l10n/generated/app_localizations.dart';
+import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/src/rust/api/chat_list.dart';
 import 'package:whitenoise/src/rust/api/groups.dart' show GroupType;
 import 'package:whitenoise/src/rust/api/messages.dart';
@@ -12,6 +13,7 @@ import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_chat_list_item.dart';
 
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -21,6 +23,7 @@ ChatSummary _chatSummary({
   GroupType groupType = GroupType.group,
   bool pendingConfirmation = false,
   String? lastMessageContent,
+  String? lastMessageAuthor,
   String? groupImagePath,
   String? groupImageUrl,
   String? welcomerPubkey,
@@ -37,7 +40,9 @@ ChatSummary _chatSummary({
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
           mlsGroupId: testGroupId,
-          author: 'author',
+          author:
+              lastMessageAuthor ??
+              '0000000000000000000000000000000000000000000000000000000000000000',
           content: lastMessageContent,
           createdAt: DateTime(2024),
           mediaAttachmentCount: BigInt.zero,
@@ -61,6 +66,11 @@ class _MockApi extends MockWnApi {
 
 final _api = _MockApi();
 
+class MockAccountPubkeyNotifier extends AccountPubkeyNotifier {
+  @override
+  String build() => testPubkeyA;
+}
+
 void main() {
   setUpAll(() => RustLib.initMock(api: _api));
   setUp(() {
@@ -73,7 +83,13 @@ void main() {
     ChatSummary chatSummary, {
     bool settle = true,
   }) async {
-    await mountWidget(ChatListTile(chatSummary: chatSummary), tester);
+    await mountWidget(
+      ChatListTile(chatSummary: chatSummary),
+      tester,
+      overrides: [
+        accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
+      ],
+    );
     if (settle) {
       await tester.pumpAndSettle();
     } else {
@@ -85,7 +101,6 @@ void main() {
     group('title', () {
       testWidgets('shows name when present', (tester) async {
         await pumpTile(tester, _chatSummary(name: 'My Group'));
-
         expect(find.text('My Group'), findsOneWidget);
       });
 
@@ -94,7 +109,6 @@ void main() {
           tester,
           _chatSummary(name: 'Alice', groupType: GroupType.directMessage),
         );
-
         expect(find.text('Alice'), findsOneWidget);
       });
 
@@ -103,13 +117,11 @@ void main() {
           tester,
           _chatSummary(groupType: GroupType.directMessage),
         );
-
         expect(find.text('Unknown user'), findsOneWidget);
       });
 
       testWidgets('shows "Unknown group" for group without name', (tester) async {
         await pumpTile(tester, _chatSummary());
-
         expect(find.text('Unknown group'), findsOneWidget);
       });
 
@@ -118,7 +130,6 @@ void main() {
           tester,
           _chatSummary(name: '', groupType: GroupType.directMessage),
         );
-
         expect(find.text('Unknown user'), findsOneWidget);
       });
     });
@@ -134,15 +145,28 @@ void main() {
                 pendingConfirmation: true,
               ),
             );
-
-            expect(
-              find.text('Has invited you to a secure chat'),
-              findsOneWidget,
-            );
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
+            expect(item.subtitle, 'Has invited you to a secure chat');
           });
         });
 
         group('group', () {
+          testWidgets('uses group name as avatarName when present', (tester) async {
+            await pumpTile(
+              tester,
+              _chatSummary(
+                name: 'Dev Team',
+                pendingConfirmation: true,
+              ),
+            );
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
+            expect(item.title, 'Dev Team');
+            final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+            expect(avatar.displayName, 'Dev Team');
+          });
+
           testWidgets('shows welcomer name in invite when available', (tester) async {
             _api.welcomerMetadata = const FlutterMetadata(
               displayName: 'Charlie',
@@ -152,14 +176,12 @@ void main() {
               tester,
               _chatSummary(
                 pendingConfirmation: true,
-                welcomerPubkey: 'welcomer-pubkey',
+                welcomerPubkey: testPubkeyB,
               ),
             );
-
-            expect(
-              find.text('Charlie has invited you to a secure chat'),
-              findsOneWidget,
-            );
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
+            expect(item.subtitle, 'Charlie has invited you to a secure chat');
           });
 
           testWidgets('shows generic invite without welcomer metadata', (tester) async {
@@ -167,11 +189,9 @@ void main() {
               tester,
               _chatSummary(pendingConfirmation: true),
             );
-
-            expect(
-              find.text('You have been invited to a secure chat'),
-              findsOneWidget,
-            );
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
+            expect(item.subtitle, 'You have been invited to a secure chat');
           });
 
           testWidgets('shows generic invite when metadata fetch fails', (tester) async {
@@ -180,14 +200,12 @@ void main() {
               tester,
               _chatSummary(
                 pendingConfirmation: true,
-                welcomerPubkey: 'welcomer-pubkey',
+                welcomerPubkey: testPubkeyB,
               ),
             );
-
-            expect(
-              find.text('You have been invited to a secure chat'),
-              findsOneWidget,
-            );
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
+            expect(item.subtitle, 'You have been invited to a secure chat');
           });
 
           testWidgets('shows generic invite when metadata has only picture', (tester) async {
@@ -199,14 +217,12 @@ void main() {
               tester,
               _chatSummary(
                 pendingConfirmation: true,
-                welcomerPubkey: 'welcomer-pubkey',
+                welcomerPubkey: testPubkeyB,
               ),
             );
-
-            expect(
-              find.text('You have been invited to a secure chat'),
-              findsOneWidget,
-            );
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
+            expect(item.subtitle, 'You have been invited to a secure chat');
           });
         });
       });
@@ -216,21 +232,37 @@ void main() {
           tester,
           _chatSummary(lastMessageContent: 'Hello world'),
         );
+        final finder = find.byType(WnChatListItem);
+        final item = tester.widget<WnChatListItem>(finder);
+        expect(item.subtitle, 'Hello world');
+      });
 
-        expect(find.text('Hello world'), findsOneWidget);
+      testWidgets('shows prefix "You: " when last message is from me', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(
+            lastMessageContent: 'Hello world',
+            lastMessageAuthor: testPubkeyA,
+          ),
+        );
+
+        final finder = find.byType(WnChatListItem);
+        final item = tester.widget<WnChatListItem>(finder);
+        expect(item.prefixSubtitle, 'You: ');
+        expect(item.subtitle, 'Hello world');
       });
 
       testWidgets('shows empty string when no last message', (tester) async {
         await pumpTile(tester, _chatSummary());
-
-        expect(find.text(''), findsOneWidget);
+        final finder = find.byType(WnChatListItem);
+        final item = tester.widget<WnChatListItem>(finder);
+        expect(item.subtitle, '');
       });
     });
 
     group('avatar', () {
       testWidgets('receives expected name', (tester) async {
         await pumpTile(tester, _chatSummary(name: 'My Group'));
-
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.displayName, 'My Group');
       });
@@ -241,7 +273,6 @@ void main() {
           _chatSummary(groupImagePath: '/path/to/image'),
           settle: false,
         );
-
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.pictureUrl, '/path/to/image');
       });
@@ -255,14 +286,12 @@ void main() {
           ),
           settle: false,
         );
-
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.pictureUrl, 'https://example.com/avatar.png');
       });
 
       testWidgets('receives color derived from mlsGroupId', (tester) async {
         await pumpTile(tester, _chatSummary(name: 'Test'));
-
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
       });
@@ -303,6 +332,9 @@ void main() {
         testWidgets('navigates to invite when pending', (tester) async {
           await tester.pumpWidget(
             ProviderScope(
+              overrides: [
+                accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
+              ],
               child: ScreenUtilInit(
                 designSize: testDesignSize,
                 builder: (_, _) => MaterialApp.router(
@@ -330,6 +362,9 @@ void main() {
         testWidgets('navigates to chat when not pending', (tester) async {
           await tester.pumpWidget(
             ProviderScope(
+              overrides: [
+                accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
+              ],
               child: ScreenUtilInit(
                 designSize: testDesignSize,
                 builder: (_, _) => MaterialApp.router(

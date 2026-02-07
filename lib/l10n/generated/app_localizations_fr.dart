@@ -504,6 +504,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get invalidNpub => 'Clé publique invalide. Veuillez réessayer.';
 
   @override
+  String get you => 'Vous';
+
+  @override
   String get timestampNow => 'Maintenant';
 
   @override
@@ -581,4 +584,13 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Impossible de se connecter au signer. Veuillez réessayer.';
+
+  @override
+  String get search => 'Rechercher';
+
+  @override
+  String get filterChats => 'Discussions';
+
+  @override
+  String get filterArchive => 'Archives';
 }

@@ -171,5 +171,9 @@
   "monthNovShort": "Nov",
   "monthDecShort": "Dic",
   "loginWithSigner": "Iniciar sesión con Signer",
-  "signerConnectionError": "No se pudo conectar al signer. Por favor, inténtalo de nuevo."
+  "signerConnectionError": "No se pudo conectar al signer. Por favor, inténtalo de nuevo.",
+  "you": "Tú",
+  "search": "Buscar",
+  "filterChats": "Chats",
+  "filterArchive": "Archivados"
 }

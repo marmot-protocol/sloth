@@ -500,6 +500,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get invalidNpub => 'Geçersiz açık anahtar. Lütfen tekrar deneyin.';
 
   @override
+  String get you => 'Sen';
+
+  @override
   String get timestampNow => 'Şimdi';
 
   @override
@@ -577,4 +580,13 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Signer\'a bağlanılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get search => 'Ara';
+
+  @override
+  String get filterChats => 'Sohbetler';
+
+  @override
+  String get filterArchive => 'Arşiv';
 }

@@ -506,6 +506,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get invalidNpub => 'Недействительный публичный ключ. Попробуйте снова.';
 
   @override
+  String get you => 'Вы';
+
+  @override
   String get timestampNow => 'Сейчас';
 
   @override
@@ -583,4 +586,13 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';
+
+  @override
+  String get search => 'Поиск';
+
+  @override
+  String get filterChats => 'Чаты';
+
+  @override
+  String get filterArchive => 'Архив';
 }

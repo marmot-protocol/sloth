@@ -502,6 +502,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get invalidNpub => 'Chave pública inválida. Por favor, tente novamente.';
 
   @override
+  String get you => 'Você';
+
+  @override
   String get timestampNow => 'Agora';
 
   @override
@@ -580,4 +583,13 @@ class AppLocalizationsPt extends AppLocalizations {
   @override
   String get signerConnectionError =>
       'Não foi possível conectar ao signer. Por favor, tente novamente.';
+
+  @override
+  String get search => 'Pesquisar';
+
+  @override
+  String get filterChats => 'Conversas';
+
+  @override
+  String get filterArchive => 'Arquivo';
 }
