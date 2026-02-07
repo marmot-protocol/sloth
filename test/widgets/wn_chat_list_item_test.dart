@@ -3,7 +3,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_chat_list_item.dart';
 import 'package:whitenoise/widgets/wn_chat_status.dart';
-import 'package:whitenoise/widgets/wn_icon.dart';
 
 import '../test_helpers.dart';
 
@@ -31,22 +30,25 @@ void main() {
       expect(hasSubtitle, isTrue);
     });
 
-    testWidgets('renders notification off icon when notificationOff is true', (tester) async {
-      await mountWidget(
-        const WnChatListItem(
-          title: 'Group',
-          subtitle: 'Msg',
-          timestamp: 'Now',
-          notificationOff: true,
-        ),
-        tester,
-      );
+    testWidgets(
+      'renders notification off icon when notificationOff is true',
+      (tester) async {
+        await mountWidget(
+          const WnChatListItem(
+            title: 'Group',
+            subtitle: 'Msg',
+            timestamp: 'Now',
+            notificationOff: true,
+          ),
+          tester,
+        );
 
-      final iconFinder = find.byWidgetPredicate(
-        (widget) => widget is WnIcon && widget.icon == WnIcons.notificationOff,
-      );
-      expect(iconFinder, findsOneWidget);
-    });
+        expect(
+          find.byKey(const Key('notification_off_icon')),
+          findsOneWidget,
+        );
+      },
+    );
 
     testWidgets('renders unread badge when status is unreadCount', (tester) async {
       await mountWidget(

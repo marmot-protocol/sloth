@@ -143,7 +143,8 @@ void main() {
                 pendingConfirmation: true,
               ),
             );
-            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
             expect(item.subtitle, 'Has invited you to a secure chat');
           });
         });
@@ -157,7 +158,8 @@ void main() {
                 pendingConfirmation: true,
               ),
             );
-            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
             expect(item.title, 'Dev Team');
             final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
             expect(avatar.displayName, 'Dev Team');
@@ -175,7 +177,8 @@ void main() {
                 welcomerPubkey: 'welcomer-pubkey',
               ),
             );
-            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
             expect(item.subtitle, 'Charlie has invited you to a secure chat');
           });
 
@@ -184,7 +187,8 @@ void main() {
               tester,
               _chatSummary(pendingConfirmation: true),
             );
-            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
             expect(item.subtitle, 'You have been invited to a secure chat');
           });
 
@@ -197,7 +201,8 @@ void main() {
                 welcomerPubkey: 'welcomer-pubkey',
               ),
             );
-            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
             expect(item.subtitle, 'You have been invited to a secure chat');
           });
 
@@ -213,7 +218,8 @@ void main() {
                 welcomerPubkey: 'welcomer-pubkey',
               ),
             );
-            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            final finder = find.byType(WnChatListItem);
+            final item = tester.widget<WnChatListItem>(finder);
             expect(item.subtitle, 'You have been invited to a secure chat');
           });
         });
@@ -224,7 +230,8 @@ void main() {
           tester,
           _chatSummary(lastMessageContent: 'Hello world'),
         );
-        final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+        final finder = find.byType(WnChatListItem);
+        final item = tester.widget<WnChatListItem>(finder);
         expect(item.subtitle, 'Hello world');
       });
 
@@ -237,14 +244,16 @@ void main() {
           ),
         );
 
-        final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+        final finder = find.byType(WnChatListItem);
+        final item = tester.widget<WnChatListItem>(finder);
         expect(item.prefixSubtitle, 'You: ');
         expect(item.subtitle, 'Hello world');
       });
 
       testWidgets('shows empty string when no last message', (tester) async {
         await pumpTile(tester, _chatSummary());
-        final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+        final finder = find.byType(WnChatListItem);
+        final item = tester.widget<WnChatListItem>(finder);
         expect(item.subtitle, '');
       });
     });

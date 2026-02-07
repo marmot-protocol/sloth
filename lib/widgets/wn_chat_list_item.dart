@@ -88,6 +88,7 @@ class WnChatListItem extends HookWidget {
                           SizedBox(width: 4.w),
                           WnIcon(
                             WnIcons.notificationOff,
+                            key: const Key('notification_off_icon'),
                             size: 14.w,
                             color: colors.backgroundContentSecondary,
                           ),
