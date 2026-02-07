@@ -56,5 +56,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes logout not working after app reinstall [PR #31](https://github.com/marmot-protocol/sloth/pull/31)
 - Fixes sign out exception and adds dedicated sign out screen with private key backup [PR #45](https://github.com/marmot-protocol/sloth/pull/45)
 - QR code color now uses theme-aware color [PR #183](https://github.com/marmot-protocol/sloth/pull/183)
+- Refactor camera permission flow [PR #194](https://github.com/marmot-protocol/sloth/pull/194)
 
 ### Security
