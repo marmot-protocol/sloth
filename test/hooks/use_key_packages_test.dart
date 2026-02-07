@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/constants/nostr_event_kinds.dart';
 import 'package:whitenoise/hooks/use_key_packages.dart';
 import 'package:whitenoise/src/rust/api/accounts.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
@@ -35,7 +36,7 @@ class MockApi implements RustLibApi {
         id: 'pkg_${keyPackages.length + 1}',
         pubkey: accountPubkey,
         createdAt: DateTime.now(),
-        kind: 443,
+        kind: NostrEventKinds.mlsKeyPackage,
         tags: [],
         content: '',
       ),
@@ -109,7 +110,7 @@ void main() {
           id: 'pkg1',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
@@ -160,7 +161,7 @@ void main() {
           id: 'pkg1',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
@@ -184,7 +185,7 @@ void main() {
           id: 'pkg1',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
@@ -216,7 +217,7 @@ void main() {
           id: 'pkg1',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
@@ -250,7 +251,7 @@ void main() {
           id: 'pkg1',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
@@ -258,7 +259,7 @@ void main() {
           id: 'pkg2',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
