@@ -5,6 +5,14 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/theme.dart';
 
+const _kAnimationDuration = Duration(milliseconds: 200);
+
+// Fraction of header revealed before it snaps closed when dragging back up.
+const _kDismissThreshold = 0.7;
+
+// Fraction of header revealed before it snaps open when pulling down.
+const _kOpenThreshold = 0.5;
+
 class WnChatList extends HookWidget {
   const WnChatList({
     super.key,
@@ -26,10 +34,11 @@ class WnChatList extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
+    final horizontalPadding = 10.w;
     final canScrollUp = useState(false);
     final hasHeader = header != null && headerHeight > 0;
     final headerRevealController = useAnimationController(
-      duration: const Duration(milliseconds: 200),
+      duration: _kAnimationDuration,
     );
     final headerRevealAnimation = useAnimation(headerRevealController);
     final headerOpen = useState(false);
@@ -96,7 +105,7 @@ class WnChatList extends HookWidget {
           if (pixels > 0 && notification.dragDetails != null) {
             final reveal = (1.0 - pixels / headerHeight).clamp(0.0, 1.0);
             headerRevealController.value = reveal;
-            if (reveal <= 0.7) {
+            if (reveal <= _kDismissThreshold) {
               headerOpen.value = false;
               isAnimatingClosed.value = true;
               headerRevealController.animateTo(0.0, curve: Curves.easeOut).then((_) {
@@ -106,7 +115,7 @@ class WnChatList extends HookWidget {
                 if (!scrollController.hasClients) return;
                 scrollController.animateTo(
                   0,
-                  duration: const Duration(milliseconds: 200),
+                  duration: _kAnimationDuration,
                   curve: Curves.easeOut,
                 );
               });
@@ -125,7 +134,7 @@ class WnChatList extends HookWidget {
           if (reveal > peakReveal.value) {
             peakReveal.value = reveal;
           }
-          if (peakReveal.value >= 0.5 && notification.dragDetails != null) {
+          if (peakReveal.value >= _kOpenThreshold && notification.dragDetails != null) {
             headerOpen.value = true;
             headerRevealController.animateTo(1.0, curve: Curves.easeOut);
             peakReveal.value = 1.0;
@@ -133,7 +142,7 @@ class WnChatList extends HookWidget {
               if (!scrollController.hasClients) return;
               scrollController.animateTo(
                 0,
-                duration: const Duration(milliseconds: 200),
+                duration: _kAnimationDuration,
                 curve: Curves.easeOut,
               );
             });
@@ -150,7 +159,7 @@ class WnChatList extends HookWidget {
             if (!scrollController.hasClients) return;
             scrollController.animateTo(
               0,
-              duration: const Duration(milliseconds: 200),
+              duration: _kAnimationDuration,
               curve: Curves.easeOut,
             );
             headerRevealController.animateTo(0.0, curve: Curves.easeOut);
@@ -178,8 +187,8 @@ class WnChatList extends HookWidget {
               controller: scrollController,
               padding: EdgeInsets.only(
                 top: topPadding + headerOffset + 16.h,
-                left: 10.w,
-                right: 10.w,
+                left: horizontalPadding,
+                right: horizontalPadding,
               ),
               physics: const AlwaysScrollableScrollPhysics(
                 parent: BouncingScrollPhysics(),
@@ -191,8 +200,8 @@ class WnChatList extends HookWidget {
               Positioned(
                 key: const Key('chat_list_header'),
                 top: topPadding,
-                left: 10.w,
-                right: 10.w,
+                left: horizontalPadding,
+                right: horizontalPadding,
                 child: ClipRect(
                   child: Align(
                     alignment: Alignment.topCenter,

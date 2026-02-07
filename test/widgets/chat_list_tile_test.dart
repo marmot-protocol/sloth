@@ -176,7 +176,7 @@ void main() {
               tester,
               _chatSummary(
                 pendingConfirmation: true,
-                welcomerPubkey: 'welcomer-pubkey',
+                welcomerPubkey: testPubkeyB,
               ),
             );
             final finder = find.byType(WnChatListItem);
@@ -200,7 +200,7 @@ void main() {
               tester,
               _chatSummary(
                 pendingConfirmation: true,
-                welcomerPubkey: 'welcomer-pubkey',
+                welcomerPubkey: testPubkeyB,
               ),
             );
             final finder = find.byType(WnChatListItem);
@@ -217,7 +217,7 @@ void main() {
               tester,
               _chatSummary(
                 pendingConfirmation: true,
-                welcomerPubkey: 'welcomer-pubkey',
+                welcomerPubkey: testPubkeyB,
               ),
             );
             final finder = find.byType(WnChatListItem);

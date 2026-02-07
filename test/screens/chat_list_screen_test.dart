@@ -186,8 +186,8 @@ void main() {
         await pumpChatListScreen(tester);
         final tiles = tester.widgetList<ChatListTile>(find.byType(ChatListTile)).toList();
 
-        expect(tiles.first.key, const Key(testPubkeyA));
-        expect(tiles.last.key, const Key(testPubkeyB));
+        expect(tiles.first.key, const Key(testPubkeyB));
+        expect(tiles.last.key, const Key(testPubkeyA));
       });
 
       testWidgets('hides empty state', (tester) async {
@@ -198,7 +198,7 @@ void main() {
 
       testWidgets('tapping pending chat navigates to invite screen', (tester) async {
         await pumpChatListScreen(tester);
-        await tester.tap(find.byType(ChatListTile).first);
+        await tester.tap(find.byType(ChatListTile).last);
         await tester.pumpAndSettle();
 
         expect(find.byType(ChatInviteScreen), findsOneWidget);
@@ -206,7 +206,7 @@ void main() {
 
       testWidgets('tapping accepted chat navigates to chat screen', (tester) async {
         await pumpChatListScreen(tester);
-        await tester.tap(find.byType(ChatListTile).last);
+        await tester.tap(find.byType(ChatListTile).first);
         await tester.pumpAndSettle();
 
         expect(find.byType(ChatScreen), findsOneWidget);
