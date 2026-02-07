@@ -149,6 +149,20 @@ void main() {
         });
 
         group('group', () {
+          testWidgets('uses group name as avatarName when present', (tester) async {
+            await pumpTile(
+              tester,
+              _chatSummary(
+                name: 'Dev Team',
+                pendingConfirmation: true,
+              ),
+            );
+            final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+            expect(item.title, 'Dev Team');
+            final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+            expect(avatar.displayName, 'Dev Team');
+          });
+
           testWidgets('shows welcomer name in invite when available', (tester) async {
             _api.welcomerMetadata = const FlutterMetadata(
               displayName: 'Charlie',

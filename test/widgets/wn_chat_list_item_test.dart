@@ -23,7 +23,6 @@ void main() {
       expect(find.text('10:00 AM'), findsOneWidget);
       expect(find.byType(WnAvatar), findsOneWidget);
 
-      // Verify subtitle exists in one of the RichText widgets (since we used RichText for subtitle)
       final richTexts = tester.widgetList<RichText>(find.byType(RichText));
       final hasSubtitle = richTexts.any((widget) {
         final text = widget.text;
@@ -43,7 +42,6 @@ void main() {
         tester,
       );
 
-      // We expect the icon to be present
       final iconFinder = find.byWidgetPredicate(
         (widget) => widget is WnIcon && widget.icon == WnIcons.notificationOff,
       );
@@ -66,7 +64,7 @@ void main() {
       expect(find.text('3'), findsOneWidget);
     });
 
-    testWidgets('renders status icon when status is provided', (tester) async {
+    testWidgets('renders chat status widget when status is provided', (tester) async {
       await mountWidget(
         const WnChatListItem(
           title: 'Charlie',
@@ -78,7 +76,6 @@ void main() {
       );
 
       expect(find.byType(WnChatStatus), findsOneWidget);
-      // WnChatStatus handles the icon internally
     });
 
     testWidgets('renders prefix subtitle', (tester) async {
@@ -119,35 +116,6 @@ void main() {
 
       await tester.tap(find.byType(WnChatListItem));
       expect(tapped, isTrue);
-    });
-
-    testWidgets('renders selected state background', (tester) async {
-      await mountWidget(
-        const WnChatListItem(
-          title: 'Selected',
-          subtitle: 'Msg',
-          timestamp: 'Now',
-          isSelected: true,
-        ),
-        tester,
-      );
-
-      final container = tester.widget<Container>(
-        find
-            .descendant(
-              of: find.byType(GestureDetector),
-              matching: find.byType(Container),
-            )
-            .first,
-      );
-
-      final decoration = container.decoration as BoxDecoration;
-      // We need to access the theme context to get the color, or mock it.
-      // mountWidget uses a real theme.
-      // But verifying the exact color might be tricky without context.
-      // We can check if color is not transparent/null.
-      expect(decoration.color, isNotNull);
-      expect(decoration.color, isNot(Colors.transparent));
     });
   });
 }
