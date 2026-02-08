@@ -61,6 +61,7 @@ whitenoise/
 │   ├── services/           # Stateless operations (API calls)
 │   ├── extensions/         # Dart extensions
 │   ├── utils/              # Utility functions
+│   ├── constants/          # Shared constants (fixed, related sets or reused elsewhere only)
 │   └── src/rust/           # Auto-generated Rust bridge code (DO NOT EDIT)
 ├── rust/                   # Rust source code
 │   └── src/api/            # API modules exposed to Flutter
@@ -69,6 +70,8 @@ whitenoise/
 ├── assets/                 # Images, SVGs, fonts
 └── scripts/                # Build/CI scripts
 ```
+
+Use `constants/` only for fixed, related sets (e.g. NIP kinds) or constants repeated in multiple places; otherwise keep constants next to the code that uses them.
 
 ## Setup Commands
 

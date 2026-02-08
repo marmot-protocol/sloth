@@ -5,6 +5,7 @@ import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/screens/home_screen.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:whitenoise/widgets/wn_icon.dart';
@@ -15,8 +16,37 @@ import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 class _MockApi extends MockWnApi {
+  bool _exportNsecThrows = false;
+  String? _exportThrowsForPubkey;
+  AccountType _accountType = AccountType.local;
+
+  void setExportNsecThrows(bool value) {
+    _exportNsecThrows = value;
+  }
+
+  void setExportThrowsForPubkey(String? pubkey) {
+    _exportThrowsForPubkey = pubkey;
+  }
+
+  void setAccountType(AccountType type) {
+    _accountType = type;
+  }
+
+  @override
+  Future<Account> crateApiAccountsGetAccount({required String pubkey}) async {
+    return Account(
+      pubkey: pubkey,
+      accountType: _accountType,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
   @override
   Future<String> crateApiAccountsExportAccountNsec({required String pubkey}) async {
+    if (_exportNsecThrows || pubkey == _exportThrowsForPubkey) {
+      throw Exception('Export error');
+    }
     return 'nsec1test${pubkey.substring(0, 10)}';
   }
 }
@@ -32,7 +62,7 @@ class _MockAuthNotifier extends AuthNotifier {
   }
 
   @override
-  Future<String?> logout({Future<void> Function()? onAndroidSignerDisconnect}) async {
+  Future<String?> logout() async {
     logoutCalled = true;
     if (nextPubkeyAfterLogout == null) {
       state = const AsyncData(null);
@@ -42,7 +72,19 @@ class _MockAuthNotifier extends AuthNotifier {
 }
 
 void main() {
-  setUpAll(() => RustLib.initMock(api: _MockApi()));
+  late _MockApi mockApi;
+
+  setUpAll(() {
+    mockApi = _MockApi();
+    RustLib.initMock(api: mockApi);
+  });
+
+  setUp(() {
+    mockApi.reset();
+    mockApi.setExportNsecThrows(false);
+    mockApi.setExportThrowsForPubkey(null);
+    mockApi.setAccountType(AccountType.local);
+  });
 
   late _MockAuthNotifier mockAuth;
 
@@ -76,6 +118,30 @@ void main() {
         find.textContaining('When you sign out of White Noise'),
         findsOneWidget,
       );
+      expect(
+        find.textContaining('If you haven\'t backed up your private key'),
+        findsOneWidget,
+      );
+    });
+
+    group('when nsec storage is external', () {
+      testWidgets('shows only sign-out warning without backup paragraph or section', (
+        tester,
+      ) async {
+        mockApi.setAccountType(AccountType.external_);
+        await pumpSignOutScreen(tester);
+        await tester.pumpAndSettle();
+        expect(
+          find.textContaining('When you sign out of White Noise'),
+          findsOneWidget,
+        );
+        expect(
+          find.textContaining('If you haven\'t backed up your private key'),
+          findsNothing,
+        );
+        expect(find.text('Back up your private key'), findsNothing);
+        expect(find.byType(WnCopyableField), findsNothing);
+      });
     });
 
     testWidgets('displays back up section', (tester) async {
@@ -200,6 +266,33 @@ void main() {
 
       expect(find.text('Are you sure you want to sign out?'), findsNothing);
       expect(find.byType(WnCopyableField), findsNothing);
+    });
+
+    testWidgets('shows error notice when nsec fails to load', (tester) async {
+      mockApi.setExportNsecThrows(true);
+      await pumpSignOutScreen(tester);
+      await tester.pumpAndSettle();
+
+      const errorText = 'Could not load private key. Please try again.';
+      for (var i = 0; i < 20; i++) {
+        await tester.pump(const Duration(milliseconds: 50));
+        if (tester.widgetList(find.text(errorText)).isNotEmpty) break;
+      }
+      expect(find.text(errorText), findsOneWidget);
+    });
+
+    testWidgets('dismisses error notice when nsec loads successfully after previous error', (
+      tester,
+    ) async {
+      mockApi.setExportThrowsForPubkey(testPubkeyA);
+      await pumpSignOutScreen(tester);
+      await tester.pumpAndSettle();
+      mockAuth.state = const AsyncData(testPubkeyB);
+      await tester.pumpAndSettle();
+      expect(
+        find.text('Could not load private key. Please try again.'),
+        findsNothing,
+      );
     });
   });
 }

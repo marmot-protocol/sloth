@@ -103,6 +103,30 @@ void main() {
       expect(find.text('Profiles'), findsNothing);
     });
 
+    testWidgets('tapping close while loading goes back', (tester) async {
+      final completer = Completer<List<Account>>();
+      mockApi.getAccountsCompleter = completer;
+      final notifier = _MockAuthNotifier(testPubkeyA);
+      await mountTestApp(
+        tester,
+        overrides: [
+          authProvider.overrideWith(() => notifier),
+          secureStorageProvider.overrideWithValue(MockSecureStorage()),
+        ],
+      );
+      Routes.pushToSettings(tester.element(find.byType(Scaffold)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      Routes.pushToSwitchProfile(tester.element(find.byType(Scaffold)));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 300));
+      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      await tester.tap(find.byKey(const Key('slate_close_button')));
+      completer.complete([]);
+      await tester.pumpAndSettle();
+      expect(find.text('Profiles'), findsNothing);
+    });
+
     testWidgets('displays list of accounts', (tester) async {
       await pumpSwitchProfileScreen(tester, testPubkeyA);
       expect(find.text('Display $testPubkeyA'), findsOneWidget);

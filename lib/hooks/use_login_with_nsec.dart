@@ -3,41 +3,41 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
 
-final _logger = Logger('useLogin');
+final _logger = Logger('useLoginWithNsec');
 
-class LoginState {
+class LoginWithNsecState {
   final bool isLoading;
   final String? error;
 
-  const LoginState({
+  const LoginWithNsecState({
     this.isLoading = false,
     this.error,
   });
 
-  LoginState copyWith({
+  LoginWithNsecState copyWith({
     bool? isLoading,
     String? error,
     bool clearError = false,
   }) {
-    return LoginState(
+    return LoginWithNsecState(
       isLoading: isLoading ?? this.isLoading,
       error: clearError ? null : (error ?? this.error),
     );
   }
 }
 
-typedef LoginCallback = Future<void> Function(String nsec);
+typedef LoginWithNsecCallback = Future<void> Function(String nsec);
 
 ({
-  TextEditingController controller,
-  LoginState state,
-  Future<void> Function() paste,
-  Future<bool> Function() submit,
-  void Function() clearError,
+  TextEditingController nsecInputController,
+  LoginWithNsecState loginWithNsecState,
+  Future<void> Function() pasteNsec,
+  Future<bool> Function() submitLoginWithNsec,
+  void Function() clearLoginWithNsecError,
 })
-useLogin(LoginCallback login) {
+useLoginWithNsec(LoginWithNsecCallback login) {
   final controller = useTextEditingController();
-  final state = useState(const LoginState());
+  final state = useState(const LoginWithNsecState());
 
   Future<void> paste() async {
     try {
@@ -91,10 +91,10 @@ useLogin(LoginCallback login) {
   }
 
   return (
-    controller: controller,
-    state: state.value,
-    paste: paste,
-    submit: submit,
-    clearError: clearError,
+    nsecInputController: controller,
+    loginWithNsecState: state.value,
+    pasteNsec: paste,
+    submitLoginWithNsec: submit,
+    clearLoginWithNsecError: clearError,
   );
 }

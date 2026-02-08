@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/constants/nostr_event_kinds.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/developer_settings_screen.dart';
@@ -76,7 +77,7 @@ List<FlutterEvent> _manyKeyPackages(int count) {
       id: 'pkg${i + 1}',
       pubkey: testPubkeyA,
       createdAt: DateTime.now(),
-      kind: 443,
+      kind: NostrEventKinds.mlsKeyPackage,
       tags: [],
       content: '',
     ),
@@ -141,7 +142,7 @@ void main() {
           id: 'pkg1',
           pubkey: testPubkeyA,
           createdAt: DateTime.now(),
-          kind: 443,
+          kind: NostrEventKinds.mlsKeyPackage,
           tags: [],
           content: '',
         ),
@@ -230,7 +231,7 @@ void main() {
             id: 'pkg1',
             pubkey: testPubkeyA,
             createdAt: DateTime.now(),
-            kind: 443,
+            kind: NostrEventKinds.mlsKeyPackage,
             tags: [],
             content: '',
           ),
@@ -266,7 +267,7 @@ void main() {
             id: 'pkg_to_delete',
             pubkey: testPubkeyA,
             createdAt: DateTime.now(),
-            kind: 443,
+            kind: NostrEventKinds.mlsKeyPackage,
             tags: [],
             content: '',
           ),

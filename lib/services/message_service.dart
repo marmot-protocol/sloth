@@ -1,15 +1,9 @@
 import 'package:logging/logging.dart';
+import 'package:whitenoise/constants/nostr_event_kinds.dart';
 import 'package:whitenoise/src/rust/api/messages.dart' as messages_api;
 import 'package:whitenoise/src/rust/api/utils.dart' as utils_api;
 
 final _logger = Logger('MessageService');
-
-// NIP-C7: https://github.com/nostr-protocol/nips/blob/master/C7.md
-const int _textMessageKind = 9;
-// NIP-09: https://github.com/nostr-protocol/nips/blob/master/09.md
-const int _deletionKind = 5;
-// NIP-25: https://github.com/nostr-protocol/nips/blob/master/25.md
-const int _reactionKind = 7;
 
 class MessageService {
   final String pubkey;
@@ -25,7 +19,7 @@ class MessageService {
       pubkey: pubkey,
       groupId: groupId,
       message: content,
-      kind: _textMessageKind,
+      kind: NostrEventKinds.chatMessage,
     );
     _logger.info('Message sent successfully');
   }
@@ -47,7 +41,7 @@ class MessageService {
       pubkey: pubkey,
       groupId: groupId,
       message: emoji,
-      kind: _reactionKind,
+      kind: NostrEventKinds.reaction,
       tags: tags,
     );
     _logger.info('Reaction sent successfully');
@@ -83,7 +77,7 @@ class MessageService {
     await _deleteEvent(
       eventId: messageId,
       eventPubkey: messagePubkey,
-      eventKind: _textMessageKind,
+      eventKind: NostrEventKinds.chatMessage,
     );
   }
 
@@ -94,7 +88,7 @@ class MessageService {
     await _deleteEvent(
       eventId: reactionId,
       eventPubkey: reactionPubkey,
-      eventKind: _reactionKind,
+      eventKind: NostrEventKinds.reaction,
     );
   }
 
@@ -116,7 +110,7 @@ class MessageService {
       groupId: groupId,
       message: '',
       tags: tags,
-      kind: _deletionKind,
+      kind: NostrEventKinds.deletion,
     );
     _logger.info('Event $eventId deleted successfully');
   }

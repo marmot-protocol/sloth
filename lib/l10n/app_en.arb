@@ -216,6 +216,16 @@
     "description": "Warning message about private key"
   },
 
+  "nsecOnExternalSigner": "Private key is stored in external signer",
+  "@nsecOnExternalSigner": {
+    "description": "Title when private key is on external signer"
+  },
+
+  "nsecOnExternalSignerDescription": "Your private key isn't available in White Noise. Open your signer to view or manage it.",
+  "@nsecOnExternalSignerDescription": {
+    "description": "Description when private key is on external signer"
+  },
+
   "editProfileTitle": "Edit profile",
   "@editProfileTitle": {
     "description": "Edit profile screen title"
@@ -294,6 +304,11 @@
   "profileLoadError": "Unable to load profile. Please try again.",
   "@profileLoadError": {
     "description": "User-friendly error when profile fails to load"
+  },
+
+  "failedToLoadPrivateKey": "Could not load private key. Please try again.",
+  "@failedToLoadPrivateKey": {
+    "description": "User-friendly error when nsec/private key fails to load"
   },
 
   "profileSaveError": "Unable to save profile. Please try again.",
@@ -391,9 +406,13 @@
     "description": "Sign out confirmation title"
   },
 
-  "signOutWarning": "When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.\n\nIf you haven't backed up your private key, you won't be able to use this profile on any other Nostr service.",
+  "signOutWarning": "When you sign out of White Noise, your chats will be deleted from this device and cannot be restored on another device.",
   "@signOutWarning": {
-    "description": "Sign out warning message"
+    "description": "Sign out warning first paragraph (chats deleted)"
+  },
+  "signOutWarningBackupKey": "If you haven't backed up your private key, you won't be able to use this profile on any other Nostr service.",
+  "@signOutWarningBackupKey": {
+    "description": "Sign out warning second paragraph (back up key, shown only for local storage)"
   },
 
   "backUpPrivateKey": "Back up your private key",
@@ -939,5 +958,49 @@
   "filterArchive": "Archive",
   "@filterArchive": {
     "description": "Chat list filter chip for archived chats"
+  },
+  "signerErrorUserRejected": "Login cancelled",
+  "@signerErrorUserRejected": {
+    "description": "Android signer error when user rejects the request"
+  },
+  "signerErrorNotConnected": "Not connected to signer. Please try again.",
+  "@signerErrorNotConnected": {
+    "description": "Android signer error when not connected"
+  },
+  "signerErrorNoSigner": "No signer app found. Please install a NIP-55 compatible signer.",
+  "@signerErrorNoSigner": {
+    "description": "Android signer error when no signer app is installed"
+  },
+  "signerErrorNoResponse": "No response from signer. Please try again.",
+  "@signerErrorNoResponse": {
+    "description": "Android signer error when signer does not respond"
+  },
+  "signerErrorNoPubkey": "Unable to get public key from signer.",
+  "@signerErrorNoPubkey": {
+    "description": "Android signer error when public key is not returned"
+  },
+  "signerErrorNoResult": "Signer did not return a result.",
+  "@signerErrorNoResult": {
+    "description": "Android signer error when signer returns no result"
+  },
+  "signerErrorNoEvent": "Signer did not return a signed event.",
+  "@signerErrorNoEvent": {
+    "description": "Android signer error when signed event is not returned"
+  },
+  "signerErrorRequestInProgress": "Another request is in progress. Please wait.",
+  "@signerErrorRequestInProgress": {
+    "description": "Android signer error when a request is already in progress"
+  },
+  "signerErrorNoActivity": "Unable to launch signer. Please try again.",
+  "@signerErrorNoActivity": {
+    "description": "Android signer error when signer cannot be launched"
+  },
+  "signerErrorLaunchError": "Failed to launch signer app.",
+  "@signerErrorLaunchError": {
+    "description": "Android signer error when launch fails"
+  },
+  "signerErrorUnknown": "An error occurred with the signer. Please try again.",
+  "@signerErrorUnknown": {
+    "description": "Android signer generic error message"
   }
 }

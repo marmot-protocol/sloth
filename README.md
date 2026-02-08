@@ -15,6 +15,7 @@ A secure, private, and decentralized chat app using the [marmot protocol 🦫](h
 
 ```
 lib/
+├── constants/     # Shared constants: fixed, related sets or reused elsewhere only
 ├── providers/     # Shared state
 ├── hooks/         # Ephemeral widget state
 ├── services/      # Stateless operations (API calls)

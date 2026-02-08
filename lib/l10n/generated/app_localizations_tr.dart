@@ -142,6 +142,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Özel anahtarınızı herkese açık paylaşmayın ve yalnızca diğer Nostr uygulamalarına giriş yapmak için kullanın.';
 
   @override
+  String get nsecOnExternalSigner => 'Özel anahtar harici bir imzalayıcıda saklanıyor';
+
+  @override
+  String get nsecOnExternalSignerDescription =>
+      'Özel anahtarınız White Noise\'da mevcut değil. Görüntülemek veya yönetmek için imzalayıcınızı açın.';
+
+  @override
   String get editProfileTitle => 'Profili düzenle';
 
   @override
@@ -187,6 +194,9 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get profileLoadError => 'Profil yüklenemedi. Lütfen tekrar deneyin.';
+
+  @override
+  String get failedToLoadPrivateKey => 'Özel anahtar yüklenemedi. Lütfen tekrar deneyin.';
 
   @override
   String get profileSaveError => 'Profil kaydedilemedi. Lütfen tekrar deneyin.';
@@ -250,7 +260,11 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get signOutWarning =>
-      'White Noise\'dan çıkış yaptığınızda, sohbetleriniz bu cihazdan silinecek ve başka bir cihazda geri yüklenemeyecektir.\n\nÖzel anahtarınızı yedeklemediyseniz, bu profili başka hiçbir Nostr hizmetinde kullanamazsınız.';
+      'White Noise\'dan çıkış yaptığınızda, sohbetleriniz bu cihazdan silinecek ve başka bir cihazda geri yüklenemeyecektir.';
+
+  @override
+  String get signOutWarningBackupKey =>
+      'Özel anahtarınızı yedeklemediyseniz, bu profili başka hiçbir Nostr hizmetinde kullanamazsınız.';
 
   @override
   String get backUpPrivateKey => 'Özel anahtarınızı yedekleyin';
@@ -589,4 +603,38 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get filterArchive => 'Arşiv';
+
+  @override
+  String get signerErrorUserRejected => 'Giriş iptal edildi';
+
+  @override
+  String get signerErrorNotConnected => 'Signer\'a bağlı değil. Lütfen tekrar deneyin.';
+
+  @override
+  String get signerErrorNoSigner =>
+      'Signer uygulaması bulunamadı. NIP-55 uyumlu bir signer yükleyin.';
+
+  @override
+  String get signerErrorNoResponse => 'Signer\'dan yanıt alınamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get signerErrorNoPubkey => 'Signer\'dan ortak anahtar alınamadı.';
+
+  @override
+  String get signerErrorNoResult => 'Signer sonuç döndürmedi.';
+
+  @override
+  String get signerErrorNoEvent => 'Signer imzalı etkinlik döndürmedi.';
+
+  @override
+  String get signerErrorRequestInProgress => 'Başka bir istek işleniyor. Lütfen bekleyin.';
+
+  @override
+  String get signerErrorNoActivity => 'Signer başlatılamadı. Lütfen tekrar deneyin.';
+
+  @override
+  String get signerErrorLaunchError => 'Signer uygulaması başlatılamadı.';
+
+  @override
+  String get signerErrorUnknown => 'Signer ile bir hata oluştu. Lütfen tekrar deneyin.';
 }

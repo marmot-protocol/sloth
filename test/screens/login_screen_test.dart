@@ -1,14 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
+import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData, ProviderScope;
+import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:whitenoise/providers/android_signer_service_provider.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/screens/home_screen.dart';
-import 'package:whitenoise/services/android_signer_service.dart';
+import 'package:whitenoise/screens/login_screen.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+
+import '../mocks/mock_android_signer_channel.dart';
 import '../mocks/mock_clipboard_paste.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -35,14 +43,19 @@ class _MockAuthNotifier extends AuthNotifier {
   bool loginWithSignerCalled = false;
   String? lastSignerPubkey;
   Exception? signerErrorToThrow;
+  Completer<void>? loginCompleter;
+  Completer<void>? signerLoginCompleter;
 
   @override
   Future<String?> build() async => null;
 
   @override
-  Future<void> login(String nsec) async {
+  Future<void> loginWithNsec(String nsec) async {
     loginCalled = true;
     lastNsec = nsec;
+    if (loginCompleter != null) {
+      await loginCompleter!.future;
+    }
     if (errorToThrow != null) throw errorToThrow!;
     state = const AsyncData(testPubkeyA);
   }
@@ -50,81 +63,23 @@ class _MockAuthNotifier extends AuthNotifier {
   @override
   Future<void> loginWithAndroidSigner({
     required String pubkey,
-    required Future<void> Function() onDisconnect,
   }) async {
     loginWithSignerCalled = true;
     lastSignerPubkey = pubkey;
+    if (signerLoginCompleter != null) {
+      await signerLoginCompleter!.future;
+    }
     if (signerErrorToThrow != null) throw signerErrorToThrow!;
     state = AsyncData(pubkey);
   }
 }
 
-class _MockAndroidSignerService implements AndroidSignerService {
-  @override
-  bool get platformIsAndroid => false;
-
-  bool _isAvailable = false;
-  String? _pubkeyToReturn;
-  Exception? _getPublicKeyError;
-
-  void setAvailable(bool value) => _isAvailable = value;
-  void setPubkeyToReturn(String value) => _pubkeyToReturn = value;
-  void setGetPublicKeyError(Exception? value) => _getPublicKeyError = value;
-
-  @override
-  Future<bool> isAvailable() async => _isAvailable;
-
-  @override
-  Future<String> getPublicKey({List<SignerPermission>? permissions}) async {
-    if (_getPublicKeyError != null) throw _getPublicKeyError!;
-    return _pubkeyToReturn ?? testPubkeyA;
-  }
-
-  @override
-  Future<AndroidSignerResponse> signEvent({
-    required String eventJson,
-    String? id,
-    String? currentUser,
-  }) async => throw UnimplementedError();
-
-  @override
-  Future<String> nip04Encrypt({
-    required String plaintext,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async => throw UnimplementedError();
-
-  @override
-  Future<String> nip04Decrypt({
-    required String encryptedText,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async => throw UnimplementedError();
-
-  @override
-  Future<String> nip44Encrypt({
-    required String plaintext,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async => throw UnimplementedError();
-
-  @override
-  Future<String> nip44Decrypt({
-    required String encryptedText,
-    required String pubkey,
-    String? currentUser,
-    String? id,
-  }) async => throw UnimplementedError();
-
-  @override
-  Future<String?> getSignerPackageName() async => null;
-
-  @override
-  Future<void> setSignerPackageName(String packageName) async {}
-}
+const _localizationsDelegates = [
+  AppLocalizations.delegate,
+  GlobalMaterialLocalizations.delegate,
+  GlobalWidgetsLocalizations.delegate,
+  GlobalCupertinoLocalizations.delegate,
+];
 
 void main() {
   setUpAll(() {
@@ -132,26 +87,41 @@ void main() {
   });
 
   late _MockAuthNotifier mockAuth;
-  late _MockAndroidSignerService mockSignerService;
+  late MockAndroidSignerChannel mockSignerChannel;
 
   Future<void> pumpLoginScreen(
     WidgetTester tester, {
     bool signerAvailable = false,
   }) async {
     mockAuth = _MockAuthNotifier();
-    mockSignerService = _MockAndroidSignerService();
-    mockSignerService.setAvailable(signerAvailable);
-    mockSignerService.setPubkeyToReturn(testPubkeyA);
+    mockSignerChannel = mockAndroidSignerChannel();
+    addTearDown(mockSignerChannel.reset);
 
-    await mountTestApp(
-      tester,
-      overrides: [
-        authProvider.overrideWith(() => mockAuth),
-        androidSignerServiceProvider.overrideWithValue(mockSignerService),
-      ],
-    );
-
-    Routes.pushToLogin(tester.element(find.byType(Scaffold)));
+    if (signerAvailable) {
+      mockSignerChannel.setResult('isExternalSignerInstalled', true);
+      mockSignerChannel.setResult('getPublicKey', {'result': testPubkeyA});
+      setUpTestView(tester);
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [authProvider.overrideWith(() => mockAuth)],
+          child: ScreenUtilInit(
+            designSize: testDesignSize,
+            builder: (_, _) => const MaterialApp(
+              locale: Locale('en'),
+              localizationsDelegates: _localizationsDelegates,
+              supportedLocales: AppLocalizations.supportedLocales,
+              home: LoginScreen(),
+            ),
+          ),
+        ),
+      );
+    } else {
+      await mountTestApp(
+        tester,
+        overrides: [authProvider.overrideWith(() => mockAuth)],
+      );
+      Routes.pushToLogin(tester.element(find.byType(Scaffold)));
+    }
     await tester.pumpAndSettle();
   }
 
@@ -245,50 +215,367 @@ void main() {
       });
     });
 
+    group('button type by signer and nsec', () {
+      testWidgets('login button is primary when signer is unavailable', (tester) async {
+        await pumpLoginScreen(tester);
+        final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+        expect(loginButton.type, WnButtonType.primary);
+      });
+
+      testWidgets(
+        'login is outline and signer is primary when signer available and nsec empty',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+          final signerButton = tester.widget<WnButton>(
+            find.byKey(const Key('android_signer_login_button')),
+          );
+          expect(loginButton.type, WnButtonType.outline);
+          expect(signerButton.type, WnButtonType.primary);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+
+      testWidgets(
+        'login is primary and signer is outline when signer available and nsec entered',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          await tester.enterText(find.byType(TextField), 'nsec1abc');
+          await tester.pump();
+          final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+          final signerButton = tester.widget<WnButton>(
+            find.byKey(const Key('android_signer_login_button')),
+          );
+          expect(loginButton.type, WnButtonType.primary);
+          expect(signerButton.type, WnButtonType.outline);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+    });
+
     group('Android signer login', () {
       testWidgets('does not show signer button when signer unavailable', (tester) async {
         await pumpLoginScreen(tester);
         expect(find.byKey(const Key('android_signer_login_button')), findsNothing);
       });
 
-      testWidgets('shows signer button when signer is available', (tester) async {
-        await pumpLoginScreen(tester, signerAvailable: true);
-        expect(find.byKey(const Key('android_signer_login_button')), findsOneWidget);
-      });
+      testWidgets(
+        'shows signer button when signer is available',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          expect(find.byKey(const Key('android_signer_login_button')), findsOneWidget);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
 
-      testWidgets('calls loginWithAndroidSigner when signer button is tapped', (tester) async {
-        await pumpLoginScreen(tester, signerAvailable: true);
-        await tester.tap(find.byKey(const Key('android_signer_login_button')));
-        await tester.pumpAndSettle();
-        expect(mockAuth.loginWithSignerCalled, isTrue);
-        expect(mockAuth.lastSignerPubkey, testPubkeyA);
-      });
+      group('when signer is loading', () {
+        testWidgets(
+          'signer button is loading',
+          (tester) async {
+            await pumpLoginScreen(tester, signerAvailable: true);
+            final getPublicKeyCompleter = Completer<Map<String, dynamic>>();
+            mockSignerChannel.setResult('getPublicKey', getPublicKeyCompleter.future);
+            await tester.tap(find.byKey(const Key('android_signer_login_button')));
+            await tester.pump();
 
-      testWidgets('redirects to chat list on successful signer login', (tester) async {
-        await pumpLoginScreen(tester, signerAvailable: true);
-        await tester.tap(find.byKey(const Key('android_signer_login_button')));
-        await tester.pumpAndSettle();
-        expect(find.byType(ChatListScreen), findsOneWidget);
-      });
-
-      testWidgets('shows user-friendly error for AndroidSignerException', (tester) async {
-        await pumpLoginScreen(tester, signerAvailable: true);
-        mockSignerService.setGetPublicKeyError(
-          const AndroidSignerException('USER_REJECTED', 'User rejected'),
+            final signerButton = tester.widget<WnButton>(
+              find.byKey(const Key('android_signer_login_button')),
+            );
+            expect(signerButton.loading, isTrue);
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
         );
-        await tester.tap(find.byKey(const Key('android_signer_login_button')));
-        await tester.pumpAndSettle();
-        expect(find.text('Login cancelled'), findsOneWidget);
-        expect(find.byType(ChatListScreen), findsNothing);
+
+        testWidgets(
+          'login button is disabled',
+          (tester) async {
+            await pumpLoginScreen(tester, signerAvailable: true);
+            final getPublicKeyCompleter = Completer<Map<String, dynamic>>();
+            mockSignerChannel.setResult('getPublicKey', getPublicKeyCompleter.future);
+            await tester.tap(find.byKey(const Key('android_signer_login_button')));
+            await tester.pump();
+            final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+            expect(loginButton.disabled, isTrue);
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+      });
+      testWidgets(
+        'calls loginWithAndroidSigner when signer button is tapped',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          mockAuth.signerLoginCompleter = Completer<void>();
+          await tester.tap(find.byKey(const Key('android_signer_login_button')));
+          await tester.pump();
+          expect(mockAuth.loginWithSignerCalled, isTrue);
+          expect(mockAuth.lastSignerPubkey, testPubkeyA);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+
+      testWidgets(
+        'shows user-friendly error for AndroidSignerException',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          mockSignerChannel.setException(
+            'getPublicKey',
+            PlatformException(code: 'USER_REJECTED', message: 'User rejected'),
+          );
+          await tester.tap(find.byKey(const Key('android_signer_login_button')));
+          await tester.pumpAndSettle();
+          expect(find.text('Login cancelled'), findsOneWidget);
+          expect(find.byType(ChatListScreen), findsNothing);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+
+      testWidgets(
+        'shows generic error for other exceptions',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          mockSignerChannel.setException(
+            'getPublicKey',
+            PlatformException(code: 'UNKNOWN', message: 'Network error'),
+          );
+          await tester.tap(find.byKey(const Key('android_signer_login_button')));
+          await tester.pumpAndSettle();
+          expect(
+            find.textContaining('An error occurred with the signer. Please try again.'),
+            findsOneWidget,
+          );
+          expect(find.byType(ChatListScreen), findsNothing);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+
+      group('signer error messages', () {
+        Future<void> testSignerError(
+          WidgetTester tester,
+          String errorCode,
+          String expectedMessage,
+        ) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          mockSignerChannel.setException(
+            'getPublicKey',
+            PlatformException(code: errorCode, message: errorCode),
+          );
+          await tester.tap(find.byKey(const Key('android_signer_login_button')));
+          await tester.pumpAndSettle();
+          expect(find.text(expectedMessage), findsOneWidget);
+        }
+
+        testWidgets(
+          'NOT_CONNECTED shows connection error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NOT_CONNECTED',
+              'Not connected to signer. Please try again.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'NO_SIGNER shows no signer error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NO_SIGNER',
+              'No signer app found. Please install a NIP-55 compatible signer.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'NO_RESPONSE shows no response error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NO_RESPONSE',
+              'No response from signer. Please try again.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'NO_PUBKEY shows no pubkey error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NO_PUBKEY',
+              'Unable to get public key from signer.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'NO_RESULT shows no result error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NO_RESULT',
+              'Signer did not return a result.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'NO_EVENT shows no event error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NO_EVENT',
+              'Signer did not return a signed event.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'NO_ACTIVITY shows no activity error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'NO_ACTIVITY',
+              'Unable to launch signer. Please try again.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'LAUNCH_ERROR shows launch error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'LAUNCH_ERROR',
+              'Failed to launch signer app.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'CONNECTION_ERROR shows connection error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'CONNECTION_ERROR',
+              'Unable to connect to signer. Please try again.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
+
+        testWidgets(
+          'REQUEST_IN_PROGRESS shows request in progress error',
+          (tester) async {
+            await testSignerError(
+              tester,
+              'REQUEST_IN_PROGRESS',
+              'Another request is in progress. Please wait.',
+            );
+          },
+          variant: TargetPlatformVariant.only(TargetPlatform.android),
+        );
       });
 
-      testWidgets('shows generic error for other exceptions', (tester) async {
-        await pumpLoginScreen(tester, signerAvailable: true);
-        mockSignerService.setGetPublicKeyError(Exception('Network error'));
-        await tester.tap(find.byKey(const Key('android_signer_login_button')));
+      testWidgets(
+        'redirects to chat list on successful login with signer',
+        (tester) async {
+          mockAuth = _MockAuthNotifier();
+          mockSignerChannel = mockAndroidSignerChannel();
+          addTearDown(mockSignerChannel.reset);
+          mockSignerChannel.setResult('isExternalSignerInstalled', true);
+          mockSignerChannel.setResult('getPublicKey', {'result': testPubkeyA});
+
+          await mountTestApp(
+            tester,
+            overrides: [authProvider.overrideWith(() => mockAuth)],
+          );
+          Routes.pushToLogin(tester.element(find.byType(Scaffold)));
+          await tester.pumpAndSettle();
+
+          await tester.tap(find.byKey(const Key('android_signer_login_button')));
+          await tester.pumpAndSettle();
+          expect(find.byType(ChatListScreen), findsOneWidget);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+    });
+
+    group('nsec input', () {
+      testWidgets('clears error when typing', (tester) async {
+        await pumpLoginScreen(tester);
+        mockAuth.errorToThrow = Exception('Invalid key');
+        await tester.enterText(find.byType(TextField), 'nsec1test');
+        await tester.tap(find.byKey(const Key('login_button')));
         await tester.pumpAndSettle();
-        expect(find.textContaining('Unable to connect to signer'), findsOneWidget);
-        expect(find.byType(ChatListScreen), findsNothing);
+        expect(
+          find.textContaining('Oh no! An error occurred, please try again.'),
+          findsOneWidget,
+        );
+
+        await tester.enterText(find.byType(TextField), 'nsec1new');
+        await tester.pumpAndSettle();
+        expect(
+          find.textContaining('Oh no! An error occurred, please try again.'),
+          findsNothing,
+        );
+      });
+
+      testWidgets('does not call login when nsec is empty', (tester) async {
+        await pumpLoginScreen(tester);
+        await tester.tap(find.byKey(const Key('login_button')));
+        await tester.pump();
+        expect(mockAuth.loginCalled, isFalse);
+      });
+    });
+
+    group('when nsec login is loading', () {
+      testWidgets('login button shows loading', (tester) async {
+        await pumpLoginScreen(tester);
+        final completer = Completer<void>();
+        mockAuth.loginCompleter = completer;
+
+        await tester.enterText(find.byType(TextField), 'nsec1test');
+        await tester.tap(find.byKey(const Key('login_button')));
+        await tester.pump();
+
+        final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+        expect(loginButton.loading, isTrue);
+
+        completer.complete();
+      });
+
+      testWidgets(
+        'signer button is disabled',
+        (tester) async {
+          await pumpLoginScreen(tester, signerAvailable: true);
+          mockAuth.loginCompleter = Completer<void>();
+
+          await tester.enterText(find.byType(TextField), 'nsec1test');
+          await tester.tap(find.byKey(const Key('login_button')));
+          await tester.pump();
+
+          final signerButton = tester.widget<WnButton>(
+            find.byKey(const Key('android_signer_login_button')),
+          );
+          expect(signerButton.disabled, isTrue);
+        },
+        variant: TargetPlatformVariant.only(TargetPlatform.android),
+      );
+    });
+
+    group('scan button', () {
+      testWidgets('displays scan button', (tester) async {
+        await pumpLoginScreen(tester);
+        expect(find.byKey(const Key('scan_button')), findsOneWidget);
       });
     });
   });

@@ -3,10 +3,9 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:whitenoise/hooks/use_android_signer.dart';
 import 'package:whitenoise/hooks/use_nsec.dart';
+import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/l10n/l10n.dart';
-import 'package:whitenoise/providers/android_signer_service_provider.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/theme.dart';
@@ -15,7 +14,8 @@ import 'package:whitenoise/widgets/wn_callout.dart';
 import 'package:whitenoise/widgets/wn_copyable_field.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
-import 'package:whitenoise/widgets/wn_system_notice.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart'
+    show WnSystemNotice, WnSystemNoticeType, WnSystemNoticeVariant;
 
 class SignOutScreen extends HookConsumerWidget {
   const SignOutScreen({super.key});
@@ -24,30 +24,20 @@ class SignOutScreen extends HookConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final colors = context.colors;
     final pubkey = ref.watch(authProvider).value;
-    final (:state, :loadNsec) = useNsec(pubkey);
-    final signerService = ref.watch(androidSignerServiceProvider);
-    final androidSigner = useAndroidSigner(signerService);
+    final (:nsecState) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
-    final noticeMessage = useState<String?>(null);
-    final isUsingExternalSigner = useState<bool?>(null);
+    final (:noticeMessage, :noticeType, :showSuccessNotice, :showErrorNotice, :dismissNotice) =
+        useSystemNotice();
 
     useEffect(() {
-      var disposed = false;
-      loadNsec();
-
-      Future<void> checkSignerType() async {
-        final isExternal = await ref.read(authProvider.notifier).isUsingAndroidSigner();
-        if (!disposed) {
-          isUsingExternalSigner.value = isExternal;
-        }
+      if (nsecState.error != null) {
+        Future.microtask(() => showErrorNotice('failedToLoadPrivateKey'));
+      } else {
+        dismissNotice();
       }
-
-      checkSignerType();
-      return () {
-        disposed = true;
-      };
-    }, [pubkey]);
+      return null;
+    }, [nsecState.error]);
 
     if (pubkey == null) {
       return const SizedBox.shrink();
@@ -57,21 +47,9 @@ class SignOutScreen extends HookConsumerWidget {
       obscurePrivateKey.value = !obscurePrivateKey.value;
     }
 
-    void showCopiedNotice(String message) {
-      noticeMessage.value = message;
-    }
-
-    void dismissNotice() {
-      noticeMessage.value = null;
-    }
-
     Future<void> signOut() async {
       isLoggingOut.value = true;
-      final nextPubkey = await ref
-          .read(authProvider.notifier)
-          .logout(
-            onAndroidSignerDisconnect: androidSigner.disconnect,
-          );
+      final nextPubkey = await ref.read(authProvider.notifier).logout();
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (context.mounted) {
           if (nextPubkey != null) {
@@ -94,10 +72,14 @@ class SignOutScreen extends HookConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
-            systemNotice: noticeMessage.value != null
+            systemNotice: noticeMessage != null
                 ? WnSystemNotice(
-                    key: ValueKey(noticeMessage.value),
-                    title: noticeMessage.value!,
+                    key: ValueKey(noticeMessage),
+                    title: _noticeMessageL10n(context, noticeMessage),
+                    type: noticeType,
+                    variant: noticeType == WnSystemNoticeType.error
+                        ? WnSystemNoticeVariant.dismissible
+                        : WnSystemNoticeVariant.temporary,
                     onDismiss: dismissNotice,
                   )
                 : null,
@@ -114,10 +96,12 @@ class SignOutScreen extends HookConsumerWidget {
                           Gap(24.h),
                           WnCallout(
                             title: context.l10n.signOutConfirmation,
-                            description: context.l10n.signOutWarning,
+                            description: nsecState.nsecStorage == NsecStorage.local
+                                ? '${context.l10n.signOutWarning}\n\n${context.l10n.signOutWarningBackupKey}'
+                                : context.l10n.signOutWarning,
                             type: CalloutType.warning,
                           ),
-                          if (isUsingExternalSigner.value == false) ...[
+                          if (nsecState.nsecStorage == NsecStorage.local) ...[
                             Gap(24.h),
                             Text(
                               context.l10n.backUpPrivateKey,
@@ -135,11 +119,11 @@ class SignOutScreen extends HookConsumerWidget {
                             Gap(16.h),
                             WnCopyableField(
                               label: context.l10n.privateKey,
-                              value: state.nsec ?? '',
+                              value: nsecState.nsec ?? '',
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,
-                              onCopied: () => showCopiedNotice(context.l10n.privateKeyCopied),
+                              onCopied: () => showSuccessNotice('privateKeyCopied'),
                             ),
                           ],
                           Gap(32.h),
@@ -164,5 +148,17 @@ class SignOutScreen extends HookConsumerWidget {
         ),
       ),
     );
+  }
+}
+
+String _noticeMessageL10n(BuildContext context, String key) {
+  final l10n = context.l10n;
+  switch (key) {
+    case 'failedToLoadPrivateKey':
+      return l10n.failedToLoadPrivateKey;
+    case 'privateKeyCopied':
+      return l10n.privateKeyCopied;
+    default:
+      return key;
   }
 }

@@ -1,9 +1,64 @@
+import 'dart:async';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/constants/nostr_event_kinds.dart';
 import 'package:whitenoise/services/android_signer_service.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 
 import '../mocks/mock_android_signer_channel.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
+
+class _SignerCallbackCaptureMock extends MockWnApi {
+  bool registerExternalSignerCalled = false;
+  FutureOr<String> Function(String)? signEventCallback;
+  FutureOr<String> Function(String, String)? nip04EncryptCallback;
+  FutureOr<String> Function(String, String)? nip04DecryptCallback;
+  FutureOr<String> Function(String, String)? nip44EncryptCallback;
+  FutureOr<String> Function(String, String)? nip44DecryptCallback;
+
+  @override
+  Future<Account> crateApiSignerLoginWithExternalSignerAndCallbacks({
+    required String pubkey,
+    required FutureOr<String> Function(String) signEvent,
+    required FutureOr<String> Function(String, String) nip04Encrypt,
+    required FutureOr<String> Function(String, String) nip04Decrypt,
+    required FutureOr<String> Function(String, String) nip44Encrypt,
+    required FutureOr<String> Function(String, String) nip44Decrypt,
+  }) async {
+    signEventCallback = signEvent;
+    nip04EncryptCallback = nip04Encrypt;
+    nip04DecryptCallback = nip04Decrypt;
+    nip44EncryptCallback = nip44Encrypt;
+    nip44DecryptCallback = nip44Decrypt;
+    return Account(
+      pubkey: pubkey,
+      accountType: AccountType.external_,
+      createdAt: DateTime.now(),
+      updatedAt: DateTime.now(),
+    );
+  }
+
+  @override
+  Future<void> crateApiSignerRegisterExternalSigner({
+    required String pubkey,
+    required FutureOr<String> Function(String) signEvent,
+    required FutureOr<String> Function(String, String) nip04Encrypt,
+    required FutureOr<String> Function(String, String) nip04Decrypt,
+    required FutureOr<String> Function(String, String) nip44Encrypt,
+    required FutureOr<String> Function(String, String) nip44Decrypt,
+  }) async {
+    registerExternalSignerCalled = true;
+    signEventCallback = signEvent;
+    nip04EncryptCallback = nip04Encrypt;
+    nip04DecryptCallback = nip04Decrypt;
+    nip44EncryptCallback = nip44Encrypt;
+    nip44DecryptCallback = nip44Decrypt;
+  }
+}
 
 void main() {
   group('AndroidSignerException', () {
@@ -12,67 +67,10 @@ void main() {
       expect(exception.toString(), 'AndroidSignerException(TEST_CODE): Test message');
     });
 
-    group('userFriendlyMessage', () {
-      test('returns correct message for USER_REJECTED', () {
-        const exception = AndroidSignerException('USER_REJECTED', 'User rejected');
-        expect(exception.userFriendlyMessage, 'Login cancelled');
-      });
-
-      test('returns correct message for NOT_CONNECTED', () {
-        const exception = AndroidSignerException('NOT_CONNECTED', 'Not connected');
-        expect(exception.userFriendlyMessage, 'Not connected to signer. Please try again.');
-      });
-
-      test('returns correct message for NO_SIGNER', () {
-        const exception = AndroidSignerException('NO_SIGNER', 'No signer');
-        expect(
-          exception.userFriendlyMessage,
-          'No signer app found. Please install a NIP-55 compatible signer.',
-        );
-      });
-
-      test('returns correct message for NO_RESPONSE', () {
-        const exception = AndroidSignerException('NO_RESPONSE', 'No response');
-        expect(exception.userFriendlyMessage, 'No response from signer. Please try again.');
-      });
-
-      test('returns correct message for NO_PUBKEY', () {
-        const exception = AndroidSignerException('NO_PUBKEY', 'No pubkey');
-        expect(exception.userFriendlyMessage, 'Unable to get public key from signer.');
-      });
-
-      test('returns correct message for NO_RESULT', () {
-        const exception = AndroidSignerException('NO_RESULT', 'No result');
-        expect(exception.userFriendlyMessage, 'Signer did not return a result.');
-      });
-
-      test('returns correct message for NO_EVENT', () {
-        const exception = AndroidSignerException('NO_EVENT', 'No event');
-        expect(exception.userFriendlyMessage, 'Signer did not return a signed event.');
-      });
-
-      test('returns correct message for REQUEST_IN_PROGRESS', () {
-        const exception = AndroidSignerException('REQUEST_IN_PROGRESS', 'In progress');
-        expect(exception.userFriendlyMessage, 'Another request is in progress. Please wait.');
-      });
-
-      test('returns correct message for NO_ACTIVITY', () {
-        const exception = AndroidSignerException('NO_ACTIVITY', 'No activity');
-        expect(exception.userFriendlyMessage, 'Unable to launch signer. Please try again.');
-      });
-
-      test('returns correct message for LAUNCH_ERROR', () {
-        const exception = AndroidSignerException('LAUNCH_ERROR', 'Launch error');
-        expect(exception.userFriendlyMessage, 'Failed to launch signer app.');
-      });
-
-      test('returns generic message for unknown error code', () {
-        const exception = AndroidSignerException('UNKNOWN_CODE', 'Unknown error');
-        expect(
-          exception.userFriendlyMessage,
-          'An error occurred with the signer. Please try again.',
-        );
-      });
+    test('exposes code and message', () {
+      const exception = AndroidSignerException('USER_REJECTED', 'User rejected');
+      expect(exception.code, 'USER_REJECTED');
+      expect(exception.message, 'User rejected');
     });
   });
 
@@ -121,67 +119,99 @@ void main() {
     });
 
     test('toJson includes kind when provided', () {
-      const permission = SignerPermission(type: 'sign_event', kind: 443);
-      expect(permission.toJson(), {'type': 'sign_event', 'kind': 443});
+      final permission = const SignerPermission(
+        type: 'sign_event',
+        kind: NostrEventKinds.mlsKeyPackage,
+      );
+      expect(permission.toJson(), {'type': 'sign_event', 'kind': NostrEventKinds.mlsKeyPackage});
     });
   });
 
   group('AndroidSignerService', () {
-    group('isAvailable', () {
-      test('returns false on non-Android platform', () async {
-        const service = AndroidSignerService(platformIsAndroid: false);
-        final result = await service.isAvailable();
-        expect(result, isFalse);
-      });
-    });
-  });
-
-  group('AndroidSignerService with mocked channel', () {
-    late dynamic mockAndroidSigner;
+    late MockAndroidSignerChannel mockAndroidSigner;
+    late _SignerCallbackCaptureMock signerMock;
 
     setUpAll(() {
       TestWidgetsFlutterBinding.ensureInitialized();
+      signerMock = _SignerCallbackCaptureMock();
+      RustLib.initMock(api: signerMock);
     });
 
     setUp(() {
       mockAndroidSigner = mockAndroidSignerChannel();
+      debugDefaultTargetPlatformOverride = TargetPlatform.android;
     });
 
     tearDown(() {
       mockAndroidSigner.reset();
+      debugDefaultTargetPlatformOverride = null;
     });
 
     group('isAvailable', () {
-      test('returns true when channel returns true', () async {
-        mockAndroidSigner.setResult('isExternalSignerInstalled', true);
+      group('on ios', () {
+        setUp(() {
+          debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+        });
 
-        const service = AndroidSignerService(platformIsAndroid: true);
-        final result = await service.isAvailable();
-
-        expect(result, isTrue);
-        expect(mockAndroidSigner.log.single.method, 'isExternalSignerInstalled');
+        test('returns false', () async {
+          const service = AndroidSignerService();
+          final result = await service.isAvailable();
+          expect(result, isFalse);
+        });
       });
 
-      test('returns false when channel returns null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
-        final result = await service.isAvailable();
+      group('when signer is available', () {
+        setUp(() {
+          mockAndroidSigner.setResult('isExternalSignerInstalled', true);
+        });
 
-        expect(result, isFalse);
+        test('returns true', () async {
+          const androidSignerService = AndroidSignerService();
+          expect(await androidSignerService.isAvailable(), isTrue);
+        });
       });
 
-      test('returns false on PlatformException', () async {
-        mockAndroidSigner.setException(
-          'isExternalSignerInstalled',
-          PlatformException(code: 'ERROR', message: 'Signer check failed'),
-        );
+      group('when signer is not available', () {
+        group('when signer returns null', () {
+          setUp(() {
+            mockAndroidSigner.setResult('isExternalSignerInstalled', null);
+          });
 
-        const service = AndroidSignerService(platformIsAndroid: true);
-        final result = await service.isAvailable();
+          test('returns false', () async {
+            const androidSignerService = AndroidSignerService();
+            expect(await androidSignerService.isAvailable(), isFalse);
+          });
+        });
 
-        expect(result, isFalse);
+        group('when signer throws Platform error', () {
+          setUp(() {
+            mockAndroidSigner.setException(
+              'isExternalSignerInstalled',
+              PlatformException(code: 'ERROR', message: 'Signer check failed'),
+            );
+          });
+
+          test('returns false', () async {
+            const androidSignerService = AndroidSignerService();
+            expect(await androidSignerService.isAvailable(), isFalse);
+          });
+        });
+
+        group('when signer throws non-Platform error', () {
+          setUp(() {
+            mockAndroidSigner.setError(
+              'isExternalSignerInstalled',
+              StateError('channel failed'),
+            );
+          });
+
+          test('returns false', () async {
+            const androidSignerService = AndroidSignerService();
+            expect(await androidSignerService.isAvailable(), isFalse);
+          });
+        });
       });
     });
-
     group('getPublicKey', () {
       test('returns pubkey when signer responds successfully', () async {
         mockAndroidSigner.setResult('getPublicKey', {
@@ -189,7 +219,7 @@ void main() {
           'package': 'com.amber.signer',
         });
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final pubkey = await service.getPublicKey();
 
         expect(pubkey, testPubkeyA);
@@ -198,23 +228,21 @@ void main() {
         expect(mockAndroidSigner.log[1].method, 'setSignerPackageName');
       });
 
-      test('includes permissions in request when provided', () async {
+      test('sends default permissions in request', () async {
         mockAndroidSigner.setResult('getPublicKey', {'result': testPubkeyA});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
-        await service.getPublicKey(
-          permissions: [
-            const SignerPermission(type: 'sign_event', kind: 443),
-          ],
-        );
+        const service = AndroidSignerService();
+        await service.getPublicKey();
 
-        expect(mockAndroidSigner.log.first.arguments['permissions'], isNotNull);
-        expect(mockAndroidSigner.log.first.arguments['permissions'], contains('sign_event'));
-        expect(mockAndroidSigner.log.first.arguments['permissions'], contains('443'));
+        final permissionsJson = mockAndroidSigner.log.first.arguments['permissions'] as String?;
+        expect(permissionsJson, isNotNull);
+        expect(permissionsJson!, contains('sign_event'));
+        expect(permissionsJson, contains('nip44_encrypt'));
+        expect(permissionsJson, contains('nip44_decrypt'));
       });
 
       test('throws AndroidSignerException when result is null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.getPublicKey(),
           throwsA(
@@ -226,7 +254,7 @@ void main() {
       test('throws AndroidSignerException when pubkey is empty', () async {
         mockAndroidSigner.setResult('getPublicKey', {'result': ''});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.getPublicKey(),
           throwsA(
@@ -241,7 +269,7 @@ void main() {
           PlatformException(code: 'USER_REJECTED', message: 'User rejected'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.getPublicKey(),
           throwsA(
@@ -255,7 +283,7 @@ void main() {
       test('returns response when signer responds with event', () async {
         mockAndroidSigner.setResult('signEvent', {'result': 'sig123', 'event': '{"signed":true}'});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final response = await service.signEvent(eventJson: '{"test":true}');
 
         expect(response.result, 'sig123');
@@ -267,7 +295,7 @@ void main() {
       test('passes currentUser and id to channel', () async {
         mockAndroidSigner.setResult('signEvent', {'result': 'sig', 'event': '{}'});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         await service.signEvent(
           eventJson: '{}',
           currentUser: testPubkeyA,
@@ -279,7 +307,7 @@ void main() {
       });
 
       test('throws AndroidSignerException when result is null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.signEvent(eventJson: '{}'),
           throwsA(
@@ -291,7 +319,7 @@ void main() {
       test('throws AndroidSignerException when no signature or event', () async {
         mockAndroidSigner.setResult('signEvent', {'result': '', 'event': ''});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.signEvent(eventJson: '{}'),
           throwsA(
@@ -306,7 +334,7 @@ void main() {
           PlatformException(code: 'USER_REJECTED', message: 'User rejected'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.signEvent(eventJson: '{}'),
           throwsA(isA<AndroidSignerException>()),
@@ -318,7 +346,7 @@ void main() {
       test('returns encrypted text on success', () async {
         mockAndroidSigner.setResult('nip04Encrypt', {'result': 'encrypted_text'});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final result = await service.nip04Encrypt(
           plaintext: 'hello',
           pubkey: testPubkeyB,
@@ -331,7 +359,7 @@ void main() {
       });
 
       test('throws AndroidSignerException when result is null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip04Encrypt(plaintext: 'hello', pubkey: testPubkeyB),
           throwsA(
@@ -343,7 +371,7 @@ void main() {
       test('throws AndroidSignerException when result is empty', () async {
         mockAndroidSigner.setResult('nip04Encrypt', {'result': ''});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip04Encrypt(plaintext: 'hello', pubkey: testPubkeyB),
           throwsA(
@@ -358,7 +386,7 @@ void main() {
           PlatformException(code: 'ERROR', message: 'Failed'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip04Encrypt(plaintext: 'hello', pubkey: testPubkeyB),
           throwsA(isA<AndroidSignerException>()),
@@ -370,7 +398,7 @@ void main() {
       test('returns decrypted text on success', () async {
         mockAndroidSigner.setResult('nip04Decrypt', {'result': 'decrypted_text'});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final result = await service.nip04Decrypt(
           encryptedText: 'encrypted',
           pubkey: testPubkeyB,
@@ -381,7 +409,7 @@ void main() {
       });
 
       test('throws AndroidSignerException when result is null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip04Decrypt(encryptedText: 'enc', pubkey: testPubkeyB),
           throwsA(
@@ -393,7 +421,7 @@ void main() {
       test('throws AndroidSignerException when result is empty', () async {
         mockAndroidSigner.setResult('nip04Decrypt', {'result': ''});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip04Decrypt(encryptedText: 'enc', pubkey: testPubkeyB),
           throwsA(
@@ -408,7 +436,7 @@ void main() {
           PlatformException(code: 'ERROR', message: 'Failed'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip04Decrypt(encryptedText: 'enc', pubkey: testPubkeyB),
           throwsA(isA<AndroidSignerException>()),
@@ -420,7 +448,7 @@ void main() {
       test('returns encrypted text on success', () async {
         mockAndroidSigner.setResult('nip44Encrypt', {'result': 'encrypted_nip44'});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final result = await service.nip44Encrypt(
           plaintext: 'hello',
           pubkey: testPubkeyB,
@@ -431,7 +459,7 @@ void main() {
       });
 
       test('throws AndroidSignerException when result is null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip44Encrypt(plaintext: 'hello', pubkey: testPubkeyB),
           throwsA(
@@ -443,7 +471,7 @@ void main() {
       test('throws AndroidSignerException when result is empty', () async {
         mockAndroidSigner.setResult('nip44Encrypt', {'result': ''});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip44Encrypt(plaintext: 'hello', pubkey: testPubkeyB),
           throwsA(
@@ -458,7 +486,7 @@ void main() {
           PlatformException(code: 'ERROR', message: 'Failed'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip44Encrypt(plaintext: 'hello', pubkey: testPubkeyB),
           throwsA(isA<AndroidSignerException>()),
@@ -470,7 +498,7 @@ void main() {
       test('returns decrypted text on success', () async {
         mockAndroidSigner.setResult('nip44Decrypt', {'result': 'decrypted_nip44'});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final result = await service.nip44Decrypt(
           encryptedText: 'encrypted',
           pubkey: testPubkeyB,
@@ -481,7 +509,7 @@ void main() {
       });
 
       test('throws AndroidSignerException when result is null', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip44Decrypt(encryptedText: 'enc', pubkey: testPubkeyB),
           throwsA(
@@ -493,7 +521,7 @@ void main() {
       test('throws AndroidSignerException when result is empty', () async {
         mockAndroidSigner.setResult('nip44Decrypt', {'result': ''});
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip44Decrypt(encryptedText: 'enc', pubkey: testPubkeyB),
           throwsA(
@@ -508,7 +536,7 @@ void main() {
           PlatformException(code: 'ERROR', message: 'Failed'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         expect(
           () => service.nip44Decrypt(encryptedText: 'enc', pubkey: testPubkeyB),
           throwsA(isA<AndroidSignerException>()),
@@ -520,7 +548,7 @@ void main() {
       test('returns package name on success', () async {
         mockAndroidSigner.setResult('getSignerPackageName', 'com.amber.signer');
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final result = await service.getSignerPackageName();
 
         expect(result, 'com.amber.signer');
@@ -533,7 +561,7 @@ void main() {
           PlatformException(code: 'ERROR', message: 'Failed'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         final result = await service.getSignerPackageName();
 
         expect(result, isNull);
@@ -542,7 +570,7 @@ void main() {
 
     group('setSignerPackageName', () {
       test('calls channel with package name', () async {
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         await service.setSignerPackageName('com.amber.signer');
 
         expect(mockAndroidSigner.log.first.method, 'setSignerPackageName');
@@ -555,8 +583,113 @@ void main() {
           PlatformException(code: 'ERROR', message: 'Failed'),
         );
 
-        const service = AndroidSignerService(platformIsAndroid: true);
+        const service = AndroidSignerService();
         await service.setSignerPackageName('com.amber.signer');
+      });
+    });
+
+    group('loginWithExternalSigner', () {
+      setUp(() {
+        mockAndroidSigner = mockAndroidSignerChannel();
+        debugDefaultTargetPlatformOverride = TargetPlatform.android;
+      });
+
+      tearDown(() {
+        mockAndroidSigner.reset();
+        debugDefaultTargetPlatformOverride = null;
+      });
+
+      test('returns account when signer responds successfully', () async {
+        final account = await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        expect(account.pubkey, testPubkeyA);
+      });
+
+      test('signEvent callback returns signed event when signer returns event', () async {
+        mockAndroidSigner.setResult('signEvent', {'event': 'signed_event_json'});
+        await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        final result = await signerMock.signEventCallback!('{}');
+        expect(result, 'signed_event_json');
+      });
+
+      test(
+        'signEvent callback throws NO_EVENT when signer returns signature but no event',
+        () async {
+          mockAndroidSigner.setResult('signEvent', {'result': 'sig_without_event'});
+          await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+          expect(
+            () => signerMock.signEventCallback!('{}'),
+            throwsA(
+              isA<AndroidSignerException>().having(
+                (e) => e.code,
+                'code',
+                'NO_EVENT',
+              ),
+            ),
+          );
+        },
+      );
+
+      test('signEvent callback throws NO_RESULT when signer returns empty event', () async {
+        mockAndroidSigner.setResult('signEvent', {'event': ''});
+        await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        expect(
+          () => signerMock.signEventCallback!('{}'),
+          throwsA(isA<AndroidSignerException>().having((e) => e.code, 'code', 'NO_RESULT')),
+        );
+      });
+
+      test('nip04Encrypt callback returns ciphertext from signer', () async {
+        mockAndroidSigner.setResult('nip04Encrypt', {'result': 'encrypted'});
+        await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        final result = await signerMock.nip04EncryptCallback!('plain', testPubkeyB);
+        expect(result, 'encrypted');
+      });
+
+      test('nip04Decrypt callback returns plaintext from signer', () async {
+        mockAndroidSigner.setResult('nip04Decrypt', {'result': 'decrypted'});
+        await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        final result = await signerMock.nip04DecryptCallback!('cipher', testPubkeyB);
+        expect(result, 'decrypted');
+      });
+
+      test('nip44Encrypt callback returns ciphertext from signer', () async {
+        mockAndroidSigner.setResult('nip44Encrypt', {'result': 'enc44'});
+        await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        final result = await signerMock.nip44EncryptCallback!('plain', testPubkeyB);
+        expect(result, 'enc44');
+      });
+
+      test('nip44Decrypt callback returns plaintext from signer', () async {
+        mockAndroidSigner.setResult('nip44Decrypt', {'result': 'dec44'});
+        await const AndroidSignerService().loginWithExternalSigner(testPubkeyA);
+        final result = await signerMock.nip44DecryptCallback!('cipher', testPubkeyB);
+        expect(result, 'dec44');
+      });
+    });
+
+    group('registerExternalSigner', () {
+      setUp(() {
+        mockAndroidSigner = mockAndroidSignerChannel();
+        debugDefaultTargetPlatformOverride = TargetPlatform.android;
+        signerMock.registerExternalSignerCalled = false;
+      });
+
+      tearDown(() {
+        mockAndroidSigner.reset();
+        debugDefaultTargetPlatformOverride = null;
+      });
+
+      test('calls Rust API registerExternalSigner with callbacks', () async {
+        await const AndroidSignerService().registerExternalSigner(testPubkeyA);
+        expect(signerMock.registerExternalSignerCalled, isTrue);
+        expect(signerMock.signEventCallback, isNotNull);
+      });
+
+      test('signEvent callback uses channel and returns signed event', () async {
+        mockAndroidSigner.setResult('signEvent', {'event': 'signed_event_json'});
+        await const AndroidSignerService().registerExternalSigner(testPubkeyA);
+        final result = await signerMock.signEventCallback!('{}');
+        expect(result, 'signed_event_json');
       });
     });
   });

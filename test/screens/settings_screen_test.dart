@@ -48,12 +48,6 @@ class _MockAuthNotifier extends AuthNotifier {
     state = AsyncData(_pubkey);
     return _pubkey;
   }
-
-  @override
-  Future<String?> logout({Future<void> Function()? onAndroidSignerDisconnect}) async {
-    logoutCalled = true;
-    return null;
-  }
 }
 
 void main() {

@@ -31,7 +31,7 @@ class _MockAuthNotifier extends AuthNotifier {
   Future<String?> build() async => null;
 
   @override
-  Future<void> login(String nsec) async {
+  Future<void> loginWithNsec(String nsec) async {
     state = const AsyncData(testPubkeyA);
   }
 }

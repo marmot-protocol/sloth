@@ -29,4 +29,3 @@
 
 - [ ] Run `just precommit` to ensure that formatting and linting are correct
 - [ ] Updated the `CHANGELOG.md` file with your changes (if they affect the user experience)
-- [ ] Updated android .so files by running `just build-android` (only needed if rust dependencies or rust code changes)
