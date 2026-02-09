@@ -20,12 +20,14 @@ void main() {
       String mlsGroupId = testGroupId,
       String displayName = 'Test User',
       String? pictureUrl,
+      String? peerPubkey,
     }) async {
       await mountWidget(
         WnChatHeader(
           mlsGroupId: mlsGroupId,
           displayName: displayName,
           pictureUrl: pictureUrl,
+          peerPubkey: peerPubkey,
           onBack: () => backPressed = true,
           onMenuTap: () => menuPressed = true,
         ),
@@ -71,14 +73,21 @@ void main() {
       expect(avatar.displayName, 'Bob');
     });
 
-    testWidgets('passes color derived from mlsGroupId to avatar', (tester) async {
+    testWidgets('uses mlsGroupId for color when peerPubkey is null', (tester) async {
       await pumpHeader(tester);
 
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
       expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
     });
 
-    testWidgets('different mlsGroupId produces different color', (tester) async {
+    testWidgets('uses peerPubkey for color when provided', (tester) async {
+      await pumpHeader(tester, peerPubkey: testPubkeyB);
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AvatarColor.fromPubkey(testPubkeyB));
+    });
+
+    testWidgets('different mlsGroupId produces different color when no peerPubkey', (tester) async {
       await pumpHeader(tester);
       final avatar1 = tester.widget<WnAvatar>(find.byType(WnAvatar));
       final color1 = avatar1.color;

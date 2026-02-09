@@ -10,6 +10,7 @@ class WnChatHeader extends StatelessWidget {
     required this.mlsGroupId,
     required this.displayName,
     this.pictureUrl,
+    this.peerPubkey,
     required this.onBack,
     required this.onMenuTap,
   });
@@ -17,6 +18,7 @@ class WnChatHeader extends StatelessWidget {
   final String mlsGroupId;
   final String displayName;
   final String? pictureUrl;
+  final String? peerPubkey;
   final VoidCallback onBack;
   final VoidCallback onMenuTap;
 
@@ -40,7 +42,7 @@ class WnChatHeader extends StatelessWidget {
         WnAvatar(
           pictureUrl: pictureUrl,
           displayName: displayName,
-          color: AvatarColor.fromPubkey(mlsGroupId),
+          color: AvatarColor.fromPubkey(peerPubkey ?? mlsGroupId),
         ),
         SizedBox(width: 12.w),
         Expanded(

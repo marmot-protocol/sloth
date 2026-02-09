@@ -120,6 +120,7 @@ class ChatScreen extends HookConsumerWidget {
                   mlsGroupId: groupId,
                   displayName: groupAvatarSnapshot.data?.displayName ?? '',
                   pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
+                  peerPubkey: groupAvatarSnapshot.data?.otherMemberPubkey,
                   onBack: () => Routes.goToChatList(context),
                   onMenuTap: () {
                     final otherPubkey = groupAvatarSnapshot.data?.otherMemberPubkey;
