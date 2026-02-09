@@ -37,7 +37,7 @@ class ChatListScreen extends HookConsumerWidget {
             header: const WnSearchAndFilters(),
             headerHeight: _searchAndFiltersHeight.h,
             itemBuilder: (context, index) {
-              final chatSummary = chatList[chatList.length - 1 - index];
+              final chatSummary = chatList[index];
               return ChatListTile(
                 key: Key(chatSummary.mlsGroupId),
                 chatSummary: chatSummary,
