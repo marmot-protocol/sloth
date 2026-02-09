@@ -12,10 +12,13 @@ class AppLocalizationsTr extends AppLocalizations {
   String get appTitle => 'White Noise';
 
   @override
-  String get tagline1 => 'Merkezi Olmayan. Sansürlenemez.';
+  String get sloganDecentralized => 'Merkezi Olmayan';
 
   @override
-  String get tagline2 => 'Güvenli Mesajlaşma.';
+  String get sloganUncensorable => 'Sansürlenemez';
+
+  @override
+  String get sloganSecureMessaging => 'Güvenli Mesajlaşma';
 
   @override
   String get login => 'Giriş Yap';
@@ -640,4 +643,31 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get messageNotFound => 'Mesaj bulunamadı';
+
+  @override
+  String get carouselPrivacyTitle => 'Gizlilik ve güvenlik';
+
+  @override
+  String get carouselPrivacyDescription =>
+      'Konuşmalarınızı gizli tutun. Bir ihlal durumunda bile mesajlarınız güvende kalır.';
+
+  @override
+  String get carouselIdentityTitle => 'Kimliğinizi seçin';
+
+  @override
+  String get carouselIdentityDescription =>
+      'Telefon numaranızı veya e-postanızı açıklamadan sohbet edin. Kimliğinizi seçin: gerçek ad, takma ad veya anonim.';
+
+  @override
+  String get carouselDecentralizedTitle => 'Merkezi olmayan ve izinsiz';
+
+  @override
+  String get carouselDecentralizedDescription =>
+      'Hiçbir merkezi otorite iletişiminizi kontrol etmez – izin gerekmez, sansür mümkün değildir.';
+
+  @override
+  String get learnMore => 'Daha fazla bilgi';
+
+  @override
+  String get backToSignUp => 'Kayıta geri dön';
 }

@@ -1,8 +1,9 @@
 {
   "@@locale": "it",
   "appTitle": "White Noise",
-  "tagline1": "Decentralizzato. Incensurabile.",
-  "tagline2": "Messaggistica Sicura.",
+  "sloganDecentralized": "Decentralizzato",
+  "sloganUncensorable": "Incensurabile",
+  "sloganSecureMessaging": "Messaggistica Sicura",
   "login": "Accedi",
   "signUp": "Registrati",
   "loginTitle": "Accedi",
@@ -191,5 +192,13 @@
   "signerErrorNoActivity": "Impossibile avviare il signer. Riprova.",
   "signerErrorLaunchError": "Avvio dell'app signer non riuscito.",
   "signerErrorUnknown": "Si è verificato un errore con il signer. Riprova.",
-  "messageNotFound": "Messaggio non trovato"
+  "messageNotFound": "Messaggio non trovato",
+  "carouselPrivacyTitle": "Privacy e sicurezza",
+  "carouselPrivacyDescription": "Mantieni le tue conversazioni private. Anche in caso di violazione, i tuoi messaggi rimangono sicuri.",
+  "carouselIdentityTitle": "Scegli la tua identità",
+  "carouselIdentityDescription": "Chatta senza rivelare il tuo numero di telefono o email. Scegli la tua identità: nome reale, pseudonimo o anonimo.",
+  "carouselDecentralizedTitle": "Decentralizzato e senza permessi",
+  "carouselDecentralizedDescription": "Nessuna autorità centrale controlla la tua comunicazione – nessun permesso necessario, nessuna censura possibile.",
+  "learnMore": "Scopri di più",
+  "backToSignUp": "Torna alla registrazione"
 }

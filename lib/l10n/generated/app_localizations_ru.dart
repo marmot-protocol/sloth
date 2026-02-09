@@ -12,10 +12,13 @@ class AppLocalizationsRu extends AppLocalizations {
   String get appTitle => 'White Noise';
 
   @override
-  String get tagline1 => 'Децентрализованный. Нецензурируемый.';
+  String get sloganDecentralized => 'Децентрализованный';
 
   @override
-  String get tagline2 => 'Безопасный Мессенджер.';
+  String get sloganUncensorable => 'Нецензурируемый';
+
+  @override
+  String get sloganSecureMessaging => 'Безопасный Мессенджер';
 
   @override
   String get login => 'Войти';
@@ -647,4 +650,31 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get messageNotFound => 'Сообщение не найдено';
+
+  @override
+  String get carouselPrivacyTitle => 'Конфиденциальность и безопасность';
+
+  @override
+  String get carouselPrivacyDescription =>
+      'Сохраняйте конфиденциальность ваших разговоров. Даже в случае утечки ваши сообщения остаются защищёнными.';
+
+  @override
+  String get carouselIdentityTitle => 'Выберите свою личность';
+
+  @override
+  String get carouselIdentityDescription =>
+      'Общайтесь, не раскрывая номер телефона или email. Выбирайте: настоящее имя, псевдоним или анонимность.';
+
+  @override
+  String get carouselDecentralizedTitle => 'Децентрализованный и без разрешений';
+
+  @override
+  String get carouselDecentralizedDescription =>
+      'Никакая центральная власть не контролирует вашу коммуникацию – разрешения не нужны, цензура невозможна.';
+
+  @override
+  String get learnMore => 'Узнать больше';
+
+  @override
+  String get backToSignUp => 'Вернуться к регистрации';
 }
