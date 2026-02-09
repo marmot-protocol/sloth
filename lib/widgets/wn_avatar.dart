@@ -109,7 +109,7 @@ class WnAvatar extends HookWidget {
             child: _EditButton(onTap: onEditTap!),
           ),
         if (showPinBadge)
-          Positioned(
+          const Positioned(
             right: 0,
             bottom: 0,
             child: _PinBadge(),
@@ -153,6 +153,8 @@ class _EditButton extends StatelessWidget {
 }
 
 class _PinBadge extends StatelessWidget {
+  const _PinBadge();
+
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
