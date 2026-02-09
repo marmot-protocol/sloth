@@ -27,6 +27,7 @@ ChatSummary _chatSummary({
   String? groupImagePath,
   String? groupImageUrl,
   String? welcomerPubkey,
+  String? dmPeerPubkey,
 }) => ChatSummary(
   mlsGroupId: testGroupId,
   name: name,
@@ -37,6 +38,7 @@ ChatSummary _chatSummary({
   groupImagePath: groupImagePath,
   groupImageUrl: groupImageUrl,
   welcomerPubkey: welcomerPubkey,
+  dmPeerPubkey: dmPeerPubkey,
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
           mlsGroupId: testGroupId,
@@ -290,8 +292,31 @@ void main() {
         expect(avatar.pictureUrl, 'https://example.com/avatar.png');
       });
 
-      testWidgets('receives color derived from mlsGroupId', (tester) async {
+      testWidgets('group uses color derived from mlsGroupId', (tester) async {
         await pumpTile(tester, _chatSummary(name: 'Test'));
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+        expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
+      });
+
+      testWidgets('DM uses color derived from dmPeerPubkey when available', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(
+            groupType: GroupType.directMessage,
+            dmPeerPubkey: testPubkeyB,
+          ),
+          settle: false,
+        );
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+        expect(avatar.color, AvatarColor.fromPubkey(testPubkeyB));
+      });
+
+      testWidgets('DM falls back to mlsGroupId when dmPeerPubkey is null', (tester) async {
+        await pumpTile(
+          tester,
+          _chatSummary(groupType: GroupType.directMessage),
+          settle: false,
+        );
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
       });
