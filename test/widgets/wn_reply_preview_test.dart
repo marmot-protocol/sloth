@@ -6,11 +6,13 @@ import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import '../test_helpers.dart';
 
 ReplyPreview _replyData({
+  String messageId = 'test-message-id',
   String authorPubkey = testPubkeyA,
   FlutterMetadata? authorMetadata,
   String content = 'Reply content',
   bool isNotFound = false,
 }) => (
+  messageId: messageId,
   authorPubkey: authorPubkey,
   authorMetadata: authorMetadata,
   content: content,
@@ -152,6 +154,51 @@ void main() {
 
       final textWidget = tester.widget<Text>(find.text('Author'));
       expect((textWidget.maxLines, textWidget.overflow), (1, TextOverflow.ellipsis));
+    });
+
+    group('onTap', () {
+      testWidgets('calls onTap when tapped', (tester) async {
+        var tapCalled = false;
+        await mountWidget(
+          WnReplyPreview(
+            data: _replyData(),
+            onTap: () => tapCalled = true,
+          ),
+          tester,
+        );
+
+        await tester.tap(find.byKey(const Key('reply_preview_tap_area')));
+        await tester.pumpAndSettle();
+
+        expect(tapCalled, isTrue);
+      });
+
+      testWidgets('no tap area key when onTap is null', (tester) async {
+        await mountWidget(
+          WnReplyPreview(data: _replyData()),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_preview_tap_area')), findsNothing);
+      });
+
+      testWidgets('works with both onTap and onCancel', (tester) async {
+        var tapCalled = false;
+        var cancelCalled = false;
+        await mountWidget(
+          WnReplyPreview(
+            data: _replyData(),
+            onTap: () => tapCalled = true,
+            onCancel: () => cancelCalled = true,
+          ),
+          tester,
+        );
+
+        await tester.tap(find.byKey(const Key('cancel_reply_button')));
+        await tester.pumpAndSettle();
+        expect(cancelCalled, isTrue);
+        expect(tapCalled, isFalse);
+      });
     });
   });
 }

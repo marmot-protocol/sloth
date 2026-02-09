@@ -13,6 +13,7 @@ class WnMessageBubble extends StatelessWidget {
   final VoidCallback? onLongPress;
   final void Function(String emoji)? onReaction;
   final ReplyPreview? replyPreview;
+  final VoidCallback? onReplyTap;
 
   const WnMessageBubble({
     super.key,
@@ -22,6 +23,7 @@ class WnMessageBubble extends StatelessWidget {
     this.onLongPress,
     this.onReaction,
     this.replyPreview,
+    this.onReplyTap,
   });
 
   @override
@@ -66,6 +68,7 @@ class WnMessageBubble extends StatelessWidget {
                       WnReplyPreview(
                         data: replyPreview!,
                         currentUserPubkey: currentUserPubkey,
+                        onTap: onReplyTap,
                       ),
                       SizedBox(height: 8.h),
                     ],
