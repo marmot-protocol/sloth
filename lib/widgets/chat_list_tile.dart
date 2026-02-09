@@ -16,10 +16,7 @@ import 'package:whitenoise/widgets/wn_chat_status.dart';
 class ChatListTile extends HookConsumerWidget {
   final ChatSummary chatSummary;
 
-  const ChatListTile({
-    super.key,
-    required this.chatSummary,
-  });
+  const ChatListTile({super.key, required this.chatSummary});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,18 +26,15 @@ class ChatListTile extends HookConsumerWidget {
     final isPending = chatSummary.pendingConfirmation;
     final hasWelcomer = chatSummary.welcomerPubkey != null;
 
-    final welcomerMetadata = useMemoized(
-      () async {
-        if (!isPending || !hasWelcomer) return null;
+    final welcomerMetadata = useMemoized(() async {
+      if (!isPending || !hasWelcomer) return null;
 
-        try {
-          return UserService(chatSummary.welcomerPubkey!).fetchMetadata();
-        } catch (_) {
-          return null;
-        }
-      },
-      [chatSummary.welcomerPubkey, isPending, hasWelcomer],
-    );
+      try {
+        return UserService(chatSummary.welcomerPubkey!).fetchMetadata();
+      } catch (_) {
+        return null;
+      }
+    }, [chatSummary.welcomerPubkey, isPending, hasWelcomer]);
     final welcomerSnapshot = useFuture(welcomerMetadata);
 
     final hasGroupName = chatSummary.name?.isNotEmpty ?? false;
@@ -80,7 +74,10 @@ class ChatListTile extends HookConsumerWidget {
     }
 
     final timestamp = chatSummary.lastMessage?.createdAt ?? chatSummary.createdAt;
-    final formattedTime = formatters.formatRelativeTime(timestamp, context.l10n);
+    final formattedTime = formatters.formatRelativeTime(
+      timestamp,
+      context.l10n,
+    );
 
     ChatStatusType? status;
     final unreadCount = chatSummary.unreadCount.toInt();
@@ -95,6 +92,10 @@ class ChatListTile extends HookConsumerWidget {
       prefixSubtitle = '${context.l10n.you}: ';
     }
 
+    final avatarColorKey = isDm
+        ? (chatSummary.dmPeerPubkey ?? chatSummary.mlsGroupId)
+        : chatSummary.mlsGroupId;
+
     return WnChatListItem(
       key: ValueKey(chatSummary.mlsGroupId),
       onTap: isPending
@@ -105,7 +106,7 @@ class ChatListTile extends HookConsumerWidget {
       timestamp: formattedTime,
       avatarUrl: pictureUrl,
       avatarName: avatarName,
-      avatarColor: AvatarColor.fromPubkey(chatSummary.mlsGroupId),
+      avatarColor: AvatarColor.fromPubkey(avatarColorKey),
       status: status,
       unreadCount: unreadCount,
       prefixSubtitle: prefixSubtitle,
