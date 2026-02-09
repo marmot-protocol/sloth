@@ -61,19 +61,19 @@ void main() {
   group('useChatList', () {
     group('initial state', () {
       testWidgets('starts with empty chats', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         expect(getResult().chats, isEmpty);
       });
 
       testWidgets('isLoading is true before data arrives', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         expect(getResult().isLoading, isTrue);
       });
 
       testWidgets('isLoading is false after initial snapshot', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([_chatSummary('c1', DateTime(2024))]);
         await tester.pump();
@@ -84,7 +84,7 @@ void main() {
 
     group('initial snapshot', () {
       testWidgets('returns chats in original API order', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024)),
@@ -99,7 +99,7 @@ void main() {
 
     group('newGroup trigger', () {
       testWidgets('adds new chat to the front', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([_chatSummary('c1', DateTime(2024))]);
         await tester.pumpAndSettle();
@@ -117,7 +117,7 @@ void main() {
 
     group('newLastMessage trigger', () {
       testWidgets('moves updated chat to the front', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024)),
@@ -138,7 +138,7 @@ void main() {
 
     group('lastMessageDeleted trigger', () {
       testWidgets('updates chat data without changing order', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024)),
@@ -162,7 +162,7 @@ void main() {
       });
 
       testWidgets('reflects updated chat data', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([_chatSummary('c1', DateTime(2024))]);
         await tester.pumpAndSettle();
@@ -184,7 +184,7 @@ void main() {
 
     group('pin ordering', () {
       testWidgets('pinned chats appear before unpinned chats', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024)),
@@ -197,7 +197,7 @@ void main() {
       });
 
       testWidgets('pinned chats are sorted by pinOrder ascending', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024), pinOrder: 3),
@@ -211,7 +211,7 @@ void main() {
       });
 
       testWidgets('unpinned chats maintain recency order after pinned', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024)),
@@ -225,7 +225,7 @@ void main() {
       });
 
       testWidgets('new message update preserves pin ordering', (tester) async {
-        final getResult = await _pump(tester, 'pk1');
+        final getResult = await _pump(tester, testPubkeyA);
 
         _api.emitInitialSnapshot([
           _chatSummary('c1', DateTime(2024), pinOrder: 1),
