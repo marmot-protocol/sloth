@@ -67,6 +67,7 @@ enum WnIcons {
   notificationsTurnedOff('notifications_turned_off'),
   paste('paste'),
   pin('pin'),
+  pinFilled('pin_filled'),
   placeholder('placeholder'),
   privacy('privacy'),
   qrCode('qr_code'),

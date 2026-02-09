@@ -15,6 +15,7 @@ class WnChatListItem extends HookWidget {
     this.avatarUrl,
     this.avatarName,
     this.avatarColor = AvatarColor.neutral,
+    this.showPinned = false,
     this.status,
     this.unreadCount,
     this.notificationOff = false,
@@ -29,6 +30,7 @@ class WnChatListItem extends HookWidget {
   final String? avatarUrl;
   final String? avatarName;
   final AvatarColor avatarColor;
+  final bool showPinned;
   final ChatStatusType? status;
   final int? unreadCount;
   final bool notificationOff;
@@ -64,6 +66,7 @@ class WnChatListItem extends HookWidget {
                   pictureUrl: avatarUrl,
                   displayName: avatarName,
                   color: avatarColor,
+                  showPinned: showPinned,
                 ),
               ),
               Expanded(

@@ -6,13 +6,14 @@ import 'package:whitenoise/src/rust/api/groups.dart' show GroupType;
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import '../test_helpers.dart';
 
-ChatSummary _chatSummary(String id, DateTime createdAt) => ChatSummary(
+ChatSummary _chatSummary(String id, DateTime createdAt, {int? pinOrder}) => ChatSummary(
   mlsGroupId: 'mls_$id',
   name: 'Chat $id',
   groupType: GroupType.group,
   createdAt: createdAt,
   pendingConfirmation: false,
   unreadCount: BigInt.zero,
+  pinOrder: pinOrder,
 );
 
 class _MockApi implements RustLibApi {
@@ -178,6 +179,69 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(getResult().chats.first.name, 'Updated Name');
+      });
+    });
+
+    group('pin ordering', () {
+      testWidgets('pinned chats appear before unpinned chats', (tester) async {
+        final getResult = await _pump(tester, 'pk1');
+
+        _api.emitInitialSnapshot([
+          _chatSummary('c1', DateTime(2024)),
+          _chatSummary('c2', DateTime(2024, 1, 2), pinOrder: 1),
+        ]);
+        await tester.pump();
+
+        final ids = getResult().chats.map((c) => c.mlsGroupId).toList();
+        expect(ids, ['mls_c2', 'mls_c1']);
+      });
+
+      testWidgets('pinned chats are sorted by pinOrder ascending', (tester) async {
+        final getResult = await _pump(tester, 'pk1');
+
+        _api.emitInitialSnapshot([
+          _chatSummary('c1', DateTime(2024), pinOrder: 3),
+          _chatSummary('c2', DateTime(2024, 1, 2), pinOrder: 1),
+          _chatSummary('c3', DateTime(2024, 1, 3), pinOrder: 2),
+        ]);
+        await tester.pump();
+
+        final ids = getResult().chats.map((c) => c.mlsGroupId).toList();
+        expect(ids, ['mls_c2', 'mls_c3', 'mls_c1']);
+      });
+
+      testWidgets('unpinned chats maintain recency order after pinned', (tester) async {
+        final getResult = await _pump(tester, 'pk1');
+
+        _api.emitInitialSnapshot([
+          _chatSummary('c1', DateTime(2024)),
+          _chatSummary('c2', DateTime(2024, 1, 2)),
+          _chatSummary('c3', DateTime(2024, 1, 3), pinOrder: 1),
+        ]);
+        await tester.pump();
+
+        final ids = getResult().chats.map((c) => c.mlsGroupId).toList();
+        expect(ids, ['mls_c3', 'mls_c1', 'mls_c2']);
+      });
+
+      testWidgets('new message update preserves pin ordering', (tester) async {
+        final getResult = await _pump(tester, 'pk1');
+
+        _api.emitInitialSnapshot([
+          _chatSummary('c1', DateTime(2024), pinOrder: 1),
+          _chatSummary('c2', DateTime(2024, 1, 2)),
+          _chatSummary('c3', DateTime(2024, 1, 3)),
+        ]);
+        await tester.pumpAndSettle();
+
+        _api.emitUpdate(
+          ChatListUpdateTrigger.newLastMessage,
+          _chatSummary('c2', DateTime(2024, 1, 4)),
+        );
+        await tester.pumpAndSettle();
+
+        final ids = getResult().chats.map((c) => c.mlsGroupId).toList();
+        expect(ids.first, 'mls_c1');
       });
     });
   });

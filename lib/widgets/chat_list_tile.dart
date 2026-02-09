@@ -107,6 +107,7 @@ class ChatListTile extends HookConsumerWidget {
       avatarUrl: pictureUrl,
       avatarName: avatarName,
       avatarColor: AvatarColor.fromPubkey(avatarColorKey),
+      showPinned: chatSummary.pinOrder != null,
       status: status,
       unreadCount: unreadCount,
       prefixSubtitle: prefixSubtitle,
