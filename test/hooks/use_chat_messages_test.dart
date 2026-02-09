@@ -454,6 +454,7 @@ void main() {
         final preview = getResult().getReplyPreview('unknown');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isTrue);
+        expect(preview.messageId, 'unknown');
         expect(preview.authorPubkey, '');
         expect(preview.content, '');
         expect(preview.authorMetadata, isNull);
@@ -471,6 +472,7 @@ void main() {
         final preview = getResult().getReplyPreview('m2');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isTrue);
+        expect(preview.messageId, 'm2');
       });
 
       testWidgets('returns preview when message is found', (tester) async {
@@ -492,6 +494,7 @@ void main() {
         final preview = getResult().getReplyPreview('m1');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isFalse);
+        expect(preview.messageId, 'm1');
         expect(preview.authorPubkey, authorPubkey);
         expect(preview.content, 'Original content');
         expect(preview.authorMetadata?.displayName, 'Original Author');

@@ -123,6 +123,7 @@ ChatMessagesResult useChatMessages(String groupId) {
     final message = getMessageById(replyId);
     if (message == null || message.isDeleted) {
       return (
+        messageId: replyId,
         authorPubkey: '',
         authorMetadata: null,
         content: '',
@@ -130,6 +131,7 @@ ChatMessagesResult useChatMessages(String groupId) {
       );
     }
     return (
+      messageId: replyId,
       authorPubkey: message.pubkey,
       authorMetadata: getAuthorMetadata(message.pubkey),
       content: message.content,
