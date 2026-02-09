@@ -34,11 +34,12 @@ impl From<WhitenoiseGroup> for Group {
             name: group.name,
             description: group.description,
             image_hash: group.image_hash,
-            image_key: group.image_key,
+            image_key: group.image_key.map(|s| *s),
             admin_pubkeys: group.admin_pubkeys.iter().map(|pk| pk.to_hex()).collect(),
             last_message_id: group.last_message_id.map(|id| id.to_hex()),
             last_message_at: group.last_message_at.map(|ts| {
-                DateTime::from_timestamp(ts.as_u64() as i64, 0)
+                let ts = i64::try_from(ts.as_secs()).unwrap_or(0);
+                DateTime::from_timestamp(ts, 0)
                     .unwrap_or_else(|| DateTime::from_timestamp(0, 0).unwrap())
             }),
             epoch: group.epoch,
@@ -64,19 +65,17 @@ impl From<FlutterGroupDataUpdate> for NostrGroupDataUpdate {
         Self {
             name: group_data.name,
             description: group_data.description,
-            // Wrap in Some() to convert Option<T> to Option<Option<T>>
-            // None means don't update, Some(value) means set to value
             image_key: group_data.image_key.map(Some),
             image_hash: group_data.image_hash.map(Some),
             image_nonce: group_data.image_nonce.map(Some),
-            // Will silently drop invalid relay inputs
+            image_upload_key: None,
+            nostr_group_id: None,
             relays: group_data.relays.map(|relays| {
                 relays
                     .into_iter()
                     .filter_map(|r| RelayUrl::parse(&r).ok())
                     .collect()
             }),
-            // Will silently drop invalid admin inputs
             admins: group_data.admins.map(|admins| {
                 admins
                     .into_iter()

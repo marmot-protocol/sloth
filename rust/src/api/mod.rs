@@ -65,6 +65,7 @@ pub mod messages;
 pub mod metadata;
 pub mod relays;
 pub mod signer;
+pub mod user_search;
 pub mod users;
 pub mod utils;
 
@@ -79,13 +80,17 @@ pub use messages::*;
 pub use metadata::*;
 pub use relays::*;
 pub use signer::*;
+pub use user_search::*;
 pub use users::*;
 pub use utils::*;
 
 #[frb]
 pub async fn initialize_whitenoise(config: WhitenoiseConfig) -> Result<(), ApiError> {
-    let core_config =
-        whitenoise::WhitenoiseConfig::new(Path::new(&config.data_dir), Path::new(&config.logs_dir));
+    let core_config = whitenoise::WhitenoiseConfig::new(
+        Path::new(&config.data_dir),
+        Path::new(&config.logs_dir),
+        "com.whitenoise.app",
+    );
     Whitenoise::initialize_whitenoise(core_config)
         .await
         .map_err(ApiError::from)
