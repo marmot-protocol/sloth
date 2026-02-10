@@ -37,12 +37,8 @@ ChatListResult useChatList(String pubkey) {
 
   final snapshot = useStream(stream, initialData: <String, ChatSummary>{});
   final isLoading = snapshot.connectionState == ConnectionState.waiting;
-  final allChats = chatMap.value.values.toList().reversed.toList();
-  final pinned = allChats.where((c) => c.pinOrder != null).toList()
-    ..sort((a, b) => a.pinOrder!.compareTo(b.pinOrder!));
-  final unpinned = allChats.where((c) => c.pinOrder == null).toList();
   return (
     isLoading: isLoading,
-    chats: [...pinned, ...unpinned],
+    chats: chatMap.value.values.toList().reversed.toList(),
   );
 }
