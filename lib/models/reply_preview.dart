@@ -1,3 +1,4 @@
+// coverage:ignore-file
 import 'package:whitenoise/src/rust/api/metadata.dart';
 
 typedef ReplyPreview = ({
