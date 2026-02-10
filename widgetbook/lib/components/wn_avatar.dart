@@ -54,6 +54,8 @@ Widget wnAvatarShowcase(BuildContext context) {
     initialValue: false,
   );
 
+  final pinned = context.knobs.boolean(label: 'Pinned', initialValue: false);
+
   return Scaffold(
     backgroundColor: colors.backgroundPrimary,
     body: SingleChildScrollView(
@@ -86,6 +88,7 @@ Widget wnAvatarShowcase(BuildContext context) {
               size: size,
               color: color,
               onEditTap: editable ? () {} : null,
+              showPinned: pinned,
             ),
           ),
           const SizedBox(height: 32),
@@ -115,6 +118,27 @@ Widget wnAvatarShowcase(BuildContext context) {
           ..._colorOptions.expand(
             (color) => [_buildInitialsRow(color, colors), _buildIconRow(color)],
           ),
+          const SizedBox(height: 32),
+          Divider(color: colors.borderTertiary),
+          const SizedBox(height: 32),
+          Text(
+            'Pinned Variant (Medium)',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.w600,
+              color: colors.backgroundContentPrimary,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            'Pin badge only appears on medium (56px) avatars.',
+            style: TextStyle(
+              fontSize: 14,
+              color: colors.backgroundContentSecondary,
+            ),
+          ),
+          const SizedBox(height: 24),
+          _buildPinnedRow(colors),
         ],
       ),
     ),
@@ -268,6 +292,65 @@ Widget _buildIconRow(AvatarColor color) {
               color: color,
               size: WnAvatarSize.large,
               onEditTap: () {},
+            ),
+          ),
+        ),
+      ],
+    ),
+  );
+}
+
+Widget _buildPinnedRow(SemanticColors colors) {
+  return Padding(
+    padding: const EdgeInsets.only(bottom: 16),
+    child: Row(
+      children: [
+        SizedBox(
+          width: 80,
+          child: Text(
+            'Pinned',
+            style: TextStyle(
+              fontSize: 13,
+              fontWeight: FontWeight.w500,
+              color: colors.backgroundContentPrimary,
+            ),
+          ),
+        ),
+        const Expanded(
+          child: Center(
+            child: WnAvatar(
+              displayName: 'A',
+              color: AvatarColor.cyan,
+              size: WnAvatarSize.medium,
+              showPinned: true,
+            ),
+          ),
+        ),
+        const Expanded(
+          child: Center(
+            child: WnAvatar(
+              color: AvatarColor.rose,
+              size: WnAvatarSize.medium,
+              showPinned: true,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: WnAvatar(
+              pictureUrl: _sampleImageUrl,
+              displayName: 'A',
+              size: WnAvatarSize.medium,
+              showPinned: true,
+            ),
+          ),
+        ),
+        const Expanded(
+          child: Center(
+            child: WnAvatar(
+              displayName: 'A',
+              size: WnAvatarSize.medium,
+              showPinned: false,
             ),
           ),
         ),

@@ -318,6 +318,82 @@ void main() {
       });
     });
 
+    group('pin badge', () {
+      testWidgets('does not show pin badge when showPinned is false', (tester) async {
+        await mountWidget(
+          const WnAvatar(displayName: 'alice', size: WnAvatarSize.medium),
+          tester,
+        );
+
+        expect(find.byKey(const Key('avatar_pin_badge')), findsNothing);
+      });
+
+      testWidgets('shows pin badge when showPinned is true and size is medium', (tester) async {
+        await mountWidget(
+          const WnAvatar(
+            displayName: 'alice',
+            size: WnAvatarSize.medium,
+            showPinned: true,
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('avatar_pin_badge')), findsOneWidget);
+      });
+
+      testWidgets('does not show pin badge for small size even with showPinned', (tester) async {
+        await mountWidget(
+          const WnAvatar(displayName: 'alice', showPinned: true),
+          tester,
+        );
+
+        expect(find.byKey(const Key('avatar_pin_badge')), findsNothing);
+      });
+
+      testWidgets('does not show pin badge for large size even with showPinned', (tester) async {
+        await mountWidget(
+          const WnAvatar(
+            displayName: 'alice',
+            size: WnAvatarSize.large,
+            showPinned: true,
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('avatar_pin_badge')), findsNothing);
+      });
+
+      testWidgets('shows pin badge with image avatar', (tester) async {
+        await mountWidget(
+          WnAvatar(
+            imageProvider: _SuccessImageProvider(),
+            size: WnAvatarSize.medium,
+            showPinned: true,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('avatar_pin_badge')), findsOneWidget);
+        expect(find.byType(Image), findsNWidgets(2));
+      });
+
+      testWidgets('shows pin badge with color', (tester) async {
+        await mountWidget(
+          const WnAvatar(
+            displayName: 'alice',
+            color: AvatarColor.rose,
+            size: WnAvatarSize.medium,
+            showPinned: true,
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('avatar_pin_badge')), findsOneWidget);
+        expect(find.text('A'), findsOneWidget);
+      });
+    });
+
     group('local file path', () {
       testWidgets('shows initials when local file fails to load', (tester) async {
         await IOOverrides.runZoned(

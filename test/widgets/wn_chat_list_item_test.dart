@@ -104,6 +104,35 @@ void main() {
       expect(hasCombinedText, isTrue);
     });
 
+    testWidgets('passes showPinned to avatar', (tester) async {
+      await mountWidget(
+        const WnChatListItem(
+          title: 'Pinned',
+          subtitle: 'msg',
+          timestamp: 'Now',
+          showPinned: true,
+        ),
+        tester,
+      );
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.showPinned, isTrue);
+    });
+
+    testWidgets('showPinned defaults to false', (tester) async {
+      await mountWidget(
+        const WnChatListItem(
+          title: 'Not Pinned',
+          subtitle: 'msg',
+          timestamp: 'Now',
+        ),
+        tester,
+      );
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.showPinned, isFalse);
+    });
+
     testWidgets('calls onTap when tapped', (tester) async {
       var tapped = false;
       await mountWidget(

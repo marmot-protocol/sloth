@@ -28,6 +28,7 @@ ChatSummary _chatSummary({
   String? groupImageUrl,
   String? welcomerPubkey,
   String? dmPeerPubkey,
+  int? pinOrder,
 }) => ChatSummary(
   mlsGroupId: testGroupId,
   name: name,
@@ -39,6 +40,7 @@ ChatSummary _chatSummary({
   groupImageUrl: groupImageUrl,
   welcomerPubkey: welcomerPubkey,
   dmPeerPubkey: dmPeerPubkey,
+  pinOrder: pinOrder,
   lastMessage: lastMessageContent != null
       ? ChatMessageSummary(
           mlsGroupId: testGroupId,
@@ -319,6 +321,27 @@ void main() {
         );
         final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
         expect(avatar.color, AvatarColor.fromPubkey(testGroupId));
+      });
+
+      testWidgets('uses medium size', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test'));
+
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+        expect(avatar.size, WnAvatarSize.medium);
+      });
+
+      testWidgets('shows pin badge when pinOrder is set', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Pinned', pinOrder: 1));
+
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+        expect(avatar.showPinned, isTrue);
+      });
+
+      testWidgets('does not show pin badge when pinOrder is null', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Not Pinned'));
+
+        final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+        expect(avatar.showPinned, isFalse);
       });
     });
 

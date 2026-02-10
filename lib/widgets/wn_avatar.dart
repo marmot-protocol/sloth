@@ -22,6 +22,7 @@ class WnAvatar extends HookWidget {
     this.imageProvider,
     this.color = AvatarColor.neutral,
     this.onEditTap,
+    this.showPinned = false,
   });
 
   final String? pictureUrl;
@@ -30,6 +31,7 @@ class WnAvatar extends HookWidget {
   final ImageProvider? imageProvider;
   final AvatarColor color;
   final VoidCallback? onEditTap;
+  final bool showPinned;
 
   double _getAvatarSize() {
     return switch (size) {
@@ -95,6 +97,7 @@ class WnAvatar extends HookWidget {
           );
 
     final showEditButton = onEditTap != null && size == WnAvatarSize.large;
+    final showPinBadge = showPinned && size == WnAvatarSize.medium;
 
     return Stack(
       children: [
@@ -104,6 +107,12 @@ class WnAvatar extends HookWidget {
             right: 0,
             bottom: 0,
             child: _EditButton(onTap: onEditTap!),
+          ),
+        if (showPinBadge)
+          const Positioned(
+            right: 0,
+            bottom: 0,
+            child: _PinBadge(),
           ),
       ],
     );
@@ -119,7 +128,7 @@ class _EditButton extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final buttonSize = 28.w;
-    final iconSize = 16.w;
+    final iconSize = 24.w;
 
     return GestureDetector(
       key: const Key('avatar_edit_button'),
@@ -130,7 +139,6 @@ class _EditButton extends StatelessWidget {
         decoration: BoxDecoration(
           shape: BoxShape.circle,
           color: colors.backgroundSecondary,
-          border: Border.all(color: colors.borderTertiary),
         ),
         child: Center(
           child: WnIcon(
@@ -138,6 +146,34 @@ class _EditButton extends StatelessWidget {
             size: iconSize,
             color: colors.backgroundContentPrimary,
           ),
+        ),
+      ),
+    );
+  }
+}
+
+class _PinBadge extends StatelessWidget {
+  const _PinBadge();
+
+  @override
+  Widget build(BuildContext context) {
+    final colors = context.colors;
+    final badgeSize = 18.w;
+    final iconSize = 16.w;
+
+    return Container(
+      key: const Key('avatar_pin_badge'),
+      width: badgeSize,
+      height: badgeSize,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: colors.backgroundSecondary,
+      ),
+      child: Center(
+        child: WnIcon(
+          WnIcons.pinFilled,
+          size: iconSize,
+          color: colors.backgroundContentSecondary,
         ),
       ),
     );
