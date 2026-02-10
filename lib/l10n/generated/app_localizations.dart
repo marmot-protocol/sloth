@@ -1254,6 +1254,12 @@ abstract class AppLocalizations {
   /// **'An error occurred with the signer. Please try again.'**
   String get signerErrorUnknown;
 
+  /// Text shown in reply preview when the original message is deleted or not available
+  ///
+  /// In en, this message translates to:
+  /// **'Message not found'**
+  String get messageNotFound;
+
   /// Pin chat context menu action
   ///
   /// In en, this message translates to:

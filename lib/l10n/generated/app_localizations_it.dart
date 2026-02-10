@@ -640,10 +640,13 @@ class AppLocalizationsIt extends AppLocalizations {
   String get signerErrorUnknown => 'Si è verificato un errore con il signer. Riprova.';
 
   @override
+  String get messageNotFound => 'Messaggio non trovato';
+
+  @override
   String get pin => 'Fissa';
 
   @override
-  String get unpin => 'Sblocca';
+  String get unpin => 'Rimuovi';
 
   @override
   String get mute => 'Silenzia';
