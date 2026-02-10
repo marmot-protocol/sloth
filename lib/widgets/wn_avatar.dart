@@ -159,7 +159,7 @@ class _PinBadge extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final badgeSize = 18.w;
-    final iconSize = 18.w;
+    final iconSize = 16.w;
 
     return Container(
       key: const Key('avatar_pin_badge'),
