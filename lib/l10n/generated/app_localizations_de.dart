@@ -654,4 +654,7 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get signerErrorUnknown =>
       'Ein Fehler ist beim Signer aufgetreten. Bitte versuch es erneut.';
+
+  @override
+  String get messageNotFound => 'Nachricht nicht gefunden';
 }

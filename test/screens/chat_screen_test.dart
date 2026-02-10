@@ -12,6 +12,7 @@ import 'package:whitenoise/src/rust/api/groups.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_wn_api.dart';
@@ -36,6 +37,8 @@ ChatMessage _message(
   DateTime createdAt, {
   String pubkey = testPubkeyB,
   bool isDeleted = false,
+  bool isReply = false,
+  String? replyToId,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
   id: id,
@@ -43,7 +46,8 @@ ChatMessage _message(
   content: 'Message $id',
   createdAt: createdAt,
   tags: const [],
-  isReply: false,
+  isReply: isReply,
+  replyToId: replyToId,
   isDeleted: isDeleted,
   contentTokens: const [],
   reactions: reactions,
@@ -58,6 +62,7 @@ class _MockApi extends MockWnApi {
   final List<String> sentMessages = [];
   final List<({String groupId, int kind, List<Tag>? tags})> deletionCalls = [];
   final List<({String groupId, String message, int kind, List<Tag>? tags})> reactionCalls = [];
+  final List<List<List<String>>> sentTextMessageTagVecs = [];
   Exception? sendError;
   Exception? deleteError;
   Exception? reactionError;
@@ -74,6 +79,7 @@ class _MockApi extends MockWnApi {
     sentMessages.clear();
     deletionCalls.clear();
     reactionCalls.clear();
+    sentTextMessageTagVecs.clear();
     sendError = null;
     deleteError = null;
     reactionError = null;
@@ -114,6 +120,9 @@ class _MockApi extends MockWnApi {
     } else {
       if (sendError != null) throw sendError!;
       sentMessages.add(message);
+      if (tags != null) {
+        sentTextMessageTagVecs.add(tags.cast<_MockTag>().map((t) => t.vec).toList());
+      }
     }
     return MessageWithTokens(
       id: 'mock_$_sendCallCount',
@@ -819,6 +828,73 @@ void main() {
           expect(find.text('Failed to remove reaction. Please try again.'), findsOneWidget);
           expect(find.byType(MessageActionsScreen), findsOneWidget);
         });
+      });
+    });
+
+    group('replies', () {
+      testWidgets('displays reply preview in bubble when message is a reply', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+          _message('m2', DateTime(2024, 1, 2), isReply: true, replyToId: 'm1', pubkey: _testPubkey),
+        ];
+        await pumpChatScreen(tester);
+
+        expect(find.text('Message m1'), findsWidgets);
+        expect(find.text('Message m2'), findsOneWidget);
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+      });
+
+      testWidgets('tapping Reply in message actions shows reply preview in input', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+        expect(find.byType(WnReplyPreview), findsNothing);
+
+        await tester.longPress(find.text('Message m1'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('reply_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+        expect(find.text('Message m1'), findsWidgets);
+      });
+
+      testWidgets('sending while replying includes reply reference in send', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+        await tester.longPress(find.text('Message m1'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('reply_button')));
+        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField), 'My reply');
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('send_button')));
+        await tester.pumpAndSettle();
+
+        expect(_api.sentMessages.last, 'My reply');
+        expect(_api.sentTextMessageTagVecs, isNotEmpty);
+        final tagVecs = _api.sentTextMessageTagVecs.last;
+        expect(tagVecs.any((t) => t.isNotEmpty && t[0] == 'e'), isTrue);
+      });
+
+      testWidgets('cancel reply hides reply preview in input', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+        await tester.longPress(find.text('Message m1'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('reply_button')));
+        await tester.pumpAndSettle();
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('cancel_reply_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnReplyPreview), findsNothing);
       });
     });
 

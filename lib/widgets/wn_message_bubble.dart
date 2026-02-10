@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_message_reactions.dart';
+import 'package:whitenoise/widgets/wn_reply_preview.dart';
 
 class WnMessageBubble extends StatelessWidget {
   final ChatMessage message;
@@ -10,6 +12,7 @@ class WnMessageBubble extends StatelessWidget {
   final String? currentUserPubkey;
   final VoidCallback? onLongPress;
   final void Function(String emoji)? onReaction;
+  final ReplyPreview? replyPreview;
 
   const WnMessageBubble({
     super.key,
@@ -18,6 +21,7 @@ class WnMessageBubble extends StatelessWidget {
     this.currentUserPubkey,
     this.onLongPress,
     this.onReaction,
+    this.replyPreview,
   });
 
   @override
@@ -54,11 +58,26 @@ class WnMessageBubble extends StatelessWidget {
                   color: isOwnMessage ? colors.fillPrimary : colors.fillSecondary,
                   borderRadius: BorderRadius.circular(8.r),
                 ),
-                child: Text(
-                  message.content,
-                  style: context.typographyScaled.medium14.copyWith(
-                    color: isOwnMessage ? colors.fillContentPrimary : colors.fillContentSecondary,
-                  ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    if (replyPreview != null) ...[
+                      WnReplyPreview(
+                        data: replyPreview!,
+                        currentUserPubkey: currentUserPubkey,
+                      ),
+                      SizedBox(height: 8.h),
+                    ],
+                    Text(
+                      message.content,
+                      style: context.typographyScaled.medium14.copyWith(
+                        color: isOwnMessage
+                            ? colors.fillContentPrimary
+                            : colors.fillContentSecondary,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),

@@ -68,6 +68,11 @@ is_generated_file() {
     return 1
 }
 
+is_coverage_ignored() {
+    local file="$1"
+    grep -q '// coverage:ignore-file' "$file"
+}
+
 count_lines() {
     local file="$1"
     wc -l < "$file" | tr -d ' '
@@ -113,6 +118,10 @@ inject_missing_files() {
         dart_file="${dart_file#./}"
 
         if is_generated_file "$dart_file"; then
+            continue
+        fi
+
+        if is_coverage_ignored "$dart_file"; then
             continue
         fi
 

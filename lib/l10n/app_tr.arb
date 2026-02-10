@@ -190,5 +190,6 @@
   "signerErrorRequestInProgress": "Başka bir istek işleniyor. Lütfen bekleyin.",
   "signerErrorNoActivity": "Signer başlatılamadı. Lütfen tekrar deneyin.",
   "signerErrorLaunchError": "Signer uygulaması başlatılamadı.",
-  "signerErrorUnknown": "Signer ile bir hata oluştu. Lütfen tekrar deneyin."
+  "signerErrorUnknown": "Signer ile bir hata oluştu. Lütfen tekrar deneyin.",
+  "messageNotFound": "Mesaj bulunamadı"
 }

@@ -190,5 +190,6 @@
   "signerErrorRequestInProgress": "Hay otra solicitud en curso. Por favor, espera.",
   "signerErrorNoActivity": "No se pudo abrir el signer. Por favor, inténtalo de nuevo.",
   "signerErrorLaunchError": "Error al abrir la app del signer.",
-  "signerErrorUnknown": "Ocurrió un error con el signer. Por favor, inténtalo de nuevo."
+  "signerErrorUnknown": "Ocurrió un error con el signer. Por favor, inténtalo de nuevo.",
+  "messageNotFound": "Mensaje no encontrado"
 }

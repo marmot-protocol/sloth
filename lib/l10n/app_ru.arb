@@ -190,5 +190,6 @@
   "signerErrorRequestInProgress": "Выполняется другой запрос. Подождите.",
   "signerErrorNoActivity": "Не удалось запустить signer. Попробуйте снова.",
   "signerErrorLaunchError": "Не удалось запустить приложение signer.",
-  "signerErrorUnknown": "Произошла ошибка с signer. Попробуйте снова."
+  "signerErrorUnknown": "Произошла ошибка с signer. Попробуйте снова.",
+  "messageNotFound": "Сообщение не найдено"
 }
