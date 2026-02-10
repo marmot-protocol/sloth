@@ -653,4 +653,7 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get archive => 'Archiver';
+
+  @override
+  String get failedToPinChat => 'Échec de l\'épinglage. Veuillez réessayer.';
 }

@@ -193,7 +193,8 @@
   "signerErrorUnknown": "Si è verificato un errore con il signer. Riprova.",
   "messageNotFound": "Messaggio non trovato",
   "pin": "Fissa",
-  "unpin": "Rimuovi",
+  "unpin": "Sblocca",
   "mute": "Silenzia",
-  "archive": "Archivia"
+  "archive": "Archivia",
+  "failedToPinChat": "Impossibile aggiornare il fissaggio. Riprova."
 }

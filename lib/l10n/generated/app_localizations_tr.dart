@@ -649,4 +649,7 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get archive => 'Arşivle';
+
+  @override
+  String get failedToPinChat => 'Sabitleme başarısız. Lütfen tekrar deneyin.';
 }

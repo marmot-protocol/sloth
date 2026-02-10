@@ -7,7 +7,12 @@ import '../test_helpers.dart' show mountWidget;
 
 void main() {
   group('WnChatListContextMenu', () {
-    tearDown(() => WnChatListContextMenu.dismiss());
+    WnChatListContextMenuController? activeController;
+
+    tearDown(() {
+      activeController?.dispose();
+      activeController = null;
+    });
 
     Future<void> openContextMenu(
       WidgetTester tester, {
@@ -25,7 +30,7 @@ void main() {
                 behavior: HitTestBehavior.opaque,
                 onTap: () {
                   final renderBox = triggerKey.currentContext!.findRenderObject() as RenderBox;
-                  WnChatListContextMenu.show(
+                  activeController = WnChatListContextMenu.show(
                     context,
                     childRenderBox: renderBox,
                     child: Text(childText),
@@ -54,6 +59,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -72,6 +78,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -88,16 +95,19 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
             ),
             WnChatListContextMenuAction(
+              id: 'archive',
               label: 'Archive',
               icon: WnIcons.archive,
               onTap: () {},
             ),
             WnChatListContextMenuAction(
+              id: 'delete',
               label: 'Delete',
               icon: WnIcons.trashCan,
               onTap: () {},
@@ -116,11 +126,13 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
             ),
             WnChatListContextMenuAction(
+              id: 'archive',
               label: 'Archive',
               icon: WnIcons.archive,
               onTap: () {},
@@ -143,6 +155,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'delete',
               label: 'Delete',
               icon: WnIcons.trashCan,
               onTap: () {},
@@ -163,6 +176,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -178,6 +192,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'mute',
               label: 'Mute',
               icon: WnIcons.notificationOff,
               onTap: () {},
@@ -200,6 +215,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () => pinCalled = true,
@@ -220,6 +236,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -248,6 +265,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -278,16 +296,19 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () => pinCalled = true,
             ),
             WnChatListContextMenuAction(
+              id: 'archive',
               label: 'Archive',
               icon: WnIcons.archive,
               onTap: () => archiveCalled = true,
             ),
             WnChatListContextMenuAction(
+              id: 'delete',
               label: 'Delete',
               icon: WnIcons.trashCan,
               onTap: () => deleteCalled = true,
@@ -313,6 +334,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -339,6 +361,7 @@ void main() {
           tester,
           actions: [
             WnChatListContextMenuAction(
+              id: 'pin',
               label: 'Pin',
               icon: WnIcons.pin,
               onTap: () {},
@@ -364,6 +387,7 @@ void main() {
     group('WnChatListContextMenuAction', () {
       test('defaults isDestructive to false', () {
         final action = WnChatListContextMenuAction(
+          id: 'pin',
           label: 'Pin',
           icon: WnIcons.pin,
           onTap: () {},
@@ -372,19 +396,22 @@ void main() {
         expect(action.isDestructive, isFalse);
       });
 
-      test('stores label and icon', () {
+      test('stores id, label and icon', () {
         final action = WnChatListContextMenuAction(
+          id: 'archive',
           label: 'Archive',
           icon: WnIcons.archive,
           onTap: () {},
         );
 
+        expect(action.id, 'archive');
         expect(action.label, 'Archive');
         expect(action.icon, WnIcons.archive);
       });
 
       test('stores isDestructive when set to true', () {
         final action = WnChatListContextMenuAction(
+          id: 'delete',
           label: 'Delete',
           icon: WnIcons.trashCan,
           onTap: () {},

@@ -643,11 +643,14 @@ class AppLocalizationsIt extends AppLocalizations {
   String get pin => 'Fissa';
 
   @override
-  String get unpin => 'Rimuovi';
+  String get unpin => 'Sblocca';
 
   @override
   String get mute => 'Silenzia';
 
   @override
   String get archive => 'Archivia';
+
+  @override
+  String get failedToPinChat => 'Impossibile aggiornare il fissaggio. Riprova.';
 }

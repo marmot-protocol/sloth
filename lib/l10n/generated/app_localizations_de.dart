@@ -666,4 +666,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get archive => 'Archivieren';
+
+  @override
+  String get failedToPinChat => 'Anheften fehlgeschlagen. Bitte versuche es erneut.';
 }

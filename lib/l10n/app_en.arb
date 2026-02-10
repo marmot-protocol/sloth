@@ -1027,5 +1027,10 @@
   "archive": "Archive",
   "@archive": {
     "description": "Archive chat context menu action"
+  },
+
+  "failedToPinChat": "Failed to update pin. Please try again.",
+  "@failedToPinChat": {
+    "description": "Error message when pin/unpin operation fails"
   }
 }

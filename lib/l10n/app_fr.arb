@@ -195,5 +195,6 @@
   "pin": "Épingler",
   "unpin": "Désépingler",
   "mute": "Muet",
-  "archive": "Archiver"
+  "archive": "Archiver",
+  "failedToPinChat": "Échec de l'épinglage. Veuillez réessayer."
 }

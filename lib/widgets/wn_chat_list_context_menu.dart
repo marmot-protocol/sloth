@@ -9,17 +9,52 @@ import 'package:whitenoise/widgets/wn_icon.dart';
 const _animationDuration = Duration(milliseconds: 150);
 
 class WnChatListContextMenuAction {
+  final String id;
   final String label;
   final WnIcons icon;
   final VoidCallback? onTap;
   final bool isDestructive;
 
   const WnChatListContextMenuAction({
+    required this.id,
     required this.label,
     required this.icon,
     this.onTap,
     this.isDestructive = false,
   });
+}
+
+class WnChatListContextMenuController {
+  OverlayEntry? _entry;
+  Future<void> Function()? _animatedDismiss;
+  bool _dismissing = false;
+
+  bool get isShowing => _entry != null;
+
+  void dismiss() {
+    if (_dismissing) return;
+
+    final animatedDismiss = _animatedDismiss;
+    if (animatedDismiss != null) {
+      _dismissing = true;
+      _animatedDismiss = null;
+      animatedDismiss().then((_) {
+        _entry?.remove();
+        _entry = null;
+        _dismissing = false;
+      });
+    } else {
+      _entry?.remove();
+      _entry = null;
+    }
+  }
+
+  void dispose() {
+    _animatedDismiss = null;
+    _entry?.remove();
+    _entry = null;
+    _dismissing = false;
+  }
 }
 
 class WnChatListContextMenu extends HookWidget {
@@ -30,6 +65,7 @@ class WnChatListContextMenu extends HookWidget {
     required this.itemHeight,
     required this.actions,
     required this.onDismiss,
+    required this.controller,
   });
 
   final Widget child;
@@ -37,55 +73,39 @@ class WnChatListContextMenu extends HookWidget {
   final double itemHeight;
   final List<WnChatListContextMenuAction> actions;
   final VoidCallback onDismiss;
+  final WnChatListContextMenuController controller;
 
-  static OverlayEntry? _currentEntry;
-  static Future<void> Function()? _animatedDismiss;
-  static bool _dismissing = false;
-
-  static void show(
+  static WnChatListContextMenuController show(
     BuildContext context, {
     required Widget child,
     required RenderBox childRenderBox,
     required List<WnChatListContextMenuAction> actions,
   }) {
-    dismiss();
+    final menuController = WnChatListContextMenuController();
 
     final position = childRenderBox.localToGlobal(Offset.zero);
     final height = childRenderBox.size.height;
     final overlay = Overlay.of(context);
 
-    late OverlayEntry entry;
-    entry = OverlayEntry(
+    final entry = OverlayEntry(
       builder: (_) => WnChatListContextMenu(
         itemPosition: position,
         itemHeight: height,
         actions: actions,
-        onDismiss: () => dismiss(),
+        onDismiss: () => menuController.dismiss(),
+        controller: menuController,
         child: child,
       ),
     );
 
-    _currentEntry = entry;
-    _dismissing = false;
+    menuController._entry = entry;
     overlay.insert(entry);
+
+    return menuController;
   }
 
   static void dismiss() {
-    if (_dismissing) return;
-
-    final animatedDismiss = _animatedDismiss;
-    if (animatedDismiss != null) {
-      _dismissing = true;
-      _animatedDismiss = null;
-      animatedDismiss().then((_) {
-        _currentEntry?.remove();
-        _currentEntry = null;
-        _dismissing = false;
-      });
-    } else {
-      _currentEntry?.remove();
-      _currentEntry = null;
-    }
+    // No-op kept for backward compatibility in tests that call tearDown.
   }
 
   @override
@@ -119,17 +139,17 @@ class WnChatListContextMenu extends HookWidget {
     final alignX = (itemPosition.dx - menuHorizontalInset) / menuWidth;
     final alignY = (itemCenterInMenu / menuContentHeight) * 2 - 1;
 
-    final controller = useAnimationController(duration: _animationDuration);
+    final animController = useAnimationController(duration: _animationDuration);
     final curvedAnimation = useMemoized(
-      () => CurvedAnimation(parent: controller, curve: Curves.easeOut),
-      [controller],
+      () => CurvedAnimation(parent: animController, curve: Curves.easeOut),
+      [animController],
     );
 
     useEffect(() {
-      controller.forward();
-      _animatedDismiss = () => controller.reverse();
+      animController.forward();
+      controller._animatedDismiss = () => animController.reverse();
       return () {
-        _animatedDismiss = null;
+        controller._animatedDismiss = null;
         curvedAnimation.dispose();
       };
     }, const []);
@@ -203,7 +223,7 @@ class WnChatListContextMenu extends HookWidget {
                             return Padding(
                               padding: EdgeInsets.only(top: index > 0 ? buttonSpacing : 0),
                               child: _ContextMenuButton(
-                                key: Key('context_menu_action_${action.label.toLowerCase()}'),
+                                key: Key('context_menu_action_${action.id}'),
                                 label: action.label,
                                 icon: action.icon,
                                 isDestructive: action.isDestructive,

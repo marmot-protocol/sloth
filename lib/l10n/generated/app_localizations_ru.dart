@@ -656,4 +656,7 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get archive => 'Архивировать';
+
+  @override
+  String get failedToPinChat => 'Не удалось закрепить. Попробуйте снова.';
 }

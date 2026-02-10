@@ -195,5 +195,6 @@
   "pin": "Sabitle",
   "unpin": "Sabitlemeden Kaldır",
   "mute": "Sessiz",
-  "archive": "Arşivle"
+  "archive": "Arşivle",
+  "failedToPinChat": "Sabitleme başarısız. Lütfen tekrar deneyin."
 }

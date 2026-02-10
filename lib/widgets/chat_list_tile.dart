@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
@@ -15,14 +16,18 @@ import 'package:whitenoise/widgets/wn_chat_list_item.dart';
 import 'package:whitenoise/widgets/wn_chat_status.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 
+final _logger = Logger('ChatListTile');
+
 class ChatListTile extends HookConsumerWidget {
   final ChatSummary chatSummary;
   final VoidCallback? onChatListChanged;
+  final void Function(String message)? onError;
 
   const ChatListTile({
     super.key,
     required this.chatSummary,
     this.onChatListChanged,
+    this.onError,
   });
 
   @override
@@ -129,26 +134,35 @@ class ChatListTile extends HookConsumerWidget {
         ),
         actions: [
           WnChatListContextMenuAction(
+            id: isPinned ? 'unpin' : 'pin',
             label: isPinned ? l10n.unpin : l10n.pin,
             icon: isPinned ? WnIcons.unpin : WnIcons.pin,
             onTap: () async {
-              await setChatPinOrder(
-                accountPubkey: myPubkey,
-                mlsGroupId: chatSummary.mlsGroupId,
-                pinOrder: isPinned ? null : 0,
-              );
-              onChatListChanged?.call();
+              try {
+                await setChatPinOrder(
+                  accountPubkey: myPubkey,
+                  mlsGroupId: chatSummary.mlsGroupId,
+                  pinOrder: isPinned ? null : 0,
+                );
+                onChatListChanged?.call();
+              } catch (e, st) {
+                _logger.severe('Failed to update pin order', e, st);
+                onError?.call(l10n.failedToPinChat);
+              }
             },
           ),
           WnChatListContextMenuAction(
+            id: 'mute',
             label: l10n.mute,
             icon: WnIcons.notification,
           ),
           WnChatListContextMenuAction(
+            id: 'archive',
             label: l10n.archive,
             icon: WnIcons.archive,
           ),
           WnChatListContextMenuAction(
+            id: 'delete',
             label: l10n.delete,
             icon: WnIcons.trashCan,
             isDestructive: true,

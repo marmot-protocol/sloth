@@ -656,4 +656,7 @@ class AppLocalizationsEs extends AppLocalizations {
 
   @override
   String get archive => 'Archivar';
+
+  @override
+  String get failedToPinChat => 'Error al fijar. Por favor, inténtalo de nuevo.';
 }

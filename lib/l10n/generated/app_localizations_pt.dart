@@ -654,4 +654,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get archive => 'Arquivar';
+
+  @override
+  String get failedToPinChat => 'Erro ao fixar. Por favor, tente novamente.';
 }

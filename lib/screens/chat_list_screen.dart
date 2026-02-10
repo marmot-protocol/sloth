@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:whitenoise/hooks/use_chat_list.dart';
+import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
@@ -9,6 +10,7 @@ import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
 import 'package:whitenoise/widgets/wn_search_and_filters.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 const _slateHeight = 80;
 const _searchAndFiltersHeight = 108;
@@ -22,6 +24,7 @@ class ChatListScreen extends HookConsumerWidget {
     final pubkey = ref.watch(accountPubkeyProvider);
     final chatListResult = useChatList(pubkey);
     final safeAreaTop = MediaQuery.of(context).padding.top;
+    final notice = useSystemNotice();
 
     final chatList = chatListResult.chats;
     final isLoading = chatListResult.isLoading;
@@ -42,6 +45,7 @@ class ChatListScreen extends HookConsumerWidget {
                 key: Key(chatSummary.mlsGroupId),
                 chatSummary: chatSummary,
                 onChatListChanged: chatListResult.refresh,
+                onError: notice.showErrorNotice,
               );
             },
           ),
@@ -49,6 +53,16 @@ class ChatListScreen extends HookConsumerWidget {
             bottom: false,
             child: WnSlate(header: WnAccountBar()),
           ),
+          if (notice.noticeMessage != null)
+            SafeArea(
+              bottom: false,
+              child: WnSystemNotice(
+                key: ValueKey(notice.noticeMessage),
+                title: notice.noticeMessage!,
+                type: notice.noticeType,
+                onDismiss: notice.dismissNotice,
+              ),
+            ),
         ],
       ),
     );

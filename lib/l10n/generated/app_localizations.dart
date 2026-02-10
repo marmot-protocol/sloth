@@ -1277,6 +1277,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Archive'**
   String get archive;
+
+  /// Error message when pin/unpin operation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update pin. Please try again.'**
+  String get failedToPinChat;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -59,6 +59,7 @@ ChatSummary _chatSummary({
 class _MockApi extends MockWnApi {
   FlutterMetadata welcomerMetadata = const FlutterMetadata(custom: {});
   bool shouldThrow = false;
+  bool shouldThrowOnPin = false;
   int setChatPinOrderCallCount = 0;
   PlatformInt64? lastPinOrder;
 
@@ -77,6 +78,7 @@ class _MockApi extends MockWnApi {
     required String mlsGroupId,
     PlatformInt64? pinOrder,
   }) async {
+    if (shouldThrowOnPin) throw Exception('Pin order update failed');
     setChatPinOrderCallCount++;
     lastPinOrder = pinOrder;
   }
@@ -94,6 +96,7 @@ void main() {
   setUp(() {
     _api.welcomerMetadata = const FlutterMetadata(custom: {});
     _api.shouldThrow = false;
+    _api.shouldThrowOnPin = false;
     _api.setChatPinOrderCallCount = 0;
     _api.lastPinOrder = null;
   });
@@ -102,9 +105,10 @@ void main() {
     WidgetTester tester,
     ChatSummary chatSummary, {
     bool settle = true,
+    void Function(String)? onError,
   }) async {
     await mountWidget(
-      ChatListTile(chatSummary: chatSummary),
+      ChatListTile(chatSummary: chatSummary, onError: onError),
       tester,
       overrides: [
         accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
@@ -565,6 +569,52 @@ void main() {
         );
         final previewItem = contextMenu.child as WnChatListItem;
         expect(previewItem.showPinned, isTrue);
+      });
+
+      testWidgets('calls onError when setChatPinOrder fails', (tester) async {
+        _api.shouldThrowOnPin = true;
+        String? errorMessage;
+
+        await pumpTile(
+          tester,
+          _chatSummary(name: 'Test Chat'),
+          onError: (msg) => errorMessage = msg,
+        );
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('context_menu_action_pin')));
+        await tester.pumpAndSettle();
+
+        expect(errorMessage, isNotNull);
+        expect(_api.setChatPinOrderCallCount, 0);
+      });
+
+      testWidgets('does not call onChatListChanged when pin fails', (tester) async {
+        _api.shouldThrowOnPin = true;
+        var refreshCalled = false;
+
+        await mountWidget(
+          ChatListTile(
+            chatSummary: _chatSummary(name: 'Test Chat'),
+            onChatListChanged: () => refreshCalled = true,
+            onError: (_) {},
+          ),
+          tester,
+          overrides: [
+            accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
+          ],
+        );
+        await tester.pumpAndSettle();
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('context_menu_action_pin')));
+        await tester.pumpAndSettle();
+
+        expect(refreshCalled, isFalse);
       });
     });
   });

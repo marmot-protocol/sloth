@@ -649,4 +649,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get archive => 'Archive';
+
+  @override
+  String get failedToPinChat => 'Failed to update pin. Please try again.';
 }

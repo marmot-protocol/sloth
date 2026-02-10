@@ -195,5 +195,6 @@
   "pin": "Fixar",
   "unpin": "Desafixar",
   "mute": "Silenciar",
-  "archive": "Arquivar"
+  "archive": "Arquivar",
+  "failedToPinChat": "Erro ao fixar. Por favor, tente novamente."
 }
