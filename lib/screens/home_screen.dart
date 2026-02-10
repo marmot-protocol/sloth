@@ -5,7 +5,6 @@ import 'package:gap/gap.dart' show Gap;
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_auth_buttons_container.dart' show WnAuthButtonsContainer;
-import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:whitenoise/widgets/wn_slate.dart' show WnSlate;
 
 class HomeScreen extends StatelessWidget {
@@ -20,7 +19,6 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          const WnPixelsLayer(),
           SafeArea(
             child: Column(
               children: [
