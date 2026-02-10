@@ -643,5 +643,14 @@ class AppLocalizationsFr extends AppLocalizations {
   String get signerErrorUnknown => 'Une erreur s\'est produite avec le signer. Veuillez réessayer.';
 
   @override
-  String get messageNotFound => 'Message introuvable';
+  String get pin => 'Épingler';
+
+  @override
+  String get unpin => 'Désépingler';
+
+  @override
+  String get mute => 'Muet';
+
+  @override
+  String get archive => 'Archiver';
 }

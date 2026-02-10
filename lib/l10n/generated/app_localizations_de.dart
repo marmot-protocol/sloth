@@ -656,5 +656,14 @@ class AppLocalizationsDe extends AppLocalizations {
       'Ein Fehler ist beim Signer aufgetreten. Bitte versuch es erneut.';
 
   @override
-  String get messageNotFound => 'Nachricht nicht gefunden';
+  String get pin => 'Anheften';
+
+  @override
+  String get unpin => 'Loslösen';
+
+  @override
+  String get mute => 'Stummschalten';
+
+  @override
+  String get archive => 'Archivieren';
 }

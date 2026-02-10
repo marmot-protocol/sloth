@@ -1007,5 +1007,25 @@
   "messageNotFound": "Message not found",
   "@messageNotFound": {
     "description": "Text shown in reply preview when the original message is deleted or not available"
+  },
+
+  "pin": "Pin",
+  "@pin": {
+    "description": "Pin chat context menu action"
+  },
+
+  "unpin": "Unpin",
+  "@unpin": {
+    "description": "Unpin chat context menu action"
+  },
+
+  "mute": "Mute",
+  "@mute": {
+    "description": "Mute chat context menu action"
+  },
+
+  "archive": "Archive",
+  "@archive": {
+    "description": "Archive chat context menu action"
   }
 }

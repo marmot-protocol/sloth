@@ -191,5 +191,9 @@
   "signerErrorNoActivity": "No se pudo abrir el signer. Por favor, inténtalo de nuevo.",
   "signerErrorLaunchError": "Error al abrir la app del signer.",
   "signerErrorUnknown": "Ocurrió un error con el signer. Por favor, inténtalo de nuevo.",
-  "messageNotFound": "Mensaje no encontrado"
+  "messageNotFound": "Mensaje no encontrado",
+  "pin": "Fijar",
+  "unpin": "Desfijar",
+  "mute": "Silenciar",
+  "archive": "Archivar"
 }

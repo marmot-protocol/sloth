@@ -191,5 +191,9 @@
   "signerErrorNoActivity": "Signer başlatılamadı. Lütfen tekrar deneyin.",
   "signerErrorLaunchError": "Signer uygulaması başlatılamadı.",
   "signerErrorUnknown": "Signer ile bir hata oluştu. Lütfen tekrar deneyin.",
-  "messageNotFound": "Mesaj bulunamadı"
+  "messageNotFound": "Mesaj bulunamadı",
+  "pin": "Sabitle",
+  "unpin": "Sabitlemeden Kaldır",
+  "mute": "Sessiz",
+  "archive": "Arşivle"
 }

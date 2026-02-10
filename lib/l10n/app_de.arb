@@ -191,5 +191,9 @@
   "signerErrorNoActivity": "Signer konnte nicht gestartet werden. Bitte versuch es erneut.",
   "signerErrorLaunchError": "Signer-App konnte nicht gestartet werden.",
   "signerErrorUnknown": "Ein Fehler ist beim Signer aufgetreten. Bitte versuch es erneut.",
-  "messageNotFound": "Nachricht nicht gefunden"
+  "messageNotFound": "Nachricht nicht gefunden",
+  "pin": "Anheften",
+  "unpin": "Loslösen",
+  "mute": "Stummschalten",
+  "archive": "Archivieren"
 }

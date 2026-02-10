@@ -191,5 +191,9 @@
   "signerErrorNoActivity": "Не удалось запустить signer. Попробуйте снова.",
   "signerErrorLaunchError": "Не удалось запустить приложение signer.",
   "signerErrorUnknown": "Произошла ошибка с signer. Попробуйте снова.",
-  "messageNotFound": "Сообщение не найдено"
+  "messageNotFound": "Сообщение не найдено",
+  "pin": "Закрепить",
+  "unpin": "Открепить",
+  "mute": "Без звука",
+  "archive": "Архивировать"
 }

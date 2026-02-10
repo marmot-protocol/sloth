@@ -1254,11 +1254,29 @@ abstract class AppLocalizations {
   /// **'An error occurred with the signer. Please try again.'**
   String get signerErrorUnknown;
 
-  /// Text shown in reply preview when the original message is deleted or not available
+  /// Pin chat context menu action
   ///
   /// In en, this message translates to:
-  /// **'Message not found'**
-  String get messageNotFound;
+  /// **'Pin'**
+  String get pin;
+
+  /// Unpin chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin'**
+  String get unpin;
+
+  /// Mute chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// Archive chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

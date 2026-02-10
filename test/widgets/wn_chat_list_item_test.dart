@@ -148,5 +148,35 @@ void main() {
       await tester.tap(find.byType(WnChatListItem));
       expect(tapped, isTrue);
     });
+
+    testWidgets('calls onLongPress when long pressed', (tester) async {
+      var longPressed = false;
+      await mountWidget(
+        WnChatListItem(
+          title: 'Hold me',
+          subtitle: 'Hold',
+          timestamp: 'Now',
+          onLongPress: () => longPressed = true,
+        ),
+        tester,
+      );
+
+      await tester.longPress(find.byType(WnChatListItem));
+      expect(longPressed, isTrue);
+    });
+
+    testWidgets('does not crash when onLongPress is null', (tester) async {
+      await mountWidget(
+        const WnChatListItem(
+          title: 'No handler',
+          subtitle: 'Test',
+          timestamp: 'Now',
+        ),
+        tester,
+      );
+
+      await tester.longPress(find.byType(WnChatListItem));
+      expect(find.text('No handler'), findsOneWidget);
+    });
   });
 }

@@ -41,6 +41,7 @@ class ChatListScreen extends HookConsumerWidget {
               return ChatListTile(
                 key: Key(chatSummary.mlsGroupId),
                 chatSummary: chatSummary,
+                onChatListChanged: chatListResult.refresh,
               );
             },
           ),

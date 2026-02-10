@@ -191,5 +191,9 @@
   "signerErrorNoActivity": "Impossible de lancer le signer. Veuillez réessayer.",
   "signerErrorLaunchError": "Échec du lancement de l'application signer.",
   "signerErrorUnknown": "Une erreur s'est produite avec le signer. Veuillez réessayer.",
-  "messageNotFound": "Message introuvable"
+  "messageNotFound": "Message introuvable",
+  "pin": "Épingler",
+  "unpin": "Désépingler",
+  "mute": "Muet",
+  "archive": "Archiver"
 }
