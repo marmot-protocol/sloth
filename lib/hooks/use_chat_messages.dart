@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:whitenoise/models/reply_preview.dart';
+import 'package:whitenoise/services/user_service.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
-import 'package:whitenoise/src/rust/api/users.dart' as users_api;
 
 typedef ChatMessagesResult = ({
   int messageCount,
@@ -19,7 +19,7 @@ ChatMessagesResult useChatMessages(String groupId) {
   final messageIds = useRef<List<String>>([]);
   final messagesById = useRef<Map<String, ChatMessage>>({});
   final indexById = useRef<Map<String, int>>({});
-  final authorsMetadataByPubkey = useRef<Map<String, FlutterMetadata>>({});
+  final authorsMetadataByPubkey = useState<Map<String, FlutterMetadata>>({});
   final loadingPubkeys = useRef<Set<String>>({});
 
   final stream = useMemoized(
@@ -100,11 +100,11 @@ ChatMessagesResult useChatMessages(String groupId) {
 
     loadingPubkeys.value.add(pubkey);
     try {
-      final metadata = await users_api.userMetadata(
-        pubkey: pubkey,
-        blockingDataSync: false,
-      );
-      authorsMetadataByPubkey.value[pubkey] = metadata;
+      final metadata = await UserService(pubkey).fetchMetadata();
+      authorsMetadataByPubkey.value = {
+        ...authorsMetadataByPubkey.value,
+        pubkey: metadata,
+      };
     } finally {
       loadingPubkeys.value.remove(pubkey);
     }

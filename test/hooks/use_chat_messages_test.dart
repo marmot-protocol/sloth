@@ -28,6 +28,10 @@ ChatMessage _message(
   kind: 9,
 );
 
+const _emptyMetadata = FlutterMetadata(custom: {});
+
+enum _MetadataMode { normal, emptyThenSuccess }
+
 class _MockApi implements RustLibApi {
   StreamController<MessageStreamItem>? controller;
 
@@ -77,14 +81,28 @@ class _MockApi implements RustLibApi {
   }
 
   FlutterMetadata? userMetadataResponse;
+  _MetadataMode metadataMode = _MetadataMode.normal;
+  final metadataCalls = <({String pubkey, bool blocking})>[];
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
     required String pubkey,
     required bool blockingDataSync,
-  }) => Future.value(
-    userMetadataResponse ?? const FlutterMetadata(displayName: 'Author', custom: {}),
-  );
+  }) {
+    metadataCalls.add((pubkey: pubkey, blocking: blockingDataSync));
+    switch (metadataMode) {
+      case _MetadataMode.normal:
+        return Future.value(
+          userMetadataResponse ?? const FlutterMetadata(displayName: 'Author', custom: {}),
+        );
+      case _MetadataMode.emptyThenSuccess:
+        return blockingDataSync
+            ? Future.value(
+                userMetadataResponse ?? const FlutterMetadata(displayName: 'Author', custom: {}),
+              )
+            : Future.value(_emptyMetadata);
+    }
+  }
 
   @override
   dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
@@ -103,6 +121,8 @@ void main() {
     _api.controller?.close();
     _api.controller = null;
     _api.userMetadataResponse = null;
+    _api.metadataMode = _MetadataMode.normal;
+    _api.metadataCalls.clear();
   });
 
   group('useChatMessages', () {
@@ -475,6 +495,52 @@ void main() {
         expect(preview.authorPubkey, authorPubkey);
         expect(preview.content, 'Original content');
         expect(preview.authorMetadata?.displayName, 'Original Author');
+      });
+
+      testWidgets('rebuilds with author metadata after async fetch completes', (tester) async {
+        const authorPubkey = testPubkeyB;
+        _api.userMetadataResponse = const FlutterMetadata(
+          displayName: 'Async Author',
+          custom: {},
+        );
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024), pubkey: authorPubkey, content: 'Hello'),
+        ]);
+        await tester.pump();
+
+        final previewBefore = getResult().getReplyPreview('m1');
+        expect(previewBefore!.authorMetadata, isNull);
+
+        await tester.pumpAndSettle();
+
+        final previewAfter = getResult().getReplyPreview('m1');
+        expect(previewAfter!.authorMetadata, isNotNull);
+        expect(previewAfter.authorMetadata?.displayName, 'Async Author');
+      });
+
+      testWidgets('fetches metadata from relays when local cache is empty', (tester) async {
+        const authorPubkey = testPubkeyB;
+        _api.metadataMode = _MetadataMode.emptyThenSuccess;
+        _api.userMetadataResponse = const FlutterMetadata(
+          displayName: 'Relay Author',
+          name: 'relay_author',
+          custom: {},
+        );
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024), pubkey: authorPubkey, content: 'Hello'),
+        ]);
+        await tester.pump();
+        getResult().getReplyPreview('m1');
+        await tester.pumpAndSettle();
+
+        final preview = getResult().getReplyPreview('m1');
+        expect(preview!.authorMetadata, isNotNull);
+        expect(preview.authorMetadata?.displayName, 'Relay Author');
+        expect(_api.metadataCalls.any((c) => c.blocking), isTrue);
       });
     });
   });
