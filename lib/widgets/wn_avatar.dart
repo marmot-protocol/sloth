@@ -144,7 +144,7 @@ class _EditButton extends StatelessWidget {
           child: WnIcon(
             WnIcons.editCircle,
             size: iconSize,
-            color: colors.backgroundContentSecondary,
+            color: colors.backgroundContentPrimary,
           ),
         ),
       ),
@@ -173,7 +173,7 @@ class _PinBadge extends StatelessWidget {
         child: WnIcon(
           WnIcons.pinFilled,
           size: iconSize,
-          color: colors.backgroundContentPrimary,
+          color: colors.backgroundContentSecondary,
         ),
       ),
     );
