@@ -204,6 +204,5 @@
   "deleteAllData": "Supprimer Toutes les Données",
   "deleteAllDataConfirmation": "Supprimer toutes les données ?",
   "deleteAllDataWarning": "Cela supprimera définitivement tous vos chats, messages et paramètres de cet appareil. Cette action ne peut pas être annulée.",
-  "deleteAllDataError": "Échec de la suppression de toutes les données. Veuillez réessayer.",
-  "allDataDeleted": "Toutes les données ont été supprimées avec succès"
+  "deleteAllDataError": "Échec de la suppression de toutes les données. Veuillez réessayer."
 }

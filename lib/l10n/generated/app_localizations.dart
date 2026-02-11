@@ -1337,12 +1337,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete all data. Please try again.'**
   String get deleteAllDataError;
-
-  /// Success message when all data is deleted
-  ///
-  /// In en, this message translates to:
-  /// **'All data deleted successfully'**
-  String get allDataDeleted;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

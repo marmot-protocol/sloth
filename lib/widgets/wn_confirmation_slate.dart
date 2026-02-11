@@ -1,25 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
-import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
-class WnConfirmationBottomSheet extends StatelessWidget {
+class WnConfirmationSlate extends StatelessWidget {
   final String title;
   final String message;
   final String confirmText;
   final String cancelText;
   final VoidCallback onConfirm;
+  final VoidCallback onCancel;
   final bool isDestructive;
 
-  const WnConfirmationBottomSheet({
+  const WnConfirmationSlate({
     super.key,
     required this.title,
     required this.message,
     required this.confirmText,
+    required this.cancelText,
     required this.onConfirm,
-    this.cancelText = '',
+    required this.onCancel,
     this.isDestructive = false,
   });
 
@@ -28,24 +31,45 @@ class WnConfirmationBottomSheet extends StatelessWidget {
     required String title,
     required String message,
     required String confirmText,
-    String? cancelText,
+    required String cancelText,
     bool isDestructive = false,
   }) async {
     final colors = context.colors;
 
-    return await showModalBottomSheet<bool>(
-      context: context,
-      backgroundColor: colors.backgroundTertiary,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16.r)),
-      ),
-      builder: (context) => WnConfirmationBottomSheet(
-        title: title,
-        message: message,
-        confirmText: confirmText,
-        cancelText: cancelText ?? context.l10n.cancel,
-        onConfirm: () => Navigator.of(context).pop(true),
-        isDestructive: isDestructive,
+    return await Navigator.of(context).push<bool>(
+      PageRouteBuilder(
+        opaque: false,
+        barrierDismissible: true,
+        barrierColor: colors.backgroundPrimary.withValues(alpha: 0.8),
+        pageBuilder: (context, _, _) {
+          return SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: GestureDetector(
+                    onTap: () => Navigator.of(context).pop(false),
+                    behavior: HitTestBehavior.opaque,
+                  ),
+                ),
+                WnConfirmationSlate(
+                  title: title,
+                  message: message,
+                  confirmText: confirmText,
+                  cancelText: cancelText,
+                  onConfirm: () => Navigator.of(context).pop(true),
+                  onCancel: () => Navigator.of(context).pop(false),
+                  isDestructive: isDestructive,
+                ),
+              ],
+            ),
+          );
+        },
+        transitionsBuilder: (_, animation, _, child) {
+          return FadeTransition(
+            opacity: animation,
+            child: child,
+          );
+        },
       ),
     );
   }
@@ -54,30 +78,17 @@ class WnConfirmationBottomSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
 
-    return SafeArea(
+    return WnSlate(
+      header: WnSlateNavigationHeader(
+        title: title,
+        onNavigate: onCancel,
+      ),
       child: Padding(
-        padding: EdgeInsets.all(16.w),
+        padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
         child: Column(
           mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Center(
-              child: Container(
-                width: 40.w,
-                height: 4.h,
-                decoration: BoxDecoration(
-                  color: colors.borderTertiary,
-                  borderRadius: BorderRadius.circular(2.r),
-                ),
-              ),
-            ),
-            Gap(16.h),
-            Text(
-              title,
-              style: context.typographyScaled.semiBold18.copyWith(
-                color: colors.backgroundContentPrimary,
-              ),
-            ),
             Gap(12.h),
             Text(
               message,
@@ -92,7 +103,7 @@ class WnConfirmationBottomSheet extends StatelessWidget {
                 Expanded(
                   child: WnButton(
                     key: const Key('cancel_button'),
-                    onPressed: () => Navigator.of(context).pop(false),
+                    onPressed: onCancel,
                     text: cancelText,
                     type: WnButtonType.outline,
                   ),

@@ -10,7 +10,7 @@ import 'package:whitenoise/providers/theme_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
-import 'package:whitenoise/widgets/wn_confirmation_bottom_sheet.dart';
+import 'package:whitenoise/widgets/wn_confirmation_slate.dart';
 import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
@@ -48,19 +48,20 @@ class AppSettingsScreen extends HookConsumerWidget {
     ];
 
     Future<void> handleDeleteAllData() async {
-      final confirmed = await WnConfirmationBottomSheet.show(
+      final confirmed = await WnConfirmationSlate.show(
         context: context,
         title: context.l10n.deleteAllDataConfirmation,
         message: context.l10n.deleteAllDataWarning,
         confirmText: context.l10n.delete,
+        cancelText: context.l10n.cancel,
         isDestructive: true,
       );
 
       if (confirmed == true) {
-        try {
-          await deleteAllData();
-          if (!context.mounted) return;
+        final success = await deleteAllData();
+        if (!context.mounted) return;
 
+        if (success) {
           await ref.read(authProvider.notifier).resetAuth();
 
           WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -68,8 +69,7 @@ class AppSettingsScreen extends HookConsumerWidget {
               Routes.goToHome(context);
             }
           });
-        } catch (e) {
-          if (!context.mounted) return;
+        } else {
           systemNotice.showErrorNotice(context.l10n.deleteAllDataError);
         }
       }

@@ -204,6 +204,5 @@
   "deleteAllData": "Eliminar Todos los Datos",
   "deleteAllDataConfirmation": "¿Eliminar todos los datos?",
   "deleteAllDataWarning": "Esto eliminará permanentemente todos tus chats, mensajes y configuraciones de este dispositivo. Esta acción no se puede deshacer.",
-  "deleteAllDataError": "No se pudieron eliminar todos los datos. Por favor, inténtalo de nuevo.",
-  "allDataDeleted": "Todos los datos se han eliminado correctamente"
+  "deleteAllDataError": "No se pudieron eliminar todos los datos. Por favor, inténtalo de nuevo."
 }

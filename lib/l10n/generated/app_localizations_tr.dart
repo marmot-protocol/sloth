@@ -683,7 +683,4 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get deleteAllDataError => 'Tüm veriler silinemedi. Lütfen tekrar deneyin.';
-
-  @override
-  String get allDataDeleted => 'Tüm veriler başarıyla silindi';
 }

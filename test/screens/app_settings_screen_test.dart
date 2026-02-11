@@ -191,7 +191,7 @@ void main() {
     });
 
     testWidgets('delete all data button shows loading state', (tester) async {
-      mockApi.deleteAllDataDelay = const Duration(milliseconds: 100);
+      mockApi.deleteAllDataDelay = const Duration(seconds: 2);
 
       await pumpAppSettingsScreen(tester);
 
@@ -200,6 +200,7 @@ void main() {
 
       await tester.tap(find.byKey(const Key('confirm_button')));
       await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
 
       final button = tester.widget<WnButton>(find.byKey(const Key('delete_all_data_button')));
       expect(button.loading, true);
@@ -216,7 +217,10 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.tap(find.byKey(const Key('confirm_button')));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 500));
       await tester.pumpAndSettle();
+      await tester.pump(const Duration(seconds: 1));
 
       expect(mockApi.deleteAllDataCalled, true);
       expect(find.text('Failed to delete all data. Please try again.'), findsOneWidget);

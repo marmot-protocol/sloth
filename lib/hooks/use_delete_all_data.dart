@@ -26,25 +26,26 @@ class DeleteAllDataState {
 
 ({
   DeleteAllDataState state,
-  Future<void> Function() deleteAllData,
+  Future<bool> Function() deleteAllData,
 })
 useDeleteAllData() {
   final state = useState(const DeleteAllDataState());
 
-  Future<void> deleteAllData() async {
+  Future<bool> deleteAllData() async {
     state.value = state.value.copyWith(isDeleting: true, hasError: false);
     try {
       _logger.info('Deleting all application data');
       await api.deleteAllData();
       _logger.info('All data deleted successfully');
-      state.value = state.value.copyWith(isDeleting: false);
+      state.value = state.value.copyWith(isDeleting: false, hasError: false);
+      return true;
     } catch (e, stackTrace) {
       _logger.severe('Failed to delete all data', e, stackTrace);
       state.value = state.value.copyWith(
         isDeleting: false,
         hasError: true,
       );
-      rethrow;
+      return false;
     }
   }
 

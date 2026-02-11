@@ -690,7 +690,4 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get deleteAllDataError => 'Не удалось удалить все данные. Пожалуйста, попробуйте снова.';
-
-  @override
-  String get allDataDeleted => 'Все данные успешно удалены';
 }

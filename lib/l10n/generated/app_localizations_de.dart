@@ -701,7 +701,4 @@ class AppLocalizationsDe extends AppLocalizations {
   @override
   String get deleteAllDataError =>
       'Fehler beim Löschen aller Daten. Bitte versuchen Sie es erneut.';
-
-  @override
-  String get allDataDeleted => 'Alle Daten wurden erfolgreich gelöscht';
 }

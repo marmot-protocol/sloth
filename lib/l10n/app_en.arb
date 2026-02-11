@@ -1072,10 +1072,5 @@
   "deleteAllDataError": "Failed to delete all data. Please try again.",
   "@deleteAllDataError": {
     "description": "Error message when data deletion fails"
-  },
-
-  "allDataDeleted": "All data deleted successfully",
-  "@allDataDeleted": {
-    "description": "Success message when all data is deleted"
   }
 }

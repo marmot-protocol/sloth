@@ -185,52 +185,31 @@ void main() {
     });
 
     testWidgets('deleteAllData clears previous error on new attempt', (tester) async {
-      late DeleteAllDataState state;
       late Future<void> Function() deleteAllData;
-
-      mockApi.deleteAllDataShouldFail = true;
-
-      await mountHook(
+      final getState = await mountHook(
         tester,
         () {
           final hook = useDeleteAllData();
-          state = hook.state;
           deleteAllData = hook.deleteAllData;
-          return null;
+          return hook.state;
         },
       );
+
+      mockApi.deleteAllDataShouldFail = true;
 
       try {
         await deleteAllData();
       } catch (_) {}
       await tester.pumpAndSettle();
 
-      await mountHook(
-        tester,
-        () {
-          final hook = useDeleteAllData();
-          state = hook.state;
-          return null;
-        },
-      );
-
-      expect(state.hasError, true);
+      expect(getState().hasError, true);
 
       mockApi.deleteAllDataShouldFail = false;
 
       await deleteAllData();
       await tester.pumpAndSettle();
 
-      await mountHook(
-        tester,
-        () {
-          final hook = useDeleteAllData();
-          state = hook.state;
-          return null;
-        },
-      );
-
-      expect(state.hasError, false);
+      expect(getState().hasError, false);
     });
   });
 }
