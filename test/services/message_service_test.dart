@@ -3,6 +3,7 @@ import 'package:whitenoise/services/message_service.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 const _testPubkey = testPubkeyA;
@@ -18,7 +19,7 @@ class _MockTag implements Tag {
   bool get isDisposed => false;
 }
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   final List<({String pubkey, String groupId, String message, int kind, List<Tag>? tags})>
   sentMessages = [];
 
@@ -45,9 +46,6 @@ class _MockApi implements RustLibApi {
       tokens: const [],
     );
   }
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 void main() {
@@ -208,7 +206,7 @@ void main() {
     test('sends deletion message once', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.length, 1);
@@ -217,7 +215,7 @@ void main() {
     test('calls API with pubkey from constructor', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.pubkey, _testPubkey);
@@ -226,7 +224,7 @@ void main() {
     test('calls API with groupId from constructor', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.groupId, 'group1');
@@ -235,7 +233,7 @@ void main() {
     test('calls API with empty message', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.message, '');
@@ -244,7 +242,7 @@ void main() {
     test('calls API with deletion kind (5)', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.kind, 5);
@@ -253,7 +251,7 @@ void main() {
     test('sends e tag with messageId', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
@@ -263,17 +261,17 @@ void main() {
     test('sends p tag with messagePubkey', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
-      expect(tags[1].vec, ['p', 'author_pubkey', '']);
+      expect(tags[1].vec, ['p', testPubkeyB, '']);
     });
 
     test('sends k tag with text message kind (9)', () async {
       await service.deleteTextMessage(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
@@ -285,7 +283,7 @@ void main() {
     test('sends deletion message once', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.length, 1);
@@ -294,7 +292,7 @@ void main() {
     test('calls API with pubkey from constructor', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.pubkey, _testPubkey);
@@ -303,7 +301,7 @@ void main() {
     test('calls API with groupId from constructor', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.groupId, 'group1');
@@ -312,7 +310,7 @@ void main() {
     test('calls API with empty message', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.message, '');
@@ -321,7 +319,7 @@ void main() {
     test('calls API with deletion kind (5)', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       expect(mockApi.sentMessages.first.kind, 5);
@@ -330,7 +328,7 @@ void main() {
     test('sends e tag with reactionId', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
@@ -340,17 +338,17 @@ void main() {
     test('sends p tag with reactionPubkey', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
-      expect(tags[1].vec, ['p', 'author_pubkey', '']);
+      expect(tags[1].vec, ['p', testPubkeyB, '']);
     });
 
     test('sends k tag with reaction kind (7)', () async {
       await service.deleteReaction(
         reactionId: 'reaction123',
-        reactionPubkey: 'author_pubkey',
+        reactionPubkey: testPubkeyB,
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
@@ -361,7 +359,7 @@ void main() {
   group('toggleReaction', () {
     ChatMessage createMessage({
       String id = 'msg123',
-      String pubkey = 'author_pubkey',
+      String pubkey = testPubkeyB,
       ReactionSummary? reactions,
     }) => ChatMessage(
       id: id,
@@ -448,12 +446,12 @@ void main() {
       final message = createMessage(
         reactions: ReactionSummary(
           byEmoji: [
-            EmojiReaction(emoji: '👍', count: BigInt.one, users: const ['other_user']),
+            EmojiReaction(emoji: '👍', count: BigInt.one, users: const [testPubkeyC]),
           ],
           userReactions: [
             UserReaction(
               reactionId: 'other_reaction',
-              user: 'other_user',
+              user: testPubkeyC,
               emoji: '👍',
               createdAt: DateTime.now(),
             ),
@@ -473,7 +471,7 @@ void main() {
     test('sends reaction message once', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '👍',
       );
@@ -484,7 +482,7 @@ void main() {
     test('calls API with pubkey from constructor', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '👍',
       );
@@ -495,7 +493,7 @@ void main() {
     test('calls API with groupId from constructor', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '👍',
       );
@@ -506,7 +504,7 @@ void main() {
     test('calls API with emoji as message', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '🔥',
       );
@@ -517,7 +515,7 @@ void main() {
     test('calls API with reaction kind (7)', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '👍',
       );
@@ -528,7 +526,7 @@ void main() {
     test('sends e tag with messageId', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '👍',
       );
@@ -540,19 +538,19 @@ void main() {
     test('sends p tag with messagePubkey', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 9,
         emoji: '👍',
       );
 
       final tags = mockApi.sentMessages.first.tags!.cast<_MockTag>();
-      expect(tags[1].vec, ['p', 'author_pubkey', '']);
+      expect(tags[1].vec, ['p', testPubkeyB, '']);
     });
 
     test('sends k tag with messageKind', () async {
       await service.sendReaction(
         messageId: 'msg123',
-        messagePubkey: 'author_pubkey',
+        messagePubkey: testPubkeyB,
         messageKind: 42,
         emoji: '👍',
       );

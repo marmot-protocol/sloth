@@ -5,13 +5,15 @@ import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 ChatMessage _message(
   String id,
   DateTime createdAt, {
   String content = 'test',
-  String pubkey = 'pubkey',
+  String pubkey = testPubkeyA,
   bool isDeleted = false,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
 }) => ChatMessage(
@@ -32,7 +34,7 @@ const _emptyMetadata = FlutterMetadata(custom: {});
 
 enum _MetadataMode { normal, emptyThenSuccess }
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   StreamController<MessageStreamItem>? controller;
 
   void emitInitialSnapshot(List<ChatMessage> messages) {
@@ -312,12 +314,12 @@ void main() {
           final getResult = await _pump(tester, 'group1');
 
           _api.emitInitialSnapshot([
-            _message('m1', DateTime(2024), pubkey: 'alice'),
-            _message('m2', DateTime(2024, 1, 2), pubkey: 'bob'),
+            _message('m1', DateTime(2024), pubkey: testPubkeyB),
+            _message('m2', DateTime(2024, 1, 2), pubkey: testPubkeyC),
           ]);
           await tester.pumpAndSettle();
 
-          expect(getResult().latestMessagePubkey, 'bob');
+          expect(getResult().latestMessagePubkey, testPubkeyC);
         });
       });
 
@@ -341,15 +343,15 @@ void main() {
 
           expect(getResult().latestMessagePubkey, isNull);
 
-          _api.emitNewMessage(_message('m1', DateTime(2024), pubkey: 'alice'));
+          _api.emitNewMessage(_message('m1', DateTime(2024), pubkey: testPubkeyB));
           await tester.pumpAndSettle();
 
-          expect(getResult().latestMessagePubkey, 'alice');
+          expect(getResult().latestMessagePubkey, testPubkeyB);
 
-          _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2), pubkey: 'bob'));
+          _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2), pubkey: testPubkeyC));
           await tester.pumpAndSettle();
 
-          expect(getResult().latestMessagePubkey, 'bob');
+          expect(getResult().latestMessagePubkey, testPubkeyC);
         });
       });
     });
@@ -454,6 +456,7 @@ void main() {
         final preview = getResult().getReplyPreview('unknown');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isTrue);
+        expect(preview.messageId, 'unknown');
         expect(preview.authorPubkey, '');
         expect(preview.content, '');
         expect(preview.authorMetadata, isNull);
@@ -471,6 +474,7 @@ void main() {
         final preview = getResult().getReplyPreview('m2');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isTrue);
+        expect(preview.messageId, 'm2');
       });
 
       testWidgets('returns preview when message is found', (tester) async {
@@ -492,6 +496,7 @@ void main() {
         final preview = getResult().getReplyPreview('m1');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isFalse);
+        expect(preview.messageId, 'm1');
         expect(preview.authorPubkey, authorPubkey);
         expect(preview.content, 'Original content');
         expect(preview.authorMetadata?.displayName, 'Original Author');
