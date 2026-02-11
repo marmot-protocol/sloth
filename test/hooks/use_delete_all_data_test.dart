@@ -21,7 +21,7 @@ void main() {
     test('copyWith preserves isDeleting when not provided', () {
       const state = DeleteAllDataState(isDeleting: true);
       final newState = state.copyWith(error: 'test error');
-      
+
       expect(newState.isDeleting, true);
       expect(newState.error, 'test error');
     });
@@ -29,7 +29,7 @@ void main() {
     test('copyWith preserves error when not provided and clearError is false', () {
       const state = DeleteAllDataState(error: 'existing error');
       final newState = state.copyWith(isDeleting: true);
-      
+
       expect(newState.isDeleting, true);
       expect(newState.error, 'existing error');
     });
@@ -37,7 +37,7 @@ void main() {
     test('copyWith clears error when clearError is true', () {
       const state = DeleteAllDataState(error: 'existing error', isDeleting: true);
       final newState = state.copyWith(clearError: true);
-      
+
       expect(newState.isDeleting, true);
       expect(newState.error, null);
     });
@@ -45,14 +45,14 @@ void main() {
     test('copyWith updates isDeleting when provided', () {
       const state = DeleteAllDataState();
       final newState = state.copyWith(isDeleting: true);
-      
+
       expect(newState.isDeleting, true);
     });
 
     test('copyWith updates error when provided', () {
       const state = DeleteAllDataState();
       final newState = state.copyWith(error: 'new error');
-      
+
       expect(newState.error, 'new error');
     });
   });
@@ -128,7 +128,7 @@ void main() {
       expect(mockApi.deleteAllDataCalled, true);
     });
 
-    testWidgets('deleteAllData keeps isDeleting true after success', (tester) async {
+    testWidgets('deleteAllData sets isDeleting to false after success', (tester) async {
       late DeleteAllDataState state;
       late Future<void> Function() deleteAllData;
 
@@ -154,7 +154,7 @@ void main() {
         },
       );
 
-      expect(state.isDeleting, true);
+      expect(state.isDeleting, false);
       expect(state.error, null);
     });
 
@@ -174,7 +174,9 @@ void main() {
         },
       );
 
-      await deleteAllData();
+      try {
+        await deleteAllData();
+      } catch (_) {}
       await tester.pumpAndSettle();
 
       await mountHook(
@@ -206,7 +208,9 @@ void main() {
         },
       );
 
-      await deleteAllData();
+      try {
+        await deleteAllData();
+      } catch (_) {}
       await tester.pumpAndSettle();
 
       await mountHook(

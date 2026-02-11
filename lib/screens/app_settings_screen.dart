@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:whitenoise/hooks/use_delete_all_data.dart';
+import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
@@ -14,6 +15,7 @@ import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 class AppSettingsScreen extends HookConsumerWidget {
   const AppSettingsScreen({super.key});
@@ -24,6 +26,7 @@ class AppSettingsScreen extends HookConsumerWidget {
     final currentThemeMode = ref.watch(themeProvider).value ?? ThemeMode.system;
     final currentLocaleSetting = ref.watch(localeProvider).value ?? const SystemLocale();
     final (:state, :deleteAllData) = useDeleteAllData();
+    final systemNotice = useSystemNotice();
 
     final themeOptions = [
       WnDropdownOption(value: ThemeMode.system, label: context.l10n.themeSystem),
@@ -54,16 +57,21 @@ class AppSettingsScreen extends HookConsumerWidget {
       );
 
       if (confirmed == true) {
-        await deleteAllData();
-        if (!context.mounted) return;
+        try {
+          await deleteAllData();
+          if (!context.mounted) return;
 
-        await ref.read(authProvider.notifier).resetAuth();
-        
-        WidgetsBinding.instance.addPostFrameCallback((_) {
-          if (context.mounted) {
-            Routes.goToHome(context);
-          }
-        });
+          await ref.read(authProvider.notifier).resetAuth();
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              Routes.goToHome(context);
+            }
+          });
+        } catch (e) {
+          if (!context.mounted) return;
+          systemNotice.showErrorNotice('Failed to delete all data. Please try again.');
+        }
       }
     }
 
@@ -78,6 +86,15 @@ class AppSettingsScreen extends HookConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
+            systemNotice: systemNotice.noticeMessage != null
+                ? WnSystemNotice(
+                    key: ValueKey(systemNotice.noticeMessage),
+                    title: systemNotice.noticeMessage!,
+                    type: systemNotice.noticeType,
+                    variant: WnSystemNoticeVariant.dismissible,
+                    onDismiss: systemNotice.dismissNotice,
+                  )
+                : null,
             child: Padding(
               padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(

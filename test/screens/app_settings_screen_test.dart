@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
 import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/app_settings_screen.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/screens/home_screen.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
@@ -21,11 +22,11 @@ class _MockAuthNotifier extends AuthNotifier {
   Future<String?> build() async {
     final storage = ref.read(secureStorageProvider);
     final storedPubkey = await storage.read(key: 'active_account_pubkey');
-    
+
     if (storedPubkey == null) {
       await storage.write(key: 'active_account_pubkey', value: _overridePubkey);
     }
-    
+
     final pubkey = storedPubkey ?? _overridePubkey;
     state = AsyncData(pubkey);
     return pubkey;
@@ -186,9 +187,6 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(mockApi.deleteAllDataCalled, true);
-      
-      await tester.pumpAndSettle();
-      
       expect(find.byType(HomeScreen), findsOneWidget);
     });
 
@@ -207,6 +205,22 @@ void main() {
       expect(button.loading, true);
 
       await tester.pumpAndSettle();
+    });
+
+    testWidgets('delete all data shows error when API fails', (tester) async {
+      mockApi.deleteAllDataShouldFail = true;
+
+      await pumpAppSettingsScreen(tester);
+
+      await tester.tap(find.byKey(const Key('delete_all_data_button')));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('confirm_button')));
+      await tester.pumpAndSettle();
+
+      expect(mockApi.deleteAllDataCalled, true);
+      expect(find.text('Failed to delete all data. Please try again.'), findsOneWidget);
+      expect(find.byType(AppSettingsScreen), findsOneWidget);
     });
 
     testWidgets('theme selection persists across navigation', (tester) async {

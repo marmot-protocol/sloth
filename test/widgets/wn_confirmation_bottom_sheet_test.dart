@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_confirmation_bottom_sheet.dart';
 
 import '../test_helpers.dart';
@@ -91,6 +92,9 @@ void main() {
       );
 
       expect(find.text('Delete'), findsOneWidget);
+
+      final confirmButton = tester.widget<WnButton>(find.byKey(const Key('confirm_button')));
+      expect(confirmButton.type, WnButtonType.destructive);
     });
 
     testWidgets('show returns true when confirmed', (tester) async {

@@ -356,7 +356,7 @@ void main() {
       test('clears state', () async {
         await container.read(authProvider.notifier).loginWithNsec('nsec123');
         expect(container.read(authProvider).value, testPubkeyB);
-        
+
         await container.read(authProvider.notifier).resetAuth();
         expect(container.read(authProvider).value, isNull);
       });
@@ -364,7 +364,7 @@ void main() {
       test('clears secure storage', () async {
         await container.read(authProvider.notifier).loginWithNsec('nsec123');
         expect(await mockStorage.read(key: 'active_account_pubkey'), testPubkeyB);
-        
+
         await container.read(authProvider.notifier).resetAuth();
         expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
       });

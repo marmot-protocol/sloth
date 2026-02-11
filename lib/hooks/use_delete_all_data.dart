@@ -38,12 +38,14 @@ useDeleteAllData() {
       _logger.info('Deleting all application data');
       await api.deleteAllData();
       _logger.info('All data deleted successfully');
+      state.value = state.value.copyWith(isDeleting: false);
     } catch (e, stackTrace) {
       _logger.severe('Failed to delete all data', e, stackTrace);
       state.value = state.value.copyWith(
         isDeleting: false,
         error: 'Failed to delete all data. Please try again.',
       );
+      rethrow;
     }
   }
 
