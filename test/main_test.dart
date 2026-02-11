@@ -88,6 +88,9 @@ class _MockInitApi extends MockWnApi {
   String? createdConfigDataDir;
   String? createdConfigLogsDir;
   rust_api.WhitenoiseConfig? initializedConfig;
+  int initCallCount = 0;
+  int failFirstNCalls = 0;
+  String failMessage = 'database was created without encryption';
 
   @override
   Future<rust_api.WhitenoiseConfig> crateApiCreateWhitenoiseConfig({
@@ -103,6 +106,10 @@ class _MockInitApi extends MockWnApi {
   Future<void> crateApiInitializeWhitenoise({
     required rust_api.WhitenoiseConfig config,
   }) async {
+    initCallCount++;
+    if (initCallCount <= failFirstNCalls) {
+      throw Exception(failMessage);
+    }
     initializedConfig = config;
   }
 
@@ -112,6 +119,9 @@ class _MockInitApi extends MockWnApi {
     createdConfigDataDir = null;
     createdConfigLogsDir = null;
     initializedConfig = null;
+    initCallCount = 0;
+    failFirstNCalls = 0;
+    failMessage = 'database was created without encryption';
   }
 }
 
@@ -229,6 +239,40 @@ void main() {
       final container = await initializeAppContainer();
 
       expect(container.read(authProvider), isA<AsyncData>());
+    });
+
+    test('wipes env data directory and retries on unencrypted db error', () async {
+      mockApi.failFirstNCalls = 1;
+      final envDir = Directory('${pathProvider.tempDir.path}/whitenoise/data/dev');
+      final marker = File('${envDir.path}/whitenoise.sqlite');
+      await envDir.create(recursive: true);
+      await marker.create();
+
+      expect(marker.existsSync(), isTrue);
+
+      final container = await initializeAppContainer();
+
+      expect(container, isA<ProviderContainer>());
+      expect(marker.existsSync(), isFalse);
+      expect(mockApi.initCallCount, 2);
+    });
+
+    test('rethrows unencrypted db error when retry also fails', () async {
+      mockApi.failFirstNCalls = 2;
+
+      expect(() => initializeAppContainer(), throwsException);
+    });
+
+    test('rethrows unrelated errors without wiping', () async {
+      mockApi.failFirstNCalls = 1;
+      mockApi.failMessage = 'network timeout';
+      final envDir = Directory('${pathProvider.tempDir.path}/whitenoise/data/dev');
+      final marker = File('${envDir.path}/whitenoise.sqlite');
+      await envDir.create(recursive: true);
+      await marker.create();
+
+      expect(() => initializeAppContainer(), throwsException);
+      expect(marker.existsSync(), isTrue);
     });
   });
 }

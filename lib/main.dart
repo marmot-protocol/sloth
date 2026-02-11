@@ -1,5 +1,6 @@
 import 'dart:io' show Directory;
 
+import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
@@ -30,7 +31,19 @@ Future<ProviderContainer> initializeAppContainer() async {
   await Directory(dataDir).create(recursive: true);
   await Directory(logsDir).create(recursive: true);
   final config = await rust_api.createWhitenoiseConfig(dataDir: dataDir, logsDir: logsDir);
-  await rust_api.initializeWhitenoise(config: config);
+
+  try {
+    await rust_api.initializeWhitenoise(config: config);
+  } catch (e) {
+    if (!e.toString().contains('database was created without encryption')) {
+      rethrow;
+    }
+    final envDir = Directory('$dataDir/${kDebugMode ? 'dev' : 'release'}');
+    if (envDir.existsSync()) {
+      await envDir.delete(recursive: true);
+    }
+    await rust_api.initializeWhitenoise(config: config);
+  }
 
   final container = ProviderContainer();
   await container.read(authProvider.future);
