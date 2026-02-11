@@ -677,4 +677,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Вернуться к регистрации';
+
+  @override
+  String get deleteAllData => 'Удалить все данные';
+
+  @override
+  String get deleteAllDataConfirmation => 'Удалить все данные?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Это действие безвозвратно удалит все ваши чаты, сообщения и настройки с этого устройства. Отменить невозможно.';
+
+  @override
+  String get allDataDeleted => 'Все данные успешно удалены';
 }

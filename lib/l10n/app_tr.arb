@@ -200,5 +200,9 @@
   "carouselDecentralizedTitle": "Merkezi olmayan ve izinsiz",
   "carouselDecentralizedDescription": "Hiçbir merkezi otorite iletişiminizi kontrol etmez – izin gerekmez, sansür mümkün değildir.",
   "learnMore": "Daha fazla bilgi",
-  "backToSignUp": "Kayıta geri dön"
+  "backToSignUp": "Kayıta geri dön",
+  "deleteAllData": "Tüm Verileri Sil",
+  "deleteAllDataConfirmation": "Tüm veriler silinsin mi?",
+  "deleteAllDataWarning": "Bu işlem, bu cihazdaki tüm sohbetlerinizi, mesajlarınızı ve ayarlarınızı kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+  "allDataDeleted": "Tüm veriler başarıyla silindi"
 }

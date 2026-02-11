@@ -675,4 +675,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Voltar ao cadastro';
+
+  @override
+  String get deleteAllData => 'Excluir Todos os Dados';
+
+  @override
+  String get deleteAllDataConfirmation => 'Excluir todos os dados?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Isso excluirá permanentemente todos os seus chats, mensagens e configurações deste dispositivo. Esta ação não pode ser desfeita.';
+
+  @override
+  String get allDataDeleted => 'Todos os dados foram excluídos com sucesso';
 }

@@ -1313,6 +1313,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to sign up'**
   String get backToSignUp;
+
+  /// Button to delete all application data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllData;
+
+  /// Confirmation dialog title for delete all data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data?'**
+  String get deleteAllDataConfirmation;
+
+  /// Warning message for delete all data action
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.'**
+  String get deleteAllDataWarning;
+
+  /// Success message when all data is deleted
+  ///
+  /// In en, this message translates to:
+  /// **'All data deleted successfully'**
+  String get allDataDeleted;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

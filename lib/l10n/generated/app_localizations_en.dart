@@ -670,4 +670,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Back to sign up';
+
+  @override
+  String get deleteAllData => 'Delete All Data';
+
+  @override
+  String get deleteAllDataConfirmation => 'Delete all data?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.';
+
+  @override
+  String get allDataDeleted => 'All data deleted successfully';
 }

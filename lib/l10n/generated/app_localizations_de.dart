@@ -687,4 +687,17 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Zurück zur Registrierung';
+
+  @override
+  String get deleteAllData => 'Alle Daten Löschen';
+
+  @override
+  String get deleteAllDataConfirmation => 'Alle Daten löschen?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Dies wird alle Ihre Chats, Nachrichten und Einstellungen von diesem Gerät dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.';
+
+  @override
+  String get allDataDeleted => 'Alle Daten wurden erfolgreich gelöscht';
 }
