@@ -682,5 +682,8 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu işlem, bu cihazdaki tüm sohbetlerinizi, mesajlarınızı ve ayarlarınızı kalıcı olarak silecektir. Bu işlem geri alınamaz.';
 
   @override
+  String get deleteAllDataError => 'Tüm veriler silinemedi. Lütfen tekrar deneyin.';
+
+  @override
   String get allDataDeleted => 'Tüm veriler başarıyla silindi';
 }

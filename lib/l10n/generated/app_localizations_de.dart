@@ -699,5 +699,9 @@ class AppLocalizationsDe extends AppLocalizations {
       'Dies wird alle Ihre Chats, Nachrichten und Einstellungen von diesem Gerät dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.';
 
   @override
+  String get deleteAllDataError =>
+      'Fehler beim Löschen aller Daten. Bitte versuchen Sie es erneut.';
+
+  @override
   String get allDataDeleted => 'Alle Daten wurden erfolgreich gelöscht';
 }

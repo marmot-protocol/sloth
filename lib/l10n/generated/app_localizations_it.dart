@@ -683,5 +683,8 @@ class AppLocalizationsIt extends AppLocalizations {
       'Questo eliminerà permanentemente tutte le tue chat, messaggi e impostazioni da questo dispositivo. Questa azione non può essere annullata.';
 
   @override
+  String get deleteAllDataError => 'Impossibile eliminare tutti i dati. Riprova.';
+
+  @override
   String get allDataDeleted => 'Tutti i dati sono stati eliminati con successo';
 }

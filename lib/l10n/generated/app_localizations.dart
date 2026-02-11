@@ -1332,6 +1332,12 @@ abstract class AppLocalizations {
   /// **'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.'**
   String get deleteAllDataWarning;
 
+  /// Error message when data deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete all data. Please try again.'**
+  String get deleteAllDataError;
+
   /// Success message when all data is deleted
   ///
   /// In en, this message translates to:

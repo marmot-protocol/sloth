@@ -20,26 +20,18 @@ void main() {
   group('DeleteAllDataState', () {
     test('copyWith preserves isDeleting when not provided', () {
       const state = DeleteAllDataState(isDeleting: true);
-      final newState = state.copyWith(error: 'test error');
+      final newState = state.copyWith(hasError: true);
 
       expect(newState.isDeleting, true);
-      expect(newState.error, 'test error');
+      expect(newState.hasError, true);
     });
 
-    test('copyWith preserves error when not provided and clearError is false', () {
-      const state = DeleteAllDataState(error: 'existing error');
+    test('copyWith preserves hasError when not provided', () {
+      const state = DeleteAllDataState(hasError: true);
       final newState = state.copyWith(isDeleting: true);
 
       expect(newState.isDeleting, true);
-      expect(newState.error, 'existing error');
-    });
-
-    test('copyWith clears error when clearError is true', () {
-      const state = DeleteAllDataState(error: 'existing error', isDeleting: true);
-      final newState = state.copyWith(clearError: true);
-
-      expect(newState.isDeleting, true);
-      expect(newState.error, null);
+      expect(newState.hasError, true);
     });
 
     test('copyWith updates isDeleting when provided', () {
@@ -49,11 +41,11 @@ void main() {
       expect(newState.isDeleting, true);
     });
 
-    test('copyWith updates error when provided', () {
+    test('copyWith updates hasError when provided', () {
       const state = DeleteAllDataState();
-      final newState = state.copyWith(error: 'new error');
+      final newState = state.copyWith(hasError: true);
 
-      expect(newState.error, 'new error');
+      expect(newState.hasError, true);
     });
   });
 
@@ -71,7 +63,7 @@ void main() {
       );
 
       expect(state.isDeleting, false);
-      expect(state.error, null);
+      expect(state.hasError, false);
     });
 
     testWidgets('deleteAllData sets isDeleting to true during operation', (tester) async {
@@ -155,7 +147,7 @@ void main() {
       );
 
       expect(state.isDeleting, false);
-      expect(state.error, null);
+      expect(state.hasError, false);
     });
 
     testWidgets('deleteAllData sets error on failure', (tester) async {
@@ -189,7 +181,7 @@ void main() {
       );
 
       expect(state.isDeleting, false);
-      expect(state.error, isNotNull);
+      expect(state.hasError, true);
     });
 
     testWidgets('deleteAllData clears previous error on new attempt', (tester) async {
@@ -222,7 +214,7 @@ void main() {
         },
       );
 
-      expect(state.error, isNotNull);
+      expect(state.hasError, true);
 
       mockApi.deleteAllDataShouldFail = false;
 
@@ -238,7 +230,7 @@ void main() {
         },
       );
 
-      expect(state.error, null);
+      expect(state.hasError, false);
     });
   });
 }

@@ -689,5 +689,8 @@ class AppLocalizationsRu extends AppLocalizations {
       'Это действие безвозвратно удалит все ваши чаты, сообщения и настройки с этого устройства. Отменить невозможно.';
 
   @override
+  String get deleteAllDataError => 'Не удалось удалить все данные. Пожалуйста, попробуйте снова.';
+
+  @override
   String get allDataDeleted => 'Все данные успешно удалены';
 }

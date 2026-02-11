@@ -70,7 +70,7 @@ class AppSettingsScreen extends HookConsumerWidget {
           });
         } catch (e) {
           if (!context.mounted) return;
-          systemNotice.showErrorNotice('Failed to delete all data. Please try again.');
+          systemNotice.showErrorNotice(context.l10n.deleteAllDataError);
         }
       }
     }

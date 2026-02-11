@@ -686,5 +686,9 @@ class AppLocalizationsFr extends AppLocalizations {
       'Cela supprimera définitivement tous vos chats, messages et paramètres de cet appareil. Cette action ne peut pas être annulée.';
 
   @override
+  String get deleteAllDataError =>
+      'Échec de la suppression de toutes les données. Veuillez réessayer.';
+
+  @override
   String get allDataDeleted => 'Toutes les données ont été supprimées avec succès';
 }

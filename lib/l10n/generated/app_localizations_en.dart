@@ -682,5 +682,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.';
 
   @override
+  String get deleteAllDataError => 'Failed to delete all data. Please try again.';
+
+  @override
   String get allDataDeleted => 'All data deleted successfully';
 }

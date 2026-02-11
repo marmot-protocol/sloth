@@ -6,21 +6,20 @@ final _logger = Logger('useDeleteAllData');
 
 class DeleteAllDataState {
   final bool isDeleting;
-  final String? error;
+  final bool hasError;
 
   const DeleteAllDataState({
     this.isDeleting = false,
-    this.error,
+    this.hasError = false,
   });
 
   DeleteAllDataState copyWith({
     bool? isDeleting,
-    String? error,
-    bool clearError = false,
+    bool? hasError,
   }) {
     return DeleteAllDataState(
       isDeleting: isDeleting ?? this.isDeleting,
-      error: clearError ? null : (error ?? this.error),
+      hasError: hasError ?? this.hasError,
     );
   }
 }
@@ -33,7 +32,7 @@ useDeleteAllData() {
   final state = useState(const DeleteAllDataState());
 
   Future<void> deleteAllData() async {
-    state.value = state.value.copyWith(isDeleting: true, clearError: true);
+    state.value = state.value.copyWith(isDeleting: true, hasError: false);
     try {
       _logger.info('Deleting all application data');
       await api.deleteAllData();
@@ -43,7 +42,7 @@ useDeleteAllData() {
       _logger.severe('Failed to delete all data', e, stackTrace);
       state.value = state.value.copyWith(
         isDeleting: false,
-        error: 'Failed to delete all data. Please try again.',
+        hasError: true,
       );
       rethrow;
     }
