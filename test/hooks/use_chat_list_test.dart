@@ -135,6 +135,28 @@ void main() {
       });
     });
 
+    group('refresh', () {
+      testWidgets('re-subscribes to stream and gets fresh data', (tester) async {
+        final getResult = await _pump(tester, testPubkeyA);
+
+        _api.emitInitialSnapshot([_chatSummary('c1', DateTime(2024))]);
+        await tester.pumpAndSettle();
+
+        expect(getResult().chats.length, 1);
+
+        getResult().refresh();
+        await tester.pump();
+
+        _api.emitInitialSnapshot([
+          _chatSummary('c1', DateTime(2024)),
+          _chatSummary('c2', DateTime(2024, 1, 2)),
+        ]);
+        await tester.pumpAndSettle();
+
+        expect(getResult().chats.length, 2);
+      });
+    });
+
     group('lastMessageDeleted trigger', () {
       testWidgets('updates chat data without changing order', (tester) async {
         final getResult = await _pump(tester, testPubkeyA);

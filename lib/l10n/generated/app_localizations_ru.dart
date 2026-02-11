@@ -652,6 +652,21 @@ class AppLocalizationsRu extends AppLocalizations {
   String get messageNotFound => 'Сообщение не найдено';
 
   @override
+  String get pin => 'Закрепить';
+
+  @override
+  String get unpin => 'Открепить';
+
+  @override
+  String get mute => 'Без звука';
+
+  @override
+  String get archive => 'Архивировать';
+
+  @override
+  String get failedToPinChat => 'Не удалось закрепить. Попробуйте снова.';
+
+  @override
   String get carouselPrivacyTitle => 'Конфиденциальность и безопасность';
 
   @override

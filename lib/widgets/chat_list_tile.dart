@@ -1,25 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
 import 'package:whitenoise/routes.dart' show Routes;
 import 'package:whitenoise/services/user_service.dart';
-import 'package:whitenoise/src/rust/api/chat_list.dart' show ChatSummary;
+import 'package:whitenoise/src/rust/api/chat_list.dart' show ChatSummary, setChatPinOrder;
 import 'package:whitenoise/src/rust/api/groups.dart' show GroupType;
 import 'package:whitenoise/utils/metadata.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_chat_list_context_menu.dart';
 import 'package:whitenoise/widgets/wn_chat_list_item.dart';
 import 'package:whitenoise/widgets/wn_chat_status.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
+
+final _logger = Logger('ChatListTile');
 
 class ChatListTile extends HookConsumerWidget {
   final ChatSummary chatSummary;
+  final VoidCallback? onChatListChanged;
+  final void Function(String message)? onError;
 
-  const ChatListTile({super.key, required this.chatSummary});
+  const ChatListTile({
+    super.key,
+    required this.chatSummary,
+    this.onChatListChanged,
+    this.onError,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final itemKey = useMemoized(GlobalKey.new);
     final formatters = ref.watch(localeFormattersProvider);
     final myPubkey = ref.watch(accountPubkeyProvider);
     final isDm = chatSummary.groupType == GroupType.directMessage;
@@ -96,11 +109,77 @@ class ChatListTile extends HookConsumerWidget {
         ? (chatSummary.dmPeerPubkey ?? chatSummary.mlsGroupId)
         : chatSummary.mlsGroupId;
 
+    void showContextMenu() {
+      final renderBox = itemKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox == null || !renderBox.hasSize) return;
+
+      final l10n = context.l10n;
+
+      final isPinned = chatSummary.pinOrder != null;
+
+      WnChatListContextMenu.show(
+        context,
+        childRenderBox: renderBox,
+        child: WnChatListItem(
+          title: title,
+          subtitle: subtitle,
+          timestamp: formattedTime,
+          avatarUrl: pictureUrl,
+          avatarName: avatarName,
+          avatarColor: AvatarColor.fromPubkey(avatarColorKey),
+          showPinned: isPinned,
+          status: status,
+          unreadCount: unreadCount,
+          prefixSubtitle: prefixSubtitle,
+        ),
+        actions: [
+          WnChatListContextMenuAction(
+            id: isPinned ? 'unpin' : 'pin',
+            label: isPinned ? l10n.unpin : l10n.pin,
+            icon: isPinned ? WnIcons.unpin : WnIcons.pin,
+            onTap: () async {
+              try {
+                await setChatPinOrder(
+                  accountPubkey: myPubkey,
+                  mlsGroupId: chatSummary.mlsGroupId,
+                  pinOrder: isPinned ? null : 0,
+                );
+                onChatListChanged?.call();
+              } catch (e, st) {
+                _logger.severe('Failed to update pin order', e, st);
+                onError?.call(l10n.failedToPinChat);
+              }
+            },
+          ),
+          WnChatListContextMenuAction(
+            id: 'mute',
+            label: l10n.mute,
+            icon: WnIcons.notification,
+            onTap: () {},
+          ),
+          WnChatListContextMenuAction(
+            id: 'archive',
+            label: l10n.archive,
+            icon: WnIcons.archive,
+            onTap: () {},
+          ),
+          WnChatListContextMenuAction(
+            id: 'delete',
+            label: l10n.delete,
+            icon: WnIcons.trashCan,
+            isDestructive: true,
+            onTap: () {},
+          ),
+        ],
+      );
+    }
+
     return WnChatListItem(
-      key: ValueKey(chatSummary.mlsGroupId),
+      key: itemKey,
       onTap: isPending
           ? () => Routes.pushToInvite(context, chatSummary.mlsGroupId)
           : () => Routes.goToChat(context, chatSummary.mlsGroupId),
+      onLongPress: isPending ? null : showContextMenu,
       title: title,
       subtitle: subtitle,
       timestamp: formattedTime,

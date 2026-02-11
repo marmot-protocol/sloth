@@ -652,6 +652,21 @@ class AppLocalizationsEs extends AppLocalizations {
   String get messageNotFound => 'Mensaje no encontrado';
 
   @override
+  String get pin => 'Fijar';
+
+  @override
+  String get unpin => 'Desfijar';
+
+  @override
+  String get mute => 'Silenciar';
+
+  @override
+  String get archive => 'Archivar';
+
+  @override
+  String get failedToPinChat => 'Error al fijar. Por favor, inténtalo de nuevo.';
+
+  @override
   String get carouselPrivacyTitle => 'Privacidad y seguridad';
 
   @override

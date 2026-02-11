@@ -103,9 +103,6 @@ class WnButton extends StatelessWidget {
   }
 
   Widget _buildDestructiveButton(SemanticColors colors) {
-    final borderColor = disabled
-        ? colors.borderDestructivePrimary.withValues(alpha: 0.25)
-        : colors.borderDestructivePrimary;
     final bgColor = disabled
         ? colors.fillDestructive.withValues(alpha: 0.25)
         : colors.fillDestructive;
@@ -117,7 +114,7 @@ class WnButton extends StatelessWidget {
       backgroundColor: bgColor,
       overlayColor: colors.fillDestructiveHover,
       contentColor: contentColor,
-      borderSide: BorderSide(color: borderColor),
+      borderSide: BorderSide.none,
     );
   }
 

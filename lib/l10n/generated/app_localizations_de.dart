@@ -662,6 +662,21 @@ class AppLocalizationsDe extends AppLocalizations {
   String get messageNotFound => 'Nachricht nicht gefunden';
 
   @override
+  String get pin => 'Anheften';
+
+  @override
+  String get unpin => 'Loslösen';
+
+  @override
+  String get mute => 'Stummschalten';
+
+  @override
+  String get archive => 'Archivieren';
+
+  @override
+  String get failedToPinChat => 'Anheften fehlgeschlagen. Bitte versuche es erneut.';
+
+  @override
   String get carouselPrivacyTitle => 'Privatsphäre und Sicherheit';
 
   @override

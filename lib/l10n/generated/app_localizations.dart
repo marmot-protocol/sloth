@@ -1266,6 +1266,36 @@ abstract class AppLocalizations {
   /// **'Message not found'**
   String get messageNotFound;
 
+  /// Pin chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Pin'**
+  String get pin;
+
+  /// Unpin chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Unpin'**
+  String get unpin;
+
+  /// Mute chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// Archive chat context menu action
+  ///
+  /// In en, this message translates to:
+  /// **'Archive'**
+  String get archive;
+
+  /// Error message when pin/unpin operation fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to update pin. Please try again.'**
+  String get failedToPinChat;
+
   /// Login carousel slide 1 title
   ///
   /// In en, this message translates to:

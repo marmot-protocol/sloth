@@ -650,6 +650,21 @@ class AppLocalizationsPt extends AppLocalizations {
   String get messageNotFound => 'Mensagem não encontrada';
 
   @override
+  String get pin => 'Fixar';
+
+  @override
+  String get unpin => 'Desafixar';
+
+  @override
+  String get mute => 'Silenciar';
+
+  @override
+  String get archive => 'Arquivar';
+
+  @override
+  String get failedToPinChat => 'Erro ao fixar. Por favor, tente novamente.';
+
+  @override
   String get carouselPrivacyTitle => 'Privacidade e segurança';
 
   @override

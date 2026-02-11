@@ -645,6 +645,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get messageNotFound => 'Message not found';
 
   @override
+  String get pin => 'Pin';
+
+  @override
+  String get unpin => 'Unpin';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get archive => 'Archive';
+
+  @override
+  String get failedToPinChat => 'Failed to update pin. Please try again.';
+
+  @override
   String get carouselPrivacyTitle => 'Privacy and security';
 
   @override
