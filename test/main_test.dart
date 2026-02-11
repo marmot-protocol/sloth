@@ -5,7 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
     show AsyncData, ProviderContainer, ProviderScope;
 import 'package:flutter_test/flutter_test.dart';
-import 'package:whitenoise/main.dart';
+import 'package:whitenoise/main.dart' show WnApp, initializeAppContainer, kUnencryptedDatabaseError;
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/theme_provider.dart';
 import 'package:whitenoise/src/rust/api.dart' as rust_api;
@@ -90,7 +90,7 @@ class _MockInitApi extends MockWnApi {
   rust_api.WhitenoiseConfig? initializedConfig;
   int initCallCount = 0;
   int failFirstNCalls = 0;
-  String failMessage = 'database was created without encryption';
+  String failMessage = kUnencryptedDatabaseError;
 
   @override
   Future<rust_api.WhitenoiseConfig> crateApiCreateWhitenoiseConfig({
@@ -121,7 +121,7 @@ class _MockInitApi extends MockWnApi {
     initializedConfig = null;
     initCallCount = 0;
     failFirstNCalls = 0;
-    failMessage = 'database was created without encryption';
+    failMessage = kUnencryptedDatabaseError;
   }
 }
 
@@ -260,7 +260,7 @@ void main() {
     test('rethrows unencrypted db error when retry also fails', () async {
       mockApi.failFirstNCalls = 2;
 
-      expect(() => initializeAppContainer(), throwsException);
+      await expectLater(initializeAppContainer(), throwsException);
     });
 
     test('rethrows unrelated errors without wiping', () async {
@@ -271,7 +271,7 @@ void main() {
       await envDir.create(recursive: true);
       await marker.create();
 
-      expect(() => initializeAppContainer(), throwsException);
+      await expectLater(initializeAppContainer(), throwsException);
       expect(marker.existsSync(), isTrue);
     });
   });

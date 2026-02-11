@@ -17,6 +17,8 @@ import 'package:whitenoise/src/rust/api.dart' as rust_api;
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/theme.dart';
 
+const kUnencryptedDatabaseError = 'database was created without encryption';
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await RustLib.init();
@@ -35,7 +37,7 @@ Future<ProviderContainer> initializeAppContainer() async {
   try {
     await rust_api.initializeWhitenoise(config: config);
   } catch (e) {
-    if (!e.toString().contains('database was created without encryption')) {
+    if (!e.toString().contains(kUnencryptedDatabaseError)) {
       rethrow;
     }
     final envDir = Directory('$dataDir/${kDebugMode ? 'dev' : 'release'}');
