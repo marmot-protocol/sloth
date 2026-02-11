@@ -201,8 +201,8 @@
   "carouselDecentralizedDescription": "Keine zentrale Instanz kontrolliert deine Kommunikation – keine Genehmigungen nötig, keine Zensur möglich.",
   "learnMore": "Mehr erfahren",
   "backToSignUp": "Zurück zur Registrierung",
-  "deleteAllData": "Alle Daten Löschen",
+  "deleteAllData": "Alle Daten löschen",
   "deleteAllDataConfirmation": "Alle Daten löschen?",
-  "deleteAllDataWarning": "Dies wird alle Ihre Chats, Nachrichten und Einstellungen von diesem Gerät dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "deleteAllDataError": "Fehler beim Löschen aller Daten. Bitte versuchen Sie es erneut."
+  "deleteAllDataWarning": "Dies wird alle deine Chats, Nachrichten und Einstellungen von diesem Gerät dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "deleteAllDataError": "Fehler beim Löschen aller Daten. Bitte versuche es erneut."
 }
