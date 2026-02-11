@@ -89,6 +89,21 @@ export CC_armv7_linux_androideabi="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$H
 export CXX_armv7_linux_androideabi="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG/bin/armv7a-linux-androideabi33-clang++"
 export AR_armv7_linux_androideabi="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG/bin/llvm-ar"
 
+# OpenSSL environment variables for Android cross-compilation
+# Point to macOS OpenSSL for the build process (sqlcipher needs headers)
+if [ -d "/opt/homebrew/opt/openssl@3" ]; then
+    export OPENSSL_DIR="/opt/homebrew/opt/openssl@3"
+    export OPENSSL_INCLUDE_DIR="/opt/homebrew/opt/openssl@3/include"
+    export OPENSSL_LIB_DIR="/opt/homebrew/opt/openssl@3/lib"
+elif [ -d "/usr/local/opt/openssl@3" ]; then
+    export OPENSSL_DIR="/usr/local/opt/openssl@3"
+    export OPENSSL_INCLUDE_DIR="/usr/local/opt/openssl@3/include"
+    export OPENSSL_LIB_DIR="/usr/local/opt/openssl@3/lib"
+fi
+
+# Use vendored OpenSSL for cross-compilation to avoid linking issues
+export OPENSSL_STATIC=1
+
 # Check if required tools are installed
 print_step "Checking development environment"
 if ! command -v rustup &> /dev/null; then
