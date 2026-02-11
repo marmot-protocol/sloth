@@ -15,6 +15,8 @@ import 'package:whitenoise/screens/login_screen.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_onboarding_carousel.dart';
+import 'package:whitenoise/widgets/wn_overlay.dart';
 
 import '../mocks/mock_android_signer_channel.dart';
 import '../mocks/mock_clipboard_paste.dart';
@@ -576,6 +578,58 @@ void main() {
       testWidgets('displays scan button', (tester) async {
         await pumpLoginScreen(tester);
         expect(find.byKey(const Key('scan_button')), findsOneWidget);
+      });
+    });
+
+    group('carousel', () {
+      testWidgets('displays login carousel', (tester) async {
+        await pumpLoginScreen(tester);
+        expect(find.byType(WnOnboardingCarousel), findsOneWidget);
+      });
+
+      testWidgets('displays carousel content', (tester) async {
+        await pumpLoginScreen(tester);
+        expect(find.text('Privacy and security'), findsOneWidget);
+      });
+
+      testWidgets('displays carousel indicator', (tester) async {
+        await pumpLoginScreen(tester);
+        expect(find.byKey(const Key('login_carousel_indicator')), findsOneWidget);
+      });
+    });
+
+    group('keyboard overlay', () {
+      testWidgets('shows WnOverlay when keyboard is open', (tester) async {
+        mockAuth = _MockAuthNotifier();
+        mockSignerChannel = mockAndroidSignerChannel();
+        addTearDown(mockSignerChannel.reset);
+
+        setUpTestView(tester);
+        await tester.pumpWidget(
+          ProviderScope(
+            overrides: [authProvider.overrideWith(() => mockAuth)],
+            child: ScreenUtilInit(
+              designSize: testDesignSize,
+              builder: (_, _) => const MediaQuery(
+                data: MediaQueryData(viewInsets: EdgeInsets.only(bottom: 300)),
+                child: MaterialApp(
+                  locale: Locale('en'),
+                  localizationsDelegates: _localizationsDelegates,
+                  supportedLocales: AppLocalizations.supportedLocales,
+                  home: LoginScreen(),
+                ),
+              ),
+            ),
+          ),
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnOverlay), findsOneWidget);
+      });
+
+      testWidgets('does not show WnOverlay when keyboard is closed', (tester) async {
+        await pumpLoginScreen(tester);
+        expect(find.byType(WnOverlay), findsNothing);
       });
     });
   });

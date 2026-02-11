@@ -1,8 +1,9 @@
 {
   "@@locale": "ru",
   "appTitle": "White Noise",
-  "tagline1": "Децентрализованный. Нецензурируемый.",
-  "tagline2": "Безопасный Мессенджер.",
+  "sloganDecentralized": "Децентрализованный",
+  "sloganUncensorable": "Нецензурируемый",
+  "sloganSecureMessaging": "Безопасный Мессенджер",
   "login": "Войти",
   "signUp": "Регистрация",
   "loginTitle": "Войти",
@@ -191,5 +192,13 @@
   "signerErrorNoActivity": "Не удалось запустить signer. Попробуйте снова.",
   "signerErrorLaunchError": "Не удалось запустить приложение signer.",
   "signerErrorUnknown": "Произошла ошибка с signer. Попробуйте снова.",
-  "messageNotFound": "Сообщение не найдено"
+  "messageNotFound": "Сообщение не найдено",
+  "carouselPrivacyTitle": "Конфиденциальность и безопасность",
+  "carouselPrivacyDescription": "Сохраняйте конфиденциальность ваших разговоров. Даже в случае утечки ваши сообщения остаются защищёнными.",
+  "carouselIdentityTitle": "Выберите свою личность",
+  "carouselIdentityDescription": "Общайтесь, не раскрывая номер телефона или email. Выбирайте: настоящее имя, псевдоним или анонимность.",
+  "carouselDecentralizedTitle": "Децентрализованный и без разрешений",
+  "carouselDecentralizedDescription": "Никакая центральная власть не контролирует вашу коммуникацию – разрешения не нужны, цензура невозможна.",
+  "learnMore": "Узнать больше",
+  "backToSignUp": "Вернуться к регистрации"
 }

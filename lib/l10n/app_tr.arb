@@ -1,8 +1,9 @@
 {
   "@@locale": "tr",
   "appTitle": "White Noise",
-  "tagline1": "Merkezi Olmayan. Sansürlenemez.",
-  "tagline2": "Güvenli Mesajlaşma.",
+  "sloganDecentralized": "Merkezi Olmayan",
+  "sloganUncensorable": "Sansürlenemez",
+  "sloganSecureMessaging": "Güvenli Mesajlaşma",
   "login": "Giriş Yap",
   "signUp": "Kayıt Ol",
   "loginTitle": "Giriş Yap",
@@ -191,5 +192,13 @@
   "signerErrorNoActivity": "Signer başlatılamadı. Lütfen tekrar deneyin.",
   "signerErrorLaunchError": "Signer uygulaması başlatılamadı.",
   "signerErrorUnknown": "Signer ile bir hata oluştu. Lütfen tekrar deneyin.",
-  "messageNotFound": "Mesaj bulunamadı"
+  "messageNotFound": "Mesaj bulunamadı",
+  "carouselPrivacyTitle": "Gizlilik ve güvenlik",
+  "carouselPrivacyDescription": "Konuşmalarınızı gizli tutun. Bir ihlal durumunda bile mesajlarınız güvende kalır.",
+  "carouselIdentityTitle": "Kimliğinizi seçin",
+  "carouselIdentityDescription": "Telefon numaranızı veya e-postanızı açıklamadan sohbet edin. Kimliğinizi seçin: gerçek ad, takma ad veya anonim.",
+  "carouselDecentralizedTitle": "Merkezi olmayan ve izinsiz",
+  "carouselDecentralizedDescription": "Hiçbir merkezi otorite iletişiminizi kontrol etmez – izin gerekmez, sansür mümkün değildir.",
+  "learnMore": "Daha fazla bilgi",
+  "backToSignUp": "Kayıta geri dön"
 }
