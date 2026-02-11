@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 
 const _animationDuration = Duration(milliseconds: 150);
@@ -25,11 +26,11 @@ class WnChatListContextMenuAction {
 }
 
 class WnChatListContextMenuController {
-  OverlayEntry? _entry;
+  OverlayEntry? _overlay;
   Future<void> Function()? _animatedDismiss;
   bool _dismissing = false;
 
-  bool get isShowing => _entry != null;
+  bool get isShowing => _overlay != null;
 
   void dismiss() {
     if (_dismissing) return;
@@ -39,20 +40,20 @@ class WnChatListContextMenuController {
       _dismissing = true;
       _animatedDismiss = null;
       animatedDismiss().then((_) {
-        _entry?.remove();
-        _entry = null;
+        _overlay?.remove();
+        _overlay = null;
         _dismissing = false;
       });
     } else {
-      _entry?.remove();
-      _entry = null;
+      _overlay?.remove();
+      _overlay = null;
     }
   }
 
   void dispose() {
     _animatedDismiss = null;
-    _entry?.remove();
-    _entry = null;
+    _overlay?.remove();
+    _overlay = null;
     _dismissing = false;
   }
 }
@@ -98,20 +99,15 @@ class WnChatListContextMenu extends HookWidget {
       ),
     );
 
-    menuController._entry = entry;
+    menuController._overlay = entry;
     overlay.insert(entry);
 
     return menuController;
   }
 
-  static void dismiss() {
-    // No-op kept for backward compatibility in tests that call tearDown.
-  }
-
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
-    final typography = context.typographyScaled;
     final mediaQuery = MediaQuery.of(context);
     final screenHeight = mediaQuery.size.height;
     final screenWidth = mediaQuery.size.width;
@@ -119,13 +115,14 @@ class WnChatListContextMenu extends HookWidget {
     final safeBottom = mediaQuery.padding.bottom;
 
     final menuPadding = 16.w;
-    final buttonHeight = 44.h;
     final buttonSpacing = 8.h;
     final containerGap = 12.h;
     final menuHorizontalInset = 10.w;
 
+    final buttonCount = actions.length;
+    final estimatedButtonHeight = 44.h;
     final totalButtonsHeight =
-        (buttonHeight * actions.length) + (buttonSpacing * (actions.length - 1));
+        (estimatedButtonHeight * buttonCount) + (buttonSpacing * (buttonCount - 1));
     final menuContentHeight =
         menuPadding + itemHeight + containerGap + totalButtonsHeight + menuPadding;
 
@@ -222,19 +219,23 @@ class WnChatListContextMenu extends HookWidget {
 
                             return Padding(
                               padding: EdgeInsets.only(top: index > 0 ? buttonSpacing : 0),
-                              child: _ContextMenuButton(
+                              child: SizedBox(
                                 key: Key('context_menu_action_${action.id}'),
-                                label: action.label,
-                                icon: action.icon,
-                                isDestructive: action.isDestructive,
-                                onTap: action.onTap != null
-                                    ? () {
-                                        onDismiss();
-                                        action.onTap!();
-                                      }
-                                    : null,
-                                colors: colors,
-                                typography: typography,
+                                width: double.infinity,
+                                child: WnButton(
+                                  text: action.label,
+                                  trailingIcon: action.icon,
+                                  type: action.isDestructive
+                                      ? WnButtonType.destructive
+                                      : WnButtonType.outline,
+                                  size: WnButtonSize.medium,
+                                  onPressed: action.onTap != null
+                                      ? () {
+                                          onDismiss();
+                                          action.onTap!();
+                                        }
+                                      : null,
+                                ),
                               ),
                             );
                           }),
@@ -244,63 +245,6 @@ class WnChatListContextMenu extends HookWidget {
                   ),
                 ),
               ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _ContextMenuButton extends StatelessWidget {
-  const _ContextMenuButton({
-    super.key,
-    required this.label,
-    required this.icon,
-    required this.isDestructive,
-    this.onTap,
-    required this.colors,
-    required this.typography,
-  });
-
-  final String label;
-  final WnIcons icon;
-  final bool isDestructive;
-  final VoidCallback? onTap;
-  final SemanticColors colors;
-  final AppTypography typography;
-
-  @override
-  Widget build(BuildContext context) {
-    final backgroundColor = isDestructive ? colors.fillDestructive : colors.fillSecondary;
-    final contentColor = isDestructive
-        ? colors.fillContentDestructive
-        : colors.fillContentSecondary;
-    final borderSide = isDestructive ? BorderSide.none : BorderSide(color: colors.borderTertiary);
-
-    return GestureDetector(
-      onTap: onTap,
-      behavior: HitTestBehavior.opaque,
-      child: Container(
-        height: 44.h,
-        decoration: BoxDecoration(
-          color: backgroundColor,
-          borderRadius: BorderRadius.circular(8.r),
-          border: Border.fromBorderSide(borderSide),
-        ),
-        padding: EdgeInsets.symmetric(horizontal: 12.w),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              label,
-              style: typography.medium14.copyWith(color: contentColor),
-            ),
-            SizedBox(width: 4.w),
-            WnIcon(
-              icon,
-              size: 18.w,
-              color: contentColor,
             ),
           ],
         ),
