@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:whitenoise/hooks/use_delete_all_data.dart';
 import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
 import 'package:whitenoise/providers/theme_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_confirmation_bottom_sheet.dart';
 import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
-class AppSettingsScreen extends ConsumerWidget {
+class AppSettingsScreen extends HookConsumerWidget {
   const AppSettingsScreen({super.key});
 
   @override
@@ -18,6 +23,7 @@ class AppSettingsScreen extends ConsumerWidget {
     final colors = context.colors;
     final currentThemeMode = ref.watch(themeProvider).value ?? ThemeMode.system;
     final currentLocaleSetting = ref.watch(localeProvider).value ?? const SystemLocale();
+    final (:state, :deleteAllData) = useDeleteAllData();
 
     final themeOptions = [
       WnDropdownOption(value: ThemeMode.system, label: context.l10n.themeSystem),
@@ -37,6 +43,29 @@ class AppSettingsScreen extends ConsumerWidget {
         ),
       ),
     ];
+
+    Future<void> handleDeleteAllData() async {
+      final confirmed = await WnConfirmationBottomSheet.show(
+        context: context,
+        title: context.l10n.deleteAllDataConfirmation,
+        message: context.l10n.deleteAllDataWarning,
+        confirmText: context.l10n.delete,
+        isDestructive: true,
+      );
+
+      if (confirmed == true) {
+        await deleteAllData();
+        if (!context.mounted) return;
+
+        await ref.read(authProvider.notifier).resetAuth();
+        
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (context.mounted) {
+            Routes.goToHome(context);
+          }
+        });
+      }
+    }
 
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
@@ -66,6 +95,19 @@ class AppSettingsScreen extends ConsumerWidget {
                     options: languageOptions,
                     value: currentLocaleSetting,
                     onChanged: (setting) => ref.read(localeProvider.notifier).setLocale(setting),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: WnButton(
+                      key: const Key('delete_all_data_button'),
+                      text: context.l10n.deleteAllData,
+                      onPressed: handleDeleteAllData,
+                      type: WnButtonType.destructive,
+                      size: WnButtonSize.medium,
+                      loading: state.isDeleting,
+                      disabled: state.isDeleting,
+                      trailingIcon: WnIcons.trashCan,
+                    ),
                   ),
                 ],
               ),
