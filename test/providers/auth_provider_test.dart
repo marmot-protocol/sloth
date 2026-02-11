@@ -352,6 +352,30 @@ void main() {
       });
     });
 
+    group('resetAuth', () {
+      test('clears state', () async {
+        await container.read(authProvider.notifier).loginWithNsec('nsec123');
+        expect(container.read(authProvider).value, testPubkeyB);
+        
+        await container.read(authProvider.notifier).resetAuth();
+        expect(container.read(authProvider).value, isNull);
+      });
+
+      test('clears secure storage', () async {
+        await container.read(authProvider.notifier).loginWithNsec('nsec123');
+        expect(await mockStorage.read(key: 'active_account_pubkey'), testPubkeyB);
+        
+        await container.read(authProvider.notifier).resetAuth();
+        expect(await mockStorage.read(key: 'active_account_pubkey'), isNull);
+      });
+
+      test('does not call Rust API logout', () async {
+        await container.read(authProvider.notifier).loginWithNsec('nsec123');
+        await container.read(authProvider.notifier).resetAuth();
+        expect(mockApi.logoutCalledWithPubkey, isNull);
+      });
+    });
+
     group('switchProfile', () {
       test('updates state to new pubkey', () async {
         await container.read(authProvider.notifier).loginWithNsec('nsec123');
