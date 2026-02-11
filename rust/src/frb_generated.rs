@@ -43,7 +43,7 @@ flutter_rust_bridge::frb_generated_boilerplate!(
     default_rust_auto_opaque = RustAutoOpaqueMoi,
 );
 pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_VERSION: &str = "2.11.1";
-pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 10616263;
+pub(crate) const FLUTTER_RUST_BRIDGE_CODEGEN_CONTENT_HASH: i32 = 652513053;
 
 // Section: executor
 
@@ -2751,6 +2751,56 @@ fn wire__crate__api__groups__remove_members_from_group_impl(
         },
     )
 }
+fn wire__crate__api__user_search__search_users_impl(
+    port_: flutter_rust_bridge::for_generated::MessagePort,
+    ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
+    rust_vec_len_: i32,
+    data_len_: i32,
+) {
+    FLUTTER_RUST_BRIDGE_HANDLER.wrap_async::<flutter_rust_bridge::for_generated::SseCodec, _, _, _>(
+        flutter_rust_bridge::for_generated::TaskInfo {
+            debug_name: "search_users",
+            port: Some(port_),
+            mode: flutter_rust_bridge::for_generated::FfiCallMode::Normal,
+        },
+        move || {
+            let message = unsafe {
+                flutter_rust_bridge::for_generated::Dart2RustMessageSse::from_wire(
+                    ptr_,
+                    rust_vec_len_,
+                    data_len_,
+                )
+            };
+            let mut deserializer =
+                flutter_rust_bridge::for_generated::SseDeserializer::new(message);
+            let api_account_pubkey = <String>::sse_decode(&mut deserializer);
+            let api_query = <String>::sse_decode(&mut deserializer);
+            let api_radius_start = <u8>::sse_decode(&mut deserializer);
+            let api_radius_end = <u8>::sse_decode(&mut deserializer);
+            let api_sink = <StreamSink<
+                crate::api::user_search::UserSearchUpdate,
+                flutter_rust_bridge::for_generated::SseCodec,
+            >>::sse_decode(&mut deserializer);
+            deserializer.end();
+            move |context| async move {
+                transform_result_sse::<_, crate::api::error::ApiError>(
+                    (move || async move {
+                        let output_ok = crate::api::user_search::search_users(
+                            api_account_pubkey,
+                            api_query,
+                            api_radius_start,
+                            api_radius_end,
+                            api_sink,
+                        )
+                        .await?;
+                        Ok(output_ok)
+                    })()
+                    .await,
+                )
+            }
+        },
+    )
+}
 fn wire__crate__api__messages__send_message_to_group_impl(
     port_: flutter_rust_bridge::for_generated::MessagePort,
     ptr_: flutter_rust_bridge::for_generated::PlatformGeneralizedUint8ListPtr,
@@ -3907,6 +3957,19 @@ impl SseDecode
     }
 }
 
+impl SseDecode
+    for StreamSink<
+        crate::api::user_search::UserSearchUpdate,
+        flutter_rust_bridge::for_generated::SseCodec,
+    >
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <String>::sse_decode(deserializer);
+        return StreamSink::deserialize(inner);
+    }
+}
+
 impl SseDecode for String {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4497,6 +4560,20 @@ impl SseDecode for Vec<Vec<String>> {
     }
 }
 
+impl SseDecode for Vec<crate::api::user_search::MatchedField> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::user_search::MatchedField>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
 impl SseDecode for Vec<crate::api::media_files::MediaFile> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4584,6 +4661,47 @@ impl SseDecode for Vec<crate::api::messages::UserReaction> {
             ));
         }
         return ans_;
+    }
+}
+
+impl SseDecode for Vec<crate::api::user_search::UserSearchResult> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut len_ = <i32>::sse_decode(deserializer);
+        let mut ans_ = vec![];
+        for idx_ in 0..len_ {
+            ans_.push(<crate::api::user_search::UserSearchResult>::sse_decode(
+                deserializer,
+            ));
+        }
+        return ans_;
+    }
+}
+
+impl SseDecode for crate::api::user_search::MatchQuality {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::user_search::MatchQuality::Exact,
+            1 => crate::api::user_search::MatchQuality::Prefix,
+            2 => crate::api::user_search::MatchQuality::Contains,
+            _ => unreachable!("Invalid variant for MatchQuality: {}", inner),
+        };
+    }
+}
+
+impl SseDecode for crate::api::user_search::MatchedField {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut inner = <i32>::sse_decode(deserializer);
+        return match inner {
+            0 => crate::api::user_search::MatchedField::Name,
+            1 => crate::api::user_search::MatchedField::Nip05,
+            2 => crate::api::user_search::MatchedField::DisplayName,
+            3 => crate::api::user_search::MatchedField::About,
+            _ => unreachable!("Invalid variant for MatchedField: {}", inner),
+        };
     }
 }
 
@@ -4840,6 +4958,65 @@ impl SseDecode for crate::api::relays::Relay {
     }
 }
 
+impl SseDecode for crate::api::user_search::SearchUpdateTrigger {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut tag_ = <i32>::sse_decode(deserializer);
+        match tag_ {
+            0 => {
+                let mut var_radius = <u8>::sse_decode(deserializer);
+                return crate::api::user_search::SearchUpdateTrigger::RadiusStarted {
+                    radius: var_radius,
+                };
+            }
+            1 => {
+                return crate::api::user_search::SearchUpdateTrigger::ResultsFound;
+            }
+            2 => {
+                let mut var_radius = <u8>::sse_decode(deserializer);
+                let mut var_totalPubkeysSearched = <u64>::sse_decode(deserializer);
+                return crate::api::user_search::SearchUpdateTrigger::RadiusCompleted {
+                    radius: var_radius,
+                    total_pubkeys_searched: var_totalPubkeysSearched,
+                };
+            }
+            3 => {
+                let mut var_radius = <u8>::sse_decode(deserializer);
+                let mut var_cap = <u64>::sse_decode(deserializer);
+                let mut var_actual = <u64>::sse_decode(deserializer);
+                return crate::api::user_search::SearchUpdateTrigger::RadiusCapped {
+                    radius: var_radius,
+                    cap: var_cap,
+                    actual: var_actual,
+                };
+            }
+            4 => {
+                let mut var_radius = <u8>::sse_decode(deserializer);
+                return crate::api::user_search::SearchUpdateTrigger::RadiusTimeout {
+                    radius: var_radius,
+                };
+            }
+            5 => {
+                let mut var_finalRadius = <u8>::sse_decode(deserializer);
+                let mut var_totalResults = <u64>::sse_decode(deserializer);
+                return crate::api::user_search::SearchUpdateTrigger::SearchCompleted {
+                    final_radius: var_finalRadius,
+                    total_results: var_totalResults,
+                };
+            }
+            6 => {
+                let mut var_message = <String>::sse_decode(deserializer);
+                return crate::api::user_search::SearchUpdateTrigger::Error {
+                    message: var_message,
+                };
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
 impl SseDecode for crate::api::messages::SerializableToken {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
@@ -4950,6 +5127,44 @@ impl SseDecode for crate::api::messages::UserReaction {
             user: var_user,
             emoji: var_emoji,
             created_at: var_createdAt,
+        };
+    }
+}
+
+impl SseDecode for crate::api::user_search::UserSearchResult {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_pubkey = <String>::sse_decode(deserializer);
+        let mut var_metadata = <crate::api::metadata::FlutterMetadata>::sse_decode(deserializer);
+        let mut var_radius = <u8>::sse_decode(deserializer);
+        let mut var_matchQuality =
+            <crate::api::user_search::MatchQuality>::sse_decode(deserializer);
+        let mut var_bestField = <crate::api::user_search::MatchedField>::sse_decode(deserializer);
+        let mut var_matchedFields =
+            <Vec<crate::api::user_search::MatchedField>>::sse_decode(deserializer);
+        return crate::api::user_search::UserSearchResult {
+            pubkey: var_pubkey,
+            metadata: var_metadata,
+            radius: var_radius,
+            match_quality: var_matchQuality,
+            best_field: var_bestField,
+            matched_fields: var_matchedFields,
+        };
+    }
+}
+
+impl SseDecode for crate::api::user_search::UserSearchUpdate {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_decode(deserializer: &mut flutter_rust_bridge::for_generated::SseDeserializer) -> Self {
+        let mut var_trigger =
+            <crate::api::user_search::SearchUpdateTrigger>::sse_decode(deserializer);
+        let mut var_newResults =
+            <Vec<crate::api::user_search::UserSearchResult>>::sse_decode(deserializer);
+        let mut var_totalResultCount = <u64>::sse_decode(deserializer);
+        return crate::api::user_search::UserSearchUpdate {
+            trigger: var_trigger,
+            new_results: var_newResults,
+            total_result_count: var_totalResultCount,
         };
     }
 }
@@ -5143,53 +5358,54 @@ fn pde_ffi_dispatcher_primary_impl(
             rust_vec_len,
             data_len,
         ),
-        71 => wire__crate__api__messages__send_message_to_group_impl(
+        71 => wire__crate__api__user_search__search_users_impl(port, ptr, rust_vec_len, data_len),
+        72 => wire__crate__api__messages__send_message_to_group_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        72 => {
+        73 => {
             wire__crate__api__chat_list__set_chat_pin_order_impl(port, ptr, rust_vec_len, data_len)
         }
-        73 => {
+        74 => {
             wire__crate__api__utils__string_from_relay_url_impl(port, ptr, rust_vec_len, data_len)
         }
-        74 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
+        75 => wire__crate__api__chat_list__subscribe_to_chat_list_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        75 => wire__crate__api__messages__subscribe_to_group_messages_impl(
+        76 => wire__crate__api__messages__subscribe_to_group_messages_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        76 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
-        81 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
-        82 => wire__crate__api__accounts__update_account_metadata_impl(
+        77 => wire__crate__api__utils__tag_from_vec_impl(port, ptr, rust_vec_len, data_len),
+        82 => wire__crate__api__accounts__unfollow_user_impl(port, ptr, rust_vec_len, data_len),
+        83 => wire__crate__api__accounts__update_account_metadata_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        83 => wire__crate__api__update_language_impl(port, ptr, rust_vec_len, data_len),
-        84 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
-        85 => wire__crate__api__accounts__upload_account_profile_picture_impl(
+        84 => wire__crate__api__update_language_impl(port, ptr, rust_vec_len, data_len),
+        85 => wire__crate__api__update_theme_mode_impl(port, ptr, rust_vec_len, data_len),
+        86 => wire__crate__api__accounts__upload_account_profile_picture_impl(
             port,
             ptr,
             rust_vec_len,
             data_len,
         ),
-        86 => {
+        87 => {
             wire__crate__api__media_files__upload_chat_media_impl(port, ptr, rust_vec_len, data_len)
         }
-        87 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
-        88 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
-        89 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
-        90 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
+        88 => wire__crate__api__groups__upload_group_image_impl(port, ptr, rust_vec_len, data_len),
+        89 => wire__crate__api__users__user_has_key_package_impl(port, ptr, rust_vec_len, data_len),
+        90 => wire__crate__api__users__user_metadata_impl(port, ptr, rust_vec_len, data_len),
+        91 => wire__crate__api__users__user_relays_impl(port, ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -5214,10 +5430,10 @@ fn pde_ffi_dispatcher_sync_impl(
         56 => wire__crate__api__utils__language_to_string_impl(ptr, rust_vec_len, data_len),
         57 => wire__crate__api__utils__language_turkish_impl(ptr, rust_vec_len, data_len),
         62 => wire__crate__api__utils__npub_from_hex_pubkey_impl(ptr, rust_vec_len, data_len),
-        77 => wire__crate__api__utils__theme_mode_dark_impl(ptr, rust_vec_len, data_len),
-        78 => wire__crate__api__utils__theme_mode_light_impl(ptr, rust_vec_len, data_len),
-        79 => wire__crate__api__utils__theme_mode_system_impl(ptr, rust_vec_len, data_len),
-        80 => wire__crate__api__utils__theme_mode_to_string_impl(ptr, rust_vec_len, data_len),
+        78 => wire__crate__api__utils__theme_mode_dark_impl(ptr, rust_vec_len, data_len),
+        79 => wire__crate__api__utils__theme_mode_light_impl(ptr, rust_vec_len, data_len),
+        80 => wire__crate__api__utils__theme_mode_system_impl(ptr, rust_vec_len, data_len),
+        81 => wire__crate__api__utils__theme_mode_to_string_impl(ptr, rust_vec_len, data_len),
         _ => unreachable!(),
     }
 }
@@ -5841,6 +6057,51 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::groups::GroupType>
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::user_search::MatchQuality {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Exact => 0.into_dart(),
+            Self::Prefix => 1.into_dart(),
+            Self::Contains => 2.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::user_search::MatchQuality
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::user_search::MatchQuality>
+    for crate::api::user_search::MatchQuality
+{
+    fn into_into_dart(self) -> crate::api::user_search::MatchQuality {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::user_search::MatchedField {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            Self::Name => 0.into_dart(),
+            Self::Nip05 => 1.into_dart(),
+            Self::DisplayName => 2.into_dart(),
+            Self::About => 3.into_dart(),
+            _ => unreachable!(),
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::user_search::MatchedField
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::user_search::MatchedField>
+    for crate::api::user_search::MatchedField
+{
+    fn into_into_dart(self) -> crate::api::user_search::MatchedField {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::media_files::MediaFile {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -5983,6 +6244,68 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::relays::Relay> for crate::api
     }
 }
 // Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::user_search::SearchUpdateTrigger {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        match self {
+            crate::api::user_search::SearchUpdateTrigger::RadiusStarted { radius } => {
+                [0.into_dart(), radius.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::user_search::SearchUpdateTrigger::ResultsFound => {
+                [1.into_dart()].into_dart()
+            }
+            crate::api::user_search::SearchUpdateTrigger::RadiusCompleted {
+                radius,
+                total_pubkeys_searched,
+            } => [
+                2.into_dart(),
+                radius.into_into_dart().into_dart(),
+                total_pubkeys_searched.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::user_search::SearchUpdateTrigger::RadiusCapped {
+                radius,
+                cap,
+                actual,
+            } => [
+                3.into_dart(),
+                radius.into_into_dart().into_dart(),
+                cap.into_into_dart().into_dart(),
+                actual.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::user_search::SearchUpdateTrigger::RadiusTimeout { radius } => {
+                [4.into_dart(), radius.into_into_dart().into_dart()].into_dart()
+            }
+            crate::api::user_search::SearchUpdateTrigger::SearchCompleted {
+                final_radius,
+                total_results,
+            } => [
+                5.into_dart(),
+                final_radius.into_into_dart().into_dart(),
+                total_results.into_into_dart().into_dart(),
+            ]
+            .into_dart(),
+            crate::api::user_search::SearchUpdateTrigger::Error { message } => {
+                [6.into_dart(), message.into_into_dart().into_dart()].into_dart()
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::user_search::SearchUpdateTrigger
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::user_search::SearchUpdateTrigger>
+    for crate::api::user_search::SearchUpdateTrigger
+{
+    fn into_into_dart(self) -> crate::api::user_search::SearchUpdateTrigger {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
 impl flutter_rust_bridge::IntoDart for crate::api::messages::SerializableToken {
     fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
         [
@@ -6086,6 +6409,53 @@ impl flutter_rust_bridge::IntoIntoDart<crate::api::messages::UserReaction>
     for crate::api::messages::UserReaction
 {
     fn into_into_dart(self) -> crate::api::messages::UserReaction {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::user_search::UserSearchResult {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.pubkey.into_into_dart().into_dart(),
+            self.metadata.into_into_dart().into_dart(),
+            self.radius.into_into_dart().into_dart(),
+            self.match_quality.into_into_dart().into_dart(),
+            self.best_field.into_into_dart().into_dart(),
+            self.matched_fields.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::user_search::UserSearchResult
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::user_search::UserSearchResult>
+    for crate::api::user_search::UserSearchResult
+{
+    fn into_into_dart(self) -> crate::api::user_search::UserSearchResult {
+        self
+    }
+}
+// Codec=Dco (DartCObject based), see doc to use other codecs
+impl flutter_rust_bridge::IntoDart for crate::api::user_search::UserSearchUpdate {
+    fn into_dart(self) -> flutter_rust_bridge::for_generated::DartAbi {
+        [
+            self.trigger.into_into_dart().into_dart(),
+            self.new_results.into_into_dart().into_dart(),
+            self.total_result_count.into_into_dart().into_dart(),
+        ]
+        .into_dart()
+    }
+}
+impl flutter_rust_bridge::for_generated::IntoDartExceptPrimitive
+    for crate::api::user_search::UserSearchUpdate
+{
+}
+impl flutter_rust_bridge::IntoIntoDart<crate::api::user_search::UserSearchUpdate>
+    for crate::api::user_search::UserSearchUpdate
+{
+    fn into_into_dart(self) -> crate::api::user_search::UserSearchUpdate {
         self
     }
 }
@@ -6312,6 +6682,18 @@ impl SseEncode
 impl SseEncode
     for StreamSink<
         crate::api::messages::MessageStreamItem,
+        flutter_rust_bridge::for_generated::SseCodec,
+    >
+{
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        unimplemented!("")
+    }
+}
+
+impl SseEncode
+    for StreamSink<
+        crate::api::user_search::UserSearchUpdate,
         flutter_rust_bridge::for_generated::SseCodec,
     >
 {
@@ -6758,6 +7140,16 @@ impl SseEncode for Vec<Vec<String>> {
     }
 }
 
+impl SseEncode for Vec<crate::api::user_search::MatchedField> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::user_search::MatchedField>::sse_encode(item, serializer);
+        }
+    }
+}
+
 impl SseEncode for Vec<crate::api::media_files::MediaFile> {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -6825,6 +7217,51 @@ impl SseEncode for Vec<crate::api::messages::UserReaction> {
         for item in self {
             <crate::api::messages::UserReaction>::sse_encode(item, serializer);
         }
+    }
+}
+
+impl SseEncode for Vec<crate::api::user_search::UserSearchResult> {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(self.len() as _, serializer);
+        for item in self {
+            <crate::api::user_search::UserSearchResult>::sse_encode(item, serializer);
+        }
+    }
+}
+
+impl SseEncode for crate::api::user_search::MatchQuality {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::user_search::MatchQuality::Exact => 0,
+                crate::api::user_search::MatchQuality::Prefix => 1,
+                crate::api::user_search::MatchQuality::Contains => 2,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
+    }
+}
+
+impl SseEncode for crate::api::user_search::MatchedField {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <i32>::sse_encode(
+            match self {
+                crate::api::user_search::MatchedField::Name => 0,
+                crate::api::user_search::MatchedField::Nip05 => 1,
+                crate::api::user_search::MatchedField::DisplayName => 2,
+                crate::api::user_search::MatchedField::About => 3,
+                _ => {
+                    unimplemented!("");
+                }
+            },
+            serializer,
+        );
     }
 }
 
@@ -7020,6 +7457,58 @@ impl SseEncode for crate::api::relays::Relay {
     }
 }
 
+impl SseEncode for crate::api::user_search::SearchUpdateTrigger {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        match self {
+            crate::api::user_search::SearchUpdateTrigger::RadiusStarted { radius } => {
+                <i32>::sse_encode(0, serializer);
+                <u8>::sse_encode(radius, serializer);
+            }
+            crate::api::user_search::SearchUpdateTrigger::ResultsFound => {
+                <i32>::sse_encode(1, serializer);
+            }
+            crate::api::user_search::SearchUpdateTrigger::RadiusCompleted {
+                radius,
+                total_pubkeys_searched,
+            } => {
+                <i32>::sse_encode(2, serializer);
+                <u8>::sse_encode(radius, serializer);
+                <u64>::sse_encode(total_pubkeys_searched, serializer);
+            }
+            crate::api::user_search::SearchUpdateTrigger::RadiusCapped {
+                radius,
+                cap,
+                actual,
+            } => {
+                <i32>::sse_encode(3, serializer);
+                <u8>::sse_encode(radius, serializer);
+                <u64>::sse_encode(cap, serializer);
+                <u64>::sse_encode(actual, serializer);
+            }
+            crate::api::user_search::SearchUpdateTrigger::RadiusTimeout { radius } => {
+                <i32>::sse_encode(4, serializer);
+                <u8>::sse_encode(radius, serializer);
+            }
+            crate::api::user_search::SearchUpdateTrigger::SearchCompleted {
+                final_radius,
+                total_results,
+            } => {
+                <i32>::sse_encode(5, serializer);
+                <u8>::sse_encode(final_radius, serializer);
+                <u64>::sse_encode(total_results, serializer);
+            }
+            crate::api::user_search::SearchUpdateTrigger::Error { message } => {
+                <i32>::sse_encode(6, serializer);
+                <String>::sse_encode(message, serializer);
+            }
+            _ => {
+                unimplemented!("");
+            }
+        }
+    }
+}
+
 impl SseEncode for crate::api::messages::SerializableToken {
     // Codec=Sse (Serialization based), see doc to use other codecs
     fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
@@ -7124,6 +7613,27 @@ impl SseEncode for crate::api::messages::UserReaction {
         <String>::sse_encode(self.user, serializer);
         <String>::sse_encode(self.emoji, serializer);
         <chrono::DateTime<chrono::Utc>>::sse_encode(self.created_at, serializer);
+    }
+}
+
+impl SseEncode for crate::api::user_search::UserSearchResult {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <String>::sse_encode(self.pubkey, serializer);
+        <crate::api::metadata::FlutterMetadata>::sse_encode(self.metadata, serializer);
+        <u8>::sse_encode(self.radius, serializer);
+        <crate::api::user_search::MatchQuality>::sse_encode(self.match_quality, serializer);
+        <crate::api::user_search::MatchedField>::sse_encode(self.best_field, serializer);
+        <Vec<crate::api::user_search::MatchedField>>::sse_encode(self.matched_fields, serializer);
+    }
+}
+
+impl SseEncode for crate::api::user_search::UserSearchUpdate {
+    // Codec=Sse (Serialization based), see doc to use other codecs
+    fn sse_encode(self, serializer: &mut flutter_rust_bridge::for_generated::SseSerializer) {
+        <crate::api::user_search::SearchUpdateTrigger>::sse_encode(self.trigger, serializer);
+        <Vec<crate::api::user_search::UserSearchResult>>::sse_encode(self.new_results, serializer);
+        <u64>::sse_encode(self.total_result_count, serializer);
     }
 }
 

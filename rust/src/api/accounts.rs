@@ -66,7 +66,7 @@ impl From<Event> for FlutterEvent {
             id: event.id.to_hex(),
             pubkey: event.pubkey.to_hex(),
             created_at: {
-                let ts = i64::try_from(event.created_at.as_u64()).unwrap_or(0);
+                let ts = i64::try_from(event.created_at.as_secs()).unwrap_or(0);
                 Utc.timestamp_opt(ts, 0)
                     .single()
                     .unwrap_or_else(|| Utc.timestamp_opt(0, 0).single().unwrap())
