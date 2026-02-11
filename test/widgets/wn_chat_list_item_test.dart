@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
@@ -163,6 +165,37 @@ void main() {
 
       await tester.longPress(find.byType(WnChatListItem));
       expect(longPressed, isTrue);
+    });
+
+    testWidgets('applies hover background on mouse enter and removes on exit', (tester) async {
+      await mountWidget(
+        const WnChatListItem(
+          title: 'Hover',
+          subtitle: 'Test',
+          timestamp: 'Now',
+        ),
+        tester,
+      );
+
+      final mouseRegionFinder = find.descendant(
+        of: find.byType(WnChatListItem),
+        matching: find.byType(MouseRegion),
+      );
+
+      final gesture = await tester.createGesture(
+        kind: PointerDeviceKind.mouse,
+      );
+      await gesture.addPointer(location: Offset.zero);
+      addTearDown(gesture.removePointer);
+      await tester.pump();
+
+      await gesture.moveTo(tester.getCenter(mouseRegionFinder));
+      await tester.pump();
+
+      await gesture.moveTo(
+        tester.getTopLeft(mouseRegionFinder) - const Offset(10, 10),
+      );
+      await tester.pump();
     });
 
     testWidgets('does not crash when onLongPress is null', (tester) async {

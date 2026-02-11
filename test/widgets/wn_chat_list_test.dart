@@ -237,6 +237,200 @@ void main() {
         expect(find.byKey(const Key('chat_list_header')), findsNothing);
       });
 
+      testWidgets('header snaps back on scroll end in overscroll territory', (tester) async {
+        await mountWidget(
+          WnChatList(
+            itemCount: 50,
+            itemBuilder: (context, index) => SizedBox(
+              height: 76,
+              child: Text('Item $index'),
+            ),
+            header: const Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        final gesture = await tester.startGesture(const Offset(200, 300));
+        await gesture.moveBy(const Offset(0, 30));
+        await tester.pump();
+
+        expect(
+          find.byKey(const Key('chat_list_header')),
+          findsOneWidget,
+        );
+
+        await gesture.up();
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(const Key('chat_list_header')),
+          findsNothing,
+        );
+      });
+
+      testWidgets(
+        'scroll events during header close animation are ignored',
+        (tester) async {
+          await mountWidget(
+            WnChatList(
+              itemCount: 50,
+              itemBuilder: (context, index) => SizedBox(
+                height: 76,
+                child: Text('Item $index'),
+              ),
+              header: const Text('Header'),
+              headerHeight: 142,
+            ),
+            tester,
+          );
+          await tester.pumpAndSettle();
+
+          final gesture = await tester.startGesture(const Offset(200, 300));
+          await gesture.moveBy(const Offset(0, 200));
+          await tester.pump();
+          await gesture.up();
+          await tester.pumpAndSettle();
+
+          expect(
+            find.byKey(const Key('chat_list_header')),
+            findsOneWidget,
+          );
+
+          final scrollGesture = await tester.startGesture(
+            const Offset(200, 400),
+          );
+          await scrollGesture.moveBy(const Offset(0, -300));
+          await tester.pump();
+          await tester.pump(const Duration(milliseconds: 50));
+          await scrollGesture.up();
+          await tester.pumpAndSettle();
+
+          expect(
+            find.byKey(const Key('chat_list_header')),
+            findsNothing,
+          );
+        },
+      );
+
+      testWidgets(
+        'dispatching ScrollEndNotification with negative pixels '
+        'snaps header reveal back to zero',
+        (tester) async {
+          await mountWidget(
+            WnChatList(
+              itemCount: 50,
+              itemBuilder: (context, index) => SizedBox(
+                height: 76,
+                child: Text('Item $index'),
+              ),
+              header: const Text('Header'),
+              headerHeight: 142,
+            ),
+            tester,
+          );
+          await tester.pumpAndSettle();
+
+          final listFinder = find.byKey(const Key('chat_list'));
+          final context = tester.element(listFinder);
+          final metrics = FixedScrollMetrics(
+            minScrollExtent: -142,
+            maxScrollExtent: 3000,
+            pixels: -20,
+            viewportDimension: 800,
+            axisDirection: AxisDirection.down,
+            devicePixelRatio: 1.0,
+          );
+
+          ScrollEndNotification(
+            metrics: metrics,
+            context: context,
+          ).dispatch(context);
+          await tester.pumpAndSettle();
+
+          expect(
+            find.byKey(const Key('chat_list_header')),
+            findsNothing,
+          );
+        },
+      );
+
+      testWidgets(
+        'scroll notifications during close animation are absorbed until '
+        'ScrollEndNotification resets the guard',
+        (tester) async {
+          await mountWidget(
+            WnChatList(
+              itemCount: 50,
+              itemBuilder: (context, index) => SizedBox(
+                height: 76,
+                child: Text('Item $index'),
+              ),
+              header: const Text('Header'),
+              headerHeight: 142,
+            ),
+            tester,
+          );
+          await tester.pumpAndSettle();
+
+          final gesture = await tester.startGesture(
+            const Offset(200, 300),
+          );
+          await gesture.moveBy(const Offset(0, 200));
+          await tester.pump();
+          await gesture.up();
+          await tester.pumpAndSettle();
+
+          expect(
+            find.byKey(const Key('chat_list_header')),
+            findsOneWidget,
+          );
+
+          final listFinder = find.byKey(const Key('chat_list'));
+          final context = tester.element(listFinder);
+
+          final dragMetrics = FixedScrollMetrics(
+            minScrollExtent: 0,
+            maxScrollExtent: 3000,
+            pixels: 50,
+            viewportDimension: 800,
+            axisDirection: AxisDirection.down,
+            devicePixelRatio: 1.0,
+          );
+
+          ScrollUpdateNotification(
+            metrics: dragMetrics,
+            context: context,
+            scrollDelta: 50,
+            dragDetails: DragUpdateDetails(
+              globalPosition: const Offset(200, 250),
+            ),
+          ).dispatch(context);
+          await tester.pump();
+
+          final endMetrics = FixedScrollMetrics(
+            minScrollExtent: 0,
+            maxScrollExtent: 3000,
+            pixels: 50,
+            viewportDimension: 800,
+            axisDirection: AxisDirection.down,
+            devicePixelRatio: 1.0,
+          );
+
+          ScrollEndNotification(
+            metrics: endMetrics,
+            context: context,
+          ).dispatch(context);
+          await tester.pumpAndSettle();
+
+          expect(
+            find.byKey(const Key('chat_list_header')),
+            findsNothing,
+          );
+        },
+      );
+
       testWidgets('does not render header when header is null', (tester) async {
         await mountWidget(
           const WnChatList(itemCount: 3, itemBuilder: _textBuilder),

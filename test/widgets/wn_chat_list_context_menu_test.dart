@@ -287,6 +287,34 @@ void main() {
         );
       });
 
+      testWidgets('tapping on menu card does not dismiss', (tester) async {
+        await openContextMenu(
+          tester,
+          actions: [
+            WnChatListContextMenuAction(
+              id: 'pin',
+              label: 'Pin',
+              icon: WnIcons.pin,
+              onTap: () {},
+            ),
+          ],
+          childText: 'Card Content',
+        );
+
+        expect(
+          find.byKey(const Key('context_menu_card')),
+          findsOneWidget,
+        );
+
+        await tester.tap(find.text('Card Content'));
+        await tester.pumpAndSettle();
+
+        expect(
+          find.byKey(const Key('context_menu_card')),
+          findsOneWidget,
+        );
+      });
+
       testWidgets('tapping correct action among multiple calls correct callback', (tester) async {
         var pinCalled = false;
         var archiveCalled = false;
@@ -382,6 +410,65 @@ void main() {
           findsNothing,
         );
       });
+    });
+
+    group('controller', () {
+      test('isShowing returns false when no overlay is set', () {
+        final controller = WnChatListContextMenuController();
+        expect(controller.isShowing, isFalse);
+      });
+
+      testWidgets('isShowing returns true after show()', (tester) async {
+        await openContextMenu(
+          tester,
+          actions: [
+            WnChatListContextMenuAction(
+              id: 'pin',
+              label: 'Pin',
+              icon: WnIcons.pin,
+              onTap: () {},
+            ),
+          ],
+        );
+
+        expect(activeController!.isShowing, isTrue);
+      });
+
+      test('dismiss on fresh controller is a no-op', () {
+        final controller = WnChatListContextMenuController();
+        controller.dismiss();
+        expect(controller.isShowing, isFalse);
+      });
+
+      test('dispose on fresh controller is a no-op', () {
+        final controller = WnChatListContextMenuController();
+        controller.dispose();
+        expect(controller.isShowing, isFalse);
+      });
+
+      testWidgets(
+        'isShowing returns false after dismiss',
+        (tester) async {
+          await openContextMenu(
+            tester,
+            actions: [
+              WnChatListContextMenuAction(
+                id: 'pin',
+                label: 'Pin',
+                icon: WnIcons.pin,
+                onTap: () {},
+              ),
+            ],
+          );
+
+          expect(activeController!.isShowing, isTrue);
+
+          activeController!.dismiss();
+          await tester.pumpAndSettle();
+
+          expect(activeController!.isShowing, isFalse);
+        },
+      );
     });
 
     group('WnChatListContextMenuAction', () {

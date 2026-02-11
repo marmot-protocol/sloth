@@ -190,13 +190,13 @@ class WnChatListContextMenu extends HookWidget {
                         boxShadow: [
                           BoxShadow(
                             color: colors.shadow.withValues(alpha: 0.1),
-                            offset: const Offset(0, 1),
+                            offset: Offset(0.w, 1.h),
                             blurRadius: 2.r,
                             spreadRadius: (-1).r,
                           ),
                           BoxShadow(
                             color: colors.shadow.withValues(alpha: 0.1),
-                            offset: const Offset(0, 1),
+                            offset: Offset(0.w, 1.h),
                             blurRadius: 3.r,
                           ),
                         ],
