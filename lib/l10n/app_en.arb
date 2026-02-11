@@ -6,14 +6,19 @@
     "description": "The application title displayed on home screen"
   },
 
-  "tagline1": "Decentralized. Uncensorable.",
-  "@tagline1": {
-    "description": "First tagline on home screen"
+  "sloganDecentralized": "Decentralized",
+  "@sloganDecentralized": {
+    "description": "First slogan word on home screen"
   },
 
-  "tagline2": "Secure Messaging.",
-  "@tagline2": {
-    "description": "Second tagline on home screen"
+  "sloganUncensorable": "Uncensorable",
+  "@sloganUncensorable": {
+    "description": "Second slogan word on home screen"
+  },
+
+  "sloganSecureMessaging": "Secure Messaging",
+  "@sloganSecureMessaging": {
+    "description": "Third slogan word on home screen"
   },
 
   "login": "Login",
@@ -1032,5 +1037,45 @@
   "failedToPinChat": "Failed to update pin. Please try again.",
   "@failedToPinChat": {
     "description": "Error message when pin/unpin operation fails"
+  },
+
+  "carouselPrivacyTitle": "Privacy and security",
+  "@carouselPrivacyTitle": {
+    "description": "Login carousel slide 1 title"
+  },
+
+  "carouselPrivacyDescription": "Keep your conversations private. Even in case of a breach, your messages remain secure.",
+  "@carouselPrivacyDescription": {
+    "description": "Login carousel slide 1 description"
+  },
+
+  "carouselIdentityTitle": "Choose your identity",
+  "@carouselIdentityTitle": {
+    "description": "Login carousel slide 2 title"
+  },
+
+  "carouselIdentityDescription": "Chat without revealing your phone number or email. Choose your identity: real name, pseudonym, or anonymous.",
+  "@carouselIdentityDescription": {
+    "description": "Login carousel slide 2 description"
+  },
+
+  "carouselDecentralizedTitle": "Decentralized and permissionless",
+  "@carouselDecentralizedTitle": {
+    "description": "Login carousel slide 3 title"
+  },
+
+  "carouselDecentralizedDescription": "No central authority controls your communication-no permissions needed, no censorship possible.",
+  "@carouselDecentralizedDescription": {
+    "description": "Login carousel slide 3 description"
+  },
+
+  "learnMore": "Learn more",
+  "@learnMore": {
+    "description": "Learn more button text on signup screen"
+  },
+
+  "backToSignUp": "Back to sign up",
+  "@backToSignUp": {
+    "description": "Button to return to signup from carousel"
   }
 }

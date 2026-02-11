@@ -9,7 +9,8 @@ import 'package:whitenoise/routes.dart' show Routes;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_input_password.dart' show WnInputPassword;
-import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
+import 'package:whitenoise/widgets/wn_onboarding_carousel.dart' show WnOnboardingCarousel;
+import 'package:whitenoise/widgets/wn_overlay.dart' show WnOverlay;
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart'
@@ -91,97 +92,105 @@ class LoginScreen extends HookConsumerWidget {
       }
     }
 
-    final isLoginLoading = loginWithNsecState.isLoading || loginWithAndroidSignerState.isLoading;
+    final keyboardHeight = MediaQuery.viewInsetsOf(context).bottom;
+    final isKeyboardOpen = keyboardHeight > 0;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: colors.backgroundPrimary,
       body: Stack(
         fit: StackFit.expand,
         children: [
-          WnPixelsLayer(isAnimating: isLoginLoading),
+          SafeArea(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 160.h),
+              child: const WnOnboardingCarousel(),
+            ),
+          ),
+          if (isKeyboardOpen) const WnOverlay(key: Key('login_keyboard_overlay')),
           Positioned.fill(
             child: GestureDetector(
               key: const Key('login_background'),
               onTap: () => Routes.goBack(context),
-              behavior: HitTestBehavior.opaque,
+              behavior: HitTestBehavior.translucent,
             ),
           ),
-          SafeArea(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                WnSlate(
-                  header: WnSlateNavigationHeader(
-                    title: context.l10n.loginTitle,
-                    type: WnSlateNavigationType.back,
-                    onNavigate: () => Routes.goBack(context),
-                  ),
-                  systemNotice: loginWithAndroidSignerState.error != null
-                      ? WnSystemNotice(
-                          key: ValueKey(loginWithAndroidSignerState.error),
-                          title: _signerErrorL10n(
-                            loginWithAndroidSignerState.error!,
-                            context.l10n,
-                          ),
-                          type: WnSystemNoticeType.error,
-                          variant: WnSystemNoticeVariant.dismissible,
-                          onDismiss: clearLoginWithAndroidSignerError,
-                        )
-                      : null,
-                  child: Padding(
-                    padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
-                    child: Column(
-                      spacing: 8.h,
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        WnInputPassword(
-                          label: context.l10n.enterPrivateKey,
-                          placeholder: context.l10n.nsecPlaceholder,
-                          controller: nsecInputController,
-                          errorText: loginWithNsecState.error,
-                          onChanged: (_) => clearLoginWithNsecError(),
-                          onPaste: pasteNsec,
-                          onScan: onScan,
+          Positioned(
+            left: 0,
+            right: 0,
+            bottom: isKeyboardOpen ? keyboardHeight + 10.h : 0,
+            child: SafeArea(
+              top: false,
+              bottom: !isKeyboardOpen,
+              child: WnSlate(
+                header: WnSlateNavigationHeader(
+                  title: context.l10n.loginTitle,
+                  type: WnSlateNavigationType.back,
+                  onNavigate: () => Routes.goBack(context),
+                ),
+                systemNotice: loginWithAndroidSignerState.error != null
+                    ? WnSystemNotice(
+                        key: ValueKey(loginWithAndroidSignerState.error),
+                        title: _signerErrorL10n(
+                          loginWithAndroidSignerState.error!,
+                          context.l10n,
                         ),
-                        ListenableBuilder(
-                          listenable: nsecInputController,
-                          builder: (context, _) {
-                            final signerPrimary =
-                                isAndroidSignerAvailable && nsecInputController.text.trim().isEmpty;
-                            return Column(
-                              spacing: 8.h,
-                              mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
+                        type: WnSystemNoticeType.error,
+                        variant: WnSystemNoticeVariant.dismissible,
+                        onDismiss: clearLoginWithAndroidSignerError,
+                      )
+                    : null,
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
+                  child: Column(
+                    spacing: 8.h,
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      WnInputPassword(
+                        label: context.l10n.enterPrivateKey,
+                        placeholder: context.l10n.nsecPlaceholder,
+                        controller: nsecInputController,
+                        errorText: loginWithNsecState.error,
+                        onChanged: (_) => clearLoginWithNsecError(),
+                        onPaste: pasteNsec,
+                        onScan: onScan,
+                      ),
+                      ListenableBuilder(
+                        listenable: nsecInputController,
+                        builder: (context, _) {
+                          final signerPrimary =
+                              isAndroidSignerAvailable && nsecInputController.text.trim().isEmpty;
+                          return Column(
+                            spacing: 8.h,
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              WnButton(
+                                key: const Key('login_button'),
+                                text: context.l10n.login,
+                                type: signerPrimary ? WnButtonType.outline : WnButtonType.primary,
+                                onPressed: onSubmit,
+                                loading: loginWithNsecState.isLoading,
+                                disabled: loginWithAndroidSignerState.isLoading,
+                              ),
+                              if (isAndroidSignerAvailable)
                                 WnButton(
-                                  key: const Key('login_button'),
-                                  text: context.l10n.login,
-                                  type: signerPrimary ? WnButtonType.outline : WnButtonType.primary,
-                                  onPressed: onSubmit,
-                                  loading: loginWithNsecState.isLoading,
-                                  disabled: loginWithAndroidSignerState.isLoading,
+                                  key: const Key('android_signer_login_button'),
+                                  text: context.l10n.loginWithSigner,
+                                  type: signerPrimary ? WnButtonType.primary : WnButtonType.outline,
+                                  onPressed: onAndroidSignerSubmit,
+                                  loading: loginWithAndroidSignerState.isLoading,
+                                  disabled: loginWithNsecState.isLoading,
                                 ),
-                                if (isAndroidSignerAvailable)
-                                  WnButton(
-                                    key: const Key('android_signer_login_button'),
-                                    text: context.l10n.loginWithSigner,
-                                    type: signerPrimary
-                                        ? WnButtonType.primary
-                                        : WnButtonType.outline,
-                                    onPressed: onAndroidSignerSubmit,
-                                    loading: loginWithAndroidSignerState.isLoading,
-                                    disabled: loginWithNsecState.isLoading,
-                                  ),
-                              ],
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                            ],
+                          );
+                        },
+                      ),
+                    ],
                   ),
                 ),
-              ],
+              ),
             ),
           ),
         ],

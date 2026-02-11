@@ -12,10 +12,13 @@ class AppLocalizationsEn extends AppLocalizations {
   String get appTitle => 'White Noise';
 
   @override
-  String get tagline1 => 'Decentralized. Uncensorable.';
+  String get sloganDecentralized => 'Decentralized';
 
   @override
-  String get tagline2 => 'Secure Messaging.';
+  String get sloganUncensorable => 'Uncensorable';
+
+  @override
+  String get sloganSecureMessaging => 'Secure Messaging';
 
   @override
   String get login => 'Login';
@@ -655,4 +658,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get failedToPinChat => 'Failed to update pin. Please try again.';
+
+  @override
+  String get carouselPrivacyTitle => 'Privacy and security';
+
+  @override
+  String get carouselPrivacyDescription =>
+      'Keep your conversations private. Even in case of a breach, your messages remain secure.';
+
+  @override
+  String get carouselIdentityTitle => 'Choose your identity';
+
+  @override
+  String get carouselIdentityDescription =>
+      'Chat without revealing your phone number or email. Choose your identity: real name, pseudonym, or anonymous.';
+
+  @override
+  String get carouselDecentralizedTitle => 'Decentralized and permissionless';
+
+  @override
+  String get carouselDecentralizedDescription =>
+      'No central authority controls your communication-no permissions needed, no censorship possible.';
+
+  @override
+  String get learnMore => 'Learn more';
+
+  @override
+  String get backToSignUp => 'Back to sign up';
 }

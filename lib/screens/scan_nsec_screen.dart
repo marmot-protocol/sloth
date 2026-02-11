@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart' show GoRouter;
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/routes.dart' show Routes;
 import 'package:whitenoise/theme.dart';
-import 'package:whitenoise/widgets/wn_pixels_layer.dart' show WnPixelsLayer;
 import 'package:whitenoise/widgets/wn_scan_box.dart' show WnScanBox;
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
@@ -26,7 +25,6 @@ class ScanNsecScreen extends StatelessWidget {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          const WnPixelsLayer(),
           Positioned.fill(
             child: GestureDetector(
               key: const Key('scan_nsec_background'),

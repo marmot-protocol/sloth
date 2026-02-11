@@ -12,10 +12,13 @@ class AppLocalizationsDe extends AppLocalizations {
   String get appTitle => 'White Noise';
 
   @override
-  String get tagline1 => 'Dezentralisiert. Unzensierbar.';
+  String get sloganDecentralized => 'Dezentralisiert';
 
   @override
-  String get tagline2 => 'Sichere Nachrichten.';
+  String get sloganUncensorable => 'Unzensierbar';
+
+  @override
+  String get sloganSecureMessaging => 'Sichere Nachrichten';
 
   @override
   String get login => 'Anmelden';
@@ -672,4 +675,31 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get failedToPinChat => 'Anheften fehlgeschlagen. Bitte versuche es erneut.';
+
+  @override
+  String get carouselPrivacyTitle => 'Privatsphäre und Sicherheit';
+
+  @override
+  String get carouselPrivacyDescription =>
+      'Halte deine Gespräche privat. Selbst bei einem Datenleck bleiben deine Nachrichten sicher.';
+
+  @override
+  String get carouselIdentityTitle => 'Wähle deine Identität';
+
+  @override
+  String get carouselIdentityDescription =>
+      'Chatte ohne deine Telefonnummer oder E-Mail preiszugeben. Wähle deine Identität: echter Name, Pseudonym oder anonym.';
+
+  @override
+  String get carouselDecentralizedTitle => 'Dezentralisiert und genehmigungsfrei';
+
+  @override
+  String get carouselDecentralizedDescription =>
+      'Keine zentrale Instanz kontrolliert deine Kommunikation – keine Genehmigungen nötig, keine Zensur möglich.';
+
+  @override
+  String get learnMore => 'Mehr erfahren';
+
+  @override
+  String get backToSignUp => 'Zurück zur Registrierung';
 }

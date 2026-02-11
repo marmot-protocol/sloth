@@ -13,6 +13,7 @@ import 'package:whitenoise/screens/onboarding_screen.dart';
 import 'package:whitenoise/src/rust/api/accounts.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_onboarding_carousel.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_secure_storage.dart';
@@ -105,9 +106,63 @@ void main() {
 
       testWidgets('tapping outside slate returns to home screen', (tester) async {
         await pumpSignupScreen(tester);
-        await tester.tapAt(const Offset(195, 50));
+        // Tap on the left margin area where the background is exposed
+        await tester.tapAt(const Offset(5, 400));
         await tester.pumpAndSettle();
         expect(find.byType(HomeScreen), findsOneWidget);
+      });
+    });
+
+    group('carousel', () {
+      testWidgets('displays Learn more button', (tester) async {
+        await pumpSignupScreen(tester);
+        expect(find.text('Learn more'), findsOneWidget);
+        expect(find.byKey(const Key('learn_more_arrow')), findsOneWidget);
+      });
+
+      testWidgets('tapping Learn more shows onboarding carousel', (tester) async {
+        await pumpSignupScreen(tester);
+        expect(find.byType(WnOnboardingCarousel), findsNothing);
+
+        await tester.tap(find.byKey(const Key('learn_more_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnOnboardingCarousel), findsOneWidget);
+      });
+
+      testWidgets('carousel shows Back to sign up button', (tester) async {
+        await pumpSignupScreen(tester);
+        await tester.tap(find.byKey(const Key('learn_more_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Back to sign up'), findsOneWidget);
+        expect(find.byKey(const Key('back_to_signup_arrow')), findsOneWidget);
+      });
+
+      testWidgets('tapping Back to sign up hides carousel', (tester) async {
+        await pumpSignupScreen(tester);
+        await tester.tap(find.byKey(const Key('learn_more_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnOnboardingCarousel), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('back_to_signup_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnOnboardingCarousel), findsNothing);
+        expect(find.text('Setup profile'), findsOneWidget);
+      });
+
+      testWidgets('tapping outside does not dismiss when carousel is visible', (tester) async {
+        await pumpSignupScreen(tester);
+        await tester.tap(find.byKey(const Key('learn_more_button')));
+        await tester.pumpAndSettle();
+
+        await tester.tapAt(const Offset(195, 50));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnOnboardingCarousel), findsOneWidget);
+        expect(find.byType(HomeScreen), findsNothing);
       });
     });
 

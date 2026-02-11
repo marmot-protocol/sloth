@@ -114,17 +114,23 @@ abstract class AppLocalizations {
   /// **'White Noise'**
   String get appTitle;
 
-  /// First tagline on home screen
+  /// First slogan word on home screen
   ///
   /// In en, this message translates to:
-  /// **'Decentralized. Uncensorable.'**
-  String get tagline1;
+  /// **'Decentralized'**
+  String get sloganDecentralized;
 
-  /// Second tagline on home screen
+  /// Second slogan word on home screen
   ///
   /// In en, this message translates to:
-  /// **'Secure Messaging.'**
-  String get tagline2;
+  /// **'Uncensorable'**
+  String get sloganUncensorable;
+
+  /// Third slogan word on home screen
+  ///
+  /// In en, this message translates to:
+  /// **'Secure Messaging'**
+  String get sloganSecureMessaging;
 
   /// Login button text
   ///
@@ -1289,6 +1295,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to update pin. Please try again.'**
   String get failedToPinChat;
+
+  /// Login carousel slide 1 title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy and security'**
+  String get carouselPrivacyTitle;
+
+  /// Login carousel slide 1 description
+  ///
+  /// In en, this message translates to:
+  /// **'Keep your conversations private. Even in case of a breach, your messages remain secure.'**
+  String get carouselPrivacyDescription;
+
+  /// Login carousel slide 2 title
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your identity'**
+  String get carouselIdentityTitle;
+
+  /// Login carousel slide 2 description
+  ///
+  /// In en, this message translates to:
+  /// **'Chat without revealing your phone number or email. Choose your identity: real name, pseudonym, or anonymous.'**
+  String get carouselIdentityDescription;
+
+  /// Login carousel slide 3 title
+  ///
+  /// In en, this message translates to:
+  /// **'Decentralized and permissionless'**
+  String get carouselDecentralizedTitle;
+
+  /// Login carousel slide 3 description
+  ///
+  /// In en, this message translates to:
+  /// **'No central authority controls your communication-no permissions needed, no censorship possible.'**
+  String get carouselDecentralizedDescription;
+
+  /// Learn more button text on signup screen
+  ///
+  /// In en, this message translates to:
+  /// **'Learn more'**
+  String get learnMore;
+
+  /// Button to return to signup from carousel
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign up'**
+  String get backToSignUp;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -116,6 +116,37 @@ Widget wnCarouselIndicatorShowcase(BuildContext context) {
         const SizedBox(height: 32),
         _buildSection(
           context,
+          'Active Color Variants',
+          'activeColor overrides the theme fill for the active dot. Omit for theme default.',
+          [
+            _CarouselIndicatorExample(
+              label: 'Theme Default',
+              description: 'activeColor: null',
+              child: const WnCarouselIndicator(itemCount: 5, activeIndex: 2),
+            ),
+            _CarouselIndicatorExample(
+              label: 'Custom Red',
+              description: 'activeColor: Colors.red',
+              child: const WnCarouselIndicator(
+                itemCount: 5,
+                activeIndex: 2,
+                activeColor: Colors.red,
+              ),
+            ),
+            _CarouselIndicatorExample(
+              label: 'Custom Blue',
+              description: 'activeColor: Colors.blue',
+              child: const WnCarouselIndicator(
+                itemCount: 5,
+                activeIndex: 2,
+                activeColor: Colors.blue,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 32),
+        _buildSection(
+          context,
           'Usage Context',
           'Carousel indicators are typically placed below carousel content to show the current slide position.',
           [
@@ -390,7 +421,15 @@ class _InteractiveCarouselIndicator extends StatelessWidget {
       max: itemCount - 1,
       initialValue: 0,
     );
+    final activeColor = context.knobs.color(
+      label: 'Active Color',
+      initialValue: context.colors.fillPrimary,
+    );
 
-    return WnCarouselIndicator(itemCount: itemCount, activeIndex: activeIndex);
+    return WnCarouselIndicator(
+      itemCount: itemCount,
+      activeIndex: activeIndex,
+      activeColor: activeColor,
+    );
   }
 }

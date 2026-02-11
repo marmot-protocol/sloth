@@ -8,6 +8,7 @@ class WnCarouselIndicator extends HookWidget {
     super.key,
     required this.itemCount,
     required this.activeIndex,
+    this.activeColor,
   }) : assert(itemCount > 0, 'itemCount must be greater than 0'),
        assert(
          activeIndex >= 0 && activeIndex < itemCount,
@@ -21,6 +22,7 @@ class WnCarouselIndicator extends HookWidget {
 
   final int itemCount;
   final int activeIndex;
+  final Color? activeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +54,7 @@ class WnCarouselIndicator extends HookWidget {
             isActive: isActive,
             wasActive: wasActive,
             movingForward: movingForward,
-            activeColor: colors.fillPrimary,
+            activeColor: activeColor ?? colors.fillPrimary,
             inactiveColor: colors.fillSecondary,
           ),
         );
