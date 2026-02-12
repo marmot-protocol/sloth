@@ -17,7 +17,6 @@ import 'package:whitenoise/screens/edit_profile_screen.dart' show EditProfileScr
 import 'package:whitenoise/screens/home_screen.dart' show HomeScreen;
 import 'package:whitenoise/screens/login_screen.dart' show LoginScreen;
 import 'package:whitenoise/screens/network_screen.dart' show NetworkScreen;
-import 'package:whitenoise/screens/onboarding_screen.dart' show OnboardingScreen;
 import 'package:whitenoise/screens/profile_keys_screen.dart' show ProfileKeysScreen;
 import 'package:whitenoise/screens/scan_npub_screen.dart' show ScanNpubScreen;
 import 'package:whitenoise/screens/scan_nsec_screen.dart' show ScanNsecScreen;
@@ -43,7 +42,6 @@ abstract final class Routes {
   static const _donate = '/donate';
   static const _appSettings = '/app-settings';
   static const _wip = '/wip';
-  static const _onboarding = '/onboarding';
   static const _developerSettings = '/developer-settings';
   static const _profileKeys = '/profile-keys';
   static const _shareProfile = '/share-profile';
@@ -144,13 +142,7 @@ abstract final class Routes {
             child: const WipScreen(),
           ),
         ),
-        GoRoute(
-          path: _onboarding,
-          pageBuilder: (context, state) => _navigationTransition(
-            state: state,
-            child: const OnboardingScreen(),
-          ),
-        ),
+
         GoRoute(
           path: _developerSettings,
           pageBuilder: (context, state) => _navigationTransition(
@@ -330,10 +322,6 @@ abstract final class Routes {
 
   static void pushToAppSettings(BuildContext context) {
     GoRouter.of(context).push(_appSettings);
-  }
-
-  static void goToOnboarding(BuildContext context) {
-    GoRouter.of(context).go(_onboarding);
   }
 
   static void pushToDeveloperSettings(BuildContext context) {

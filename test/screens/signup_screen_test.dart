@@ -5,11 +5,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/l10n/generated/app_localizations.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
-import 'package:whitenoise/providers/is_adding_account_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/screens/home_screen.dart';
-import 'package:whitenoise/screens/onboarding_screen.dart';
 import 'package:whitenoise/src/rust/api/accounts.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
@@ -178,12 +176,12 @@ void main() {
         ];
       });
 
-      testWidgets('redirects to onboarding on success', (tester) async {
+      testWidgets('redirects to chat list on success', (tester) async {
         await pumpSignupScreen(tester, overrides: overrides);
         await tester.enterText(find.byType(TextField).first, 'Test User');
         await tester.tap(find.text('Sign Up'));
         await tester.pumpAndSettle();
-        expect(find.byType(OnboardingScreen), findsOneWidget);
+        expect(find.byType(ChatListScreen), findsOneWidget);
       });
 
       testWidgets('does not redirect on failure', (tester) async {
@@ -192,25 +190,7 @@ void main() {
         await tester.enterText(find.byType(TextField).first, 'Test User');
         await tester.tap(find.text('Sign Up'));
         await tester.pumpAndSettle();
-        expect(find.byType(OnboardingScreen), findsNothing);
-      });
-
-      testWidgets('redirects to chat list when adding account', (tester) async {
-        await mountTestApp(tester, overrides: overrides);
-
-        final element = tester.element(find.byType(Scaffold));
-        final container = ProviderScope.containerOf(element);
-        container.read(isAddingAccountProvider.notifier).set(true);
-
-        Routes.pushToSignup(element);
-        await tester.pumpAndSettle();
-
-        await tester.enterText(find.byType(TextField).first, 'Test User');
-        await tester.tap(find.text('Sign Up'));
-        await tester.pumpAndSettle();
-
-        expect(find.byType(ChatListScreen), findsOneWidget);
-        expect(find.byType(OnboardingScreen), findsNothing);
+        expect(find.byType(ChatListScreen), findsNothing);
       });
     });
 
