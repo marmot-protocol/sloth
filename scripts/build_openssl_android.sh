@@ -3,7 +3,7 @@
 # Build OpenSSL static libraries for Android targets
 # This is needed because libsqlite3-sys (SQLCipher) requires libcrypto,
 # and Android doesn't ship a system libcrypto.so.
-set -e
+set -eo pipefail
 
 print_step() {
     echo -e "\n\033[1;34m=== $1 ===\033[0m"
@@ -96,11 +96,10 @@ build_openssl_for_target() {
         no-tests \
         no-ui-console \
         no-stdio \
-        -fPIC \
-        2>&1 | tail -3
+        -fPIC
 
-    make -j"$(nproc 2>/dev/null || sysctl -n hw.ncpu)" build_libs 2>&1 | tail -3
-    make install_dev 2>&1 | tail -3
+    make -j"$(nproc 2>/dev/null || sysctl -n hw.ncpu)" build_libs
+    make install_dev
 
     cd "$PROJECT_ROOT"
     rm -rf "$build_src"
