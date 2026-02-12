@@ -47,13 +47,13 @@ ChatMessagesResult useChatMessages(String groupId) {
         update: (update) {
           final message = update.message;
 
-          if (update.trigger == UpdateTrigger.newMessage) {
+          messagesById.value[message.id] = message;
+
+          if (update.trigger == UpdateTrigger.newMessage &&
+              !indexById.value.containsKey(message.id)) {
             final newIndex = messageIds.value.length;
             messageIds.value.add(message.id);
-            messagesById.value[message.id] = message;
             indexById.value[message.id] = newIndex;
-          } else {
-            messagesById.value[message.id] = message;
           }
 
           final lastId = messageIds.value.isNotEmpty ? messageIds.value.last : null;

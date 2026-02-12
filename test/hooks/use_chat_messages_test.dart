@@ -437,6 +437,58 @@ void main() {
       });
     });
 
+    group('duplicate messages', () {
+      testWidgets('ignores duplicate newMessage update with same id', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024))]);
+        await tester.pumpAndSettle();
+
+        _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2)));
+        await tester.pumpAndSettle();
+
+        _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2)));
+        await tester.pumpAndSettle();
+
+        final result = getResult();
+        expect(result.messageCount, 2);
+        expect(result.getMessage(0).id, 'm2');
+        expect(result.getMessage(1).id, 'm1');
+      });
+
+      testWidgets('ignores newMessage update for id already in initial snapshot', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message('m1', DateTime(2024)),
+          _message('m2', DateTime(2024, 1, 2)),
+        ]);
+        await tester.pumpAndSettle();
+
+        _api.emitNewMessage(_message('m2', DateTime(2024, 1, 2)));
+        await tester.pumpAndSettle();
+
+        final result = getResult();
+        expect(result.messageCount, 2);
+        expect(result.getMessage(0).id, 'm2');
+        expect(result.getMessage(1).id, 'm1');
+      });
+
+      testWidgets('still updates message data when duplicate id arrives', (tester) async {
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([_message('m1', DateTime(2024), content: 'original')]);
+        await tester.pumpAndSettle();
+
+        _api.emitNewMessage(_message('m1', DateTime(2024), content: 'updated'));
+        await tester.pumpAndSettle();
+
+        final result = getResult();
+        expect(result.messageCount, 1);
+        expect(result.getMessage(0).content, 'updated');
+      });
+    });
+
     group('getReplyPreview', () {
       testWidgets('returns null when replyId is null', (tester) async {
         final getResult = await _pump(tester, 'group1');
