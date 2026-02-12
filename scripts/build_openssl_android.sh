@@ -51,7 +51,12 @@ fi
 
 # Detect host OS
 case "$(uname -s)" in
-    Darwin*)    HOST_TAG="darwin-x86_64" ;;
+    Darwin*)
+        case "$(uname -m)" in
+            arm64|aarch64) HOST_TAG="darwin-arm64" ;;
+            *)             HOST_TAG="darwin-x86_64" ;;
+        esac
+        ;;
     Linux*)     HOST_TAG="linux-x86_64" ;;
     *)          print_error "Unsupported host OS: $(uname -s)"; exit 1 ;;
 esac
@@ -124,7 +129,14 @@ if [ ! -d "$OPENSSL_SRC_DIR" ]; then
     fi
 
     print_step "Verifying tarball integrity"
-    ACTUAL_SHA256=$(shasum -a 256 "$TARBALL" | awk '{print $1}')
+    if command -v shasum >/dev/null 2>&1; then
+        ACTUAL_SHA256=$(shasum -a 256 "$TARBALL" | awk '{print $1}')
+    elif command -v sha256sum >/dev/null 2>&1; then
+        ACTUAL_SHA256=$(sha256sum "$TARBALL" | awk '{print $1}')
+    else
+        print_error "No SHA-256 tool found (need shasum or sha256sum)"
+        exit 1
+    fi
     if [ "$ACTUAL_SHA256" != "$OPENSSL_SHA256" ]; then
         print_error "SHA-256 mismatch for $TARBALL"
         print_error "  Expected: $OPENSSL_SHA256"
