@@ -26,8 +26,10 @@ class _NeutralColors {
   static const Color neutral100 = Color(0xFFF5F5F5);
   static const Color neutral150 = Color(0xFFEDEDEE);
   static const Color neutral200 = Color(0xFFE5E5E5);
+  static const Color neutral250 = Color(0xFFDCDCDD);
   static const Color neutral400 = Color(0xFFA3A3A3);
   static const Color neutral500 = Color(0xFF737373);
+  static const Color neutral700 = Color(0xFF404040);
   static const Color neutral800 = Color(0xFF262626);
   static const Color neutral850 = Color(0xFF1E1E1F);
   static const Color neutral900 = Color(0xFF171717);
@@ -185,6 +187,76 @@ class AccentColorSet {
 }
 
 @immutable
+class ReactionColorSet {
+  final Color fill;
+  final Color fillHover;
+  final Color fillSelected;
+  final Color content;
+  final Color contentHover;
+  final Color contentSelected;
+
+  const ReactionColorSet({
+    required this.fill,
+    required this.fillHover,
+    required this.fillSelected,
+    required this.content,
+    required this.contentHover,
+    required this.contentSelected,
+  });
+
+  ReactionColorSet copyWith({
+    Color? fill,
+    Color? fillHover,
+    Color? fillSelected,
+    Color? content,
+    Color? contentHover,
+    Color? contentSelected,
+  }) {
+    return ReactionColorSet(
+      fill: fill ?? this.fill,
+      fillHover: fillHover ?? this.fillHover,
+      fillSelected: fillSelected ?? this.fillSelected,
+      content: content ?? this.content,
+      contentHover: contentHover ?? this.contentHover,
+      contentSelected: contentSelected ?? this.contentSelected,
+    );
+  }
+
+  static ReactionColorSet lerp(ReactionColorSet a, ReactionColorSet b, double t) {
+    return ReactionColorSet(
+      fill: Color.lerp(a.fill, b.fill, t)!,
+      fillHover: Color.lerp(a.fillHover, b.fillHover, t)!,
+      fillSelected: Color.lerp(a.fillSelected, b.fillSelected, t)!,
+      content: Color.lerp(a.content, b.content, t)!,
+      contentHover: Color.lerp(a.contentHover, b.contentHover, t)!,
+      contentSelected: Color.lerp(a.contentSelected, b.contentSelected, t)!,
+    );
+  }
+}
+
+@immutable
+class SemanticReactionColors {
+  final ReactionColorSet incoming;
+  final ReactionColorSet outgoing;
+
+  const SemanticReactionColors({
+    required this.incoming,
+    required this.outgoing,
+  });
+
+  static SemanticReactionColors lerp(
+    SemanticReactionColors a,
+    SemanticReactionColors b,
+    double t,
+  ) {
+    return SemanticReactionColors(
+      incoming: ReactionColorSet.lerp(a.incoming, b.incoming, t),
+      outgoing: ReactionColorSet.lerp(a.outgoing, b.outgoing, t),
+    );
+  }
+}
+
+@immutable
 class SemanticAccentColors {
   final AccentColorSet blue;
   final AccentColorSet cyan;
@@ -235,6 +307,44 @@ class SemanticAccentColors {
     );
   }
 }
+
+const _lightReactionColors = SemanticReactionColors(
+  incoming: ReactionColorSet(
+    fill: _BaseColors.white,
+    fillHover: _NeutralColors.neutral200,
+    fillSelected: _NeutralColors.neutral800,
+    content: _NeutralColors.neutral500,
+    contentHover: _NeutralColors.neutral500,
+    contentSelected: _BaseColors.white,
+  ),
+  outgoing: ReactionColorSet(
+    fill: _NeutralColors.neutral800,
+    fillHover: _NeutralColors.neutral700,
+    fillSelected: _NeutralColors.neutral50,
+    content: _NeutralColors.neutral250,
+    contentHover: _NeutralColors.neutral250,
+    contentSelected: _NeutralColors.neutral950,
+  ),
+);
+
+const _darkReactionColors = SemanticReactionColors(
+  incoming: ReactionColorSet(
+    fill: _NeutralColors.neutral800,
+    fillHover: _NeutralColors.neutral700,
+    fillSelected: _NeutralColors.neutral50,
+    content: _NeutralColors.neutral250,
+    contentHover: _NeutralColors.neutral250,
+    contentSelected: _NeutralColors.neutral950,
+  ),
+  outgoing: ReactionColorSet(
+    fill: _NeutralColors.neutral100,
+    fillHover: _NeutralColors.neutral150,
+    fillSelected: _NeutralColors.neutral800,
+    content: _NeutralColors.neutral500,
+    contentHover: _NeutralColors.neutral500,
+    contentSelected: _BaseColors.white,
+  ),
+);
 
 const _lightAccentColors = SemanticAccentColors(
   blue: AccentColorSet(
@@ -434,6 +544,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color overlaySecondary;
   final Color qrCode;
   final SemanticAccentColors accent;
+  final SemanticReactionColors reaction;
 
   const SemanticColors({
     required this.backgroundPrimary,
@@ -482,6 +593,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.overlaySecondary,
     required this.qrCode,
     required this.accent,
+    required this.reaction,
   });
 
   static const light = SemanticColors(
@@ -531,6 +643,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     overlaySecondary: _WhiteAlphaColors.whiteAlpha500,
     qrCode: _NeutralColors.neutral950,
     accent: _lightAccentColors,
+    reaction: _lightReactionColors,
   );
 
   static const dark = SemanticColors(
@@ -580,6 +693,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     overlaySecondary: _BlackAlphaColors.blackAlpha500,
     qrCode: _BaseColors.white,
     accent: _darkAccentColors,
+    reaction: _darkReactionColors,
   );
 
   @override
@@ -630,6 +744,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? overlaySecondary,
     Color? qrCode,
     SemanticAccentColors? accent,
+    SemanticReactionColors? reaction,
   }) {
     return SemanticColors(
       backgroundPrimary: backgroundPrimary ?? this.backgroundPrimary,
@@ -680,6 +795,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       overlaySecondary: overlaySecondary ?? this.overlaySecondary,
       qrCode: qrCode ?? this.qrCode,
       accent: accent ?? this.accent,
+      reaction: reaction ?? this.reaction,
     );
   }
 
@@ -789,6 +905,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       overlaySecondary: Color.lerp(overlaySecondary, other.overlaySecondary, t)!,
       qrCode: Color.lerp(qrCode, other.qrCode, t)!,
       accent: SemanticAccentColors.lerp(accent, other.accent, t),
+      reaction: SemanticReactionColors.lerp(reaction, other.reaction, t),
     );
   }
 }
