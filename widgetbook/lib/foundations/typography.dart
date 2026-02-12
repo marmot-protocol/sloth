@@ -152,6 +152,22 @@ Widget allTypography(BuildContext context) {
           ],
         ),
         _buildSizeSection(
+          'Size 16 Compact',
+          fontSize: 16,
+          lineHeight: 18,
+          letterSpacing: 0.2,
+          styles: [
+            _StyleItem('medium16Compact', typography.medium16Compact, 'Medium'),
+            _StyleItem(
+              'semiBold16Compact',
+              typography.semiBold16Compact,
+              'SemiBold',
+            ),
+            _StyleItem('bold16Compact', typography.bold16Compact, 'Bold'),
+          ],
+          description: 'Tighter line height for compact layouts',
+        ),
+        _buildSizeSection(
           'Size 14',
           fontSize: 14,
           lineHeight: 18,
@@ -188,6 +204,22 @@ Widget allTypography(BuildContext context) {
             _StyleItem('semiBold12', typography.semiBold12, 'SemiBold'),
             _StyleItem('bold12', typography.bold12, 'Bold'),
           ],
+        ),
+        _buildSizeSection(
+          'Size 12 Compact',
+          fontSize: 12,
+          lineHeight: 13,
+          letterSpacing: 0.6,
+          styles: [
+            _StyleItem('medium12Compact', typography.medium12Compact, 'Medium'),
+            _StyleItem(
+              'semiBold12Compact',
+              typography.semiBold12Compact,
+              'SemiBold',
+            ),
+            _StyleItem('bold12Compact', typography.bold12Compact, 'Bold'),
+          ],
+          description: 'Tighter line height for compact layouts',
         ),
         _buildSizeSection(
           'Size 10',
