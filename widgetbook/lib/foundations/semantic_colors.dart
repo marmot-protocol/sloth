@@ -304,6 +304,69 @@ Widget allColors(BuildContext context) {
               'from background content and keep focus on it.',
         ),
         const SizedBox(height: 24),
+        _buildColorSection('Reaction', [
+          _ColorPairItem(
+            semanticName: 'Reaction Fill Incoming',
+            lightColor: light.reaction.incoming.fill,
+            darkColor: dark.reaction.incoming.fill,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Fill Incoming Hover',
+            lightColor: light.reaction.incoming.fillHover,
+            darkColor: dark.reaction.incoming.fillHover,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Fill Incoming Selected',
+            lightColor: light.reaction.incoming.fillSelected,
+            darkColor: dark.reaction.incoming.fillSelected,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Fill Outgoing',
+            lightColor: light.reaction.outgoing.fill,
+            darkColor: dark.reaction.outgoing.fill,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Fill Outgoing Hover',
+            lightColor: light.reaction.outgoing.fillHover,
+            darkColor: dark.reaction.outgoing.fillHover,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Fill Outgoing Selected',
+            lightColor: light.reaction.outgoing.fillSelected,
+            darkColor: dark.reaction.outgoing.fillSelected,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Content Incoming',
+            lightColor: light.reaction.incoming.content,
+            darkColor: dark.reaction.incoming.content,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Content Incoming Hover',
+            lightColor: light.reaction.incoming.contentHover,
+            darkColor: dark.reaction.incoming.contentHover,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Content Incoming Selected',
+            lightColor: light.reaction.incoming.contentSelected,
+            darkColor: dark.reaction.incoming.contentSelected,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Content Outgoing',
+            lightColor: light.reaction.outgoing.content,
+            darkColor: dark.reaction.outgoing.content,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Content Outgoing Hover',
+            lightColor: light.reaction.outgoing.contentHover,
+            darkColor: dark.reaction.outgoing.contentHover,
+          ),
+          _ColorPairItem(
+            semanticName: 'Reaction Content Outgoing Selected',
+            lightColor: light.reaction.outgoing.contentSelected,
+            darkColor: dark.reaction.outgoing.contentSelected,
+          ),
+        ], description: 'Use for reaction fills and content.'),
+        const SizedBox(height: 24),
         _buildColorSection(
           'Accent',
           [
