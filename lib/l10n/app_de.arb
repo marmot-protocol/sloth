@@ -98,6 +98,7 @@
   "startNewChat": "Neuen Chat starten",
   "noResults": "Keine Ergebnisse",
   "noFollowsYet": "Noch keine Follows",
+  "searchByNameOrNpub": "Name oder npub1...",
   "developerSettingsTitle": "Entwicklereinstellungen",
   "publishNewKeyPackage": "Neues Schlüsselpaket veröffentlichen",
   "refreshKeyPackages": "Schlüsselpakete aktualisieren",
@@ -142,7 +143,8 @@
   "follow": "Folgen",
   "unfollow": "Entfolgen",
   "failedToStartChat": "Chat konnte nicht gestartet werden. Bitte versuchen Sie es erneut.",
-  "userNotOnWhiteNoise": "Dieser Benutzer ist noch nicht bei White Noise.",
+  "inviteToWhiteNoise": "Zu White Noise einladen",
+  "inviteToWhiteNoiseDescription": "{name} ist noch nicht bei White Noise. Teilen Sie die App, um einen sicheren Chat zu starten.",
   "failedToUpdateFollow": "Folgestatus konnte nicht aktualisiert werden. Bitte versuchen Sie es erneut.",
   "imagePickerError": "Bild konnte nicht ausgewählt werden. Bitte versuchen Sie es erneut.",
   "scanNsec": "QR-Code scannen",
@@ -205,5 +207,9 @@
   "carouselDecentralizedTitle": "Dezentralisiert und genehmigungsfrei",
   "carouselDecentralizedDescription": "Keine zentrale Instanz kontrolliert deine Kommunikation – keine Genehmigungen nötig, keine Zensur möglich.",
   "learnMore": "Mehr erfahren",
-  "backToSignUp": "Zurück zur Registrierung"
+  "backToSignUp": "Zurück zur Registrierung",
+  "deleteAllData": "Alle Daten löschen",
+  "deleteAllDataConfirmation": "Alle Daten löschen?",
+  "deleteAllDataWarning": "Dies wird alle deine Chats, Nachrichten und Einstellungen von diesem Gerät dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
+  "deleteAllDataError": "Fehler beim Löschen aller Daten. Bitte versuche es erneut."
 }

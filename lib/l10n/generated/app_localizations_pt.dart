@@ -324,6 +324,9 @@ class AppLocalizationsPt extends AppLocalizations {
   String get noFollowsYet => 'Ainda não há seguidos';
 
   @override
+  String get searchByNameOrNpub => 'Nome ou npub1...';
+
+  @override
   String get developerSettingsTitle => 'Configurações de Desenvolvedor';
 
   @override
@@ -489,7 +492,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get failedToStartChat => 'Falha ao iniciar a conversa. Por favor, tente novamente.';
 
   @override
-  String get userNotOnWhiteNoise => 'Este usuário ainda não está no White Noise.';
+  String get inviteToWhiteNoise => 'Convidar para o White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name ainda não está no White Noise. Compartilhe o app para iniciar uma conversa segura.';
+  }
 
   @override
   String get failedToUpdateFollow =>
@@ -690,4 +698,17 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Voltar ao cadastro';
+
+  @override
+  String get deleteAllData => 'Excluir Todos os Dados';
+
+  @override
+  String get deleteAllDataConfirmation => 'Excluir todos os dados?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Isso excluirá permanentemente todos os seus chats, mensagens e configurações deste dispositivo. Esta ação não pode ser desfeita.';
+
+  @override
+  String get deleteAllDataError => 'Falha ao excluir todos os dados. Por favor, tente novamente.';
 }

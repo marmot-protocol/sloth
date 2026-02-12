@@ -510,6 +510,11 @@
     "description": "Message when user has no follows"
   },
 
+  "searchByNameOrNpub": "Name or npub1...",
+  "@searchByNameOrNpub": {
+    "description": "User search field placeholder"
+  },
+
   "developerSettingsTitle": "Developer Settings",
   "@developerSettingsTitle": {
     "description": "Developer settings screen title"
@@ -760,9 +765,19 @@
     "description": "Error when starting chat fails"
   },
 
-  "userNotOnWhiteNoise": "This user is not on White Noise yet.",
-  "@userNotOnWhiteNoise": {
-    "description": "Message shown when user has no key packages"
+  "inviteToWhiteNoise": "Invite to White Noise",
+  "@inviteToWhiteNoise": {
+    "description": "Callout title when user is not on White Noise"
+  },
+
+  "inviteToWhiteNoiseDescription": "{name} isn't on White Noise yet. Share the app to start a secure chat.",
+  "@inviteToWhiteNoiseDescription": {
+    "description": "Callout description when user is not on White Noise",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
 
   "failedToUpdateFollow": "Failed to update follow status. Please try again.",
@@ -1077,5 +1092,25 @@
   "backToSignUp": "Back to sign up",
   "@backToSignUp": {
     "description": "Button to return to signup from carousel"
+  },
+
+  "deleteAllData": "Delete All Data",
+  "@deleteAllData": {
+    "description": "Button to delete all application data"
+  },
+
+  "deleteAllDataConfirmation": "Delete all data?",
+  "@deleteAllDataConfirmation": {
+    "description": "Confirmation dialog title for delete all data"
+  },
+
+  "deleteAllDataWarning": "This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.",
+  "@deleteAllDataWarning": {
+    "description": "Warning message for delete all data action"
+  },
+
+  "deleteAllDataError": "Failed to delete all data. Please try again.",
+  "@deleteAllDataError": {
+    "description": "Error message when data deletion fails"
   }
 }

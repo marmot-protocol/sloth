@@ -7,6 +7,7 @@ import 'package:whitenoise/src/rust/api/error.dart';
 import 'package:whitenoise/src/rust/api/groups.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/user_search.dart';
 import 'package:whitenoise/src/rust/api/users.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 
@@ -44,6 +45,11 @@ class MockWnApi implements RustLibApi {
 
   List<User> follows = [];
   bool userHasKeyPackage = true;
+  StreamController<UserSearchUpdate>? searchUsersController;
+
+  bool deleteAllDataCalled = false;
+  bool deleteAllDataShouldFail = false;
+  Duration deleteAllDataDelay = Duration.zero;
 
   @override
   Future<bool> crateApiUsersUserHasKeyPackage({
@@ -76,6 +82,18 @@ class MockWnApi implements RustLibApi {
     required String userPubkey,
   }) async {
     return follows.any((user) => user.pubkey == userPubkey);
+  }
+
+  @override
+  Stream<UserSearchUpdate> crateApiUserSearchSearchUsers({
+    required String accountPubkey,
+    required String query,
+    required int radiusStart,
+    required int radiusEnd,
+  }) {
+    searchUsersController?.close();
+    searchUsersController = StreamController<UserSearchUpdate>(sync: true);
+    return searchUsersController!.stream;
   }
 
   @override
@@ -277,6 +295,17 @@ class MockWnApi implements RustLibApi {
     }
   }
 
+  @override
+  Future<void> crateApiDeleteAllData() async {
+    deleteAllDataCalled = true;
+    if (deleteAllDataDelay > Duration.zero) {
+      await Future.delayed(deleteAllDataDelay);
+    }
+    if (deleteAllDataShouldFail) {
+      throw Exception('Failed to delete all data');
+    }
+  }
+
   void reset() {
     currentThemeMode = 'system';
     currentLanguage = 'system';
@@ -287,6 +316,11 @@ class MockWnApi implements RustLibApi {
     follows = [];
     getAccountsCompleter = null;
     userHasKeyPackage = true;
+    searchUsersController?.close();
+    searchUsersController = null;
+    deleteAllDataCalled = false;
+    deleteAllDataShouldFail = false;
+    deleteAllDataDelay = Duration.zero;
   }
 
   @override

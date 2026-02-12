@@ -137,6 +137,7 @@ void main() {
   Future<void> pumpStartChatScreen(
     WidgetTester tester, {
     required String userPubkey,
+    FlutterMetadata? initialMetadata,
   }) async {
     setUpTestView(tester);
     await mountTestApp(
@@ -144,7 +145,11 @@ void main() {
       overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
     );
     await tester.pumpAndSettle();
-    Routes.pushToStartChat(tester.element(find.byType(Scaffold)), userPubkey);
+    Routes.pushToStartChat(
+      tester.element(find.byType(Scaffold)),
+      userPubkey,
+      metadata: initialMetadata,
+    );
     await tester.pumpAndSettle();
   }
 
@@ -210,6 +215,20 @@ void main() {
       testWidgets('displays about', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.text('I love Nostr!'), findsOneWidget);
+      });
+    });
+
+    group('with initialMetadata', () {
+      testWidgets('displays name from initialMetadata when API returns empty', (tester) async {
+        await pumpStartChatScreen(
+          tester,
+          userPubkey: _otherPubkey,
+          initialMetadata: const FlutterMetadata(
+            displayName: 'Bob',
+            custom: {},
+          ),
+        );
+        expect(find.text('Bob'), findsOneWidget);
       });
     });
 
@@ -331,10 +350,10 @@ void main() {
         _api.userHasKeyPackage = false;
       });
 
-      testWidgets('shows user not on whitenoise message', (tester) async {
+      testWidgets('shows invite callout', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.byKey(const Key('user_not_on_whitenoise')), findsOneWidget);
-        expect(find.text('This user is not on White Noise yet.'), findsOneWidget);
+        expect(find.text('Invite to White Noise'), findsOneWidget);
       });
 
       testWidgets('does not show follow button', (tester) async {
@@ -345,6 +364,42 @@ void main() {
       testWidgets('does not show start chat button', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.byKey(const Key('start_chat_button')), findsNothing);
+      });
+
+      group('invite callout description', () {
+        testWidgets('uses displayName when available', (tester) async {
+          _api.metadata = const FlutterMetadata(
+            displayName: 'Alice',
+            name: 'alice_nostr',
+            custom: {},
+          );
+          await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+          expect(
+            find.text("Alice isn't on White Noise yet. Share the app to start a secure chat."),
+            findsOneWidget,
+          );
+        });
+
+        testWidgets('uses name when displayName is absent', (tester) async {
+          _api.metadata = const FlutterMetadata(name: 'bob_nostr', custom: {});
+          await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+          expect(
+            find.text(
+              "bob_nostr isn't on White Noise yet. Share the app to start a secure chat.",
+            ),
+            findsOneWidget,
+          );
+        });
+
+        testWidgets('uses Unknown user when no metadata names', (tester) async {
+          await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+          expect(
+            find.text(
+              "Unknown user isn't on White Noise yet. Share the app to start a secure chat.",
+            ),
+            findsOneWidget,
+          );
+        });
       });
     });
 

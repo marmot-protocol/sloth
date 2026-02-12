@@ -324,6 +324,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noFollowsYet => 'Пока нет подписок';
 
   @override
+  String get searchByNameOrNpub => 'Имя или npub1...';
+
+  @override
   String get developerSettingsTitle => 'Настройки Разработчика';
 
   @override
@@ -494,7 +497,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get failedToStartChat => 'Не удалось начать чат. Попробуйте снова.';
 
   @override
-  String get userNotOnWhiteNoise => 'Этот пользователь ещё не в White Noise.';
+  String get inviteToWhiteNoise => 'Пригласить в White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name ещё не в White Noise. Поделитесь приложением, чтобы начать безопасный чат.';
+  }
 
   @override
   String get failedToUpdateFollow => 'Не удалось обновить статус подписки. Попробуйте снова.';
@@ -692,4 +700,17 @@ class AppLocalizationsRu extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Вернуться к регистрации';
+
+  @override
+  String get deleteAllData => 'Удалить все данные';
+
+  @override
+  String get deleteAllDataConfirmation => 'Удалить все данные?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Это действие безвозвратно удалит все ваши чаты, сообщения и настройки с этого устройства. Отменить невозможно.';
+
+  @override
+  String get deleteAllDataError => 'Не удалось удалить все данные. Пожалуйста, попробуйте снова.';
 }

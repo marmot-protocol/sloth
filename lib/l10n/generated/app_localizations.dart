@@ -696,6 +696,12 @@ abstract class AppLocalizations {
   /// **'No follows yet'**
   String get noFollowsYet;
 
+  /// User search field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Name or npub1...'**
+  String get searchByNameOrNpub;
+
   /// Developer settings screen title
   ///
   /// In en, this message translates to:
@@ -960,11 +966,17 @@ abstract class AppLocalizations {
   /// **'Failed to start chat. Please try again.'**
   String get failedToStartChat;
 
-  /// Message shown when user has no key packages
+  /// Callout title when user is not on White Noise
   ///
   /// In en, this message translates to:
-  /// **'This user is not on White Noise yet.'**
-  String get userNotOnWhiteNoise;
+  /// **'Invite to White Noise'**
+  String get inviteToWhiteNoise;
+
+  /// Callout description when user is not on White Noise
+  ///
+  /// In en, this message translates to:
+  /// **'{name} isn\'t on White Noise yet. Share the app to start a secure chat.'**
+  String inviteToWhiteNoiseDescription(String name);
 
   /// Error when follow or unfollow action fails
   ///
@@ -1343,6 +1355,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Back to sign up'**
   String get backToSignUp;
+
+  /// Button to delete all application data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All Data'**
+  String get deleteAllData;
+
+  /// Confirmation dialog title for delete all data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all data?'**
+  String get deleteAllDataConfirmation;
+
+  /// Warning message for delete all data action
+  ///
+  /// In en, this message translates to:
+  /// **'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.'**
+  String get deleteAllDataWarning;
+
+  /// Error message when data deletion fails
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to delete all data. Please try again.'**
+  String get deleteAllDataError;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

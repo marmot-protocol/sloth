@@ -323,6 +323,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noFollowsYet => 'Henüz takip yok';
 
   @override
+  String get searchByNameOrNpub => 'Ad veya npub1...';
+
+  @override
   String get developerSettingsTitle => 'Geliştirici Ayarları';
 
   @override
@@ -487,7 +490,12 @@ class AppLocalizationsTr extends AppLocalizations {
   String get failedToStartChat => 'Sohbet başlatılamadı. Lütfen tekrar deneyin.';
 
   @override
-  String get userNotOnWhiteNoise => 'Bu kullanıcı henüz White Noise\'da değil.';
+  String get inviteToWhiteNoise => 'White Noise\'a Davet Et';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name henüz White Noise\'da değil. Güvenli bir sohbet başlatmak için uygulamayı paylaşın.';
+  }
 
   @override
   String get failedToUpdateFollow => 'Takip durumu güncellenemedi. Lütfen tekrar deneyin.';
@@ -685,4 +693,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Kayıta geri dön';
+
+  @override
+  String get deleteAllData => 'Tüm Verileri Sil';
+
+  @override
+  String get deleteAllDataConfirmation => 'Tüm veriler silinsin mi?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Bu işlem, bu cihazdaki tüm sohbetlerinizi, mesajlarınızı ve ayarlarınızı kalıcı olarak silecektir. Bu işlem geri alınamaz.';
+
+  @override
+  String get deleteAllDataError => 'Tüm veriler silinemedi. Lütfen tekrar deneyin.';
 }

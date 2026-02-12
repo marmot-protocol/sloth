@@ -110,6 +110,14 @@ class AuthNotifier extends AsyncNotifier<String?> {
     return null;
   }
 
+  Future<void> resetAuth() async {
+    _logger.info('Resetting auth state');
+    final storage = ref.read(secureStorageProvider);
+    await storage.delete(key: _storageKey);
+    state = const AsyncData(null);
+    _logger.info('Auth state reset complete');
+  }
+
   /// Switch the active profile to the given pubkey.
   Future<void> switchProfile(String pubkey) async {
     _logger.info('Switching profile');

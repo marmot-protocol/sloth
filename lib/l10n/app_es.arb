@@ -98,6 +98,7 @@
   "startNewChat": "Iniciar nuevo chat",
   "noResults": "Sin resultados",
   "noFollowsYet": "Aún no hay seguidos",
+  "searchByNameOrNpub": "Nombre o npub1...",
   "developerSettingsTitle": "Ajustes de Desarrollador",
   "publishNewKeyPackage": "Publicar Nuevo Paquete de Llaves",
   "refreshKeyPackages": "Actualizar Paquetes de Llaves",
@@ -142,7 +143,8 @@
   "follow": "Seguir",
   "unfollow": "Dejar de seguir",
   "failedToStartChat": "Error al iniciar el chat. Por favor, inténtalo de nuevo.",
-  "userNotOnWhiteNoise": "Este usuario aún no está en White Noise.",
+  "inviteToWhiteNoise": "Invitar a White Noise",
+  "inviteToWhiteNoiseDescription": "{name} aún no está en White Noise. Comparte la app para iniciar un chat seguro.",
   "failedToUpdateFollow": "Error al actualizar el estado de seguimiento. Por favor, inténtalo de nuevo.",
   "imagePickerError": "Error al seleccionar imagen. Por favor, inténtalo de nuevo.",
   "scanNsec": "Escanear código QR",
@@ -205,5 +207,9 @@
   "carouselDecentralizedTitle": "Descentralizado y sin permisos",
   "carouselDecentralizedDescription": "Ninguna autoridad central controla tu comunicación, sin permisos necesarios, sin censura posible.",
   "learnMore": "Más información",
-  "backToSignUp": "Volver al registro"
+  "backToSignUp": "Volver al registro",
+  "deleteAllData": "Eliminar Todos los Datos",
+  "deleteAllDataConfirmation": "¿Eliminar todos los datos?",
+  "deleteAllDataWarning": "Esto eliminará permanentemente todos tus chats, mensajes y configuraciones de este dispositivo. Esta acción no se puede deshacer.",
+  "deleteAllDataError": "No se pudieron eliminar todos los datos. Por favor, inténtalo de nuevo."
 }

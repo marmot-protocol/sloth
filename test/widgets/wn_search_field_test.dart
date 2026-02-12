@@ -1,4 +1,5 @@
-import 'package:flutter/material.dart' show EditableText, Key, TextField, TextEditingController;
+import 'package:flutter/material.dart'
+    show CircularProgressIndicator, EditableText, Key, TextField, TextEditingController;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/theme/semantic_colors.dart' show SemanticColors;
 import 'package:whitenoise/widgets/wn_search_field.dart' show WnSearchField;
@@ -89,6 +90,35 @@ void main() {
         );
         await tester.tap(find.byKey(const Key('scan_button')));
         expect(scanCalled, isTrue);
+      });
+    });
+
+    group('with isLoading', () {
+      testWidgets('shows loading indicator when isLoading is true', (tester) async {
+        await mountWidget(
+          const WnSearchField(placeholder: 'Search', isLoading: true),
+          tester,
+        );
+        expect(find.byKey(const Key('search_loading_indicator')), findsOneWidget);
+        expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      });
+
+      testWidgets('hides scan button when isLoading is true', (tester) async {
+        await mountWidget(
+          WnSearchField(placeholder: 'Search', onScan: () {}, isLoading: true),
+          tester,
+        );
+        expect(find.byKey(const Key('scan_button')), findsNothing);
+        expect(find.byKey(const Key('search_loading_indicator')), findsOneWidget);
+      });
+
+      testWidgets('shows scan button when isLoading is false', (tester) async {
+        await mountWidget(
+          WnSearchField(placeholder: 'Search', onScan: () {}),
+          tester,
+        );
+        expect(find.byKey(const Key('scan_button')), findsOneWidget);
+        expect(find.byKey(const Key('search_loading_indicator')), findsNothing);
       });
     });
   });

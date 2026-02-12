@@ -98,6 +98,7 @@
   "startNewChat": "Nouvelle discussion",
   "noResults": "Aucun résultat",
   "noFollowsYet": "Pas encore d'abonnements",
+  "searchByNameOrNpub": "Nom ou npub1...",
   "developerSettingsTitle": "Paramètres Développeur",
   "publishNewKeyPackage": "Publier un Nouveau Paquet de Clés",
   "refreshKeyPackages": "Actualiser les Paquets de Clés",
@@ -142,7 +143,8 @@
   "follow": "Suivre",
   "unfollow": "Ne plus suivre",
   "failedToStartChat": "Échec du démarrage de la discussion. Veuillez réessayer.",
-  "userNotOnWhiteNoise": "Cet utilisateur n'est pas encore sur White Noise.",
+  "inviteToWhiteNoise": "Inviter sur White Noise",
+  "inviteToWhiteNoiseDescription": "{name} n'est pas encore sur White Noise. Partagez l'application pour démarrer une discussion sécurisée.",
   "failedToUpdateFollow": "Échec de la mise à jour du statut de suivi. Veuillez réessayer.",
   "imagePickerError": "Échec de la sélection de l'image. Veuillez réessayer.",
   "scanNsec": "Scanner le code QR",
@@ -205,5 +207,9 @@
   "carouselDecentralizedTitle": "Décentralisé et sans permission",
   "carouselDecentralizedDescription": "Aucune autorité centrale ne contrôle votre communication – pas de permissions nécessaires, pas de censure possible.",
   "learnMore": "En savoir plus",
-  "backToSignUp": "Retour à l'inscription"
+  "backToSignUp": "Retour à l'inscription",
+  "deleteAllData": "Supprimer Toutes les Données",
+  "deleteAllDataConfirmation": "Supprimer toutes les données ?",
+  "deleteAllDataWarning": "Cela supprimera définitivement tous vos chats, messages et paramètres de cet appareil. Cette action ne peut pas être annulée.",
+  "deleteAllDataError": "Échec de la suppression de toutes les données. Veuillez réessayer."
 }

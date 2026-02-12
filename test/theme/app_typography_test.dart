@@ -130,6 +130,16 @@ void main() {
         expect(typography.bold14.fontWeight, FontWeight.w700);
       });
 
+      test('16px compact styles have correct properties', () {
+        expect(typography.medium16Compact.fontSize, 16);
+        expect(typography.medium16Compact.height, 18 / 16);
+        expect(typography.medium16Compact.letterSpacing, 0.2);
+        expect(typography.medium16Compact.fontWeight, FontWeight.w500);
+
+        expect(typography.semiBold16Compact.fontWeight, FontWeight.w600);
+        expect(typography.bold16Compact.fontWeight, FontWeight.w700);
+      });
+
       test('14px compact styles have correct properties', () {
         expect(typography.medium14Compact.fontSize, 14);
         expect(typography.medium14Compact.height, 16 / 14);
@@ -148,6 +158,16 @@ void main() {
 
         expect(typography.semiBold12.fontWeight, FontWeight.w600);
         expect(typography.bold12.fontWeight, FontWeight.w700);
+      });
+
+      test('12px compact styles have correct properties', () {
+        expect(typography.medium12Compact.fontSize, 12);
+        expect(typography.medium12Compact.height, 13 / 12);
+        expect(typography.medium12Compact.letterSpacing, 0.6);
+        expect(typography.medium12Compact.fontWeight, FontWeight.w500);
+
+        expect(typography.semiBold12Compact.fontWeight, FontWeight.w600);
+        expect(typography.bold12Compact.fontWeight, FontWeight.w700);
       });
 
       test('10px styles have correct properties', () {

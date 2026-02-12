@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:whitenoise/hooks/use_delete_all_data.dart';
+import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/l10n/l10n.dart';
+import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
 import 'package:whitenoise/providers/theme_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_confirmation_slate.dart';
 import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
+import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 
-class AppSettingsScreen extends ConsumerWidget {
+class AppSettingsScreen extends HookConsumerWidget {
   const AppSettingsScreen({super.key});
 
   @override
@@ -18,6 +25,8 @@ class AppSettingsScreen extends ConsumerWidget {
     final colors = context.colors;
     final currentThemeMode = ref.watch(themeProvider).value ?? ThemeMode.system;
     final currentLocaleSetting = ref.watch(localeProvider).value ?? const SystemLocale();
+    final (:state, :deleteAllData) = useDeleteAllData();
+    final systemNotice = useSystemNotice();
 
     final themeOptions = [
       WnDropdownOption(value: ThemeMode.system, label: context.l10n.themeSystem),
@@ -38,6 +47,34 @@ class AppSettingsScreen extends ConsumerWidget {
       ),
     ];
 
+    Future<void> handleDeleteAllData() async {
+      final confirmed = await WnConfirmationSlate.show(
+        context: context,
+        title: context.l10n.deleteAllDataConfirmation,
+        message: context.l10n.deleteAllDataWarning,
+        confirmText: context.l10n.delete,
+        cancelText: context.l10n.cancel,
+        isDestructive: true,
+      );
+
+      if (confirmed == true) {
+        final success = await deleteAllData();
+        if (!context.mounted) return;
+
+        if (success) {
+          await ref.read(authProvider.notifier).resetAuth();
+
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            if (context.mounted) {
+              Routes.goToHome(context);
+            }
+          });
+        } else {
+          systemNotice.showErrorNotice(context.l10n.deleteAllDataError);
+        }
+      }
+    }
+
     return Scaffold(
       backgroundColor: colors.backgroundPrimary,
       body: SafeArea(
@@ -49,6 +86,15 @@ class AppSettingsScreen extends ConsumerWidget {
               type: WnSlateNavigationType.back,
               onNavigate: () => Routes.goBack(context),
             ),
+            systemNotice: systemNotice.noticeMessage != null
+                ? WnSystemNotice(
+                    key: ValueKey(systemNotice.noticeMessage),
+                    title: systemNotice.noticeMessage!,
+                    type: systemNotice.noticeType,
+                    variant: WnSystemNoticeVariant.dismissible,
+                    onDismiss: systemNotice.dismissNotice,
+                  )
+                : null,
             child: Padding(
               padding: EdgeInsets.fromLTRB(14.w, 0, 14.w, 14.h),
               child: Column(
@@ -66,6 +112,19 @@ class AppSettingsScreen extends ConsumerWidget {
                     options: languageOptions,
                     value: currentLocaleSetting,
                     onChanged: (setting) => ref.read(localeProvider.notifier).setLocale(setting),
+                  ),
+                  SizedBox(
+                    width: double.infinity,
+                    child: WnButton(
+                      key: const Key('delete_all_data_button'),
+                      text: context.l10n.deleteAllData,
+                      onPressed: handleDeleteAllData,
+                      type: WnButtonType.destructive,
+                      size: WnButtonSize.medium,
+                      loading: state.isDeleting,
+                      disabled: state.isDeleting,
+                      trailingIcon: WnIcons.trashCan,
+                    ),
                   ),
                 ],
               ),

@@ -324,6 +324,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noFollowsYet => 'Pas encore d\'abonnements';
 
   @override
+  String get searchByNameOrNpub => 'Nom ou npub1...';
+
+  @override
   String get developerSettingsTitle => 'Paramètres Développeur';
 
   @override
@@ -490,7 +493,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get failedToStartChat => 'Échec du démarrage de la discussion. Veuillez réessayer.';
 
   @override
-  String get userNotOnWhiteNoise => 'Cet utilisateur n\'est pas encore sur White Noise.';
+  String get inviteToWhiteNoise => 'Inviter sur White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name n\'est pas encore sur White Noise. Partagez l\'application pour démarrer une discussion sécurisée.';
+  }
 
   @override
   String get failedToUpdateFollow =>
@@ -689,4 +697,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Retour à l\'inscription';
+
+  @override
+  String get deleteAllData => 'Supprimer Toutes les Données';
+
+  @override
+  String get deleteAllDataConfirmation => 'Supprimer toutes les données ?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Cela supprimera définitivement tous vos chats, messages et paramètres de cet appareil. Cette action ne peut pas être annulée.';
+
+  @override
+  String get deleteAllDataError =>
+      'Échec de la suppression de toutes les données. Veuillez réessayer.';
 }

@@ -134,6 +134,25 @@ void main() {
         await pumpCard(tester, metadata: metadata);
         expect(find.text('I love Nostr!'), findsOneWidget);
       });
+
+      testWidgets('truncates long about text to 10 lines', (tester) async {
+        final longAbout = List.generate(20, (i) => 'Line $i of the about text').join('\n');
+        await pumpCard(
+          tester,
+          metadata: FlutterMetadata(
+            displayName: 'Alice',
+            about: longAbout,
+            custom: const {},
+          ),
+        );
+        final aboutText = tester.widget<Text>(
+          find.byWidgetPredicate(
+            (w) => w is Text && w.data != null && w.data!.startsWith('Line 0 of'),
+          ),
+        );
+        expect(aboutText.maxLines, 10);
+        expect(aboutText.overflow, TextOverflow.ellipsis);
+      });
     });
 
     group('with minimal metadata', () {

@@ -1,9 +1,22 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logging/logging.dart';
 import 'package:whitenoise/services/user_service.dart';
 import 'package:whitenoise/src/rust/api/accounts.dart' as accounts_api;
+import 'package:whitenoise/src/rust/api/user_search.dart' as user_search_api;
 import 'package:whitenoise/src/rust/api/users.dart' show User;
 import 'package:whitenoise/utils/encoding.dart';
+import 'package:whitenoise/utils/metadata.dart' show presentName;
+
+final _logger = Logger('useUserSearch');
+
+const _nameSearchDebounceMs = 400;
+const _nameSearchBatchMs = 300;
+const _nameSearchRadiusStart = 0;
+const _nameSearchRadiusEnd = 2;
+const _followsRefreshInterval = Duration(seconds: 5);
 
 bool _isPartialNpubQuery(String searchQuery, String? hexPubkeyFromQuery) {
   final trimmedSearchQuery = searchQuery.trim().toLowerCase();
@@ -12,9 +25,47 @@ bool _isPartialNpubQuery(String searchQuery, String? hexPubkeyFromQuery) {
       (trimmedSearchQuery.startsWith('npub1') && hexPubkeyFromQuery == null);
 }
 
+bool _isNameSearch(String searchQuery, String? hexPubkeyFromQuery) {
+  final trimmed = searchQuery.trim();
+  if (trimmed.isEmpty) return false;
+  if (hexPubkeyFromQuery != null) return false;
+  if (_isPartialNpubQuery(searchQuery, hexPubkeyFromQuery)) return false;
+  return true;
+}
+
+int _matchQualityRank(user_search_api.MatchQuality quality) {
+  return switch (quality) {
+    user_search_api.MatchQuality.exact => 0,
+    user_search_api.MatchQuality.prefix => 1,
+    user_search_api.MatchQuality.contains => 2,
+  };
+}
+
+List<User> _sortByName(List<User> users) {
+  return users.toList()..sort((a, b) {
+    final nameA = presentName(a.metadata);
+    final nameB = presentName(b.metadata);
+    if (nameA != null && nameB != null) return nameA.toLowerCase().compareTo(nameB.toLowerCase());
+    if (nameA != null) return -1;
+    if (nameB != null) return 1;
+    return 0;
+  });
+}
+
+User _userFromSearchResult(user_search_api.UserSearchResult result) {
+  final now = DateTime.now();
+  return User(
+    pubkey: result.pubkey,
+    metadata: result.metadata,
+    createdAt: now,
+    updatedAt: now,
+  );
+}
+
 typedef UserSearchState = ({
   List<User> users,
   bool isLoading,
+  bool isSearching,
   bool hasSearchQuery,
 });
 
@@ -25,16 +76,18 @@ UserSearchState useUserSearch({
   final followsRef = useRef(<User>[]);
   final trimmedSearchQuery = searchQuery.trim().toLowerCase();
   final hexPubkeyFromQuery = hexFromNpub(trimmedSearchQuery);
+  final refreshTick = _usePeriodicTick(_followsRefreshInterval);
 
   final followsFuture = useMemoized(
     () => accounts_api.accountFollows(pubkey: accountPubkey),
-    [accountPubkey],
+    [accountPubkey, refreshTick],
   );
   final followsSnapshot = useFuture(followsFuture);
-  final isLoadingFollows = followsSnapshot.connectionState == ConnectionState.waiting;
+  final isLoadingFollows =
+      followsSnapshot.connectionState == ConnectionState.waiting && followsRef.value.isEmpty;
 
   if (followsSnapshot.hasData) {
-    followsRef.value = followsSnapshot.data!;
+    followsRef.value = _sortByName(followsSnapshot.data!);
   }
 
   final follows = followsRef.value;
@@ -56,6 +109,7 @@ UserSearchState useUserSearch({
 
   final hasSearchQuery = trimmedSearchQuery.isNotEmpty;
   final isPartialNpubSearch = _isPartialNpubQuery(searchQuery, hexPubkeyFromQuery);
+  final isNameQuery = _isNameSearch(searchQuery, hexPubkeyFromQuery);
 
   final matchingFollows = useMemoized(() {
     if (!isPartialNpubSearch || follows.isEmpty) return follows;
@@ -64,6 +118,84 @@ UserSearchState useUserSearch({
       return npub != null && npub.startsWith(trimmedSearchQuery);
     }).toList();
   }, [trimmedSearchQuery, followNpubs, isPartialNpubSearch]);
+
+  final nameSearchResults = useState(<User>[]);
+  final isLoadingNameSearch = useState(false);
+  final isSearchingNames = useState(false);
+  final debouncedQuery = _useDebouncedValue(trimmedSearchQuery, _nameSearchDebounceMs);
+
+  useEffect(() {
+    if (!_isNameSearch(debouncedQuery, hexFromNpub(debouncedQuery))) {
+      nameSearchResults.value = [];
+      isLoadingNameSearch.value = false;
+      isSearchingNames.value = false;
+      return null;
+    }
+
+    isLoadingNameSearch.value = true;
+    isSearchingNames.value = true;
+    final results = <String, user_search_api.UserSearchResult>{};
+    var hasPendingFlush = false;
+
+    void flushResults() {
+      final sorted = results.values.toList()
+        ..sort(
+          (a, b) => _matchQualityRank(a.matchQuality).compareTo(_matchQualityRank(b.matchQuality)),
+        );
+      nameSearchResults.value = sorted.map(_userFromSearchResult).toList();
+      isLoadingNameSearch.value = false;
+      hasPendingFlush = false;
+    }
+
+    Timer? batchTimer;
+
+    final subscription = user_search_api
+        .searchUsers(
+          accountPubkey: accountPubkey,
+          query: debouncedQuery,
+          radiusStart: _nameSearchRadiusStart,
+          radiusEnd: _nameSearchRadiusEnd,
+        )
+        .listen(
+          (update) {
+            for (final result in update.newResults) {
+              final existing = results[result.pubkey];
+              if (existing == null ||
+                  _matchQualityRank(result.matchQuality) <
+                      _matchQualityRank(existing.matchQuality)) {
+                results[result.pubkey] = result;
+              }
+            }
+
+            final isComplete =
+                update.trigger is user_search_api.SearchUpdateTrigger_SearchCompleted;
+            if (isComplete) {
+              batchTimer?.cancel();
+              flushResults();
+              isSearchingNames.value = false;
+            } else if (!hasPendingFlush) {
+              hasPendingFlush = true;
+              batchTimer = Timer(const Duration(milliseconds: _nameSearchBatchMs), flushResults);
+            }
+          },
+          onDone: () {
+            batchTimer?.cancel();
+            flushResults();
+            isSearchingNames.value = false;
+          },
+          onError: (Object error, StackTrace stack) {
+            _logger.severe('Name search failed for "$debouncedQuery"', error, stack);
+            batchTimer?.cancel();
+            isLoadingNameSearch.value = false;
+            isSearchingNames.value = false;
+          },
+        );
+
+    return () {
+      batchTimer?.cancel();
+      subscription.cancel();
+    };
+  }, [debouncedQuery, accountPubkey]);
 
   final List<User> users;
   final bool isLoading;
@@ -79,9 +211,40 @@ UserSearchState useUserSearch({
     users = matchingFollows;
     isLoading = isLoadingFollows;
   } else {
-    users = [];
-    isLoading = false;
+    users = nameSearchResults.value;
+    isLoading = isLoadingNameSearch.value && nameSearchResults.value.isEmpty;
   }
 
-  return (users: users, isLoading: isLoading, hasSearchQuery: hasSearchQuery);
+  return (
+    users: users,
+    isLoading: isLoading,
+    isSearching: isNameQuery && isSearchingNames.value,
+    hasSearchQuery: hasSearchQuery,
+  );
+}
+
+String _useDebouncedValue(String value, int milliseconds) {
+  final debounced = useState('');
+
+  useEffect(() {
+    final timer = Timer(Duration(milliseconds: milliseconds), () {
+      debounced.value = value;
+    });
+    return timer.cancel;
+  }, [value, milliseconds]);
+
+  return debounced.value;
+}
+
+int _usePeriodicTick(Duration interval) {
+  final tick = useState(0);
+
+  useEffect(() {
+    final timer = Timer.periodic(interval, (_) {
+      tick.value++;
+    });
+    return timer.cancel;
+  }, [interval]);
+
+  return tick.value;
 }
