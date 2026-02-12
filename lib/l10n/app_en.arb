@@ -760,9 +760,19 @@
     "description": "Error when starting chat fails"
   },
 
-  "userNotOnWhiteNoise": "This user is not on White Noise yet.",
-  "@userNotOnWhiteNoise": {
-    "description": "Message shown when user has no key packages"
+  "inviteToWhiteNoise": "Invite to White Noise",
+  "@inviteToWhiteNoise": {
+    "description": "Callout title when user is not on White Noise"
+  },
+
+  "inviteToWhiteNoiseDescription": "{name} isn't on White Noise yet. Share the app to start a secure chat.",
+  "@inviteToWhiteNoiseDescription": {
+    "description": "Callout description when user is not on White Noise",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   },
 
   "failedToUpdateFollow": "Failed to update follow status. Please try again.",

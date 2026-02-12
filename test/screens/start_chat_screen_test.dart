@@ -331,10 +331,10 @@ void main() {
         _api.userHasKeyPackage = false;
       });
 
-      testWidgets('shows user not on whitenoise message', (tester) async {
+      testWidgets('shows invite callout', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.byKey(const Key('user_not_on_whitenoise')), findsOneWidget);
-        expect(find.text('This user is not on White Noise yet.'), findsOneWidget);
+        expect(find.text('Invite to White Noise'), findsOneWidget);
       });
 
       testWidgets('does not show follow button', (tester) async {
@@ -345,6 +345,42 @@ void main() {
       testWidgets('does not show start chat button', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.byKey(const Key('start_chat_button')), findsNothing);
+      });
+
+      group('invite callout description', () {
+        testWidgets('uses displayName when available', (tester) async {
+          _api.metadata = const FlutterMetadata(
+            displayName: 'Alice',
+            name: 'alice_nostr',
+            custom: {},
+          );
+          await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+          expect(
+            find.text("Alice isn't on White Noise yet. Share the app to start a secure chat."),
+            findsOneWidget,
+          );
+        });
+
+        testWidgets('uses name when displayName is absent', (tester) async {
+          _api.metadata = const FlutterMetadata(name: 'bob_nostr', custom: {});
+          await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+          expect(
+            find.text(
+              "bob_nostr isn't on White Noise yet. Share the app to start a secure chat.",
+            ),
+            findsOneWidget,
+          );
+        });
+
+        testWidgets('uses Unknown user when no metadata names', (tester) async {
+          await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
+          expect(
+            find.text(
+              "Unknown user isn't on White Noise yet. Share the app to start a secure chat.",
+            ),
+            findsOneWidget,
+          );
+        });
       });
     });
 

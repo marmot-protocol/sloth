@@ -37,6 +37,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Android signer (NIP-55) support [PR #48](https://github.com/marmot-protocol/sloth/pull/48)
 - Replies [PR #179](https://github.com/marmot-protocol/whitenoise/pull/179)
 - Replies scroll [PR #202](https://github.com/marmot-protocol/whitenoise/pull/202)
+- Invite callout [PR #230](https://github.com/marmot-protocol/whitenoise/pull/230)
 
 ### Changed
 
