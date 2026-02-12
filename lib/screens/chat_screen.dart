@@ -4,9 +4,9 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
-import 'package:whitenoise/hooks/use_chat_avatar.dart';
 import 'package:whitenoise/hooks/use_chat_input.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
+import 'package:whitenoise/hooks/use_chat_profile.dart';
 import 'package:whitenoise/hooks/use_chat_scroll.dart';
 import 'package:whitenoise/hooks/use_scroll_to_message.dart';
 import 'package:whitenoise/l10n/l10n.dart';
@@ -17,6 +17,7 @@ import 'package:whitenoise/screens/message_actions_screen.dart';
 import 'package:whitenoise/services/message_service.dart';
 import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
 import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/avatar_color.dart';
 import 'package:whitenoise/widgets/wn_chat_header.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
@@ -50,7 +51,7 @@ class ChatScreen extends HookConsumerWidget {
     ) = useChatMessages(
       groupId,
     );
-    final groupAvatarSnapshot = useChatAvatar(pubkey, groupId);
+    final chatProfile = useChatProfile(pubkey, groupId);
     final scrollToMessageResult = useScrollToMessage(
       getReversedMessageIndex: getReversedMessageIndex,
     );
@@ -203,12 +204,12 @@ class ChatScreen extends HookConsumerWidget {
                     child: WnSlate(
                       padding: EdgeInsets.symmetric(vertical: 14.h),
                       header: WnChatHeader(
-                        mlsGroupId: groupId,
-                        displayName: groupAvatarSnapshot.data?.displayName ?? '',
-                        pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
+                        displayName: chatProfile.data?.displayName ?? '',
+                        avatarColor: chatProfile.data?.color ?? AvatarColor.neutral,
+                        pictureUrl: chatProfile.data?.pictureUrl,
                         onBack: () => Routes.goToChatList(context),
                         onMenuTap: () {
-                          final otherPubkey = groupAvatarSnapshot.data?.otherMemberPubkey;
+                          final otherPubkey = chatProfile.data?.otherMemberPubkey;
                           if (otherPubkey != null) {
                             Routes.pushToChatInfo(context, otherPubkey);
                           } else {
