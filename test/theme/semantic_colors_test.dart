@@ -74,6 +74,117 @@ void main() {
     });
   });
 
+  group('ReactionColorSet', () {
+    const reaction = ReactionColorSet(
+      fill: Colors.white,
+      fillHover: Colors.grey,
+      fillSelected: Colors.black,
+      content: Colors.blue,
+      contentHover: Colors.blue,
+      contentSelected: Colors.red,
+    );
+
+    test('copyWith returns new instance with updated values', () {
+      final updated = reaction.copyWith(fill: Colors.red);
+
+      expect(updated.fill, Colors.red);
+      expect(updated.fillHover, Colors.grey);
+      expect(updated.fillSelected, Colors.black);
+      expect(updated.content, Colors.blue);
+      expect(updated.contentHover, Colors.blue);
+      expect(updated.contentSelected, Colors.red);
+    });
+
+    test('copyWith with no arguments returns equivalent instance', () {
+      final updated = reaction.copyWith();
+
+      expect(updated.fill, reaction.fill);
+      expect(updated.fillHover, reaction.fillHover);
+      expect(updated.fillSelected, reaction.fillSelected);
+      expect(updated.content, reaction.content);
+      expect(updated.contentHover, reaction.contentHover);
+      expect(updated.contentSelected, reaction.contentSelected);
+    });
+
+    test('lerp interpolates between two ReactionColorSets', () {
+      const other = ReactionColorSet(
+        fill: Colors.black,
+        fillHover: Colors.white,
+        fillSelected: Colors.red,
+        content: Colors.green,
+        contentHover: Colors.green,
+        contentSelected: Colors.blue,
+      );
+
+      final result = ReactionColorSet.lerp(reaction, other, 0.5);
+
+      expect(result.fill, Color.lerp(Colors.white, Colors.black, 0.5));
+      expect(result.fillHover, Color.lerp(Colors.grey, Colors.white, 0.5));
+      expect(result.fillSelected, Color.lerp(Colors.black, Colors.red, 0.5));
+      expect(result.content, Color.lerp(Colors.blue, Colors.green, 0.5));
+      expect(result.contentHover, Color.lerp(Colors.blue, Colors.green, 0.5));
+      expect(result.contentSelected, Color.lerp(Colors.red, Colors.blue, 0.5));
+    });
+
+    test('lerp at 0 returns first ReactionColorSet colors', () {
+      const other = ReactionColorSet(
+        fill: Colors.black,
+        fillHover: Colors.white,
+        fillSelected: Colors.red,
+        content: Colors.green,
+        contentHover: Colors.green,
+        contentSelected: Colors.blue,
+      );
+
+      final result = ReactionColorSet.lerp(reaction, other, 0);
+
+      expect(result.fill.toARGB32(), reaction.fill.toARGB32());
+      expect(result.content.toARGB32(), reaction.content.toARGB32());
+    });
+
+    test('lerp at 1 returns second ReactionColorSet colors', () {
+      const other = ReactionColorSet(
+        fill: Colors.black,
+        fillHover: Colors.white,
+        fillSelected: Colors.red,
+        content: Colors.green,
+        contentHover: Colors.green,
+        contentSelected: Colors.blue,
+      );
+
+      final result = ReactionColorSet.lerp(reaction, other, 1);
+
+      expect(result.fill.toARGB32(), other.fill.toARGB32());
+      expect(result.content.toARGB32(), other.content.toARGB32());
+    });
+  });
+
+  group('SemanticReactionColors', () {
+    test('lerp interpolates incoming and outgoing', () {
+      final light = SemanticColors.light.reaction;
+      final dark = SemanticColors.dark.reaction;
+
+      final result = SemanticReactionColors.lerp(light, dark, 0.5);
+
+      expect(
+        result.incoming.fill,
+        Color.lerp(light.incoming.fill, dark.incoming.fill, 0.5),
+      );
+      expect(
+        result.outgoing.fill,
+        Color.lerp(light.outgoing.fill, dark.outgoing.fill, 0.5),
+      );
+      expect(
+        result.incoming.content,
+        Color.lerp(light.incoming.content, dark.incoming.content, 0.5),
+      );
+      expect(
+        result.outgoing.content,
+        Color.lerp(light.outgoing.content, dark.outgoing.content, 0.5),
+      );
+    });
+  });
+
   group('SemanticAccentColors', () {
     test('lerp interpolates all accent color sets', () {
       final light = SemanticColors.light.accent;
@@ -141,6 +252,12 @@ void main() {
         expect(SemanticColors.light.accent, isNotNull);
         expect(SemanticColors.light.accent.blue, isNotNull);
       });
+
+      test('has reaction colors', () {
+        expect(SemanticColors.light.reaction, isNotNull);
+        expect(SemanticColors.light.reaction.incoming.fill, const Color(0xFFFFFFFF));
+        expect(SemanticColors.light.reaction.outgoing.fill, const Color(0xFF262626));
+      });
     });
 
     group('dark theme', () {
@@ -168,6 +285,12 @@ void main() {
       test('has accent colors', () {
         expect(SemanticColors.dark.accent, isNotNull);
         expect(SemanticColors.dark.accent.blue, isNotNull);
+      });
+
+      test('has reaction colors', () {
+        expect(SemanticColors.dark.reaction, isNotNull);
+        expect(SemanticColors.dark.reaction.incoming.fill, const Color(0xFF262626));
+        expect(SemanticColors.dark.reaction.outgoing.fill, const Color(0xFFF5F5F5));
       });
     });
 
@@ -383,12 +506,42 @@ void main() {
         expect(updated.accent.blue.fill, Colors.red);
       });
 
+      test('returns new instance with updated reaction colors', () {
+        const newReaction = SemanticReactionColors(
+          incoming: ReactionColorSet(
+            fill: Colors.red,
+            fillHover: Colors.green,
+            fillSelected: Colors.blue,
+            content: Colors.orange,
+            contentHover: Colors.purple,
+            contentSelected: Colors.pink,
+          ),
+          outgoing: ReactionColorSet(
+            fill: Colors.cyan,
+            fillHover: Colors.teal,
+            fillSelected: Colors.indigo,
+            content: Colors.amber,
+            contentHover: Colors.lime,
+            contentSelected: Colors.brown,
+          ),
+        );
+
+        final updated = SemanticColors.light.copyWith(reaction: newReaction);
+
+        expect(updated.reaction.incoming.fill, Colors.red);
+        expect(updated.reaction.outgoing.fill, Colors.cyan);
+      });
+
       test('with no arguments returns equivalent instance', () {
         final updated = SemanticColors.light.copyWith();
 
         expect(updated.backgroundPrimary, SemanticColors.light.backgroundPrimary);
         expect(updated.fillPrimary, SemanticColors.light.fillPrimary);
         expect(updated.borderPrimary, SemanticColors.light.borderPrimary);
+        expect(
+          updated.reaction.incoming.fill,
+          SemanticColors.light.reaction.incoming.fill,
+        );
       });
     });
 
@@ -742,6 +895,23 @@ void main() {
           Color.lerp(
             SemanticColors.light.overlayTertiary,
             SemanticColors.dark.overlayTertiary,
+            0.5,
+          ),
+        );
+
+        expect(
+          result.reaction.incoming.fill,
+          Color.lerp(
+            SemanticColors.light.reaction.incoming.fill,
+            SemanticColors.dark.reaction.incoming.fill,
+            0.5,
+          ),
+        );
+        expect(
+          result.reaction.outgoing.fill,
+          Color.lerp(
+            SemanticColors.light.reaction.outgoing.fill,
+            SemanticColors.dark.reaction.outgoing.fill,
             0.5,
           ),
         );
