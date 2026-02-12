@@ -23,6 +23,18 @@ class WnSearchAndFilters extends HookWidget {
     final selectedFilter = useState(ChatFilter.chats);
     final searchController = useTextEditingController();
 
+    final onSearchChangedRef = useRef(onSearchChanged);
+    onSearchChangedRef.value = onSearchChanged;
+
+    useEffect(() {
+      void listener() {
+        onSearchChangedRef.value?.call(searchController.text);
+      }
+
+      searchController.addListener(listener);
+      return () => searchController.removeListener(listener);
+    }, [searchController]);
+
     void handleFilterSelected(ChatFilter filter) {
       selectedFilter.value = filter;
       onFilterChanged?.call(filter);
@@ -38,7 +50,6 @@ class WnSearchAndFilters extends HookWidget {
           WnSearchField(
             placeholder: l10n.search,
             controller: searchController,
-            onChanged: onSearchChanged,
           ),
           SizedBox(height: 8.h),
           Row(
