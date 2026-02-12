@@ -65,9 +65,6 @@ linker = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/bin/x86_64-li
 CC_armv7_linux_androideabi = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/bin/armv7a-linux-androideabi33-clang"
 CXX_armv7_linux_androideabi = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/bin/armv7a-linux-androideabi33-clang++"
 AR_armv7_linux_androideabi = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/bin/llvm-ar"
-OPENSSL_DIR = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/sysroot/usr"
-OPENSSL_INCLUDE_DIR = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/sysroot/usr/include"
-OPENSSL_LIB_DIR = "${ANDROID_NDK_HOME}/toolchains/llvm/prebuilt/${HOST_TAG}/sysroot/usr/lib/aarch64-linux-android"
 EOF
 
 print_success "Generated Cargo config for host: $HOST_TAG"
