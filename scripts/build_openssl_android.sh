@@ -19,7 +19,7 @@ print_error() {
 
 # Configuration
 OPENSSL_VERSION="3.4.1"
-OPENSSL_SHA256="002a2d6b6b7f2173b7bd2b0608120b1ee1af4d4d"
+OPENSSL_SHA256="002a2d6b30b58bf4bea46c43bdd96365aaf8daa6c428782aa4feee06da197df3"
 ANDROID_API=33
 
 # Resolve paths
@@ -123,6 +123,17 @@ if [ ! -d "$OPENSSL_SRC_DIR" ]; then
     if [ ! -f "$TARBALL" ]; then
         curl -LO "https://github.com/openssl/openssl/releases/download/openssl-$OPENSSL_VERSION/$TARBALL"
     fi
+
+    print_step "Verifying tarball integrity"
+    ACTUAL_SHA256=$(shasum -a 256 "$TARBALL" | awk '{print $1}')
+    if [ "$ACTUAL_SHA256" != "$OPENSSL_SHA256" ]; then
+        print_error "SHA-256 mismatch for $TARBALL"
+        print_error "  Expected: $OPENSSL_SHA256"
+        print_error "  Actual:   $ACTUAL_SHA256"
+        rm -f "$TARBALL"
+        exit 1
+    fi
+    print_success "SHA-256 verified"
 
     tar xzf "$TARBALL"
     cd "$PROJECT_ROOT"
