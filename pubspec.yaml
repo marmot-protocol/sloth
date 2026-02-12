@@ -59,6 +59,7 @@ dependencies:
   qr_flutter: ^4.1.0
   cached_network_image: ^3.4.1
   mobile_scanner: ^7.1.4
+  scroll_to_index: ^3.0.1
 
 dev_dependencies:
   flutter_test:

@@ -12,11 +12,13 @@ class WnReplyPreview extends StatelessWidget {
     required this.data,
     this.currentUserPubkey,
     this.onCancel,
+    this.onTap,
   });
 
   final ReplyPreview data;
   final String? currentUserPubkey;
   final VoidCallback? onCancel;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -31,48 +33,52 @@ class WnReplyPreview extends StatelessWidget {
               : presentName(data.authorMetadata) ?? l10n.unknownUser);
     final content = data.isNotFound ? l10n.messageNotFound : data.content;
 
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
-      decoration: BoxDecoration(
-        color: colors.backgroundPrimary,
-        borderRadius: BorderRadius.circular(8.r),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  authorName,
-                  style: typography.semiBold12.copyWith(color: colors.backgroundContentPrimary),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-                SizedBox(height: 2.h),
-                Text(
-                  content,
-                  style: typography.medium12.copyWith(color: colors.backgroundContentPrimary),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
-            ),
-          ),
-          if (onCancel != null) ...[
-            SizedBox(width: 8.w),
-            GestureDetector(
-              key: const Key('cancel_reply_button'),
-              onTap: onCancel,
-              child: WnIcon(
-                WnIcons.closeSmall,
-                color: colors.backgroundContentPrimary,
-                size: 16.sp,
+    return GestureDetector(
+      key: onTap != null ? const Key('reply_preview_tap_area') : null,
+      onTap: onTap,
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+        decoration: BoxDecoration(
+          color: colors.backgroundPrimary,
+          borderRadius: BorderRadius.circular(8.r),
+        ),
+        child: Row(
+          children: [
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    authorName,
+                    style: typography.semiBold12.copyWith(color: colors.backgroundContentPrimary),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                  SizedBox(height: 2.h),
+                  Text(
+                    content,
+                    style: typography.medium12.copyWith(color: colors.backgroundContentPrimary),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ],
               ),
             ),
+            if (onCancel != null) ...[
+              SizedBox(width: 8.w),
+              GestureDetector(
+                key: const Key('cancel_reply_button'),
+                onTap: onCancel,
+                child: WnIcon(
+                  WnIcons.closeSmall,
+                  color: colors.backgroundContentPrimary,
+                  size: 16.sp,
+                ),
+              ),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }

@@ -20,6 +20,7 @@ import 'api/messages.dart';
 import 'api/metadata.dart';
 import 'api/relays.dart';
 import 'api/signer.dart';
+import 'api/user_search.dart';
 import 'api/users.dart';
 import 'api/utils.dart';
 import 'frb_generated.dart';
@@ -217,6 +218,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<MessageStreamItem> dco_decode_StreamSink_message_stream_item_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<UserSearchUpdate> dco_decode_StreamSink_user_search_update_Sse(
+    dynamic raw,
+  );
+
+  @protected
   String dco_decode_String(dynamic raw);
 
   @protected
@@ -363,6 +369,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<List<String>> dco_decode_list_list_String(dynamic raw);
 
   @protected
+  List<MatchedField> dco_decode_list_matched_field(dynamic raw);
+
+  @protected
   List<MediaFile> dco_decode_list_media_file(dynamic raw);
 
   @protected
@@ -382,6 +391,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   List<UserReaction> dco_decode_list_user_reaction(dynamic raw);
+
+  @protected
+  List<UserSearchResult> dco_decode_list_user_search_result(dynamic raw);
+
+  @protected
+  MatchQuality dco_decode_match_quality(dynamic raw);
+
+  @protected
+  MatchedField dco_decode_matched_field(dynamic raw);
 
   @protected
   MediaFile dco_decode_media_file(dynamic raw);
@@ -443,6 +461,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Relay dco_decode_relay(dynamic raw);
 
   @protected
+  SearchUpdateTrigger dco_decode_search_update_trigger(dynamic raw);
+
+  @protected
   SerializableToken dco_decode_serializable_token(dynamic raw);
 
   @protected
@@ -474,6 +495,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   UserReaction dco_decode_user_reaction(dynamic raw);
+
+  @protected
+  UserSearchResult dco_decode_user_search_result(dynamic raw);
+
+  @protected
+  UserSearchUpdate dco_decode_user_search_update(dynamic raw);
 
   @protected
   BigInt dco_decode_usize(dynamic raw);
@@ -629,6 +656,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   RustStreamSink<MessageStreamItem> sse_decode_StreamSink_message_stream_item_Sse(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  RustStreamSink<UserSearchUpdate> sse_decode_StreamSink_user_search_update_Sse(
     SseDeserializer deserializer,
   );
 
@@ -807,6 +839,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<List<String>> sse_decode_list_list_String(SseDeserializer deserializer);
 
   @protected
+  List<MatchedField> sse_decode_list_matched_field(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   List<MediaFile> sse_decode_list_media_file(SseDeserializer deserializer);
 
   @protected
@@ -832,6 +869,17 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   List<UserReaction> sse_decode_list_user_reaction(
     SseDeserializer deserializer,
   );
+
+  @protected
+  List<UserSearchResult> sse_decode_list_user_search_result(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  MatchQuality sse_decode_match_quality(SseDeserializer deserializer);
+
+  @protected
+  MatchedField sse_decode_matched_field(SseDeserializer deserializer);
 
   @protected
   MediaFile sse_decode_media_file(SseDeserializer deserializer);
@@ -903,6 +951,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   Relay sse_decode_relay(SseDeserializer deserializer);
 
   @protected
+  SearchUpdateTrigger sse_decode_search_update_trigger(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   SerializableToken sse_decode_serializable_token(SseDeserializer deserializer);
 
   @protected
@@ -936,6 +989,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   UserReaction sse_decode_user_reaction(SseDeserializer deserializer);
+
+  @protected
+  UserSearchResult sse_decode_user_search_result(SseDeserializer deserializer);
+
+  @protected
+  UserSearchUpdate sse_decode_user_search_update(SseDeserializer deserializer);
 
   @protected
   BigInt sse_decode_usize(SseDeserializer deserializer);
@@ -1126,6 +1185,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_StreamSink_message_stream_item_Sse(
     RustStreamSink<MessageStreamItem> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_StreamSink_user_search_update_Sse(
+    RustStreamSink<UserSearchUpdate> self,
     SseSerializer serializer,
   );
 
@@ -1346,6 +1411,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  void sse_encode_list_matched_field(
+    List<MatchedField> self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_list_media_file(
     List<MediaFile> self,
     SseSerializer serializer,
@@ -1380,6 +1451,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
     List<UserReaction> self,
     SseSerializer serializer,
   );
+
+  @protected
+  void sse_encode_list_user_search_result(
+    List<UserSearchResult> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_match_quality(MatchQuality self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_matched_field(MatchedField self, SseSerializer serializer);
 
   @protected
   void sse_encode_media_file(MediaFile self, SseSerializer serializer);
@@ -1467,6 +1550,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   void sse_encode_relay(Relay self, SseSerializer serializer);
 
   @protected
+  void sse_encode_search_update_trigger(
+    SearchUpdateTrigger self,
+    SseSerializer serializer,
+  );
+
+  @protected
   void sse_encode_serializable_token(
     SerializableToken self,
     SseSerializer serializer,
@@ -1504,6 +1593,18 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   void sse_encode_user_reaction(UserReaction self, SseSerializer serializer);
+
+  @protected
+  void sse_encode_user_search_result(
+    UserSearchResult self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_user_search_update(
+    UserSearchUpdate self,
+    SseSerializer serializer,
+  );
 
   @protected
   void sse_encode_usize(BigInt self, SseSerializer serializer);

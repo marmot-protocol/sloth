@@ -11,11 +11,10 @@ anyhow = "1.0.99"
 chrono = { version = "0.4.40", features = ["serde"] }
 flutter_rust_bridge = { version = "=2.11.1", features = ["chrono"] }
 hex = "0.4"
-mdk-core = { version = "0.5.1", git = "https://github.com/parres-hq/mdk", rev = "f46875ec6fbe1cd616e9dfb4d2aa10f56044e58c", features = [
+mdk-core = { version = "0.5.1", git = "https://github.com/marmot-protocol/mdk", rev = "5ef0c607e56cc20217ddde24b4b2f8e82f76b776", features = [
     "mip04",
 ] }
-nostr-sdk = { version = "0.43", features = [
-    "lmdb",
+nostr-sdk = { version = "0.44", features = [
     "nip04",
     "nip44",
     "nip47",
@@ -25,7 +24,7 @@ serde_json = "1.0.140"
 thiserror = "2.0.12"
 tokio = { version = "1.44", features = ["rt", "rt-multi-thread"] }
 url = "2.5.1"
-whitenoise = { version = "0.1.0", git = "https://github.com/marmot-protocol/whitenoise-rs", rev = "a75ebdf711cd59cf4214c3d0aba2627a5adaf489" }
+whitenoise = { version = "0.1.0", git = "https://github.com/marmot-protocol/whitenoise-rs", rev = "9c3c2669d0cfa4ecc02984d82f7d5d2388d268ed" }
 
 [lints.rust]
 unexpected_cfgs = { level = "warn", check-cfg = ['cfg(frb_expand)'] }

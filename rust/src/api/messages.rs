@@ -147,7 +147,7 @@ impl From<&WhitenoiseMessageWithTokens> for MessageWithTokens {
             kind: message_with_tokens.message.kind.as_u16(),
             created_at: {
                 let ts =
-                    i64::try_from(message_with_tokens.message.created_at.as_u64()).unwrap_or(0);
+                    i64::try_from(message_with_tokens.message.created_at.as_secs()).unwrap_or(0);
                 Utc.timestamp_opt(ts, 0)
                     .single()
                     .unwrap_or_else(|| Utc.timestamp_opt(0, 0).single().unwrap())
@@ -234,7 +234,7 @@ impl From<&WhitenoiseReactionSummary> for ReactionSummary {
                 user: user_reaction.user.to_hex(),
                 emoji: user_reaction.emoji.clone(),
                 created_at: {
-                    let ts = i64::try_from(user_reaction.created_at.as_u64()).unwrap_or(0);
+                    let ts = i64::try_from(user_reaction.created_at.as_secs()).unwrap_or(0);
                     Utc.timestamp_opt(ts, 0)
                         .single()
                         .unwrap_or_else(|| Utc.timestamp_opt(0, 0).single().unwrap())
@@ -278,7 +278,7 @@ impl From<&WhitenoiseChatMessage> for ChatMessage {
             pubkey: chat_message.author.to_hex(),
             content: chat_message.content.clone(),
             created_at: {
-                let ts = i64::try_from(chat_message.created_at.as_u64()).unwrap_or(0);
+                let ts = i64::try_from(chat_message.created_at.as_secs()).unwrap_or(0);
                 Utc.timestamp_opt(ts, 0)
                     .single()
                     .unwrap_or_else(|| Utc.timestamp_opt(0, 0).single().unwrap())

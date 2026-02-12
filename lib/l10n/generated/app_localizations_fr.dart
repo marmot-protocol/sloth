@@ -649,6 +649,21 @@ class AppLocalizationsFr extends AppLocalizations {
   String get messageNotFound => 'Message introuvable';
 
   @override
+  String get pin => 'Épingler';
+
+  @override
+  String get unpin => 'Désépingler';
+
+  @override
+  String get mute => 'Muet';
+
+  @override
+  String get archive => 'Archiver';
+
+  @override
+  String get failedToPinChat => 'Échec de l\'épinglage. Veuillez réessayer.';
+
+  @override
   String get carouselPrivacyTitle => 'Confidentialité et sécurité';
 
   @override

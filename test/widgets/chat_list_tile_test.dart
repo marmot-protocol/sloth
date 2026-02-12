@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart' show PlatformInt64;
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +14,7 @@ import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_chat_list_context_menu.dart';
 import 'package:whitenoise/widgets/wn_chat_list_item.dart';
 
 import '../mocks/mock_wn_api.dart';
@@ -57,6 +59,9 @@ ChatSummary _chatSummary({
 class _MockApi extends MockWnApi {
   FlutterMetadata welcomerMetadata = const FlutterMetadata(custom: {});
   bool shouldThrow = false;
+  bool shouldThrowOnPin = false;
+  int setChatPinOrderCallCount = 0;
+  PlatformInt64? lastPinOrder;
 
   @override
   Future<FlutterMetadata> crateApiUsersUserMetadata({
@@ -65,6 +70,17 @@ class _MockApi extends MockWnApi {
   }) async {
     if (shouldThrow) throw Exception('Network error');
     return welcomerMetadata;
+  }
+
+  @override
+  Future<void> crateApiChatListSetChatPinOrder({
+    required String accountPubkey,
+    required String mlsGroupId,
+    PlatformInt64? pinOrder,
+  }) async {
+    if (shouldThrowOnPin) throw Exception('Pin order update failed');
+    setChatPinOrderCallCount++;
+    lastPinOrder = pinOrder;
   }
 }
 
@@ -80,15 +96,19 @@ void main() {
   setUp(() {
     _api.welcomerMetadata = const FlutterMetadata(custom: {});
     _api.shouldThrow = false;
+    _api.shouldThrowOnPin = false;
+    _api.setChatPinOrderCallCount = 0;
+    _api.lastPinOrder = null;
   });
 
   Future<void> pumpTile(
     WidgetTester tester,
     ChatSummary chatSummary, {
     bool settle = true,
+    void Function(String)? onError,
   }) async {
     await mountWidget(
-      ChatListTile(chatSummary: chatSummary),
+      ChatListTile(chatSummary: chatSummary, onError: onError),
       tester,
       overrides: [
         accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
@@ -434,6 +454,167 @@ void main() {
 
           expect(find.text('Chat Screen'), findsOneWidget);
         });
+      });
+    });
+
+    group('context menu', () {
+      testWidgets('long press on accepted chat shows context menu', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test Chat'));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnChatListContextMenu), findsOneWidget);
+      });
+
+      testWidgets('context menu shows Pin, Mute, Archive, Delete actions', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test Chat'));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Pin'), findsOneWidget);
+        expect(find.text('Mute'), findsOneWidget);
+        expect(find.text('Archive'), findsOneWidget);
+        expect(find.text('Delete'), findsOneWidget);
+      });
+
+      testWidgets('pending chat has no onLongPress handler', (tester) async {
+        await pumpTile(tester, _chatSummary(pendingConfirmation: true));
+
+        final item = tester.widget<WnChatListItem>(find.byType(WnChatListItem));
+        expect(item.onLongPress, isNull);
+      });
+
+      testWidgets('context menu contains a preview of the chat item', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Preview Chat'));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('context_menu_card')), findsOneWidget);
+        final contextMenuFinder = find.byType(WnChatListContextMenu);
+        final contextMenu = tester.widget<WnChatListContextMenu>(contextMenuFinder);
+        expect(contextMenu.child, isA<WnChatListItem>());
+      });
+
+      testWidgets('context menu is dismissed when tapping outside', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test Chat'));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnChatListContextMenu), findsOneWidget);
+
+        await tester.tapAt(Offset.zero);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnChatListContextMenu), findsNothing);
+      });
+
+      testWidgets('shows Pin label and icon for unpinned chat', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test Chat'));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Pin'), findsOneWidget);
+        expect(find.byKey(const Key('context_menu_action_pin')), findsOneWidget);
+      });
+
+      testWidgets('shows Unpin label and icon for pinned chat', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Pinned Chat', pinOrder: 0));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Unpin'), findsOneWidget);
+        expect(find.byKey(const Key('context_menu_action_unpin')), findsOneWidget);
+      });
+
+      testWidgets('tapping Pin calls setChatPinOrder with pinOrder 0', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Test Chat'));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('context_menu_action_pin')));
+        await tester.pumpAndSettle();
+
+        expect(_api.setChatPinOrderCallCount, 1);
+        expect(_api.lastPinOrder, 0);
+      });
+
+      testWidgets('tapping Unpin calls setChatPinOrder with null', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Pinned Chat', pinOrder: 0));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('context_menu_action_unpin')));
+        await tester.pumpAndSettle();
+
+        expect(_api.setChatPinOrderCallCount, 1);
+        expect(_api.lastPinOrder, isNull);
+      });
+
+      testWidgets('pinned chat preview in context menu shows pin badge', (tester) async {
+        await pumpTile(tester, _chatSummary(name: 'Pinned Chat', pinOrder: 0));
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        final contextMenu = tester.widget<WnChatListContextMenu>(
+          find.byType(WnChatListContextMenu),
+        );
+        final previewItem = contextMenu.child as WnChatListItem;
+        expect(previewItem.showPinned, isTrue);
+      });
+
+      testWidgets('calls onError when setChatPinOrder fails', (tester) async {
+        _api.shouldThrowOnPin = true;
+        String? errorMessage;
+
+        await pumpTile(
+          tester,
+          _chatSummary(name: 'Test Chat'),
+          onError: (msg) => errorMessage = msg,
+        );
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('context_menu_action_pin')));
+        await tester.pumpAndSettle();
+
+        expect(errorMessage, isNotNull);
+        expect(_api.setChatPinOrderCallCount, 0);
+      });
+
+      testWidgets('does not call onChatListChanged when pin fails', (tester) async {
+        _api.shouldThrowOnPin = true;
+        var refreshCalled = false;
+
+        await mountWidget(
+          ChatListTile(
+            chatSummary: _chatSummary(name: 'Test Chat'),
+            onChatListChanged: () => refreshCalled = true,
+            onError: (_) {},
+          ),
+          tester,
+          overrides: [
+            accountPubkeyProvider.overrideWith(MockAccountPubkeyNotifier.new),
+          ],
+        );
+        await tester.pumpAndSettle();
+
+        await tester.longPress(find.byType(WnChatListItem));
+        await tester.pumpAndSettle();
+
+        await tester.tap(find.byKey(const Key('context_menu_action_pin')));
+        await tester.pumpAndSettle();
+
+        expect(refreshCalled, isFalse);
       });
     });
   });

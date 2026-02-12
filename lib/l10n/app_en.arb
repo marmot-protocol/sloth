@@ -1014,6 +1014,31 @@
     "description": "Text shown in reply preview when the original message is deleted or not available"
   },
 
+  "pin": "Pin",
+  "@pin": {
+    "description": "Pin chat context menu action"
+  },
+
+  "unpin": "Unpin",
+  "@unpin": {
+    "description": "Unpin chat context menu action"
+  },
+
+  "mute": "Mute",
+  "@mute": {
+    "description": "Mute chat context menu action"
+  },
+
+  "archive": "Archive",
+  "@archive": {
+    "description": "Archive chat context menu action"
+  },
+
+  "failedToPinChat": "Failed to update pin. Please try again.",
+  "@failedToPinChat": {
+    "description": "Error message when pin/unpin operation fails"
+  },
+
   "carouselPrivacyTitle": "Privacy and security",
   "@carouselPrivacyTitle": {
     "description": "Login carousel slide 1 title"

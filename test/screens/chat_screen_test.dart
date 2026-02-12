@@ -896,6 +896,32 @@ void main() {
 
         expect(find.byType(WnReplyPreview), findsNothing);
       });
+
+      testWidgets('tapping reply preview scrolls to original message', (tester) async {
+        _api.initialMessages = [
+          ...List.generate(
+            20,
+            (i) => _message('m$i', DateTime(2024, 1, i + 1)),
+          ),
+          _message(
+            'reply_msg',
+            DateTime(2024, 1, 22),
+            isReply: true,
+            replyToId: 'm0',
+            pubkey: _testPubkey,
+          ),
+        ];
+        await pumpChatScreen(tester);
+        await tester.pumpAndSettle();
+
+        final position = Scrollable.of(tester.element(find.byType(WnMessageBubble).first)).position;
+        expect(position.pixels, 0);
+
+        await tester.tap(find.byKey(const Key('reply_preview_tap_area')));
+        await tester.pumpAndSettle();
+
+        expect(position.pixels, greaterThan(0));
+      });
     });
 
     group('reaction pills', () {

@@ -9,11 +9,13 @@ import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import '../test_helpers.dart';
 
 ReplyPreview _replyPreview({
+  String messageId = 'original-msg',
   String authorPubkey = testPubkeyB,
   FlutterMetadata? authorMetadata,
   String content = 'Original message content',
   bool isNotFound = false,
 }) => (
+  messageId: messageId,
   authorPubkey: authorPubkey,
   authorMetadata:
       authorMetadata ??
@@ -251,6 +253,37 @@ void main() {
         );
 
         expect(find.byKey(const Key('cancel_reply_button')), findsNothing);
+      });
+
+      testWidgets('passes onReplyTap to WnReplyPreview', (tester) async {
+        var tapCalled = false;
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(isReply: true, replyToId: 'original-msg'),
+            isOwnMessage: false,
+            replyPreview: _replyPreview(),
+            onReplyTap: () => tapCalled = true,
+          ),
+          tester,
+        );
+
+        await tester.tap(find.byKey(const Key('reply_preview_tap_area')));
+        await tester.pumpAndSettle();
+
+        expect(tapCalled, isTrue);
+      });
+
+      testWidgets('no tap area when onReplyTap is null', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(isReply: true, replyToId: 'original-msg'),
+            isOwnMessage: false,
+            replyPreview: _replyPreview(),
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_preview_tap_area')), findsNothing);
       });
     });
   });

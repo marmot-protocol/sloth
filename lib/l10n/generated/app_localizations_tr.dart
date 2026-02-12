@@ -645,6 +645,21 @@ class AppLocalizationsTr extends AppLocalizations {
   String get messageNotFound => 'Mesaj bulunamadı';
 
   @override
+  String get pin => 'Sabitle';
+
+  @override
+  String get unpin => 'Sabitlemeden Kaldır';
+
+  @override
+  String get mute => 'Sessiz';
+
+  @override
+  String get archive => 'Arşivle';
+
+  @override
+  String get failedToPinChat => 'Sabitleme başarısız. Lütfen tekrar deneyin.';
+
+  @override
   String get carouselPrivacyTitle => 'Gizlilik ve güvenlik';
 
   @override

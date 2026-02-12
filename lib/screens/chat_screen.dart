@@ -3,10 +3,12 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:scroll_to_index/scroll_to_index.dart';
 import 'package:whitenoise/hooks/use_chat_avatar.dart';
 import 'package:whitenoise/hooks/use_chat_input.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/hooks/use_chat_scroll.dart';
+import 'package:whitenoise/hooks/use_scroll_to_message.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
@@ -16,14 +18,16 @@ import 'package:whitenoise/services/message_service.dart';
 import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_chat_header.dart';
-import 'package:whitenoise/widgets/wn_fade_overlay.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
 import 'package:whitenoise/widgets/wn_reply_preview.dart';
+import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 final _logger = Logger('ChatScreen');
+
+const _slateHeight = 80.0;
 
 class ChatScreen extends HookConsumerWidget {
   final String groupId;
@@ -47,7 +51,10 @@ class ChatScreen extends HookConsumerWidget {
       groupId,
     );
     final groupAvatarSnapshot = useChatAvatar(pubkey, groupId);
-    final scrollController = useScrollController();
+    final scrollToMessageResult = useScrollToMessage(
+      getReversedMessageIndex: getReversedMessageIndex,
+    );
+    final scrollController = scrollToMessageResult.scrollController;
     final input = useChatInput();
     final messageService = useMemoized(
       () => MessageService(pubkey: pubkey, groupId: groupId),
@@ -109,98 +116,122 @@ class ChatScreen extends HookConsumerWidget {
       if (context.mounted) FocusManager.instance.primaryFocus?.unfocus();
     }
 
+    final safeAreaTop = MediaQuery.of(context).padding.top;
+    final slateTopPadding = safeAreaTop + _slateHeight.h;
+
+    Widget messageListContent;
+    if (isLoading) {
+      messageListContent = Center(
+        child: CircularProgressIndicator(color: colors.backgroundContentPrimary),
+      );
+    } else if (messageCount == 0) {
+      messageListContent = Center(
+        child: Text(
+          context.l10n.noMessagesYet,
+          style: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
+        ),
+      );
+    } else {
+      messageListContent = ListView.builder(
+        controller: scrollController,
+        reverse: true,
+        padding: EdgeInsets.only(top: slateTopPadding + 8.h, bottom: 12.h),
+        itemCount: messageCount,
+        findChildIndexCallback: (key) {
+          if (key is ValueKey<String>) {
+            return getReversedMessageIndex(key.value);
+          }
+          return null;
+        },
+        itemBuilder: (context, index) {
+          final message = getMessage(index);
+          final isOwnMessage = message.pubkey == pubkey;
+          final replyPreview = message.isReply ? getReplyPreview(message.replyToId) : null;
+
+          return AutoScrollTag(
+            key: ValueKey(message.id),
+            controller: scrollController,
+            index: index,
+            child: WnMessageBubble(
+              message: message,
+              isOwnMessage: isOwnMessage,
+              currentUserPubkey: pubkey,
+              onLongPress: () => showMessageMenu(message),
+              onReaction: (emoji) => toggleReaction(message, emoji),
+              replyPreview: replyPreview,
+              onReplyTap: replyPreview != null && !replyPreview.isNotFound
+                  ? () => scrollToMessageResult.scrollToMessage(replyPreview.messageId)
+                  : null,
+            ),
+          );
+        },
+      );
+    }
+
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         backgroundColor: colors.backgroundPrimary,
-        body: SafeArea(
-          child: Column(
-            children: [
-              if (noticeMessage.value != null)
-                WnSystemNotice(
-                  key: ValueKey(noticeMessage.value),
-                  title: noticeMessage.value!,
-                  type: WnSystemNoticeType.error,
-                  onDismiss: dismissNotice,
-                ),
-              WnSlate(
-                padding: EdgeInsets.symmetric(vertical: 14.h),
-                header: WnChatHeader(
-                  mlsGroupId: groupId,
-                  displayName: groupAvatarSnapshot.data?.displayName ?? '',
-                  pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
-                  peerPubkey: groupAvatarSnapshot.data?.otherMemberPubkey,
-                  onBack: () => Routes.goToChatList(context),
-                  onMenuTap: () {
-                    final otherPubkey = groupAvatarSnapshot.data?.otherMemberPubkey;
-                    if (otherPubkey != null) {
-                      Routes.pushToChatInfo(context, otherPubkey);
-                    } else {
-                      Routes.pushToWip(context);
-                    }
-                  },
-                ),
-              ),
-              Expanded(
-                child: isLoading
-                    ? Center(
-                        child: CircularProgressIndicator(
-                          color: colors.backgroundContentPrimary,
-                        ),
-                      )
-                    : messageCount == 0
-                    ? Center(
-                        child: Text(
-                          context.l10n.noMessagesYet,
-                          style: typography.medium14.copyWith(
-                            color: colors.backgroundContentTertiary,
-                          ),
-                        ),
-                      )
-                    : Stack(
-                        children: [
-                          ListView.builder(
-                            controller: scrollController,
-                            reverse: true,
-                            padding: EdgeInsets.only(top: 8.h, bottom: 12.h),
-                            itemCount: messageCount,
-                            findChildIndexCallback: (key) {
-                              if (key is ValueKey<String>) {
-                                return getReversedMessageIndex(key.value);
-                              }
-                              return null;
-                            },
-                            itemBuilder: (context, index) {
-                              final message = getMessage(index);
-                              final isOwnMessage = message.pubkey == pubkey;
-                              final replyPreview = message.isReply
-                                  ? getReplyPreview(message.replyToId)
-                                  : null;
-
-                              return WnMessageBubble(
-                                key: ValueKey(message.id),
-                                message: message,
-                                isOwnMessage: isOwnMessage,
-                                currentUserPubkey: pubkey,
-                                onLongPress: () => showMessageMenu(message),
-                                onReaction: (emoji) => toggleReaction(message, emoji),
-                                replyPreview: replyPreview,
-                              );
-                            },
-                          ),
-                          WnFadeOverlay.bottom(color: colors.backgroundPrimary),
-                        ],
+        body: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  messageListContent,
+                  WnScrollEdgeEffect.canvasTop(
+                    color: colors.backgroundPrimary,
+                    height: slateTopPadding,
+                  ),
+                  WnScrollEdgeEffect.canvasBottom(
+                    color: colors.backgroundPrimary,
+                    height: 20.h,
+                  ),
+                  if (noticeMessage.value != null)
+                    Positioned(
+                      top: safeAreaTop,
+                      left: 0,
+                      right: 0,
+                      child: WnSystemNotice(
+                        key: ValueKey(noticeMessage.value),
+                        title: noticeMessage.value!,
+                        type: WnSystemNoticeType.error,
+                        onDismiss: dismissNotice,
                       ),
+                    ),
+                  SafeArea(
+                    bottom: false,
+                    child: WnSlate(
+                      padding: EdgeInsets.symmetric(vertical: 14.h),
+                      header: WnChatHeader(
+                        mlsGroupId: groupId,
+                        displayName: groupAvatarSnapshot.data?.displayName ?? '',
+                        pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
+                        onBack: () => Routes.goToChatList(context),
+                        onMenuTap: () {
+                          final otherPubkey = groupAvatarSnapshot.data?.otherMemberPubkey;
+                          if (otherPubkey != null) {
+                            Routes.pushToChatInfo(context, otherPubkey);
+                          } else {
+                            Routes.pushToWip(context);
+                          }
+                        },
+                      ),
+                    ),
+                  ),
+                ],
               ),
-              _ChatInput(
+            ),
+            SafeArea(
+              top: false,
+              child: _ChatInput(
                 input: input,
                 currentUserPubkey: pubkey,
                 onSend: sendMessage,
                 onError: showNotice,
                 getReplyPreview: getReplyPreview,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );

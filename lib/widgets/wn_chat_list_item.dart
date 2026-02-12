@@ -20,6 +20,7 @@ class WnChatListItem extends HookWidget {
     this.unreadCount,
     this.notificationOff = false,
     this.onTap,
+    this.onLongPress,
     this.isSelected = false,
     this.prefixSubtitle,
   });
@@ -35,6 +36,7 @@ class WnChatListItem extends HookWidget {
   final int? unreadCount;
   final bool notificationOff;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPress;
   final bool isSelected;
   final String? prefixSubtitle;
 
@@ -50,6 +52,7 @@ class WnChatListItem extends HookWidget {
       cursor: SystemMouseCursors.click,
       child: GestureDetector(
         onTap: onTap,
+        onLongPress: onLongPress,
         behavior: HitTestBehavior.opaque,
         child: Container(
           decoration: BoxDecoration(

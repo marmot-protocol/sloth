@@ -12,7 +12,7 @@ import '../test_helpers.dart';
 
 ChatMessage _createTestMessage({
   String id = 'msg-1',
-  String pubkey = 'user-pubkey',
+  String pubkey = testPubkeyA,
   String content = 'Test message content',
   ReactionSummary? reactions,
 }) {
@@ -41,7 +41,7 @@ void main() {
           onClose: () {},
           onReaction: (_) {},
           onEmojiPicker: () {},
-          currentUserPubkey: 'test-pubkey',
+          currentUserPubkey: testPubkeyA,
         ),
         tester,
       );
@@ -57,7 +57,7 @@ void main() {
           onClose: () {},
           onReaction: (_) {},
           onEmojiPicker: () {},
-          currentUserPubkey: 'test-pubkey',
+          currentUserPubkey: testPubkeyA,
         ),
         tester,
       );
@@ -74,7 +74,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
             onReply: () {},
           ),
           tester,
@@ -91,7 +91,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -108,7 +108,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
             onReply: () => replyCalled = true,
           ),
           tester,
@@ -130,7 +130,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
             onDelete: () {},
           ),
           tester,
@@ -147,7 +147,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -164,7 +164,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
             onDelete: () => deleteCalled = true,
           ),
           tester,
@@ -187,7 +187,7 @@ void main() {
             onClose: () => closeCalled = true,
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -208,7 +208,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -226,7 +226,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -245,7 +245,7 @@ void main() {
             onClose: () {},
             onReaction: (emoji) => receivedEmoji = emoji,
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -264,7 +264,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
             selectedEmojis: const {'❤', '🚀'},
           ),
           tester,
@@ -292,7 +292,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () => emojiPickerCalled = true,
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -313,7 +313,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -334,7 +334,7 @@ void main() {
             onClose: () {},
             onReaction: (_) {},
             onEmojiPicker: () {},
-            currentUserPubkey: 'test-pubkey',
+            currentUserPubkey: testPubkeyA,
           ),
           tester,
         );
@@ -377,7 +377,7 @@ void main() {
           onPressed: () => MessageActionsScreen.show(
             context,
             message: _createTestMessage(),
-            pubkey: 'user-pubkey',
+            pubkey: testPubkeyA,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
           ),
@@ -393,13 +393,13 @@ void main() {
     });
 
     testWidgets('shows delete button for own message', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: myPubkey),
+            message: _createTestMessage(),
             pubkey: myPubkey,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
@@ -421,8 +421,8 @@ void main() {
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: 'other-user'),
-            pubkey: 'my-pubkey',
+            message: _createTestMessage(pubkey: testPubkeyB),
+            pubkey: testPubkeyA,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
             onDelete: () async {},
@@ -438,13 +438,13 @@ void main() {
     });
 
     testWidgets('hides delete button for own message when onDelete is null', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: myPubkey),
+            message: _createTestMessage(),
             pubkey: myPubkey,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
@@ -466,7 +466,7 @@ void main() {
           onPressed: () => MessageActionsScreen.show(
             context,
             message: _createTestMessage(),
-            pubkey: 'user-pubkey',
+            pubkey: testPubkeyA,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
           ),
@@ -492,7 +492,7 @@ void main() {
           onPressed: () => MessageActionsScreen.show(
             context,
             message: _createTestMessage(),
-            pubkey: 'user-pubkey',
+            pubkey: testPubkeyA,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
           ),
@@ -513,14 +513,14 @@ void main() {
 
     testWidgets('calls onDelete and closes menu when delete button is tapped', (tester) async {
       var deleteCalled = false;
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
 
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: myPubkey),
+            message: _createTestMessage(),
             pubkey: myPubkey,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
@@ -545,13 +545,13 @@ void main() {
     });
 
     testWidgets('aligns message preview right for own message', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: myPubkey),
+            message: _createTestMessage(),
             pubkey: myPubkey,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
@@ -575,8 +575,8 @@ void main() {
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: 'other-user'),
-            pubkey: 'my-pubkey',
+            message: _createTestMessage(pubkey: testPubkeyB),
+            pubkey: testPubkeyA,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
           ),
@@ -594,14 +594,14 @@ void main() {
     });
 
     testWidgets('shows system notice when delete fails', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
 
       await mountShowTest(
         tester,
         builder: (context) => ElevatedButton(
           onPressed: () => MessageActionsScreen.show(
             context,
-            message: _createTestMessage(pubkey: myPubkey),
+            message: _createTestMessage(),
             pubkey: myPubkey,
             onAddReaction: (_) async {},
             onRemoveReaction: (_) async {},
@@ -637,7 +637,7 @@ void main() {
           onPressed: () => MessageActionsScreen.show(
             context,
             message: _createTestMessage(),
-            pubkey: 'user-pubkey',
+            pubkey: testPubkeyA,
             onAddReaction: (emoji) async {
               receivedEmoji = emoji;
             },
@@ -666,7 +666,7 @@ void main() {
           onPressed: () => MessageActionsScreen.show(
             context,
             message: _createTestMessage(),
-            pubkey: 'user-pubkey',
+            pubkey: testPubkeyA,
             onAddReaction: (emoji) async {
               throw Exception('Reaction failed');
             },
@@ -690,9 +690,9 @@ void main() {
     });
 
     testWidgets('highlights emojis user has already reacted with', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
       final message = _createTestMessage(
-        pubkey: 'other-user',
+        pubkey: testPubkeyB,
         reactions: ReactionSummary(
           byEmoji: [
             EmojiReaction(emoji: '❤', count: BigInt.one, users: const [myPubkey]),
@@ -739,10 +739,10 @@ void main() {
     });
 
     testWidgets('calls onRemoveReaction when tapping already reacted emoji', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
       String? removedReactionId;
       final message = _createTestMessage(
-        pubkey: 'other-user',
+        pubkey: testPubkeyB,
         reactions: ReactionSummary(
           byEmoji: [
             EmojiReaction(emoji: '❤', count: BigInt.one, users: const [myPubkey]),
@@ -785,9 +785,9 @@ void main() {
     });
 
     testWidgets('shows system notice when remove reaction fails', (tester) async {
-      const myPubkey = 'my-pubkey';
+      const myPubkey = testPubkeyA;
       final message = _createTestMessage(
-        pubkey: 'other-user',
+        pubkey: testPubkeyB,
         reactions: ReactionSummary(
           byEmoji: [
             EmojiReaction(emoji: '❤', count: BigInt.one, users: const [myPubkey]),
@@ -837,7 +837,7 @@ void main() {
           onPressed: () => MessageActionsScreen.show(
             context,
             message: _createTestMessage(),
-            pubkey: 'user-pubkey',
+            pubkey: testPubkeyA,
             onAddReaction: (emoji) async {
               throw Exception('Reaction failed');
             },
@@ -871,7 +871,7 @@ void main() {
             onPressed: () => MessageActionsScreen.show(
               context,
               message: _createTestMessage(),
-              pubkey: 'user-pubkey',
+              pubkey: testPubkeyA,
               onAddReaction: onAddReaction ?? (_) async {},
               onRemoveReaction: (_) async {},
             ),
@@ -891,7 +891,7 @@ void main() {
             onPressed: () => MessageActionsScreen.show(
               context,
               message: _createTestMessage(),
-              pubkey: 'user-pubkey',
+              pubkey: testPubkeyA,
               onAddReaction: (_) async {},
               onRemoveReaction: (_) async {},
             ),
