@@ -206,12 +206,9 @@ UserSearchState useUserSearch({
   } else if (isPartialNpubSearch) {
     users = matchingFollows;
     isLoading = isLoadingFollows;
-  } else if (isNameQuery) {
+  } else {
     users = nameSearchResults.value;
     isLoading = isLoadingNameSearch.value && nameSearchResults.value.isEmpty;
-  } else {
-    users = [];
-    isLoading = false;
   }
 
   return (
