@@ -20,18 +20,9 @@ void main() {
   group('DeleteAllDataState', () {
     test('copyWith preserves isDeleting when not provided', () {
       const state = DeleteAllDataState(isDeleting: true);
-      final newState = state.copyWith(hasError: true);
+      final newState = state.copyWith();
 
       expect(newState.isDeleting, true);
-      expect(newState.hasError, true);
-    });
-
-    test('copyWith preserves hasError when not provided', () {
-      const state = DeleteAllDataState(hasError: true);
-      final newState = state.copyWith(isDeleting: true);
-
-      expect(newState.isDeleting, true);
-      expect(newState.hasError, true);
     });
 
     test('copyWith updates isDeleting when provided', () {
@@ -39,13 +30,6 @@ void main() {
       final newState = state.copyWith(isDeleting: true);
 
       expect(newState.isDeleting, true);
-    });
-
-    test('copyWith updates hasError when provided', () {
-      const state = DeleteAllDataState();
-      final newState = state.copyWith(hasError: true);
-
-      expect(newState.hasError, true);
     });
   });
 
@@ -63,7 +47,6 @@ void main() {
       );
 
       expect(state.isDeleting, false);
-      expect(state.hasError, false);
     });
 
     testWidgets('deleteAllData sets isDeleting to true during operation', (tester) async {
@@ -122,7 +105,7 @@ void main() {
 
     testWidgets('deleteAllData sets isDeleting to false after success', (tester) async {
       late DeleteAllDataState state;
-      late Future<void> Function() deleteAllData;
+      late Future<bool> Function() deleteAllData;
 
       await mountHook(
         tester,
@@ -134,7 +117,7 @@ void main() {
         },
       );
 
-      await deleteAllData();
+      final result = await deleteAllData();
       await tester.pumpAndSettle();
 
       await mountHook(
@@ -146,13 +129,12 @@ void main() {
         },
       );
 
+      expect(result, true);
       expect(state.isDeleting, false);
-      expect(state.hasError, false);
     });
 
-    testWidgets('deleteAllData sets error on failure', (tester) async {
-      late DeleteAllDataState state;
-      late Future<void> Function() deleteAllData;
+    testWidgets('deleteAllData returns false on failure', (tester) async {
+      late Future<bool> Function() deleteAllData;
 
       mockApi.deleteAllDataShouldFail = true;
 
@@ -160,32 +142,19 @@ void main() {
         tester,
         () {
           final hook = useDeleteAllData();
-          state = hook.state;
           deleteAllData = hook.deleteAllData;
           return null;
         },
       );
 
-      try {
-        await deleteAllData();
-      } catch (_) {}
+      final result = await deleteAllData();
       await tester.pumpAndSettle();
 
-      await mountHook(
-        tester,
-        () {
-          final hook = useDeleteAllData();
-          state = hook.state;
-          return null;
-        },
-      );
-
-      expect(state.isDeleting, false);
-      expect(state.hasError, true);
+      expect(result, false);
     });
 
-    testWidgets('deleteAllData clears previous error on new attempt', (tester) async {
-      late Future<void> Function() deleteAllData;
+    testWidgets('deleteAllData returns true after clearing previous error', (tester) async {
+      late Future<bool> Function() deleteAllData;
       final getState = await mountHook(
         tester,
         () {
@@ -197,19 +166,18 @@ void main() {
 
       mockApi.deleteAllDataShouldFail = true;
 
-      try {
-        await deleteAllData();
-      } catch (_) {}
+      final failResult = await deleteAllData();
       await tester.pumpAndSettle();
 
-      expect(getState().hasError, true);
+      expect(failResult, false);
 
       mockApi.deleteAllDataShouldFail = false;
 
-      await deleteAllData();
+      final successResult = await deleteAllData();
       await tester.pumpAndSettle();
 
-      expect(getState().hasError, false);
+      expect(successResult, true);
+      expect(getState().isDeleting, false);
     });
   });
 }

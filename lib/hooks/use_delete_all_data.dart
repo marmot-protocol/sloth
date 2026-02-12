@@ -6,20 +6,16 @@ final _logger = Logger('useDeleteAllData');
 
 class DeleteAllDataState {
   final bool isDeleting;
-  final bool hasError;
 
   const DeleteAllDataState({
     this.isDeleting = false,
-    this.hasError = false,
   });
 
   DeleteAllDataState copyWith({
     bool? isDeleting,
-    bool? hasError,
   }) {
     return DeleteAllDataState(
       isDeleting: isDeleting ?? this.isDeleting,
-      hasError: hasError ?? this.hasError,
     );
   }
 }
@@ -30,21 +26,29 @@ class DeleteAllDataState {
 })
 useDeleteAllData() {
   final state = useState(const DeleteAllDataState());
+  final isMountedRef = useRef(true);
+
+  useEffect(() {
+    return () {
+      isMountedRef.value = false;
+    };
+  }, const []);
 
   Future<bool> deleteAllData() async {
-    state.value = state.value.copyWith(isDeleting: true, hasError: false);
+    state.value = state.value.copyWith(isDeleting: true);
     try {
       _logger.info('Deleting all application data');
       await api.deleteAllData();
       _logger.info('All data deleted successfully');
-      state.value = state.value.copyWith(isDeleting: false, hasError: false);
+      if (isMountedRef.value) {
+        state.value = state.value.copyWith(isDeleting: false);
+      }
       return true;
     } catch (e, stackTrace) {
       _logger.severe('Failed to delete all data', e, stackTrace);
-      state.value = state.value.copyWith(
-        isDeleting: false,
-        hasError: true,
-      );
+      if (isMountedRef.value) {
+        state.value = state.value.copyWith(isDeleting: false);
+      }
       return false;
     }
   }
