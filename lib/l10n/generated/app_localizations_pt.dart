@@ -489,7 +489,12 @@ class AppLocalizationsPt extends AppLocalizations {
   String get failedToStartChat => 'Falha ao iniciar a conversa. Por favor, tente novamente.';
 
   @override
-  String get userNotOnWhiteNoise => 'Este usuário ainda não está no White Noise.';
+  String get inviteToWhiteNoise => 'Convidar para o White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name ainda não está no White Noise. Compartilhe o app para iniciar uma conversa segura.';
+  }
 
   @override
   String get failedToUpdateFollow =>

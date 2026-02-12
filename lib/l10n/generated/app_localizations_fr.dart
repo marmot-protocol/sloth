@@ -490,7 +490,12 @@ class AppLocalizationsFr extends AppLocalizations {
   String get failedToStartChat => 'Échec du démarrage de la discussion. Veuillez réessayer.';
 
   @override
-  String get userNotOnWhiteNoise => 'Cet utilisateur n\'est pas encore sur White Noise.';
+  String get inviteToWhiteNoise => 'Inviter sur White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name n\'est pas encore sur White Noise. Partagez l\'application pour démarrer une discussion sécurisée.';
+  }
 
   @override
   String get failedToUpdateFollow =>
