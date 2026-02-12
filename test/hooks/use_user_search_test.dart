@@ -650,6 +650,52 @@ void main() {
 
         expect(getState().isSearching, isFalse);
       });
+
+      testWidgets('flushes results and stops searching when stream closes', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'Alice')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump();
+        expect(getState().isSearching, isTrue);
+
+        api.searchUsersController!.close();
+        await tester.pump();
+
+        expect(getState().users.length, 1);
+        expect(getState().isSearching, isFalse);
+        expect(getState().isLoading, isFalse);
+      });
+
+      testWidgets('stops searching on stream error', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        expect(getState().isSearching, isTrue);
+
+        api.searchUsersController!.addError(Exception('network error'));
+        await tester.pump();
+
+        expect(getState().isSearching, isFalse);
+        expect(getState().isLoading, isFalse);
+      });
+
+      testWidgets('returns empty state for whitespace-only query', (tester) async {
+        await pump(tester, searchQuery: '   ');
+        await tester.pump();
+
+        expect(getState().users, isEmpty);
+        expect(getState().isLoading, isFalse);
+        expect(getState().hasSearchQuery, isFalse);
+      });
     });
   });
 }

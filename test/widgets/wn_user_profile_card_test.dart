@@ -145,12 +145,13 @@ void main() {
             custom: const {},
           ),
         );
-        final aboutWidget = tester
-            .widgetList<Text>(find.byType(Text))
-            .where(
-              (t) => t.maxLines == 10 && t.overflow == TextOverflow.ellipsis,
-            );
-        expect(aboutWidget, isNotEmpty);
+        final aboutText = tester.widget<Text>(
+          find.byWidgetPredicate(
+            (w) => w is Text && w.data != null && w.data!.startsWith('Line 0 of'),
+          ),
+        );
+        expect(aboutText.maxLines, 10);
+        expect(aboutText.overflow, TextOverflow.ellipsis);
       });
     });
 

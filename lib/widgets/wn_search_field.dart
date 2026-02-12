@@ -33,7 +33,7 @@ class WnSearchField extends StatelessWidget {
         child: SizedBox(
           key: const Key('search_loading_indicator'),
           width: 16.w,
-          height: 16.w,
+          height: 16.h,
           child: CircularProgressIndicator(
             strokeWidth: 2.w,
             color: colors.backgroundContentTertiary,
