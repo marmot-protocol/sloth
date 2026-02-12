@@ -161,6 +161,17 @@ Widget _buildHeader(SemanticColors colors) {
       ),
       Expanded(
         child: Text(
+          'XSmall (36px)',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
+            color: colors.backgroundContentSecondary,
+          ),
+        ),
+      ),
+      Expanded(
+        child: Text(
           'Small (48px)',
           textAlign: TextAlign.center,
           style: TextStyle(
@@ -228,6 +239,15 @@ Widget _buildInitialsRow(AvatarColor color, SemanticColors colors) {
             child: WnAvatar(
               displayName: 'A',
               color: color,
+              size: WnAvatarSize.xSmall,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: WnAvatar(
+              displayName: 'A',
+              color: color,
               size: WnAvatarSize.small,
             ),
           ),
@@ -271,6 +291,11 @@ Widget _buildIconRow(AvatarColor color) {
     child: Row(
       children: [
         const SizedBox(width: 80),
+        Expanded(
+          child: Center(
+            child: WnAvatar(color: color, size: WnAvatarSize.xSmall),
+          ),
+        ),
         Expanded(
           child: Center(
             child: WnAvatar(color: color, size: WnAvatarSize.small),
@@ -372,6 +397,15 @@ Widget _buildImageRow(SemanticColors colors) {
               fontSize: 13,
               fontWeight: FontWeight.w500,
               color: colors.backgroundContentPrimary,
+            ),
+          ),
+        ),
+        Expanded(
+          child: Center(
+            child: WnAvatar(
+              pictureUrl: _sampleImageUrl,
+              displayName: 'A',
+              size: WnAvatarSize.xSmall,
             ),
           ),
         ),

@@ -222,13 +222,80 @@ void main() {
       });
     });
 
-    group('edit button', () {
-      testWidgets('does not show edit button when onEditTap is null', (tester) async {
+    group('xSmall size', () {
+      testWidgets('renders at xSmall size', (tester) async {
         await mountWidget(
-          const WnAvatar(displayName: 'alice', size: WnAvatarSize.large),
+          const WnAvatar(displayName: 'alice', size: WnAvatarSize.xSmall),
+          tester,
+        );
+        expect(find.text('A'), findsOneWidget);
+        expect(find.byKey(const Key('avatar_container')), findsOneWidget);
+      });
+
+      testWidgets('shows user icon at xSmall size when no displayName', (tester) async {
+        await mountWidget(
+          const WnAvatar(size: WnAvatarSize.xSmall),
+          tester,
+        );
+        expect(find.byType(WnIcon), findsOneWidget);
+      });
+
+      testWidgets('does not show edit button for xSmall size even with onEditTap', (tester) async {
+        await mountWidget(
+          WnAvatar(
+            displayName: 'alice',
+            size: WnAvatarSize.xSmall,
+            onEditTap: () {},
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('avatar_edit_button')), findsNothing);
+      });
+
+      testWidgets('does not show pin badge for xSmall size even with showPinned', (tester) async {
+        await mountWidget(
+          const WnAvatar(
+            displayName: 'alice',
+            size: WnAvatarSize.xSmall,
+            showPinned: true,
+          ),
+          tester,
+        );
+        expect(find.byKey(const Key('avatar_pin_badge')), findsNothing);
+      });
+
+      testWidgets('renders image at xSmall size', (tester) async {
+        await mountWidget(
+          WnAvatar(
+            imageProvider: _SuccessImageProvider(),
+            size: WnAvatarSize.xSmall,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+        expect(find.byType(Image), findsNWidgets(2));
+      });
+
+      testWidgets('applies color at xSmall size', (tester) async {
+        await mountWidget(
+          const WnAvatar(
+            displayName: 'alice',
+            size: WnAvatarSize.xSmall,
+            color: AvatarColor.cyan,
+          ),
           tester,
         );
 
+        final container = tester.widget<Container>(find.byKey(const Key('avatar_container')));
+        final decoration = container.decoration! as BoxDecoration;
+
+        expect(decoration.color, SemanticColors.light.accent.cyan.fill);
+      });
+    });
+
+    group('edit button', () {
+      testWidgets('does not show edit button when onEditTap is null', (tester) async {
+        await mountWidget(const WnAvatar(), tester);
         expect(find.byKey(const Key('avatar_edit_button')), findsNothing);
       });
 
