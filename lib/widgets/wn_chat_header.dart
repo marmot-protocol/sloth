@@ -7,18 +7,16 @@ import 'package:whitenoise/widgets/wn_icon.dart';
 class WnChatHeader extends StatelessWidget {
   const WnChatHeader({
     super.key,
-    required this.mlsGroupId,
     required this.displayName,
+    required this.avatarColor,
     this.pictureUrl,
-    this.peerPubkey,
     required this.onBack,
     required this.onMenuTap,
   });
 
-  final String mlsGroupId;
   final String displayName;
+  final AvatarColor avatarColor;
   final String? pictureUrl;
-  final String? peerPubkey;
   final VoidCallback onBack;
   final VoidCallback onMenuTap;
 
@@ -42,7 +40,7 @@ class WnChatHeader extends StatelessWidget {
         WnAvatar(
           pictureUrl: pictureUrl,
           displayName: displayName,
-          color: AvatarColor.fromPubkey(peerPubkey ?? mlsGroupId),
+          color: avatarColor,
         ),
         SizedBox(width: 12.w),
         Expanded(
