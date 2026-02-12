@@ -432,6 +432,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color shadow;
   final Color overlayPrimary;
   final Color overlaySecondary;
+  final Color overlayTertiary;
   final Color qrCode;
   final SemanticAccentColors accent;
 
@@ -480,6 +481,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.shadow,
     required this.overlayPrimary,
     required this.overlaySecondary,
+    required this.overlayTertiary,
     required this.qrCode,
     required this.accent,
   });
@@ -529,6 +531,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     shadow: _BaseColors.black,
     overlayPrimary: _WhiteAlphaColors.whiteAlpha500,
     overlaySecondary: _WhiteAlphaColors.whiteAlpha500,
+    overlayTertiary: _BlackAlphaColors.blackAlpha500,
     qrCode: _NeutralColors.neutral950,
     accent: _lightAccentColors,
   );
@@ -578,6 +581,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     shadow: _BaseColors.black,
     overlayPrimary: _BlackAlphaColors.blackAlpha50,
     overlaySecondary: _BlackAlphaColors.blackAlpha500,
+    overlayTertiary: _BlackAlphaColors.blackAlpha500,
     qrCode: _BaseColors.white,
     accent: _darkAccentColors,
   );
@@ -628,6 +632,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? shadow,
     Color? overlayPrimary,
     Color? overlaySecondary,
+    Color? overlayTertiary,
     Color? qrCode,
     SemanticAccentColors? accent,
   }) {
@@ -678,6 +683,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       shadow: shadow ?? this.shadow,
       overlayPrimary: overlayPrimary ?? this.overlayPrimary,
       overlaySecondary: overlaySecondary ?? this.overlaySecondary,
+      overlayTertiary: overlayTertiary ?? this.overlayTertiary,
       qrCode: qrCode ?? this.qrCode,
       accent: accent ?? this.accent,
     );
@@ -787,6 +793,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       shadow: Color.lerp(shadow, other.shadow, t)!,
       overlayPrimary: Color.lerp(overlayPrimary, other.overlayPrimary, t)!,
       overlaySecondary: Color.lerp(overlaySecondary, other.overlaySecondary, t)!,
+      overlayTertiary: Color.lerp(overlayTertiary, other.overlayTertiary, t)!,
       qrCode: Color.lerp(qrCode, other.qrCode, t)!,
       accent: SemanticAccentColors.lerp(accent, other.accent, t),
     );
