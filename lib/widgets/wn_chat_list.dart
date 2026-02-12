@@ -83,7 +83,7 @@ class WnChatList extends HookWidget {
         headerRevealController.animateTo(1.0, curve: Curves.easeOut);
       }
       return null;
-    }, [isSearchActive]);
+    }, [isSearchActive, hasHeader]);
 
     void updateScrollState(ScrollMetrics metrics) {
       final newValue = metrics.extentBefore > 0;
