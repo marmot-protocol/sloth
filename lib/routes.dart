@@ -29,6 +29,7 @@ import 'package:whitenoise/screens/start_chat_screen.dart' show StartChatScreen;
 import 'package:whitenoise/screens/switch_profile_screen.dart' show SwitchProfileScreen;
 import 'package:whitenoise/screens/user_search_screen.dart' show UserSearchScreen;
 import 'package:whitenoise/screens/wip_screen.dart' show WipScreen;
+import 'package:whitenoise/src/rust/api/metadata.dart' show FlutterMetadata;
 import 'package:whitenoise/widgets/wn_slate_content_transition.dart' show WnSlateContentTransition;
 
 abstract final class Routes {
@@ -218,7 +219,10 @@ abstract final class Routes {
           path: _startChat,
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
-            child: StartChatScreen(userPubkey: state.pathParameters['userPubkey']!),
+            child: StartChatScreen(
+              userPubkey: state.pathParameters['userPubkey']!,
+              initialMetadata: state.extra as FlutterMetadata?,
+            ),
           ),
         ),
         GoRoute(
@@ -380,7 +384,15 @@ abstract final class Routes {
     GoRouter.of(context).pushNamed('chatInfo', pathParameters: {'userPubkey': userPubkey});
   }
 
-  static void pushToStartChat(BuildContext context, String userPubkey) {
-    GoRouter.of(context).pushNamed('startChat', pathParameters: {'userPubkey': userPubkey});
+  static void pushToStartChat(
+    BuildContext context,
+    String userPubkey, {
+    FlutterMetadata? metadata,
+  }) {
+    GoRouter.of(context).pushNamed(
+      'startChat',
+      pathParameters: {'userPubkey': userPubkey},
+      extra: metadata,
+    );
   }
 }

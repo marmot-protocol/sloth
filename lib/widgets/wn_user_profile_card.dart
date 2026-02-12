@@ -4,7 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/utils/formatting.dart';
-import 'package:whitenoise/utils/metadata.dart';
+import 'package:whitenoise/utils/metadata.dart' show presentName, sanitizeForDisplay;
 import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_copy_card.dart';
 
@@ -49,7 +49,7 @@ class WnUserProfileCard extends StatelessWidget {
         if (metadata?.nip05 != null && metadata!.nip05!.isNotEmpty) ...[
           Gap(4.h),
           Text(
-            metadata!.nip05!,
+            sanitizeForDisplay(metadata!.nip05!),
             style: typography.medium14.copyWith(color: colors.backgroundContentTertiary),
             textAlign: TextAlign.center,
           ),
@@ -57,9 +57,11 @@ class WnUserProfileCard extends StatelessWidget {
         if (metadata?.about != null && metadata!.about!.isNotEmpty) ...[
           Gap(16.h),
           Text(
-            metadata!.about!,
+            sanitizeForDisplay(metadata!.about!),
             style: typography.medium14.copyWith(color: colors.backgroundContentSecondary),
             textAlign: TextAlign.center,
+            maxLines: 10,
+            overflow: TextOverflow.ellipsis,
           ),
         ],
         if (npub != null) ...[

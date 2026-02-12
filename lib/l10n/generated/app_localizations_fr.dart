@@ -324,6 +324,9 @@ class AppLocalizationsFr extends AppLocalizations {
   String get noFollowsYet => 'Pas encore d\'abonnements';
 
   @override
+  String get searchByNameOrNpub => 'Nom ou npub1...';
+
+  @override
   String get developerSettingsTitle => 'Paramètres Développeur';
 
   @override

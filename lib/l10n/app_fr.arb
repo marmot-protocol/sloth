@@ -98,6 +98,7 @@
   "startNewChat": "Nouvelle discussion",
   "noResults": "Aucun résultat",
   "noFollowsYet": "Pas encore d'abonnements",
+  "searchByNameOrNpub": "Nom ou npub1...",
   "developerSettingsTitle": "Paramètres Développeur",
   "publishNewKeyPackage": "Publier un Nouveau Paquet de Clés",
   "refreshKeyPackages": "Actualiser les Paquets de Clés",

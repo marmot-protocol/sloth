@@ -38,9 +38,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Delete all data [PR #225](https://github.com/marmot-protocol/whitenoise/pull/225)
 - Replies [PR #179](https://github.com/marmot-protocol/whitenoise/pull/179)
 - Replies scroll [PR #202](https://github.com/marmot-protocol/whitenoise/pull/202)
+- Search users by name with batched streaming results [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Loading indicator in search field during name search [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Pass metadata to start chat screen for instant display [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
 - Invite callout [PR #230](https://github.com/marmot-protocol/whitenoise/pull/230)
 
 ### Changed
+
+- Redesign user list tile to match profile switcher pattern [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Sort follows list: users with metadata alphabetically first, then users without [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Periodically refresh follows list to pick up background metadata updates [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Truncate long about text to 10 lines in user profile card [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
 
 - Replace all snackbars with system notice [PR #168](https://github.com/marmot-protocol/sloth/pull/168)
 - Use large size for login and signup buttons [PR #165](https://github.com/marmot-protocol/sloth/pull/165)
@@ -62,6 +70,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes sign out exception and adds dedicated sign out screen with private key backup [PR #45](https://github.com/marmot-protocol/sloth/pull/45)
 - QR code color now uses theme-aware color [PR #183](https://github.com/marmot-protocol/sloth/pull/183)
 - DM avatar color inconsistency [PR #199](https://github.com/marmot-protocol/sloth/pull/199)
+- Sanitize malformed UTF-16 in user metadata to prevent rendering crashes [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
 - Lock app orientation to portrait mode [PR #235](https://github.com/marmot-protocol/whitenoise/pull/235)
 
 ### Security

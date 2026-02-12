@@ -325,6 +325,9 @@ class AppLocalizationsEs extends AppLocalizations {
   String get noFollowsYet => 'Aún no hay seguidos';
 
   @override
+  String get searchByNameOrNpub => 'Nombre o npub1...';
+
+  @override
   String get developerSettingsTitle => 'Ajustes de Desarrollador';
 
   @override

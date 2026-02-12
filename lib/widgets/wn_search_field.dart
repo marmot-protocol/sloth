@@ -11,6 +11,7 @@ class WnSearchField extends StatelessWidget {
     this.onChanged,
     this.autofocus = false,
     this.onScan,
+    this.isLoading = false,
   });
 
   final String placeholder;
@@ -18,11 +19,44 @@ class WnSearchField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final bool autofocus;
   final VoidCallback? onScan;
+  final bool isLoading;
 
   @override
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typographyScaled;
+
+    final Widget? suffixWidget;
+    if (isLoading) {
+      suffixWidget = Padding(
+        padding: EdgeInsets.only(right: 14.w),
+        child: SizedBox(
+          key: const Key('search_loading_indicator'),
+          width: 16.w,
+          height: 16.h,
+          child: CircularProgressIndicator(
+            strokeWidth: 2.w,
+            color: colors.backgroundContentTertiary,
+            strokeCap: StrokeCap.round,
+          ),
+        ),
+      );
+    } else if (onScan != null) {
+      suffixWidget = GestureDetector(
+        key: const Key('scan_button'),
+        onTap: onScan,
+        child: Padding(
+          padding: EdgeInsets.only(right: 14.w),
+          child: WnIcon(
+            WnIcons.scan,
+            size: 20.sp,
+            color: colors.backgroundContentTertiary,
+          ),
+        ),
+      );
+    } else {
+      suffixWidget = null;
+    }
 
     return TextField(
       controller: controller,
@@ -42,20 +76,7 @@ class WnSearchField extends StatelessWidget {
           ),
         ),
         prefixIconConstraints: const BoxConstraints(),
-        suffixIcon: onScan != null
-            ? GestureDetector(
-                key: const Key('scan_button'),
-                onTap: onScan,
-                child: Padding(
-                  padding: EdgeInsets.only(right: 14.w),
-                  child: WnIcon(
-                    WnIcons.scan,
-                    size: 20.sp,
-                    color: colors.backgroundContentTertiary,
-                  ),
-                ),
-              )
-            : null,
+        suffixIcon: suffixWidget,
         suffixIconConstraints: const BoxConstraints(),
         filled: true,
         fillColor: colors.backgroundPrimary,

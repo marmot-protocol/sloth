@@ -510,6 +510,11 @@
     "description": "Message when user has no follows"
   },
 
+  "searchByNameOrNpub": "Name or npub1...",
+  "@searchByNameOrNpub": {
+    "description": "User search field placeholder"
+  },
+
   "developerSettingsTitle": "Developer Settings",
   "@developerSettingsTitle": {
     "description": "Developer settings screen title"

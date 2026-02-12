@@ -137,6 +137,7 @@ void main() {
   Future<void> pumpStartChatScreen(
     WidgetTester tester, {
     required String userPubkey,
+    FlutterMetadata? initialMetadata,
   }) async {
     setUpTestView(tester);
     await mountTestApp(
@@ -144,7 +145,11 @@ void main() {
       overrides: [authProvider.overrideWith(() => _MockAuthNotifier())],
     );
     await tester.pumpAndSettle();
-    Routes.pushToStartChat(tester.element(find.byType(Scaffold)), userPubkey);
+    Routes.pushToStartChat(
+      tester.element(find.byType(Scaffold)),
+      userPubkey,
+      metadata: initialMetadata,
+    );
     await tester.pumpAndSettle();
   }
 
@@ -210,6 +215,20 @@ void main() {
       testWidgets('displays about', (tester) async {
         await pumpStartChatScreen(tester, userPubkey: _otherPubkey);
         expect(find.text('I love Nostr!'), findsOneWidget);
+      });
+    });
+
+    group('with initialMetadata', () {
+      testWidgets('displays name from initialMetadata when API returns empty', (tester) async {
+        await pumpStartChatScreen(
+          tester,
+          userPubkey: _otherPubkey,
+          initialMetadata: const FlutterMetadata(
+            displayName: 'Bob',
+            custom: {},
+          ),
+        );
+        expect(find.text('Bob'), findsOneWidget);
       });
     });
 

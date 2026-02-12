@@ -98,6 +98,7 @@
   "startNewChat": "Neuen Chat starten",
   "noResults": "Keine Ergebnisse",
   "noFollowsYet": "Noch keine Follows",
+  "searchByNameOrNpub": "Name oder npub1...",
   "developerSettingsTitle": "Entwicklereinstellungen",
   "publishNewKeyPackage": "Neues Schlüsselpaket veröffentlichen",
   "refreshKeyPackages": "Schlüsselpakete aktualisieren",
