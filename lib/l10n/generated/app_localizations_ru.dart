@@ -287,6 +287,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get startConversation => 'Начните разговор';
 
   @override
+  String get welcomeNoticeTitle => 'Ваш профиль готов';
+
+  @override
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startNewChat) {
+    return 'Нажмите $findPeople, чтобы найти друзей. $shareProfile, чтобы связаться со знакомыми, или $startNewChat, используя иконку чата.';
+  }
+
+  @override
+  String get findPeople => 'Найти людей';
+
+  @override
+  String get startNewChat => 'Новый чат';
+
+  @override
   String get noMessagesYet => 'Пока нет сообщений';
 
   @override
@@ -313,9 +327,6 @@ class AppLocalizationsRu extends AppLocalizations {
   String failedToDeclineInvitation(String error) {
     return 'Не удалось отклонить приглашение: $error';
   }
-
-  @override
-  String get startNewChat => 'Новый чат';
 
   @override
   String get noResults => 'Нет результатов';

@@ -630,6 +630,30 @@ abstract class AppLocalizations {
   /// **'Start a conversation'**
   String get startConversation;
 
+  /// Title for welcome notice shown on empty chat list after signup
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is ready'**
+  String get welcomeNoticeTitle;
+
+  /// Description for welcome notice shown on empty chat list
+  ///
+  /// In en, this message translates to:
+  /// **'Tap {findPeople} to find your friends. {shareProfile} to connect with people you know, or {startNewChat} using the chat plus icon.'**
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startNewChat);
+
+  /// Button text to find/search for people
+  ///
+  /// In en, this message translates to:
+  /// **'Find people'**
+  String get findPeople;
+
+  /// User search screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Start new chat'**
+  String get startNewChat;
+
   /// Empty state for chat screen
   ///
   /// In en, this message translates to:
@@ -677,12 +701,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to decline invitation: {error}'**
   String failedToDeclineInvitation(String error);
-
-  /// User search screen title
-  ///
-  /// In en, this message translates to:
-  /// **'Start new chat'**
-  String get startNewChat;
 
   /// Empty search results message
   ///

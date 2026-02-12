@@ -286,6 +286,20 @@ class AppLocalizationsEn extends AppLocalizations {
   String get startConversation => 'Start a conversation';
 
   @override
+  String get welcomeNoticeTitle => 'Your profile is ready';
+
+  @override
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startNewChat) {
+    return 'Tap $findPeople to find your friends. $shareProfile to connect with people you know, or $startNewChat using the chat plus icon.';
+  }
+
+  @override
+  String get findPeople => 'Find people';
+
+  @override
+  String get startNewChat => 'Start new chat';
+
+  @override
   String get noMessagesYet => 'No messages yet';
 
   @override
@@ -312,9 +326,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToDeclineInvitation(String error) {
     return 'Failed to decline invitation: $error';
   }
-
-  @override
-  String get startNewChat => 'Start new chat';
 
   @override
   String get noResults => 'No results';
