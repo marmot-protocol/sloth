@@ -45,6 +45,10 @@ class MockWnApi implements RustLibApi {
   List<User> follows = [];
   bool userHasKeyPackage = true;
 
+  bool deleteAllDataCalled = false;
+  bool deleteAllDataShouldFail = false;
+  Duration deleteAllDataDelay = Duration.zero;
+
   @override
   Future<bool> crateApiUsersUserHasKeyPackage({
     required String pubkey,
@@ -277,6 +281,17 @@ class MockWnApi implements RustLibApi {
     }
   }
 
+  @override
+  Future<void> crateApiDeleteAllData() async {
+    deleteAllDataCalled = true;
+    if (deleteAllDataDelay > Duration.zero) {
+      await Future.delayed(deleteAllDataDelay);
+    }
+    if (deleteAllDataShouldFail) {
+      throw Exception('Failed to delete all data');
+    }
+  }
+
   void reset() {
     currentThemeMode = 'system';
     currentLanguage = 'system';
@@ -287,6 +302,9 @@ class MockWnApi implements RustLibApi {
     follows = [];
     getAccountsCompleter = null;
     userHasKeyPackage = true;
+    deleteAllDataCalled = false;
+    deleteAllDataShouldFail = false;
+    deleteAllDataDelay = Duration.zero;
   }
 
   @override

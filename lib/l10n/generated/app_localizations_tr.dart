@@ -690,4 +690,17 @@ class AppLocalizationsTr extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Kayıta geri dön';
+
+  @override
+  String get deleteAllData => 'Tüm Verileri Sil';
+
+  @override
+  String get deleteAllDataConfirmation => 'Tüm veriler silinsin mi?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Bu işlem, bu cihazdaki tüm sohbetlerinizi, mesajlarınızı ve ayarlarınızı kalıcı olarak silecektir. Bu işlem geri alınamaz.';
+
+  @override
+  String get deleteAllDataError => 'Tüm veriler silinemedi. Lütfen tekrar deneyin.';
 }

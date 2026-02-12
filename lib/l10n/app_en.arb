@@ -1087,5 +1087,25 @@
   "backToSignUp": "Back to sign up",
   "@backToSignUp": {
     "description": "Button to return to signup from carousel"
+  },
+
+  "deleteAllData": "Delete All Data",
+  "@deleteAllData": {
+    "description": "Button to delete all application data"
+  },
+
+  "deleteAllDataConfirmation": "Delete all data?",
+  "@deleteAllDataConfirmation": {
+    "description": "Confirmation dialog title for delete all data"
+  },
+
+  "deleteAllDataWarning": "This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.",
+  "@deleteAllDataWarning": {
+    "description": "Warning message for delete all data action"
+  },
+
+  "deleteAllDataError": "Failed to delete all data. Please try again.",
+  "@deleteAllDataError": {
+    "description": "Error message when data deletion fails"
   }
 }

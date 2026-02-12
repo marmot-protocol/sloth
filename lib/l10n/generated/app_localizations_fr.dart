@@ -694,4 +694,18 @@ class AppLocalizationsFr extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Retour à l\'inscription';
+
+  @override
+  String get deleteAllData => 'Supprimer Toutes les Données';
+
+  @override
+  String get deleteAllDataConfirmation => 'Supprimer toutes les données ?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Cela supprimera définitivement tous vos chats, messages et paramètres de cet appareil. Cette action ne peut pas être annulée.';
+
+  @override
+  String get deleteAllDataError =>
+      'Échec de la suppression de toutes les données. Veuillez réessayer.';
 }

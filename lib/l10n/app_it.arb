@@ -206,5 +206,9 @@
   "carouselDecentralizedTitle": "Decentralizzato e senza permessi",
   "carouselDecentralizedDescription": "Nessuna autorità centrale controlla la tua comunicazione – nessun permesso necessario, nessuna censura possibile.",
   "learnMore": "Scopri di più",
-  "backToSignUp": "Torna alla registrazione"
+  "backToSignUp": "Torna alla registrazione",
+  "deleteAllData": "Elimina Tutti i Dati",
+  "deleteAllDataConfirmation": "Eliminare tutti i dati?",
+  "deleteAllDataWarning": "Questo eliminerà permanentemente tutte le tue chat, messaggi e impostazioni da questo dispositivo. Questa azione non può essere annullata.",
+  "deleteAllDataError": "Impossibile eliminare tutti i dati. Riprova."
 }
