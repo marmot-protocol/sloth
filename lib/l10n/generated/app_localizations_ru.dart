@@ -494,7 +494,12 @@ class AppLocalizationsRu extends AppLocalizations {
   String get failedToStartChat => 'Не удалось начать чат. Попробуйте снова.';
 
   @override
-  String get userNotOnWhiteNoise => 'Этот пользователь ещё не в White Noise.';
+  String get inviteToWhiteNoise => 'Пригласить в White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name ещё не в White Noise. Поделитесь приложением, чтобы начать безопасный чат.';
+  }
 
   @override
   String get failedToUpdateFollow => 'Не удалось обновить статус подписки. Попробуйте снова.';

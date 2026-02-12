@@ -960,11 +960,17 @@ abstract class AppLocalizations {
   /// **'Failed to start chat. Please try again.'**
   String get failedToStartChat;
 
-  /// Message shown when user has no key packages
+  /// Callout title when user is not on White Noise
   ///
   /// In en, this message translates to:
-  /// **'This user is not on White Noise yet.'**
-  String get userNotOnWhiteNoise;
+  /// **'Invite to White Noise'**
+  String get inviteToWhiteNoise;
+
+  /// Callout description when user is not on White Noise
+  ///
+  /// In en, this message translates to:
+  /// **'{name} isn\'t on White Noise yet. Share the app to start a secure chat.'**
+  String inviteToWhiteNoiseDescription(String name);
 
   /// Error when follow or unfollow action fails
   ///
