@@ -12,7 +12,9 @@ import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/src/rust/api/groups.dart' as groups_api;
+import 'package:whitenoise/src/rust/api/metadata.dart' show FlutterMetadata;
 import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/metadata.dart' show presentName;
 import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
@@ -22,9 +24,10 @@ import 'package:whitenoise/widgets/wn_user_profile_card.dart';
 final _logger = Logger('StartChatScreen');
 
 class StartChatScreen extends HookConsumerWidget {
-  const StartChatScreen({super.key, required this.userPubkey});
+  const StartChatScreen({super.key, required this.userPubkey, this.initialMetadata});
 
   final String userPubkey;
+  final FlutterMetadata? initialMetadata;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -42,7 +45,9 @@ class StartChatScreen extends HookConsumerWidget {
       userPubkey: userPubkey,
     );
 
-    final metadata = metadataSnapshot.data;
+    final fetchedMetadata = metadataSnapshot.data;
+    final hasContent = fetchedMetadata != null && presentName(fetchedMetadata) != null;
+    final metadata = hasContent ? fetchedMetadata : (initialMetadata ?? fetchedMetadata);
     final isLoading =
         metadataSnapshot.connectionState == ConnectionState.waiting ||
         keyPackageSnapshot.connectionState == ConnectionState.waiting ||

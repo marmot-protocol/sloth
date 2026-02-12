@@ -98,6 +98,7 @@
   "startNewChat": "Yeni sohbet",
   "noResults": "Sonuç yok",
   "noFollowsYet": "Henüz takip yok",
+  "searchByNameOrNpub": "Ad veya npub1...",
   "developerSettingsTitle": "Geliştirici Ayarları",
   "publishNewKeyPackage": "Yeni Anahtar Paketi Yayınla",
   "refreshKeyPackages": "Anahtar Paketlerini Yenile",

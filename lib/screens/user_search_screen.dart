@@ -13,6 +13,7 @@ import 'package:whitenoise/utils/formatting.dart' show formatPublicKey, npubFrom
 import 'package:whitenoise/utils/metadata.dart' show presentName;
 import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_fade_overlay.dart';
+import 'package:whitenoise/widgets/wn_middle_ellipsis_text.dart';
 import 'package:whitenoise/widgets/wn_search_field.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
@@ -50,10 +51,11 @@ class UserSearchScreen extends HookConsumerWidget {
                 children: [
                   Gap(16.h),
                   WnSearchField(
-                    placeholder: 'npub1...',
+                    placeholder: context.l10n.searchByNameOrNpub,
                     controller: searchController,
                     onChanged: (value) => searchQuery.value = value,
                     onScan: () => Routes.pushToScanNpub(context),
+                    isLoading: state.isSearching,
                   ),
                   Expanded(
                     child: state.isLoading
@@ -83,7 +85,11 @@ class UserSearchScreen extends HookConsumerWidget {
                                   final user = state.users[index];
                                   return _UserListTile(
                                     user: user,
-                                    onTap: () => Routes.pushToStartChat(context, user.pubkey),
+                                    onTap: () => Routes.pushToStartChat(
+                                      context,
+                                      user.pubkey,
+                                      metadata: user.metadata,
+                                    ),
                                   );
                                 },
                               ),
@@ -116,39 +122,55 @@ class _UserListTile extends StatelessWidget {
     final colors = context.colors;
     final typography = context.typographyScaled;
     final displayName = presentName(user.metadata);
-    final hasDisplayName = displayName != null;
     final formattedPubKey = formatPublicKey(npubFromHex(user.pubkey) ?? user.pubkey);
 
-    return ListTile(
+    return GestureDetector(
       onTap: onTap,
-      contentPadding: EdgeInsets.zero,
-      leading: WnAvatar(
-        pictureUrl: user.metadata.picture,
-        displayName: displayName,
-        color: AvatarColor.fromPubkey(user.pubkey),
-      ),
-      title: hasDisplayName
-          ? Text(
-              displayName,
-              style: typography.semiBold16.copyWith(
-                color: colors.backgroundContentPrimary,
-              ),
-              overflow: TextOverflow.ellipsis,
-            )
-          : Text(
-              formattedPubKey,
-              style: typography.medium12.copyWith(
-                color: colors.backgroundContentTertiary,
+      behavior: HitTestBehavior.opaque,
+      child: Padding(
+        padding: EdgeInsets.symmetric(vertical: 10.h),
+        child: Row(
+          children: [
+            WnAvatar(
+              size: WnAvatarSize.medium,
+              pictureUrl: user.metadata.picture,
+              displayName: displayName,
+              color: AvatarColor.fromPubkey(user.pubkey),
+            ),
+            Gap(8.w),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  if (displayName != null)
+                    Text(
+                      displayName,
+                      style: typography.medium16.copyWith(
+                        color: colors.backgroundContentPrimary,
+                      ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    )
+                  else
+                    WnMiddleEllipsisText(
+                      text: formattedPubKey,
+                      style: typography.medium16.copyWith(
+                        color: colors.backgroundContentPrimary,
+                      ),
+                    ),
+                  Gap(4.h),
+                  WnMiddleEllipsisText(
+                    text: formattedPubKey,
+                    style: typography.medium12.copyWith(
+                      color: colors.backgroundContentSecondary,
+                    ),
+                  ),
+                ],
               ),
             ),
-      subtitle: hasDisplayName
-          ? Text(
-              formattedPubKey,
-              style: typography.medium14.copyWith(
-                color: colors.backgroundContentTertiary,
-              ),
-            )
-          : null,
+          ],
+        ),
+      ),
     );
   }
 }

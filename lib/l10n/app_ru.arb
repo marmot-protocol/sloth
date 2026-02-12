@@ -98,6 +98,7 @@
   "startNewChat": "Новый чат",
   "noResults": "Нет результатов",
   "noFollowsYet": "Пока нет подписок",
+  "searchByNameOrNpub": "Имя или npub1...",
   "developerSettingsTitle": "Настройки Разработчика",
   "publishNewKeyPackage": "Опубликовать Новый Пакет Ключей",
   "refreshKeyPackages": "Обновить Пакеты Ключей",

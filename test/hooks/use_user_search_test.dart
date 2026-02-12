@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/hooks/use_user_search.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/user_search.dart';
 import 'package:whitenoise/src/rust/api/users.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import '../mocks/mock_wn_api.dart';
@@ -24,6 +25,20 @@ User _userFactory(
   updatedAt: DateTime(2024),
 );
 
+UserSearchResult _searchResultFactory(
+  String pubkey, {
+  String? displayName,
+  MatchQuality matchQuality = MatchQuality.exact,
+  MatchedField bestField = MatchedField.name,
+}) => UserSearchResult(
+  pubkey: pubkey,
+  metadata: FlutterMetadata(displayName: displayName, custom: const {}),
+  radius: 0,
+  matchQuality: matchQuality,
+  bestField: bestField,
+  matchedFields: [bestField],
+);
+
 class _MockApi extends MockWnApi {
   Completer<List<User>>? followsCompleter;
   final Map<String, User> userByPubkey = {};
@@ -33,6 +48,7 @@ class _MockApi extends MockWnApi {
   Completer<User>? userCompleter;
   final userCalls = <({String pubkey, bool blocking})>[];
   final followsCalls = <String>[];
+  final searchUsersCalls = <({String query, String accountPubkey})>[];
 
   @override
   Future<List<User>> crateApiAccountsAccountFollows({required String pubkey}) {
@@ -64,6 +80,22 @@ class _MockApi extends MockWnApi {
   }
 
   @override
+  Stream<UserSearchUpdate> crateApiUserSearchSearchUsers({
+    required String accountPubkey,
+    required String query,
+    required int radiusStart,
+    required int radiusEnd,
+  }) {
+    searchUsersCalls.add((query: query, accountPubkey: accountPubkey));
+    return super.crateApiUserSearchSearchUsers(
+      accountPubkey: accountPubkey,
+      query: query,
+      radiusStart: radiusStart,
+      radiusEnd: radiusEnd,
+    );
+  }
+
+  @override
   void reset() {
     super.reset();
     followsCompleter = null;
@@ -74,6 +106,7 @@ class _MockApi extends MockWnApi {
     userCompleter = null;
     userCalls.clear();
     followsCalls.clear();
+    searchUsersCalls.clear();
   }
 }
 
@@ -156,16 +189,6 @@ void main() {
           await tester.pump();
 
           expect(getState().hasSearchQuery, isFalse);
-        });
-      });
-
-      group('when query does not start with npub1', () {
-        testWidgets('returns empty list with hasSearchQuery true', (tester) async {
-          await pump(tester, searchQuery: 'some random text');
-          await tester.pump();
-
-          expect(getState().users, isEmpty);
-          expect(getState().hasSearchQuery, isTrue);
         });
       });
 
@@ -295,6 +318,337 @@ void main() {
 
         expect(getState().users.length, 1);
         expect(getState().users[0].pubkey, testPubkeyA);
+      });
+    });
+
+    group('sorting', () {
+      testWidgets('sorts users with metadata before users without', (tester) async {
+        api.follows = [
+          _userFactory(testPubkeyA),
+          _userFactory(testPubkeyB, displayName: 'Bob'),
+          _userFactory(testPubkeyC, displayName: 'Alice'),
+        ];
+        await pump(tester);
+        await tester.pump();
+
+        expect(getState().users[0].pubkey, testPubkeyC);
+        expect(getState().users[1].pubkey, testPubkeyB);
+        expect(getState().users[2].pubkey, testPubkeyA);
+      });
+
+      testWidgets('sorts users with metadata alphabetically', (tester) async {
+        api.follows = [
+          _userFactory(testPubkeyA, displayName: 'Charlie'),
+          _userFactory(testPubkeyB, displayName: 'Alice'),
+          _userFactory(testPubkeyC, displayName: 'Bob'),
+        ];
+        await pump(tester);
+        await tester.pump();
+
+        expect(getState().users[0].metadata.displayName, 'Alice');
+        expect(getState().users[1].metadata.displayName, 'Bob');
+        expect(getState().users[2].metadata.displayName, 'Charlie');
+      });
+
+      testWidgets('alphabetical sort is case-insensitive', (tester) async {
+        api.follows = [
+          _userFactory(testPubkeyA, displayName: 'bob'),
+          _userFactory(testPubkeyB, displayName: 'Alice'),
+        ];
+        await pump(tester);
+        await tester.pump();
+
+        expect(getState().users[0].metadata.displayName, 'Alice');
+        expect(getState().users[1].metadata.displayName, 'bob');
+      });
+
+      testWidgets('preserves sort after periodic refresh', (tester) async {
+        api.follows = [
+          _userFactory(testPubkeyA),
+          _userFactory(testPubkeyB, displayName: 'Zara'),
+        ];
+        await pump(tester);
+        await tester.pump();
+
+        expect(getState().users[0].pubkey, testPubkeyB);
+        expect(getState().users[1].pubkey, testPubkeyA);
+
+        api.follows = [
+          _userFactory(testPubkeyA, displayName: 'Alice'),
+          _userFactory(testPubkeyB, displayName: 'Zara'),
+        ];
+        await tester.pump(const Duration(seconds: 5));
+        await tester.pump();
+
+        expect(getState().users[0].metadata.displayName, 'Alice');
+        expect(getState().users[1].metadata.displayName, 'Zara');
+      });
+    });
+
+    group('name search', () {
+      testWidgets('triggers name search for non-npub query after debounce', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        expect(getState().hasSearchQuery, isTrue);
+
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        expect(api.searchUsersCalls.length, 1);
+        expect(api.searchUsersCalls[0].query, 'alice');
+      });
+
+      testWidgets('returns users from search results', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'Alice')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+
+        expect(getState().users.length, 1);
+        expect(getState().users[0].pubkey, testPubkeyA);
+        expect(getState().users[0].metadata.displayName, 'Alice');
+        expect(getState().isLoading, isFalse);
+      });
+
+      testWidgets('sorts results by match quality', (tester) async {
+        await pump(tester, searchQuery: 'bob');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [
+              _searchResultFactory(
+                testPubkeyB,
+                displayName: 'Bobby',
+                matchQuality: MatchQuality.contains,
+              ),
+              _searchResultFactory(
+                testPubkeyA,
+                displayName: 'Bob',
+              ),
+            ],
+            totalResultCount: BigInt.two,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+
+        expect(getState().users.length, 2);
+        expect(getState().users[0].pubkey, testPubkeyA);
+        expect(getState().users[1].pubkey, testPubkeyB);
+      });
+
+      testWidgets('batches rapid updates into single rebuild', (tester) async {
+        await pump(tester, searchQuery: 'test');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'TestA')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [
+              _searchResultFactory(
+                testPubkeyB,
+                displayName: 'TestB',
+                matchQuality: MatchQuality.prefix,
+              ),
+            ],
+            totalResultCount: BigInt.two,
+          ),
+        );
+        await tester.pump();
+        expect(getState().users, isEmpty);
+
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+        expect(getState().users.length, 2);
+      });
+
+      testWidgets('deduplicates results keeping best match quality', (tester) async {
+        await pump(tester, searchQuery: 'test');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [
+              _searchResultFactory(
+                testPubkeyA,
+                displayName: 'TestA',
+                matchQuality: MatchQuality.contains,
+              ),
+            ],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [
+              _searchResultFactory(
+                testPubkeyA,
+                displayName: 'TestA',
+              ),
+            ],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+
+        expect(getState().users.length, 1);
+        expect(getState().users[0].pubkey, testPubkeyA);
+      });
+
+      testWidgets('shows empty results when search completes with no results', (tester) async {
+        await pump(tester, searchQuery: 'zzzzz');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: SearchUpdateTrigger.searchCompleted(
+              finalRadius: 2,
+              totalResults: BigInt.zero,
+            ),
+            newResults: const [],
+            totalResultCount: BigInt.zero,
+          ),
+        );
+        await tester.pump();
+
+        expect(getState().users, isEmpty);
+        expect(getState().isLoading, isFalse);
+        expect(getState().hasSearchQuery, isTrue);
+      });
+
+      testWidgets('isLoading is true before results arrive', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        expect(getState().isLoading, isTrue);
+        expect(getState().users, isEmpty);
+      });
+
+      testWidgets('isLoading becomes false after first batch flushes', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'Alice')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump();
+        expect(getState().isLoading, isTrue);
+
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+        expect(getState().isLoading, isFalse);
+      });
+
+      testWidgets('clears results when query is cleared', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'Alice')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+        expect(getState().users.length, 1);
+
+        await pump(tester);
+        await tester.pump();
+
+        expect(getState().hasSearchQuery, isFalse);
+      });
+
+      testWidgets('does not search before debounce period', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 100));
+
+        expect(api.searchUsersCalls, isEmpty);
+      });
+
+      testWidgets('isSearching is true while stream is active', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        expect(getState().isSearching, isTrue);
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'Alice')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+
+        expect(getState().isSearching, isTrue);
+        expect(getState().users.length, 1);
+      });
+
+      testWidgets('isSearching becomes false when stream completes', (tester) async {
+        await pump(tester, searchQuery: 'alice');
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        expect(getState().isSearching, isTrue);
+
+        api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: SearchUpdateTrigger.searchCompleted(
+              finalRadius: 2,
+              totalResults: BigInt.one,
+            ),
+            newResults: [_searchResultFactory(testPubkeyA, displayName: 'Alice')],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump();
+
+        expect(getState().isSearching, isFalse);
+      });
+
+      testWidgets('isSearching is false for non-name queries', (tester) async {
+        await pump(tester);
+        await tester.pump();
+
+        expect(getState().isSearching, isFalse);
       });
     });
   });

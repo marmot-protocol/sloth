@@ -4,7 +4,14 @@ import 'package:whitenoise/src/rust/api/users.dart' as users_api;
 
 AsyncSnapshot<bool> useUserHasKeyPackage(String pubkey) {
   final future = useMemoized(
-    () => users_api.userHasKeyPackage(pubkey: pubkey, blockingDataSync: false),
+    () async {
+      final hasKeyPackage = await users_api.userHasKeyPackage(
+        pubkey: pubkey,
+        blockingDataSync: false,
+      );
+      if (hasKeyPackage) return true;
+      return users_api.userHasKeyPackage(pubkey: pubkey, blockingDataSync: true);
+    },
     [pubkey],
   );
   return useFuture(future);

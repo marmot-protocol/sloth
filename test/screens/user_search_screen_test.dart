@@ -5,9 +5,11 @@ import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/api/user_search.dart';
 import 'package:whitenoise/src/rust/api/users.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
+import 'package:whitenoise/widgets/wn_middle_ellipsis_text.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
@@ -70,6 +72,8 @@ void main() {
     _api.userByPubkey.clear();
     _api.npubToPubkey.clear();
     _api.errorPubkeys.clear();
+    _api.searchUsersController?.close();
+    _api.searchUsersController = null;
   });
 
   Future<void> pumpUserSearchScreen(WidgetTester tester) async {
@@ -96,7 +100,7 @@ void main() {
 
     testWidgets('displays search field', (tester) async {
       await pumpUserSearchScreen(tester);
-      expect(find.text('npub1...'), findsOneWidget);
+      expect(find.text('Name or npub1...'), findsOneWidget);
       expect(find.byType(TextField), findsOneWidget);
     });
 
@@ -137,14 +141,12 @@ void main() {
 
       testWidgets('shows formatted npub as subtitle', (tester) async {
         await pumpUserSearchScreen(tester);
-        expect(
-          find.textContaining(testNpubAFormatted),
-          findsOneWidget,
-        );
-        expect(
-          find.textContaining(testNpubBFormatted),
-          findsOneWidget,
-        );
+        final ellipsisWidgets = tester
+            .widgetList<WnMiddleEllipsisText>(find.byType(WnMiddleEllipsisText))
+            .toList();
+        final texts = ellipsisWidgets.map((w) => w.text).toList();
+        expect(texts.any((t) => t.startsWith('npub 1a1b')), isTrue);
+        expect(texts.any((t) => t.startsWith('npub 1b2c')), isTrue);
       });
 
       testWidgets('passes color derived from pubkey to each avatar', (tester) async {
@@ -205,15 +207,14 @@ void main() {
         ];
       });
 
-      testWidgets('shows formatted npub as title with no subtitle', (tester) async {
+      testWidgets('shows formatted npub as both title and subtitle', (tester) async {
         await pumpUserSearchScreen(tester);
 
-        final listTile = tester.widget<ListTile>(find.byType(ListTile));
-        expect(listTile.subtitle, isNull);
-        expect(
-          find.textContaining(testNpubCFormatted.substring(0, 20)),
-          findsOneWidget,
-        );
+        final ellipsisWidgets = tester
+            .widgetList<WnMiddleEllipsisText>(find.byType(WnMiddleEllipsisText))
+            .toList();
+        final matching = ellipsisWidgets.where((w) => w.text.startsWith('npub 1c3d'));
+        expect(matching.length, 2);
       });
     });
 
@@ -233,10 +234,10 @@ void main() {
         await pumpUserSearchScreen(tester);
 
         expect(find.text('ValidName'), findsOneWidget);
-        expect(
-          find.textContaining(testNpubCFormatted.substring(0, 20)),
-          findsOneWidget,
-        );
+        final ellipsisWidgets = tester
+            .widgetList<WnMiddleEllipsisText>(find.byType(WnMiddleEllipsisText))
+            .toList();
+        expect(ellipsisWidgets.any((w) => w.text.startsWith('npub 1c3d')), isTrue);
       });
     });
 
@@ -266,11 +267,54 @@ void main() {
       });
     });
 
-    group('non-npub search', () {
-      testWidgets('shows no results for non-npub query', (tester) async {
+    group('name search', () {
+      testWidgets('shows results for name query', (tester) async {
         await pumpUserSearchScreen(tester);
-        await tester.enterText(find.byType(TextField), 'random text');
-        await tester.pumpAndSettle();
+        await tester.enterText(find.byType(TextField), 'alice');
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        _api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: const SearchUpdateTrigger.resultsFound(),
+            newResults: [
+              const UserSearchResult(
+                pubkey: testPubkeyC,
+                metadata: FlutterMetadata(displayName: 'Alice', custom: {}),
+                radius: 0,
+                matchQuality: MatchQuality.exact,
+                bestField: MatchedField.name,
+                matchedFields: [MatchedField.name],
+              ),
+            ],
+            totalResultCount: BigInt.one,
+          ),
+        );
+        await tester.pump(const Duration(milliseconds: 300));
+        await tester.pump();
+
+        expect(find.text('Alice'), findsOneWidget);
+      });
+
+      testWidgets('shows no results when search completes empty', (tester) async {
+        await pumpUserSearchScreen(tester);
+        await tester.enterText(find.byType(TextField), 'zzzznonexistent');
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
+        await tester.pump();
+
+        _api.searchUsersController!.add(
+          UserSearchUpdate(
+            trigger: SearchUpdateTrigger.searchCompleted(
+              finalRadius: 2,
+              totalResults: BigInt.zero,
+            ),
+            newResults: const [],
+            totalResultCount: BigInt.zero,
+          ),
+        );
+        await tester.pump();
 
         expect(find.text('No results'), findsOneWidget);
       });

@@ -323,6 +323,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String get noFollowsYet => 'Henüz takip yok';
 
   @override
+  String get searchByNameOrNpub => 'Ad veya npub1...';
+
+  @override
   String get developerSettingsTitle => 'Geliştirici Ayarları';
 
   @override

@@ -696,6 +696,12 @@ abstract class AppLocalizations {
   /// **'No follows yet'**
   String get noFollowsYet;
 
+  /// User search field placeholder
+  ///
+  /// In en, this message translates to:
+  /// **'Name or npub1...'**
+  String get searchByNameOrNpub;
+
   /// Developer settings screen title
   ///
   /// In en, this message translates to:

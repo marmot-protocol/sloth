@@ -324,6 +324,9 @@ class AppLocalizationsRu extends AppLocalizations {
   String get noFollowsYet => 'Пока нет подписок';
 
   @override
+  String get searchByNameOrNpub => 'Имя или npub1...';
+
+  @override
   String get developerSettingsTitle => 'Настройки Разработчика';
 
   @override
