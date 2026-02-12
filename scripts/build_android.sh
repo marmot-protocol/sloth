@@ -89,20 +89,10 @@ export CC_armv7_linux_androideabi="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$H
 export CXX_armv7_linux_androideabi="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG/bin/armv7a-linux-androideabi33-clang++"
 export AR_armv7_linux_androideabi="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG/bin/llvm-ar"
 
-# OpenSSL environment variables for Android cross-compilation
-# Point to macOS OpenSSL for the build process (sqlcipher needs headers)
-if [ -d "/opt/homebrew/opt/openssl@3" ]; then
-    export OPENSSL_DIR="/opt/homebrew/opt/openssl@3"
-    export OPENSSL_INCLUDE_DIR="/opt/homebrew/opt/openssl@3/include"
-    export OPENSSL_LIB_DIR="/opt/homebrew/opt/openssl@3/lib"
-elif [ -d "/usr/local/opt/openssl@3" ]; then
-    export OPENSSL_DIR="/usr/local/opt/openssl@3"
-    export OPENSSL_INCLUDE_DIR="/usr/local/opt/openssl@3/include"
-    export OPENSSL_LIB_DIR="/usr/local/opt/openssl@3/lib"
-fi
-
-# Use vendored OpenSSL for cross-compilation to avoid linking issues
-export OPENSSL_STATIC=1
+# Build static OpenSSL for Android targets (SQLCipher requires libcrypto)
+print_step "Building OpenSSL for Android"
+./scripts/build_openssl_android.sh
+OPENSSL_ANDROID_DIR="$PWD/rust/target/openssl/install"
 
 # Check if required tools are installed
 print_step "Checking development environment"
@@ -132,23 +122,26 @@ mkdir -p android/app/src/main/jniLibs/x86_64
 print_step "Building for Android architectures"
 cd rust
 
-# aarch64 (arm64-v8a) - 64-bit ARM
-print_step "Building for aarch64 (arm64-v8a)"
-cargo build --target aarch64-linux-android --release --quiet
-cp target/aarch64-linux-android/release/librust_lib_whitenoise.so ../android/app/src/main/jniLibs/arm64-v8a/
-print_success "Built for aarch64 (arm64-v8a)"
+# Build helper: sets per-target OpenSSL env vars and runs cargo build
+build_for_target() {
+    local target="$1"
+    local label="$2"
+    local jni_dir="$3"
 
-# armv7 (armeabi-v7a) - 32-bit ARM
-print_step "Building for armv7 (armeabi-v7a)"
-cargo build --target armv7-linux-androideabi --release --quiet
-cp target/armv7-linux-androideabi/release/librust_lib_whitenoise.so ../android/app/src/main/jniLibs/armeabi-v7a/
-print_success "Built for armv7 (armeabi-v7a)"
+    print_step "Building for $label"
+    OPENSSL_DIR="$OPENSSL_ANDROID_DIR/$target" \
+    OPENSSL_INCLUDE_DIR="$OPENSSL_ANDROID_DIR/$target/include" \
+    OPENSSL_LIB_DIR="$OPENSSL_ANDROID_DIR/$target/lib" \
+    OPENSSL_STATIC=1 \
+    OPENSSL_NO_VENDOR=1 \
+    cargo build --target "$target" --release --quiet
+    cp "target/$target/release/librust_lib_whitenoise.so" "../android/app/src/main/jniLibs/$jni_dir/"
+    print_success "Built for $label"
+}
 
-# x86_64 - 64-bit Intel
-print_step "Building for x86_64"
-cargo build --target x86_64-linux-android --release --quiet
-cp target/x86_64-linux-android/release/librust_lib_whitenoise.so ../android/app/src/main/jniLibs/x86_64/
-print_success "Built for x86_64"
+build_for_target "aarch64-linux-android" "aarch64 (arm64-v8a)" "arm64-v8a"
+build_for_target "armv7-linux-androideabi" "armv7 (armeabi-v7a)" "armeabi-v7a"
+build_for_target "x86_64-linux-android" "x86_64" "x86_64"
 
 cd ..
 

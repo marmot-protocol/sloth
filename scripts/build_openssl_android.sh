@@ -1,0 +1,138 @@
+#!/bin/bash
+
+# Build OpenSSL static libraries for Android targets
+# This is needed because libsqlite3-sys (SQLCipher) requires libcrypto,
+# and Android doesn't ship a system libcrypto.so.
+set -e
+
+print_step() {
+    echo -e "\n\033[1;34m=== $1 ===\033[0m"
+}
+
+print_success() {
+    echo -e "\033[1;32m$1\033[0m"
+}
+
+print_error() {
+    echo -e "\033[1;31m$1\033[0m"
+}
+
+# Configuration
+OPENSSL_VERSION="3.4.1"
+OPENSSL_SHA256="002a2d6b6b7f2173b7bd2b0608120b1ee1af4d4d"
+ANDROID_API=33
+
+# Resolve paths
+SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
+PROJECT_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+OPENSSL_BUILD_DIR="$PROJECT_ROOT/rust/target/openssl"
+OPENSSL_SRC_DIR="$OPENSSL_BUILD_DIR/openssl-$OPENSSL_VERSION"
+OPENSSL_INSTALL_DIR="$OPENSSL_BUILD_DIR/install"
+
+# Auto-detect Android NDK
+if [ -z "$ANDROID_NDK_HOME" ]; then
+    if [ -n "$NDK_HOME" ]; then
+        ANDROID_NDK_HOME="$NDK_HOME"
+    elif [ -n "$ANDROID_HOME" ]; then
+        NDK_DIR="$ANDROID_HOME/ndk"
+        if [ -d "$NDK_DIR" ]; then
+            NDK_VERSION=$(ls "$NDK_DIR" | sort -V | tail -n 1)
+            if [ -n "$NDK_VERSION" ]; then
+                ANDROID_NDK_HOME="$NDK_DIR/$NDK_VERSION"
+            fi
+        fi
+    fi
+fi
+
+if [ -z "$ANDROID_NDK_HOME" ] || [ ! -d "$ANDROID_NDK_HOME" ]; then
+    print_error "Android NDK not found. Set ANDROID_NDK_HOME or NDK_HOME."
+    exit 1
+fi
+
+# Detect host OS
+case "$(uname -s)" in
+    Darwin*)    HOST_TAG="darwin-x86_64" ;;
+    Linux*)     HOST_TAG="linux-x86_64" ;;
+    *)          print_error "Unsupported host OS: $(uname -s)"; exit 1 ;;
+esac
+
+TOOLCHAIN="$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/$HOST_TAG"
+
+# Target configurations: (rust_target openssl_target arch)
+TARGETS=(
+    "aarch64-linux-android:android-arm64:aarch64"
+    "armv7-linux-androideabi:android-arm:armv7a"
+    "x86_64-linux-android:android-x86_64:x86_64"
+)
+
+build_openssl_for_target() {
+    local rust_target="$1"
+    local openssl_target="$2"
+    local arch="$3"
+    local install_prefix="$OPENSSL_INSTALL_DIR/$rust_target"
+
+    # Skip if already built
+    if [ -f "$install_prefix/lib/libcrypto.a" ]; then
+        print_success "OpenSSL already built for $rust_target (skipping)"
+        return 0
+    fi
+
+    print_step "Building OpenSSL for $rust_target ($openssl_target)"
+
+    # Clean and re-extract source for each target (OpenSSL doesn't support out-of-tree builds well)
+    local build_src="$OPENSSL_BUILD_DIR/build-$rust_target"
+    rm -rf "$build_src"
+    cp -r "$OPENSSL_SRC_DIR" "$build_src"
+    cd "$build_src"
+
+    export ANDROID_NDK_ROOT="$ANDROID_NDK_HOME"
+    export PATH="$TOOLCHAIN/bin:$PATH"
+
+    ./Configure "$openssl_target" \
+        -D__ANDROID_API__=$ANDROID_API \
+        --prefix="$install_prefix" \
+        --openssldir="$install_prefix/ssl" \
+        no-shared \
+        no-tests \
+        no-ui-console \
+        no-stdio \
+        -fPIC \
+        2>&1 | tail -3
+
+    make -j"$(nproc 2>/dev/null || sysctl -n hw.ncpu)" build_libs 2>&1 | tail -3
+    make install_dev 2>&1 | tail -3
+
+    cd "$PROJECT_ROOT"
+    rm -rf "$build_src"
+
+    if [ -f "$install_prefix/lib/libcrypto.a" ]; then
+        print_success "Built OpenSSL for $rust_target"
+    else
+        print_error "Failed to build OpenSSL for $rust_target"
+        exit 1
+    fi
+}
+
+# Download OpenSSL source if needed
+if [ ! -d "$OPENSSL_SRC_DIR" ]; then
+    print_step "Downloading OpenSSL $OPENSSL_VERSION"
+    mkdir -p "$OPENSSL_BUILD_DIR"
+    cd "$OPENSSL_BUILD_DIR"
+
+    TARBALL="openssl-$OPENSSL_VERSION.tar.gz"
+    if [ ! -f "$TARBALL" ]; then
+        curl -LO "https://github.com/openssl/openssl/releases/download/openssl-$OPENSSL_VERSION/$TARBALL"
+    fi
+
+    tar xzf "$TARBALL"
+    cd "$PROJECT_ROOT"
+fi
+
+# Build for each target
+for target_spec in "${TARGETS[@]}"; do
+    IFS=':' read -r rust_target openssl_target arch <<< "$target_spec"
+    build_openssl_for_target "$rust_target" "$openssl_target" "$arch"
+done
+
+print_success "All OpenSSL Android builds complete!"
+echo "Install directory: $OPENSSL_INSTALL_DIR"
