@@ -40,6 +40,7 @@ class ChatListScreen extends HookConsumerWidget {
           WnChatList(
             itemCount: filteredChats.length,
             isLoading: isLoading,
+            isSearchActive: searchQuery.value.isNotEmpty,
             topPadding: safeAreaTop + _slateHeight.h,
             header: WnSearchAndFilters(
               onSearchChanged: (value) => searchQuery.value = value,

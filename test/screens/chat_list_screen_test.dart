@@ -267,7 +267,7 @@ void main() {
         expect(find.byType(ChatListTile), findsOneWidget);
       });
 
-      testWidgets('shows no results for non-matching query', (tester) async {
+      testWidgets('shows no results message for non-matching query', (tester) async {
         await pumpChatListScreen(tester);
         await revealSearchBar(tester);
 
@@ -275,6 +275,19 @@ void main() {
         await tester.pump();
 
         expect(find.byType(ChatListTile), findsNothing);
+        expect(find.text('No results'), findsOneWidget);
+        expect(find.text('No chats yet'), findsNothing);
+      });
+
+      testWidgets('search bar stays visible when no results match', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        await tester.enterText(find.byType(TextField), 'Zorro');
+        await tester.pump();
+
+        expect(find.byType(WnSearchAndFilters), findsOneWidget);
+        expect(find.byType(TextField), findsOneWidget);
       });
 
       testWidgets('passes onSearchChanged callback to WnSearchAndFilters', (tester) async {
