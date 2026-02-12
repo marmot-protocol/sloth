@@ -37,16 +37,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Android signer (NIP-55) support [PR #48](https://github.com/marmot-protocol/sloth/pull/48)
 - Replies [PR #179](https://github.com/marmot-protocol/whitenoise/pull/179)
 - Replies scroll [PR #202](https://github.com/marmot-protocol/whitenoise/pull/202)
-- Search users by name with batched streaming results [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
-- Loading indicator in search field during name search [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
-- Pass metadata to start chat screen for instant display [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
+- Search users by name with batched streaming results [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Loading indicator in search field during name search [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Pass metadata to start chat screen for instant display [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
 
 ### Changed
 
-- Redesign user list tile to match profile switcher pattern [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
-- Sort follows list: users with metadata alphabetically first, then users without [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
-- Periodically refresh follows list to pick up background metadata updates [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
-- Truncate long about text to 10 lines in user profile card [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
+- Redesign user list tile to match profile switcher pattern [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Sort follows list: users with metadata alphabetically first, then users without [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Periodically refresh follows list to pick up background metadata updates [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
+- Truncate long about text to 10 lines in user profile card [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
 
 - Replace all snackbars with system notice [PR #168](https://github.com/marmot-protocol/sloth/pull/168)
 - Use large size for login and signup buttons [PR #165](https://github.com/marmot-protocol/sloth/pull/165)
@@ -68,6 +68,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Fixes sign out exception and adds dedicated sign out screen with private key backup [PR #45](https://github.com/marmot-protocol/sloth/pull/45)
 - QR code color now uses theme-aware color [PR #183](https://github.com/marmot-protocol/sloth/pull/183)
 - DM avatar color inconsistency [PR #199](https://github.com/marmot-protocol/sloth/pull/199)
-- Sanitize malformed UTF-16 in user metadata to prevent rendering crashes [PR #TBD](https://github.com/marmot-protocol/whitenoise/pull/TBD)
+- Sanitize malformed UTF-16 in user metadata to prevent rendering crashes [PR #234](https://github.com/marmot-protocol/whitenoise/pull/234)
 
 ### Security
