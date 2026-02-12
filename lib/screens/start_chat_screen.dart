@@ -14,8 +14,9 @@ import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/src/rust/api/groups.dart' as groups_api;
 import 'package:whitenoise/src/rust/api/metadata.dart' show FlutterMetadata;
 import 'package:whitenoise/theme.dart';
-import 'package:whitenoise/utils/metadata.dart' show presentName;
+import 'package:whitenoise/utils/metadata.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
+import 'package:whitenoise/widgets/wn_callout.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart' show WnSystemNotice;
@@ -37,8 +38,13 @@ class StartChatScreen extends HookConsumerWidget {
     final metadataSnapshot = useUserMetadata(context, userPubkey);
     final keyPackageSnapshot = useUserHasKeyPackage(userPubkey);
     final isStartingChat = useState(false);
-    final (:noticeMessage, :noticeType, :showErrorNotice, :showSuccessNotice, :dismissNotice) =
-        useSystemNotice();
+    final (
+      :noticeMessage,
+      :noticeType,
+      :showErrorNotice,
+      :showSuccessNotice,
+      :dismissNotice,
+    ) = useSystemNotice();
 
     final followState = useFollowActions(
       accountPubkey: accountPubkey,
@@ -163,13 +169,13 @@ class StartChatScreen extends HookConsumerWidget {
                             ),
                           ),
                         ] else
-                          Text(
+                          WnCallout(
                             key: const Key('user_not_on_whitenoise'),
-                            context.l10n.userNotOnWhiteNoise,
-                            style: context.typographyScaled.medium14.copyWith(
-                              color: colors.backgroundContentSecondary,
+                            title: context.l10n.inviteToWhiteNoise,
+                            description: context.l10n.inviteToWhiteNoiseDescription(
+                              presentName(metadata) ?? context.l10n.unknownUser,
                             ),
-                            textAlign: TextAlign.center,
+                            type: CalloutType.info,
                           ),
                       ],
                     ],

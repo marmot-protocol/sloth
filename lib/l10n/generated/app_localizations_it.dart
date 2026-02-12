@@ -491,7 +491,12 @@ class AppLocalizationsIt extends AppLocalizations {
   String get failedToStartChat => 'Impossibile avviare la chat. Riprova.';
 
   @override
-  String get userNotOnWhiteNoise => 'Questo utente non è ancora su White Noise.';
+  String get inviteToWhiteNoise => 'Invita su White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name non è ancora su White Noise. Condividi l\'app per avviare una chat sicura.';
+  }
 
   @override
   String get failedToUpdateFollow => 'Impossibile aggiornare lo stato del seguito. Riprova.';
@@ -689,4 +694,17 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Torna alla registrazione';
+
+  @override
+  String get deleteAllData => 'Elimina Tutti i Dati';
+
+  @override
+  String get deleteAllDataConfirmation => 'Eliminare tutti i dati?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'Questo eliminerà permanentemente tutte le tue chat, messaggi e impostazioni da questo dispositivo. Questa azione non può essere annullata.';
+
+  @override
+  String get deleteAllDataError => 'Impossibile eliminare tutti i dati. Riprova.';
 }

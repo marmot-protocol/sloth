@@ -11,7 +11,7 @@ import 'package:whitenoise/widgets/wn_icon.dart';
 
 export 'package:whitenoise/utils/avatar_color.dart';
 
-enum WnAvatarSize { small, medium, large }
+enum WnAvatarSize { xSmall, small, medium, large }
 
 class WnAvatar extends HookWidget {
   const WnAvatar({
@@ -35,6 +35,7 @@ class WnAvatar extends HookWidget {
 
   double _getAvatarSize() {
     return switch (size) {
+      WnAvatarSize.xSmall => 36.w,
       WnAvatarSize.small => 48.w,
       WnAvatarSize.medium => 56.w,
       WnAvatarSize.large => 96.w,
@@ -43,6 +44,7 @@ class WnAvatar extends HookWidget {
 
   double _getFontSize() {
     return switch (size) {
+      WnAvatarSize.xSmall => 12.sp,
       WnAvatarSize.small => 14.sp,
       WnAvatarSize.medium => 16.sp,
       WnAvatarSize.large => 32.sp,
@@ -51,6 +53,7 @@ class WnAvatar extends HookWidget {
 
   double _getIconSize() {
     return switch (size) {
+      WnAvatarSize.xSmall => 14.w,
       WnAvatarSize.small => 16.w,
       WnAvatarSize.medium => 20.w,
       WnAvatarSize.large => 32.w,
@@ -201,6 +204,7 @@ class _InitialsContent extends StatelessWidget {
     final initials = formatInitials(displayName);
 
     final textStyle = switch (avatarSizeEnum) {
+      WnAvatarSize.xSmall => typography.semiBold12,
       WnAvatarSize.small => typography.semiBold14,
       WnAvatarSize.medium => typography.semiBold16,
       WnAvatarSize.large => typography.semiBold32,

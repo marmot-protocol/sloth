@@ -143,7 +143,8 @@
   "follow": "Takip et",
   "unfollow": "Takibi bırak",
   "failedToStartChat": "Sohbet başlatılamadı. Lütfen tekrar deneyin.",
-  "userNotOnWhiteNoise": "Bu kullanıcı henüz White Noise'da değil.",
+  "inviteToWhiteNoise": "White Noise'a Davet Et",
+  "inviteToWhiteNoiseDescription": "{name} henüz White Noise'da değil. Güvenli bir sohbet başlatmak için uygulamayı paylaşın.",
   "failedToUpdateFollow": "Takip durumu güncellenemedi. Lütfen tekrar deneyin.",
   "imagePickerError": "Görsel seçilemedi. Lütfen tekrar deneyin.",
   "scanNsec": "QR kodu tara",
@@ -206,5 +207,9 @@
   "carouselDecentralizedTitle": "Merkezi olmayan ve izinsiz",
   "carouselDecentralizedDescription": "Hiçbir merkezi otorite iletişiminizi kontrol etmez – izin gerekmez, sansür mümkün değildir.",
   "learnMore": "Daha fazla bilgi",
-  "backToSignUp": "Kayıta geri dön"
+  "backToSignUp": "Kayıta geri dön",
+  "deleteAllData": "Tüm Verileri Sil",
+  "deleteAllDataConfirmation": "Tüm veriler silinsin mi?",
+  "deleteAllDataWarning": "Bu işlem, bu cihazdaki tüm sohbetlerinizi, mesajlarınızı ve ayarlarınızı kalıcı olarak silecektir. Bu işlem geri alınamaz.",
+  "deleteAllDataError": "Tüm veriler silinemedi. Lütfen tekrar deneyin."
 }

@@ -298,6 +298,11 @@ Widget allColors(BuildContext context) {
               lightColor: light.overlaySecondary,
               darkColor: dark.overlaySecondary,
             ),
+            _ColorPairItem(
+              semanticName: 'Overlay Tertiary',
+              lightColor: light.overlayTertiary,
+              darkColor: dark.overlayTertiary,
+            ),
           ],
           description:
               'Overlay colors. Use for backdrops and overlay surfaces to separate Slate '

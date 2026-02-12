@@ -490,7 +490,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String get failedToStartChat => 'Failed to start chat. Please try again.';
 
   @override
-  String get userNotOnWhiteNoise => 'This user is not on White Noise yet.';
+  String get inviteToWhiteNoise => 'Invite to White Noise';
+
+  @override
+  String inviteToWhiteNoiseDescription(String name) {
+    return '$name isn\'t on White Noise yet. Share the app to start a secure chat.';
+  }
 
   @override
   String get failedToUpdateFollow => 'Failed to update follow status. Please try again.';
@@ -688,4 +693,17 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get backToSignUp => 'Back to sign up';
+
+  @override
+  String get deleteAllData => 'Delete All Data';
+
+  @override
+  String get deleteAllDataConfirmation => 'Delete all data?';
+
+  @override
+  String get deleteAllDataWarning =>
+      'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.';
+
+  @override
+  String get deleteAllDataError => 'Failed to delete all data. Please try again.';
 }

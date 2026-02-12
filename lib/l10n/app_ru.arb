@@ -143,7 +143,8 @@
   "follow": "Подписаться",
   "unfollow": "Отписаться",
   "failedToStartChat": "Не удалось начать чат. Попробуйте снова.",
-  "userNotOnWhiteNoise": "Этот пользователь ещё не в White Noise.",
+  "inviteToWhiteNoise": "Пригласить в White Noise",
+  "inviteToWhiteNoiseDescription": "{name} ещё не в White Noise. Поделитесь приложением, чтобы начать безопасный чат.",
   "failedToUpdateFollow": "Не удалось обновить статус подписки. Попробуйте снова.",
   "imagePickerError": "Не удалось выбрать изображение. Попробуйте снова.",
   "scanNsec": "Сканировать QR-код",
@@ -206,5 +207,9 @@
   "carouselDecentralizedTitle": "Децентрализованный и без разрешений",
   "carouselDecentralizedDescription": "Никакая центральная власть не контролирует вашу коммуникацию – разрешения не нужны, цензура невозможна.",
   "learnMore": "Узнать больше",
-  "backToSignUp": "Вернуться к регистрации"
+  "backToSignUp": "Вернуться к регистрации",
+  "deleteAllData": "Удалить все данные",
+  "deleteAllDataConfirmation": "Удалить все данные?",
+  "deleteAllDataWarning": "Это действие безвозвратно удалит все ваши чаты, сообщения и настройки с этого устройства. Отменить невозможно.",
+  "deleteAllDataError": "Не удалось удалить все данные. Пожалуйста, попробуйте снова."
 }

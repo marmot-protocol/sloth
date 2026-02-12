@@ -43,6 +43,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medium16;
   final TextStyle semiBold16;
   final TextStyle bold16;
+  final TextStyle medium16Compact;
+  final TextStyle semiBold16Compact;
+  final TextStyle bold16Compact;
   final TextStyle medium14;
   final TextStyle semiBold14;
   final TextStyle bold14;
@@ -52,6 +55,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
   final TextStyle medium12;
   final TextStyle semiBold12;
   final TextStyle bold12;
+  final TextStyle medium12Compact;
+  final TextStyle semiBold12Compact;
+  final TextStyle bold12Compact;
   final TextStyle medium10;
   final TextStyle semiBold10;
   final TextStyle bold10;
@@ -90,6 +96,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medium16,
     required this.semiBold16,
     required this.bold16,
+    required this.medium16Compact,
+    required this.semiBold16Compact,
+    required this.bold16Compact,
     required this.medium14,
     required this.semiBold14,
     required this.bold14,
@@ -99,6 +108,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
     required this.medium12,
     required this.semiBold12,
     required this.bold12,
+    required this.medium12Compact,
+    required this.semiBold12Compact,
+    required this.bold12Compact,
     required this.medium10,
     required this.semiBold10,
     required this.bold10,
@@ -336,6 +348,27 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
+    medium16Compact: TextStyle(
+      fontSize: 16,
+      height: 18 / 16,
+      letterSpacing: 0.2,
+      fontWeight: FontWeight.w500,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    semiBold16Compact: TextStyle(
+      fontSize: 16,
+      height: 18 / 16,
+      letterSpacing: 0.2,
+      fontWeight: FontWeight.w600,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    bold16Compact: TextStyle(
+      fontSize: 16,
+      height: 18 / 16,
+      letterSpacing: 0.2,
+      fontWeight: FontWeight.w700,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
     medium14: TextStyle(
       fontSize: 14,
       height: 18 / 14,
@@ -399,6 +432,27 @@ class AppTypography extends ThemeExtension<AppTypography> {
       fontWeight: FontWeight.w700,
       leadingDistribution: TextLeadingDistribution.even,
     ),
+    medium12Compact: TextStyle(
+      fontSize: 12,
+      height: 13 / 12,
+      letterSpacing: 0.6,
+      fontWeight: FontWeight.w500,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    semiBold12Compact: TextStyle(
+      fontSize: 12,
+      height: 13 / 12,
+      letterSpacing: 0.6,
+      fontWeight: FontWeight.w600,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
+    bold12Compact: TextStyle(
+      fontSize: 12,
+      height: 13 / 12,
+      letterSpacing: 0.6,
+      fontWeight: FontWeight.w700,
+      leadingDistribution: TextLeadingDistribution.even,
+    ),
     medium10: TextStyle(
       fontSize: 10,
       height: 14 / 10,
@@ -457,6 +511,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medium16,
     TextStyle? semiBold16,
     TextStyle? bold16,
+    TextStyle? medium16Compact,
+    TextStyle? semiBold16Compact,
+    TextStyle? bold16Compact,
     TextStyle? medium14,
     TextStyle? semiBold14,
     TextStyle? bold14,
@@ -466,6 +523,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
     TextStyle? medium12,
     TextStyle? semiBold12,
     TextStyle? bold12,
+    TextStyle? medium12Compact,
+    TextStyle? semiBold12Compact,
+    TextStyle? bold12Compact,
     TextStyle? medium10,
     TextStyle? semiBold10,
     TextStyle? bold10,
@@ -504,6 +564,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medium16: medium16 ?? this.medium16,
       semiBold16: semiBold16 ?? this.semiBold16,
       bold16: bold16 ?? this.bold16,
+      medium16Compact: medium16Compact ?? this.medium16Compact,
+      semiBold16Compact: semiBold16Compact ?? this.semiBold16Compact,
+      bold16Compact: bold16Compact ?? this.bold16Compact,
       medium14: medium14 ?? this.medium14,
       semiBold14: semiBold14 ?? this.semiBold14,
       bold14: bold14 ?? this.bold14,
@@ -513,6 +576,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medium12: medium12 ?? this.medium12,
       semiBold12: semiBold12 ?? this.semiBold12,
       bold12: bold12 ?? this.bold12,
+      medium12Compact: medium12Compact ?? this.medium12Compact,
+      semiBold12Compact: semiBold12Compact ?? this.semiBold12Compact,
+      bold12Compact: bold12Compact ?? this.bold12Compact,
       medium10: medium10 ?? this.medium10,
       semiBold10: semiBold10 ?? this.semiBold10,
       bold10: bold10 ?? this.bold10,
@@ -556,6 +622,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medium16: TextStyle.lerp(medium16, other.medium16, t)!,
       semiBold16: TextStyle.lerp(semiBold16, other.semiBold16, t)!,
       bold16: TextStyle.lerp(bold16, other.bold16, t)!,
+      medium16Compact: TextStyle.lerp(medium16Compact, other.medium16Compact, t)!,
+      semiBold16Compact: TextStyle.lerp(semiBold16Compact, other.semiBold16Compact, t)!,
+      bold16Compact: TextStyle.lerp(bold16Compact, other.bold16Compact, t)!,
       medium14: TextStyle.lerp(medium14, other.medium14, t)!,
       semiBold14: TextStyle.lerp(semiBold14, other.semiBold14, t)!,
       bold14: TextStyle.lerp(bold14, other.bold14, t)!,
@@ -565,6 +634,9 @@ class AppTypography extends ThemeExtension<AppTypography> {
       medium12: TextStyle.lerp(medium12, other.medium12, t)!,
       semiBold12: TextStyle.lerp(semiBold12, other.semiBold12, t)!,
       bold12: TextStyle.lerp(bold12, other.bold12, t)!,
+      medium12Compact: TextStyle.lerp(medium12Compact, other.medium12Compact, t)!,
+      semiBold12Compact: TextStyle.lerp(semiBold12Compact, other.semiBold12Compact, t)!,
+      bold12Compact: TextStyle.lerp(bold12Compact, other.bold12Compact, t)!,
       medium10: TextStyle.lerp(medium10, other.medium10, t)!,
       semiBold10: TextStyle.lerp(semiBold10, other.semiBold10, t)!,
       bold10: TextStyle.lerp(bold10, other.bold10, t)!,
@@ -612,6 +684,9 @@ extension AppTypographyExtension on BuildContext {
       medium16: _scaleStyle(base.medium16),
       semiBold16: _scaleStyle(base.semiBold16),
       bold16: _scaleStyle(base.bold16),
+      medium16Compact: _scaleStyle(base.medium16Compact),
+      semiBold16Compact: _scaleStyle(base.semiBold16Compact),
+      bold16Compact: _scaleStyle(base.bold16Compact),
       medium14: _scaleStyle(base.medium14),
       semiBold14: _scaleStyle(base.semiBold14),
       bold14: _scaleStyle(base.bold14),
@@ -621,6 +696,9 @@ extension AppTypographyExtension on BuildContext {
       medium12: _scaleStyle(base.medium12),
       semiBold12: _scaleStyle(base.semiBold12),
       bold12: _scaleStyle(base.bold12),
+      medium12Compact: _scaleStyle(base.medium12Compact),
+      semiBold12Compact: _scaleStyle(base.semiBold12Compact),
+      bold12Compact: _scaleStyle(base.bold12Compact),
       medium10: _scaleStyle(base.medium10),
       semiBold10: _scaleStyle(base.semiBold10),
       bold10: _scaleStyle(base.bold10),

@@ -294,10 +294,12 @@ void main() {
         final updated = SemanticColors.light.copyWith(
           overlayPrimary: Colors.red,
           overlaySecondary: Colors.green,
+          overlayTertiary: Colors.blue,
         );
 
         expect(updated.overlayPrimary, Colors.red);
         expect(updated.overlaySecondary, Colors.green);
+        expect(updated.overlayTertiary, Colors.blue);
       });
 
       test('returns new instance with updated accent colors', () {
@@ -732,6 +734,14 @@ void main() {
           Color.lerp(
             SemanticColors.light.overlaySecondary,
             SemanticColors.dark.overlaySecondary,
+            0.5,
+          ),
+        );
+        expect(
+          result.overlayTertiary,
+          Color.lerp(
+            SemanticColors.light.overlayTertiary,
+            SemanticColors.dark.overlayTertiary,
             0.5,
           ),
         );
