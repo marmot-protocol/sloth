@@ -2,12 +2,15 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:logging/logging.dart';
 import 'package:whitenoise/services/user_service.dart';
 import 'package:whitenoise/src/rust/api/accounts.dart' as accounts_api;
 import 'package:whitenoise/src/rust/api/user_search.dart' as user_search_api;
 import 'package:whitenoise/src/rust/api/users.dart' show User;
 import 'package:whitenoise/utils/encoding.dart';
 import 'package:whitenoise/utils/metadata.dart' show presentName;
+
+final _logger = Logger('useUserSearch');
 
 const _nameSearchDebounceMs = 400;
 const _nameSearchBatchMs = 300;
@@ -180,7 +183,8 @@ UserSearchState useUserSearch({
             flushResults();
             isSearchingNames.value = false;
           },
-          onError: (_) {
+          onError: (Object error, StackTrace stack) {
+            _logger.severe('Name search failed for "$debouncedQuery"', error, stack);
             batchTimer?.cancel();
             isLoadingNameSearch.value = false;
             isSearchingNames.value = false;
