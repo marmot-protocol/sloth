@@ -2,6 +2,7 @@ import 'dart:io' show Directory;
 
 import 'package:flutter/foundation.dart' show kDebugMode;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show DeviceOrientation, SystemChrome;
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart' show ScreenUtilInit;
 import 'package:go_router/go_router.dart' show GoRouter;
@@ -21,6 +22,10 @@ const kUnencryptedDatabaseError = 'database was created without encryption';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+  ]);
   await RustLib.init();
   final container = await initializeAppContainer();
   runApp(UncontrolledProviderScope(container: container, child: const WnApp()));
