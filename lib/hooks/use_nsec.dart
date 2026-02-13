@@ -90,9 +90,7 @@ class NsecState {
 
     var disposed = false;
     loadNsec(() => disposed);
-    return () {
-      disposed = true;
-    };
+    return () => disposed = true;
   }, [pubkey]);
 
   return (nsecState: state.value);

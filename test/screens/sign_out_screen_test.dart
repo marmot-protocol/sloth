@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/hooks/use_clipboard_guard.dart' show cancelClipboardGuardTimer;
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
@@ -10,7 +11,7 @@ import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:whitenoise/widgets/wn_icon.dart';
 
-import '../mocks/mock_clipboard.dart' show mockClipboard;
+import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard;
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
@@ -84,6 +85,10 @@ void main() {
     mockApi.setExportNsecThrows(false);
     mockApi.setExportThrowsForPubkey(null);
     mockApi.setAccountType(AccountType.local);
+  });
+
+  tearDown(() {
+    cancelClipboardGuardTimer();
   });
 
   late _MockAuthNotifier mockAuth;
@@ -166,6 +171,7 @@ void main() {
       await tester.tap(copyButton);
       await tester.pump();
       expect(getClipboard(), startsWith('nsec1'));
+      cancelClipboardGuardTimer();
     });
 
     testWidgets('shows success message when copying private key', (tester) async {
@@ -175,6 +181,24 @@ void main() {
       await tester.tap(copyButton);
       await tester.pump();
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
+      cancelClipboardGuardTimer();
+    });
+
+    testWidgets('clears clipboard 60 seconds after copying private key', (tester) async {
+      final getClipboard = mockClipboard();
+      await pumpSignOutScreen(tester);
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.byKey(const Key('copy_button')));
+      await tester.pump();
+      expect(getClipboard(), startsWith('nsec1'));
+
+      await tester.pump(const Duration(seconds: 59));
+      expect(getClipboard(), startsWith('nsec1'));
+
+      await tester.pump(const Duration(seconds: 1));
+      expect(getClipboard(), '');
+      clearClipboardMock();
     });
 
     testWidgets('dismisses notice after auto-hide duration', (tester) async {
@@ -189,6 +213,7 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.text('Private key copied to clipboard'), findsNothing);
+      cancelClipboardGuardTimer();
     });
 
     testWidgets('tapping visibility toggle shows/hides private key', (tester) async {
