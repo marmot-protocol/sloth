@@ -100,7 +100,7 @@ class WnButton extends StatelessWidget {
     final fontSize = _getFontSize();
     final iconPadding = (size == WnButtonSize.small || size == WnButtonSize.xsmall) ? 4.w : 8.w;
 
-    Widget button = FilledButton(
+    final Widget button = FilledButton(
       onPressed: (loading || disabled) ? null : onPressed,
       style: FilledButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: horizontalPadding),
