@@ -69,14 +69,14 @@ void main() {
       await tester.tap(find.byKey(const Key('delete_all_data_button')));
       await tester.pumpAndSettle();
 
-      expect(find.text('Delete all data?'), findsOneWidget);
+      expect(find.text('Delete all app data?'), findsOneWidget);
       expect(
         find.text(
-          'This will permanently delete all your chats, messages, and settings from this device. This action cannot be undone.',
+          'This will erase every profile, key, chat, and local file from this device. This cannot be undone.',
         ),
         findsOneWidget,
       );
-      expect(find.text('Delete'), findsOneWidget);
+      expect(find.byKey(const Key('confirm_button')), findsOneWidget);
       expect(find.text('Cancel'), findsOneWidget);
     });
 

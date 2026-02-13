@@ -27,9 +27,9 @@ class PrivacySecurityScreen extends HookConsumerWidget {
     Future<void> handleDeleteAllData() async {
       final confirmed = await WnConfirmationSlate.show(
         context: context,
-        title: context.l10n.deleteAllDataConfirmation,
-        message: context.l10n.deleteAllDataWarning,
-        confirmText: context.l10n.delete,
+        title: context.l10n.deleteAllAppDataConfirmation,
+        message: context.l10n.deleteAllAppDataWarning,
+        confirmText: context.l10n.deleteAppData,
         cancelText: context.l10n.cancel,
         isDestructive: true,
       );
@@ -79,8 +79,8 @@ class PrivacySecurityScreen extends HookConsumerWidget {
                 children: [
                   Text(
                     context.l10n.deleteAllAppData,
-                    style: typography.medium14.copyWith(
-                      color: colors.backgroundContentPrimary,
+                    style: typography.semiBold16.copyWith(
+                      color: colors.backgroundContentSecondary,
                     ),
                   ),
                   SizedBox(height: 8.h),

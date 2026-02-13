@@ -36,6 +36,8 @@
   "deleteAllAppData": "Supprimer Toutes les Données de l'App",
   "deleteAppData": "Supprimer les données de l'app",
   "deleteAllAppDataDescription": "Effacer tous les profils, clés, chats et fichiers locaux de cet appareil.",
+  "deleteAllAppDataConfirmation": "Supprimer toutes les données de l'app ?",
+  "deleteAllAppDataWarning": "Cela effacera tous les profils, clés, chats et fichiers locaux de cet appareil. Cette action est irréversible.",
   "theme": "Thème",
   "themeSystem": "Système",
   "themeLight": "Clair",

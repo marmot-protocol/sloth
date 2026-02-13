@@ -36,6 +36,8 @@
   "deleteAllAppData": "Tüm Uygulama Verilerini Sil",
   "deleteAppData": "Uygulama verilerini sil",
   "deleteAllAppDataDescription": "Bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları sil.",
+  "deleteAllAppDataConfirmation": "Tüm uygulama verileri silinsin mi?",
+  "deleteAllAppDataWarning": "Bu cihazdaki tüm profiller, anahtarlar, sohbetler ve yerel dosyalar silinecektir. Bu işlem geri alınamaz.",
   "theme": "Tema",
   "themeSystem": "Sistem",
   "themeLight": "Açık",

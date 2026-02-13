@@ -324,6 +324,18 @@ abstract class AppLocalizations {
   /// **'Erase every profile, key, chat, and local file from this device.'**
   String get deleteAllAppDataDescription;
 
+  /// Confirmation dialog title for deleting all app data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all app data?'**
+  String get deleteAllAppDataConfirmation;
+
+  /// Warning message in delete all app data confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will erase every profile, key, chat, and local file from this device. This cannot be undone.'**
+  String get deleteAllAppDataWarning;
+
   /// Theme selector label
   ///
   /// In en, this message translates to:

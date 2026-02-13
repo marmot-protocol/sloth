@@ -36,6 +36,8 @@
   "deleteAllAppData": "Alle App-Daten löschen",
   "deleteAppData": "App-Daten löschen",
   "deleteAllAppDataDescription": "Alle Profile, Schlüssel, Chats und lokalen Dateien von diesem Gerät löschen.",
+  "deleteAllAppDataConfirmation": "Alle App-Daten löschen?",
+  "deleteAllAppDataWarning": "Hiermit werden alle Profile, Schlüssel, Chats und lokalen Dateien von diesem Gerät gelöscht. Dies kann nicht rückgängig gemacht werden.",
   "theme": "Design",
   "themeSystem": "System",
   "themeLight": "Hell",

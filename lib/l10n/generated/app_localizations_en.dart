@@ -119,6 +119,13 @@ class AppLocalizationsEn extends AppLocalizations {
       'Erase every profile, key, chat, and local file from this device.';
 
   @override
+  String get deleteAllAppDataConfirmation => 'Delete all app data?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'This will erase every profile, key, chat, and local file from this device. This cannot be undone.';
+
+  @override
   String get theme => 'Theme';
 
   @override

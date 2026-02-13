@@ -119,6 +119,13 @@ class AppLocalizationsFr extends AppLocalizations {
       'Effacer tous les profils, clés, chats et fichiers locaux de cet appareil.';
 
   @override
+  String get deleteAllAppDataConfirmation => 'Supprimer toutes les données de l\'app ?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Cela effacera tous les profils, clés, chats et fichiers locaux de cet appareil. Cette action est irréversible.';
+
+  @override
   String get theme => 'Thème';
 
   @override

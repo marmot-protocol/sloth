@@ -119,6 +119,13 @@ class AppLocalizationsTr extends AppLocalizations {
       'Bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları sil.';
 
   @override
+  String get deleteAllAppDataConfirmation => 'Tüm uygulama verileri silinsin mi?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Bu cihazdaki tüm profiller, anahtarlar, sohbetler ve yerel dosyalar silinecektir. Bu işlem geri alınamaz.';
+
+  @override
   String get theme => 'Tema';
 
   @override

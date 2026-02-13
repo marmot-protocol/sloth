@@ -181,6 +181,16 @@
     "description": "Description for delete all app data action"
   },
 
+  "deleteAllAppDataConfirmation": "Delete all app data?",
+  "@deleteAllAppDataConfirmation": {
+    "description": "Confirmation dialog title for deleting all app data"
+  },
+
+  "deleteAllAppDataWarning": "This will erase every profile, key, chat, and local file from this device. This cannot be undone.",
+  "@deleteAllAppDataWarning": {
+    "description": "Warning message in delete all app data confirmation dialog"
+  },
+
   "theme": "Theme",
   "@theme": {
     "description": "Theme selector label"

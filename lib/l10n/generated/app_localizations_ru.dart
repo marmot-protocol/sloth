@@ -119,6 +119,13 @@ class AppLocalizationsRu extends AppLocalizations {
       'Удалить все профили, ключи, чаты и локальные файлы с этого устройства.';
 
   @override
+  String get deleteAllAppDataConfirmation => 'Удалить все данные приложения?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Будут удалены все профили, ключи, чаты и локальные файлы с этого устройства. Это действие нельзя отменить.';
+
+  @override
   String get theme => 'Тема';
 
   @override
