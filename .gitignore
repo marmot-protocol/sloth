@@ -18,7 +18,8 @@ migrate_working_dir/
 *.iws
 .idea/
 
-# Eclipse/Android Studio project files
+# Eclipse project files
+.classpath
 .project
 .settings/
 
