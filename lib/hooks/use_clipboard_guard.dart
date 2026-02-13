@@ -19,9 +19,9 @@ void Function() useClipboardGuard() {
 
   void scheduleClipboardClear() {
     timerRef.value?.cancel();
-    timerRef.value = Timer(_clipboardClearDelay, () {
+    timerRef.value = Timer(_clipboardClearDelay, () async {
       try {
-        Clipboard.setData(const ClipboardData(text: ''));
+        await Clipboard.setData(const ClipboardData(text: ''));
       } catch (e) {
         _logger.warning('Failed to clear clipboard: $e');
       }
