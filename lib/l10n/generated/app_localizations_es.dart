@@ -621,7 +621,7 @@ class AppLocalizationsEs extends AppLocalizations {
   String get monthDecShort => 'Dic';
 
   @override
-  String get loginWithSigner => 'Iniciar sesión con Signer';
+  String get loginWithAmber => 'Iniciar sesión con Amber';
 
   @override
   String get signerConnectionError =>

@@ -618,7 +618,7 @@ class AppLocalizationsPt extends AppLocalizations {
   String get monthDecShort => 'Dez';
 
   @override
-  String get loginWithSigner => 'Entrar com Signer';
+  String get loginWithAmber => 'Entrar com Amber';
 
   @override
   String get signerConnectionError =>

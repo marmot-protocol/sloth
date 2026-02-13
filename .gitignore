@@ -18,6 +18,11 @@ migrate_working_dir/
 *.iws
 .idea/
 
+# Eclipse project files
+.classpath
+.project
+.settings/
+
 .vscode/
 
 # Flutter/Dart/Pub related

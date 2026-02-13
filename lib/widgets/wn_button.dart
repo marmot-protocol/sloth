@@ -43,79 +43,46 @@ class WnButton extends StatelessWidget {
   }
 
   Widget _buildPrimaryButton(SemanticColors colors) {
-    final bgColor = disabled ? colors.fillPrimary.withValues(alpha: 0.25) : colors.fillPrimary;
-    final contentColor = disabled
-        ? colors.fillContentPrimary.withValues(alpha: 0.25)
-        : colors.fillContentPrimary;
-
     return _buildButton(
-      backgroundColor: bgColor,
+      backgroundColor: colors.fillPrimary,
       overlayColor: colors.fillPrimaryHover,
-      contentColor: contentColor,
+      contentColor: colors.fillContentPrimary,
       borderSide: BorderSide.none,
     );
   }
 
   Widget _buildOutlineButton(SemanticColors colors) {
-    final borderColor = disabled
-        ? colors.borderTertiary.withValues(alpha: 0.25)
-        : colors.borderTertiary;
-    final bgColor = disabled
-        ? colors.fillQuaternary.withValues(alpha: 0.25)
-        : colors.fillQuaternary;
-    final contentColor = disabled
-        ? colors.fillContentSecondary.withValues(alpha: 0.25)
-        : colors.fillContentSecondary;
-
     return _buildButton(
-      backgroundColor: bgColor,
+      backgroundColor: colors.fillQuaternary,
       overlayColor: colors.fillQuaternaryHover,
-      contentColor: contentColor,
-      borderSide: BorderSide(color: borderColor),
+      contentColor: colors.fillContentSecondary,
+      borderSide: BorderSide(color: colors.borderTertiary),
     );
   }
 
   Widget _buildGhostButton(SemanticColors colors) {
-    final contentColor = disabled
-        ? colors.fillContentSecondary.withValues(alpha: 0.25)
-        : colors.fillContentSecondary;
-
     return _buildButton(
       backgroundColor: colors.fillTertiary,
       overlayColor: colors.fillTertiaryHover,
-      contentColor: contentColor,
+      contentColor: colors.fillContentSecondary,
       borderSide: BorderSide.none,
     );
   }
 
   Widget _buildOverlayButton(SemanticColors colors) {
-    final bgColor = disabled
-        ? colors.fillQuaternary.withValues(alpha: 0.25)
-        : colors.fillQuaternary;
-    final contentColor = disabled
-        ? colors.backgroundContentPrimary.withValues(alpha: 0.25)
-        : colors.backgroundContentPrimary;
-
     return _buildButton(
-      backgroundColor: bgColor,
+      backgroundColor: colors.fillQuaternary,
       overlayColor: colors.fillQuaternaryHover,
-      contentColor: contentColor,
+      contentColor: colors.backgroundContentPrimary,
       borderSide: BorderSide.none,
     );
   }
 
   Widget _buildDestructiveButton(SemanticColors colors) {
-    final bgColor = disabled
-        ? colors.fillDestructive.withValues(alpha: 0.25)
-        : colors.fillDestructive;
-    final contentColor = disabled
-        ? colors.fillContentDestructive.withValues(alpha: 0.25)
-        : colors.fillContentDestructive;
-
     return _buildButton(
-      backgroundColor: bgColor,
+      backgroundColor: colors.fillDestructive,
       overlayColor: colors.fillDestructiveHover,
-      contentColor: contentColor,
+      contentColor: colors.fillContentDestructive,
       borderSide: BorderSide.none,
     );
   }
@@ -133,7 +100,7 @@ class WnButton extends StatelessWidget {
     final fontSize = _getFontSize();
     final iconPadding = (size == WnButtonSize.small || size == WnButtonSize.xsmall) ? 4.w : 8.w;
 
-    return FilledButton(
+    final Widget button = FilledButton(
       onPressed: (loading || disabled) ? null : onPressed,
       style: FilledButton.styleFrom(
         padding: EdgeInsets.symmetric(vertical: verticalPadding, horizontal: horizontalPadding),
@@ -148,6 +115,8 @@ class WnButton extends StatelessWidget {
           ? _buildLoadingIndicator(contentColor)
           : _buildContent(contentColor, iconSize, fontSize, iconPadding),
     );
+
+    return button;
   }
 
   Widget _buildLoadingIndicator(Color color) {

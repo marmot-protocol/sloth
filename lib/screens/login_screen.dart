@@ -159,8 +159,7 @@ class LoginScreen extends HookConsumerWidget {
                       ListenableBuilder(
                         listenable: nsecInputController,
                         builder: (context, _) {
-                          final signerPrimary =
-                              isAndroidSignerAvailable && nsecInputController.text.trim().isEmpty;
+                          final nsecEmpty = nsecInputController.text.trim().isEmpty;
                           return Column(
                             spacing: 8.h,
                             mainAxisSize: MainAxisSize.min,
@@ -169,16 +168,15 @@ class LoginScreen extends HookConsumerWidget {
                               WnButton(
                                 key: const Key('login_button'),
                                 text: context.l10n.login,
-                                type: signerPrimary ? WnButtonType.outline : WnButtonType.primary,
                                 onPressed: onSubmit,
                                 loading: loginWithNsecState.isLoading,
-                                disabled: loginWithAndroidSignerState.isLoading,
+                                disabled: nsecEmpty || loginWithAndroidSignerState.isLoading,
                               ),
                               if (isAndroidSignerAvailable)
                                 WnButton(
                                   key: const Key('android_signer_login_button'),
-                                  text: context.l10n.loginWithSigner,
-                                  type: signerPrimary ? WnButtonType.primary : WnButtonType.outline,
+                                  text: context.l10n.loginWithAmber,
+                                  type: WnButtonType.outline,
                                   onPressed: onAndroidSignerSubmit,
                                   loading: loginWithAndroidSignerState.isLoading,
                                   disabled: loginWithNsecState.isLoading,

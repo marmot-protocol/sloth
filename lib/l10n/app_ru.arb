@@ -181,7 +181,7 @@
   "monthOctShort": "Окт",
   "monthNovShort": "Ноя",
   "monthDecShort": "Дек",
-  "loginWithSigner": "Войти через Signer",
+  "loginWithAmber": "Войти через Amber",
   "signerConnectionError": "Не удалось подключиться к signer. Попробуйте снова.",
   "you": "Вы",
   "search": "Поиск",
