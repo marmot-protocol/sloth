@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:whitenoise/hooks/use_chat_avatar.dart';
+import 'package:whitenoise/hooks/use_chat_messages.dart';
+import 'package:whitenoise/hooks/use_chat_profile.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/src/rust/api/account_groups.dart' as account_groups_api;
-import 'package:whitenoise/src/rust/api/messages.dart' as messages_api;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
@@ -40,19 +40,8 @@ class ChatInviteScreen extends HookConsumerWidget {
       noticeMessage.value = null;
     }
 
-    final groupAvatarSnapshot = useChatAvatar(pubkey, mlsGroupId);
-
-    final messagesFuture = useMemoized(
-      () => messages_api.fetchAggregatedMessagesForGroup(
-        pubkey: pubkey,
-        groupId: mlsGroupId,
-      ),
-      [pubkey, mlsGroupId],
-    );
-    final messagesSnapshot = useFuture(messagesFuture);
-
-    final messages = messagesSnapshot.data ?? [];
-    final isLoading = messagesSnapshot.connectionState == ConnectionState.waiting;
+    final chatProfile = useChatProfile(pubkey, mlsGroupId);
+    final chatMessages = useChatMessages(mlsGroupId);
 
     Future<void> handleAccept() async {
       isAccepting.value = true;
@@ -107,22 +96,22 @@ class ChatInviteScreen extends HookConsumerWidget {
             Column(
               children: [
                 WnChatHeader(
-                  mlsGroupId: mlsGroupId,
-                  displayName: groupAvatarSnapshot.data?.displayName ?? '',
-                  pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
+                  displayName: chatProfile.data?.displayName ?? '',
+                  avatarColor: chatProfile.data?.color ?? AvatarColor.neutral,
+                  pictureUrl: chatProfile.data?.pictureUrl,
                   onBack: () => Routes.goToChatList(context),
                   onMenuTap: () => Routes.pushToWip(context),
                 ),
                 SizedBox(height: 48.h),
                 WnAvatar(
-                  pictureUrl: groupAvatarSnapshot.data?.pictureUrl,
-                  displayName: groupAvatarSnapshot.data?.displayName,
+                  pictureUrl: chatProfile.data?.pictureUrl,
+                  displayName: chatProfile.data?.displayName,
                   size: WnAvatarSize.large,
-                  color: AvatarColor.fromPubkey(mlsGroupId),
+                  color: chatProfile.data?.color ?? AvatarColor.neutral,
                 ),
                 SizedBox(height: 16.h),
                 Text(
-                  groupAvatarSnapshot.data?.displayName ?? '',
+                  chatProfile.data?.displayName ?? '',
                   style: typography.semiBold18.copyWith(
                     color: colors.backgroundContentPrimary,
                   ),
@@ -132,13 +121,13 @@ class ChatInviteScreen extends HookConsumerWidget {
               ],
             ),
             Expanded(
-              child: isLoading
+              child: chatMessages.isLoading
                   ? Center(
                       child: CircularProgressIndicator(
                         color: colors.backgroundContentPrimary,
                       ),
                     )
-                  : messages.isEmpty
+                  : chatMessages.messageCount == 0
                   ? Center(
                       child: Text(
                         context.l10n.invitedToSecureChat,
@@ -148,15 +137,20 @@ class ChatInviteScreen extends HookConsumerWidget {
                       ),
                     )
                   : ListView.builder(
+                      reverse: true,
                       padding: EdgeInsets.symmetric(vertical: 8.h),
-                      itemCount: messages.length,
+                      itemCount: chatMessages.messageCount,
                       itemBuilder: (context, index) {
-                        final message = messages[index];
+                        final message = chatMessages.getMessage(index);
                         final isOwnMessage = message.pubkey == pubkey;
+                        final replyPreview = message.isReply
+                            ? chatMessages.getReplyPreview(message.replyToId)
+                            : null;
                         return WnMessageBubble(
                           message: message,
                           isOwnMessage: isOwnMessage,
                           currentUserPubkey: pubkey,
+                          replyPreview: replyPreview,
                         );
                       },
                     ),

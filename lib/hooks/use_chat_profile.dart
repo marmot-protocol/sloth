@@ -3,17 +3,20 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:logging/logging.dart';
 import 'package:whitenoise/src/rust/api/groups.dart' as groups_api;
 import 'package:whitenoise/src/rust/api/users.dart' as users_api;
+import 'package:whitenoise/utils/avatar_color.dart';
 import 'package:whitenoise/utils/metadata.dart';
 
-final _logger = Logger('useChatAvatar');
+final _logger = Logger('useChatProfile');
 
-class ChatAvatarData {
+class ChatProfile {
   final String displayName;
   final String? pictureUrl;
   final String? otherMemberPubkey;
+  final AvatarColor color;
 
-  const ChatAvatarData({
+  const ChatProfile({
     required this.displayName,
+    required this.color,
     this.pictureUrl,
     this.otherMemberPubkey,
   });
@@ -21,26 +24,27 @@ class ChatAvatarData {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is ChatAvatarData &&
+      other is ChatProfile &&
           runtimeType == other.runtimeType &&
           displayName == other.displayName &&
           pictureUrl == other.pictureUrl &&
-          otherMemberPubkey == other.otherMemberPubkey;
+          otherMemberPubkey == other.otherMemberPubkey &&
+          color == other.color;
 
   @override
-  int get hashCode => Object.hash(displayName, pictureUrl, otherMemberPubkey);
+  int get hashCode => Object.hash(displayName, pictureUrl, otherMemberPubkey, color);
 }
 
-AsyncSnapshot<ChatAvatarData> useChatAvatar(String pubkey, String groupId) {
+AsyncSnapshot<ChatProfile> useChatProfile(String pubkey, String groupId) {
   final future = useMemoized(
-    () => _fetchGroupAvatar(pubkey, groupId),
+    () => _fetchChatProfile(pubkey, groupId),
     [pubkey, groupId],
   );
   return useFuture(future);
 }
 
-Future<ChatAvatarData> _fetchGroupAvatar(String pubkey, String groupId) async {
-  _logger.fine('Fetching group avatar for groupId: $groupId');
+Future<ChatProfile> _fetchChatProfile(String pubkey, String groupId) async {
+  _logger.fine('Fetching chat profile for groupId: $groupId');
 
   final group = await groups_api.getGroup(
     accountPubkey: pubkey,
@@ -50,28 +54,29 @@ Future<ChatAvatarData> _fetchGroupAvatar(String pubkey, String groupId) async {
   final isDm = await group.isDirectMessageType(accountPubkey: pubkey);
 
   if (isDm) {
-    _logger.info('Fetching DM avatar data');
-    return await _fetchDmAvatarData(group, pubkey);
+    _logger.info('Fetching DM profile');
+    return await _fetchDmProfile(group, pubkey);
   } else {
-    _logger.info('Fetching group avatar data');
-    return await _fetchGroupAvatarData(group, pubkey);
+    _logger.info('Fetching group profile');
+    return await _fetchGroupProfile(group, pubkey);
   }
 }
 
-Future<ChatAvatarData> _fetchGroupAvatarData(groups_api.Group group, String pubkey) async {
+Future<ChatProfile> _fetchGroupProfile(groups_api.Group group, String pubkey) async {
   _logger.info('Fetching group image path');
   final imagePath = await groups_api.getGroupImagePath(
     accountPubkey: pubkey,
     groupId: group.mlsGroupId,
   );
   _logger.fine('Group image path fetched');
-  return ChatAvatarData(
+  return ChatProfile(
     displayName: group.name.isEmpty ? 'Unknown group' : group.name,
     pictureUrl: imagePath,
+    color: AvatarColor.fromPubkey(group.mlsGroupId),
   );
 }
 
-Future<ChatAvatarData> _fetchDmAvatarData(
+Future<ChatProfile> _fetchDmProfile(
   groups_api.Group group,
   String pubkey,
 ) async {
@@ -86,7 +91,7 @@ Future<ChatAvatarData> _fetchDmAvatarData(
 
   if (otherMemberPubkey == null) {
     _logger.warning('No other member found in DM group');
-    return const ChatAvatarData(displayName: 'Unknown User');
+    return ChatProfile(displayName: 'Unknown User', color: AvatarColor.fromPubkey(groupId));
   }
 
   final metadata = await users_api.userMetadata(
@@ -94,9 +99,10 @@ Future<ChatAvatarData> _fetchDmAvatarData(
     blockingDataSync: false,
   );
 
-  return ChatAvatarData(
+  return ChatProfile(
     displayName: presentName(metadata) ?? 'Unknown User',
     pictureUrl: metadata.picture,
     otherMemberPubkey: otherMemberPubkey,
+    color: AvatarColor.fromPubkey(otherMemberPubkey),
   );
 }

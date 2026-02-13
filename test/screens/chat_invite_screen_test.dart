@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -9,9 +11,11 @@ import 'package:whitenoise/screens/wip_screen.dart';
 import 'package:whitenoise/src/rust/api/account_groups.dart';
 import 'package:whitenoise/src/rust/api/groups.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
+import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 import '../mocks/mock_wn_api.dart';
@@ -20,13 +24,21 @@ import '../test_helpers.dart';
 const _testPubkey = testPubkeyA;
 const _testGroupId = testGroupId;
 
-ChatMessage _message(String id, {bool isDeleted = false}) => ChatMessage(
+ChatMessage _message(
+  String id, {
+  bool isDeleted = false,
+  bool isReply = false,
+  String? replyToId,
+  String pubkey = testPubkeyB,
+  String content = '',
+}) => ChatMessage(
   id: id,
-  pubkey: testPubkeyB,
-  content: 'Message $id',
+  pubkey: pubkey,
+  content: content.isEmpty ? 'Message $id' : content,
   createdAt: DateTime(2024),
   tags: const [],
-  isReply: false,
+  isReply: isReply,
+  replyToId: replyToId,
   isDeleted: isDeleted,
   contentTokens: const [],
   reactions: const ReactionSummary(byEmoji: [], userReactions: []),
@@ -42,27 +54,58 @@ AccountGroup _accountGroup() => AccountGroup(
 );
 
 class _MockApi extends MockWnApi {
-  List<ChatMessage> messages = [];
+  StreamController<MessageStreamItem>? controller;
+  List<ChatMessage> initialMessages = [];
   String groupName = 'Test Group';
   bool acceptCalled = false;
   bool declineCalled = false;
   Exception? errorToThrow;
+  FlutterMetadata? userMetadataResponse;
+  bool isDm = false;
+  List<String> groupMembers = [];
 
   @override
   void reset() {
-    messages = [];
+    controller?.close();
+    controller = null;
+    initialMessages = [];
     groupName = 'Test Group';
     acceptCalled = false;
     declineCalled = false;
     errorToThrow = null;
+    userMetadataResponse = null;
+    isDm = false;
+    groupMembers = [];
+  }
+
+  void emitMessage(ChatMessage message) {
+    controller?.add(
+      MessageStreamItem.update(
+        update: MessageUpdate(trigger: UpdateTrigger.newMessage, message: message),
+      ),
+    );
   }
 
   @override
-  Future<List<ChatMessage>> crateApiMessagesFetchAggregatedMessagesForGroup({
+  Future<FlutterMetadata> crateApiUsersUserMetadata({
     required String pubkey,
-    required String groupId,
+    required bool blockingDataSync,
   }) async {
-    return messages;
+    return userMetadataResponse ?? const FlutterMetadata(displayName: 'Author', custom: {});
+  }
+
+  @override
+  Stream<MessageStreamItem> crateApiMessagesSubscribeToGroupMessages({
+    required String groupId,
+  }) {
+    controller?.close();
+    controller = StreamController<MessageStreamItem>.broadcast();
+    Future.microtask(() {
+      controller?.add(
+        MessageStreamItem.initialSnapshot(messages: initialMessages),
+      );
+    });
+    return controller!.stream;
   }
 
   @override
@@ -80,6 +123,18 @@ class _MockApi extends MockWnApi {
       state: GroupState.active,
     );
   }
+
+  @override
+  Future<bool> crateApiGroupsGroupIsDirectMessageType({
+    required Group that,
+    required String accountPubkey,
+  }) async => isDm;
+
+  @override
+  Future<List<String>> crateApiGroupsGroupMembers({
+    required String pubkey,
+    required String groupId,
+  }) async => groupMembers;
 
   @override
   Future<AccountGroup> crateApiAccountGroupsAcceptAccountGroup({
@@ -155,14 +210,28 @@ void main() {
       expect(find.text('Decline'), findsOneWidget);
     });
 
-    testWidgets('displays avatars with color derived from mlsGroupId', (tester) async {
-      await pumpInviteScreen(tester);
+    group('avatar color', () {
+      testWidgets('uses group ID for non-DM', (tester) async {
+        await pumpInviteScreen(tester);
 
-      final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
-      expect(avatars.length, 2);
-      for (final avatar in avatars) {
-        expect(avatar.color, AvatarColor.fromPubkey(_testGroupId));
-      }
+        final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+        expect(avatars.length, 2);
+        for (final avatar in avatars) {
+          expect(avatar.color, AvatarColor.fromPubkey(_testGroupId));
+        }
+      });
+
+      testWidgets('uses other member pubkey for DM', (tester) async {
+        _api.isDm = true;
+        _api.groupMembers = [_testPubkey, testPubkeyB];
+        await pumpInviteScreen(tester);
+
+        final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+        expect(avatars.length, 2);
+        for (final avatar in avatars) {
+          expect(avatar.color, AvatarColor.fromPubkey(testPubkeyB));
+        }
+      });
     });
 
     group('with no messages', () {
@@ -174,7 +243,9 @@ void main() {
     });
 
     group('with messages', () {
-      setUp(() => _api.messages = [_message('m1'), _message('m2')]);
+      setUp(() {
+        _api.initialMessages = [_message('m1'), _message('m2')];
+      });
 
       testWidgets('displays messages', (tester) async {
         await pumpInviteScreen(tester);
@@ -189,10 +260,87 @@ void main() {
       });
 
       testWidgets('does not display deleted message text', (tester) async {
-        _api.messages = [_message('m1'), _message('m2', isDeleted: true)];
+        _api.initialMessages = [_message('m1'), _message('m2', isDeleted: true)];
         await pumpInviteScreen(tester);
 
         expect(find.text('Message m2'), findsNothing);
+      });
+    });
+
+    group('message reception', () {
+      testWidgets('message appears when stream emits update', (tester) async {
+        await pumpInviteScreen(tester);
+        _api.emitMessage(_message('new_msg'));
+        await tester.pumpAndSettle();
+
+        expect(find.text('Message new_msg'), findsOneWidget);
+      });
+    });
+
+    group('reply previews', () {
+      testWidgets('displays reply preview when message is a reply', (tester) async {
+        _api.initialMessages = [
+          _message('m1', content: 'Original message'),
+          _message('m2', isReply: true, replyToId: 'm1', content: 'Reply message'),
+        ];
+        await pumpInviteScreen(tester);
+
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+      });
+
+      testWidgets('does not display reply preview for non-reply messages', (tester) async {
+        _api.initialMessages = [_message('m1'), _message('m2')];
+        await pumpInviteScreen(tester);
+
+        expect(find.byType(WnReplyPreview), findsNothing);
+      });
+
+      testWidgets('displays author name in reply preview', (tester) async {
+        _api.userMetadataResponse = const FlutterMetadata(
+          displayName: 'Reply Author',
+          custom: {},
+        );
+        _api.initialMessages = [
+          _message('m1', content: 'Original', pubkey: testPubkeyC),
+          _message('m2', isReply: true, replyToId: 'm1'),
+        ];
+        await pumpInviteScreen(tester);
+
+        expect(find.text('Reply Author'), findsOneWidget);
+      });
+
+      testWidgets('displays original message content in reply preview', (tester) async {
+        _api.initialMessages = [
+          _message('m1', content: 'Original message content'),
+          _message('m2', isReply: true, replyToId: 'm1', content: 'Reply text'),
+        ];
+        await pumpInviteScreen(tester);
+
+        final replyPreview = find.byType(WnReplyPreview);
+        expect(replyPreview, findsOneWidget);
+        expect(
+          find.descendant(of: replyPreview, matching: find.text('Original message content')),
+          findsOneWidget,
+        );
+      });
+
+      testWidgets('displays "Message not found" when reply target is missing', (tester) async {
+        _api.initialMessages = [_message('m2', isReply: true, replyToId: 'nonexistent')];
+        await pumpInviteScreen(tester);
+
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+        expect(find.text('Message not found'), findsOneWidget);
+      });
+
+      testWidgets('displays "Message not found" when reply target is deleted', (tester) async {
+        _api.initialMessages = [
+          _message('m1', isDeleted: true),
+          _message('m2', isReply: true, replyToId: 'm1'),
+        ];
+        await pumpInviteScreen(tester);
+
+        expect(find.byType(WnReplyPreview), findsOneWidget);
+        expect(find.text('Message not found'), findsOneWidget);
       });
     });
 

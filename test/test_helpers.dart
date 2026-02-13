@@ -36,6 +36,7 @@ const testNpubToHex = <String, String>{
   testNpubD: testPubkeyD,
 };
 const testGroupId = 'abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234';
+const otherTestGroupId = 'dbcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234abcd1234';
 const testNostrGroupId = 'dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321dcba4321';
 
 void setUpTestView(WidgetTester tester) {
