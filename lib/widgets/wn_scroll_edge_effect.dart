@@ -1,16 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-enum ScrollEdgeEffectType {
-  canvas,
-  slate,
-  dropdown,
-}
+enum ScrollEdgeEffectType { canvas, slate, dropdown }
 
-enum ScrollEdgePosition {
-  top,
-  bottom,
-}
+enum ScrollEdgePosition { top, bottom }
 
 class WnScrollEdgeEffect extends StatelessWidget {
   const WnScrollEdgeEffect._({
@@ -101,9 +94,9 @@ class WnScrollEdgeEffect extends StatelessWidget {
   double get _defaultHeight {
     switch (type) {
       case ScrollEdgeEffectType.canvas:
-        return 48.h;
+        return 196.h;
       case ScrollEdgeEffectType.slate:
-        return 32.h;
+        return 40.h;
       case ScrollEdgeEffectType.dropdown:
         return 40.h;
     }
@@ -122,14 +115,15 @@ class WnScrollEdgeEffect extends StatelessWidget {
       right: 0,
       height: effectiveHeight,
       child: IgnorePointer(
-        child: Container(
+        child: DecoratedBox(
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: _isTop
-                  ? [color, color.withValues(alpha: 0)]
-                  : [color.withValues(alpha: 0), color],
+                  ? [color, color.withValues(alpha: 0.6), color.withValues(alpha: 0)]
+                  : [color.withValues(alpha: 0), color.withValues(alpha: 0.6), color],
+              stops: _isTop ? const [0.0, 0.4, 1.0] : const [0.0, 0.6, 1.0],
             ),
           ),
         ),

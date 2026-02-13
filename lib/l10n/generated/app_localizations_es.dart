@@ -88,7 +88,10 @@ class AppLocalizationsEs extends AppLocalizations {
   String get networkRelays => 'Relés de red';
 
   @override
-  String get appSettings => 'Ajustes de la app';
+  String get appearance => 'Apariencia';
+
+  @override
+  String get privacySecurity => 'Privacidad y seguridad';
 
   @override
   String get donateToWhiteNoise => 'Donar a White Noise';
@@ -100,7 +103,20 @@ class AppLocalizationsEs extends AppLocalizations {
   String get signOut => 'Cerrar sesión';
 
   @override
-  String get appSettingsTitle => 'Ajustes de la App';
+  String get appearanceTitle => 'Apariencia';
+
+  @override
+  String get privacySecurityTitle => 'Privacidad y seguridad';
+
+  @override
+  String get deleteAllAppData => 'Eliminar todos los datos de la app';
+
+  @override
+  String get deleteAppData => 'Eliminar datos de la app';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Borrar todos los perfiles, claves, chats y archivos locales de este dispositivo.';
 
   @override
   String get theme => 'Tema';

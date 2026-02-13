@@ -3,12 +3,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
-import 'package:whitenoise/screens/app_settings_screen.dart';
+import 'package:whitenoise/screens/appearance_screen.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/screens/developer_settings_screen.dart';
 import 'package:whitenoise/screens/donate_screen.dart';
 import 'package:whitenoise/screens/edit_profile_screen.dart';
 import 'package:whitenoise/screens/network_screen.dart';
+import 'package:whitenoise/screens/privacy_security_screen.dart';
 import 'package:whitenoise/screens/profile_keys_screen.dart';
 import 'package:whitenoise/screens/share_profile_screen.dart';
 import 'package:whitenoise/screens/sign_out_screen.dart';
@@ -129,16 +130,23 @@ void main() {
       expect(find.byType(NetworkScreen), findsOneWidget);
     });
 
-    testWidgets('tapping App settings navigates to AppSettingsScreen', (tester) async {
+    testWidgets('tapping Privacy & security navigates to PrivacySecurityScreen', (tester) async {
       await pumpSettingsScreen(tester);
-      await tester.tap(find.text('App settings'));
+      await tester.tap(find.text('Privacy & security'));
       await tester.pumpAndSettle();
-      expect(find.byType(AppSettingsScreen), findsOneWidget);
+      expect(find.byType(PrivacySecurityScreen), findsOneWidget);
+    });
+
+    testWidgets('tapping Appearance navigates to AppearanceScreen', (tester) async {
+      await pumpSettingsScreen(tester);
+      await tester.tap(find.text('Appearance'));
+      await tester.pumpAndSettle();
+      expect(find.byType(AppearanceScreen), findsOneWidget);
     });
 
     testWidgets('tapping Donate navigates to Donate screen', (tester) async {
       await pumpSettingsScreen(tester);
-      await tester.tap(find.text('Donate to White Noise'));
+      await tester.tap(find.text('Donate'));
       await tester.pumpAndSettle();
       expect(find.byType(DonateScreen), findsOneWidget);
     });

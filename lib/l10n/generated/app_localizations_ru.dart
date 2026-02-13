@@ -88,7 +88,10 @@ class AppLocalizationsRu extends AppLocalizations {
   String get networkRelays => 'Сетевые реле';
 
   @override
-  String get appSettings => 'Настройки приложения';
+  String get appearance => 'Внешний вид';
+
+  @override
+  String get privacySecurity => 'Конфиденциальность и безопасность';
 
   @override
   String get donateToWhiteNoise => 'Пожертвовать White Noise';
@@ -100,7 +103,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get signOut => 'Выйти';
 
   @override
-  String get appSettingsTitle => 'Настройки Приложения';
+  String get appearanceTitle => 'Внешний вид';
+
+  @override
+  String get privacySecurityTitle => 'Конфиденциальность и безопасность';
+
+  @override
+  String get deleteAllAppData => 'Удалить все данные приложения';
+
+  @override
+  String get deleteAppData => 'Удалить данные приложения';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Удалить все профили, ключи, чаты и локальные файлы с этого устройства.';
 
   @override
   String get theme => 'Тема';
