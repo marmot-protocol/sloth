@@ -287,6 +287,20 @@ class AppLocalizationsIt extends AppLocalizations {
   String get startConversation => 'Inizia una conversazione';
 
   @override
+  String get welcomeNoticeTitle => 'Il tuo profilo è pronto';
+
+  @override
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startANewChat) {
+    return 'Tocca $findPeople per trovare i tuoi amici. $shareProfile per connetterti con persone che conosci, o $startANewChat usando l\'icona chat.';
+  }
+
+  @override
+  String get findPeople => 'Trova persone';
+
+  @override
+  String get startANewChat => 'inizia una nuova chat';
+
+  @override
   String get noMessagesYet => 'Ancora nessun messaggio';
 
   @override

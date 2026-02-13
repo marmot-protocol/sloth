@@ -103,7 +103,7 @@ void main() {
       await mountWidget(
         const WnSystemNotice(
           title: 'Temporary',
-          description: 'Should not show',
+          description: Text('Should not show'),
         ),
         tester,
       );
@@ -139,7 +139,7 @@ void main() {
           WnSystemNotice(
             title: 'Collapsed',
             variant: WnSystemNoticeVariant.collapsed,
-            description: 'Hidden Content',
+            description: const Text('Hidden Content'),
             onToggle: () {},
           ),
           tester,
@@ -160,7 +160,7 @@ void main() {
           WnSystemNotice(
             title: 'Expanded',
             variant: WnSystemNoticeVariant.expanded,
-            description: 'Visible Content',
+            description: const Text('Visible Content'),
             onToggle: () {},
           ),
           tester,
@@ -180,7 +180,7 @@ void main() {
       await mountWidget(
         WnSystemNotice(
           title: 'Notice',
-          description: 'Description text',
+          description: const Text('Description text'),
           variant: WnSystemNoticeVariant.dismissible,
           onDismiss: () {},
         ),
@@ -486,7 +486,7 @@ void main() {
               home: Scaffold(
                 body: WnSystemNotice(
                   title: 'Toggle me',
-                  description: 'Content',
+                  description: const Text('Content'),
                   variant: isExpanded
                       ? WnSystemNoticeVariant.expanded
                       : WnSystemNoticeVariant.collapsed,
@@ -524,7 +524,7 @@ void main() {
               home: Scaffold(
                 body: WnSystemNotice(
                   title: 'Toggle me',
-                  description: 'Content',
+                  description: const Text('Content'),
                   variant: isExpanded
                       ? WnSystemNoticeVariant.expanded
                       : WnSystemNoticeVariant.collapsed,
