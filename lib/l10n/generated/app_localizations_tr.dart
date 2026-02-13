@@ -302,6 +302,20 @@ class AppLocalizationsTr extends AppLocalizations {
   String get startConversation => 'Bir sohbet başlatın';
 
   @override
+  String get welcomeNoticeTitle => 'Profiliniz hazır';
+
+  @override
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startANewChat) {
+    return 'Arkadaşlarınızı bulmak için $findPeople\'a dokunun. Tanıdığınız kişilerle bağlantı kurmak için $shareProfile veya sohbet artı simgesini kullanarak $startANewChat.';
+  }
+
+  @override
+  String get findPeople => 'Kişi bul';
+
+  @override
+  String get startANewChat => 'yeni bir sohbet başlatın';
+
+  @override
   String get noMessagesYet => 'Henüz mesaj yok';
 
   @override

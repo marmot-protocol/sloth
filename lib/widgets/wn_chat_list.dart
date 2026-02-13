@@ -23,6 +23,7 @@ class WnChatList extends HookWidget {
     this.topPadding = 0,
     this.header,
     this.headerHeight = 0,
+    this.showEmptyState = true,
   });
 
   final int itemCount;
@@ -32,6 +33,7 @@ class WnChatList extends HookWidget {
   final double topPadding;
   final Widget? header;
   final double headerHeight;
+  final bool showEmptyState;
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +57,7 @@ class WnChatList extends HookWidget {
       );
     }
 
-    if (itemCount == 0 && !isSearchActive) {
+    if (itemCount == 0 && showEmptyState && !isSearchActive) {
       final typography = context.typographyScaled;
       return Center(
         key: const Key('chat_list_empty'),

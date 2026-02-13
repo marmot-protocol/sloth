@@ -660,6 +660,30 @@ abstract class AppLocalizations {
   /// **'Start a conversation'**
   String get startConversation;
 
+  /// Title for welcome notice shown on empty chat list after signup
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is ready'**
+  String get welcomeNoticeTitle;
+
+  /// Description for welcome notice shown on empty chat list
+  ///
+  /// In en, this message translates to:
+  /// **'Tap {findPeople} to find your friends. {shareProfile} to connect with people you know, or {startANewChat} using the chat plus icon.'**
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startANewChat);
+
+  /// Button text to find/search for people
+  ///
+  /// In en, this message translates to:
+  /// **'Find people'**
+  String get findPeople;
+
+  /// Text for starting a new chat action
+  ///
+  /// In en, this message translates to:
+  /// **'start a new chat'**
+  String get startANewChat;
+
   /// Empty state for chat screen
   ///
   /// In en, this message translates to:

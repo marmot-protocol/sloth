@@ -6,6 +6,7 @@ import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/screens/chat_invite_screen.dart';
 import 'package:whitenoise/screens/chat_screen.dart';
 import 'package:whitenoise/screens/settings_screen.dart';
+import 'package:whitenoise/screens/share_profile_screen.dart';
 import 'package:whitenoise/screens/user_search_screen.dart';
 import 'package:whitenoise/src/rust/api/chat_list.dart';
 import 'package:whitenoise/src/rust/api/groups.dart';
@@ -16,6 +17,7 @@ import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
 import 'package:whitenoise/widgets/wn_search_and_filters.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_system_notice.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
@@ -83,6 +85,18 @@ class _MockAuthNotifier extends AuthNotifier {
   Future<String?> build() async {
     state = const AsyncData(testPubkeyA);
     return testPubkeyA;
+  }
+}
+
+class _SwitchableAuthNotifier extends AuthNotifier {
+  @override
+  Future<String?> build() async {
+    state = const AsyncData(testPubkeyA);
+    return testPubkeyA;
+  }
+
+  void switchTo(String pubkey) {
+    state = AsyncData(pubkey);
   }
 }
 
@@ -159,16 +173,96 @@ void main() {
     });
 
     group('without chats', () {
-      testWidgets('shows no chats message', (tester) async {
+      testWidgets('shows welcome notice', (tester) async {
         await pumpChatListScreen(tester);
 
-        expect(find.text('No chats yet'), findsOneWidget);
+        expect(find.byType(WnSystemNotice), findsOneWidget);
+        expect(find.text('Your profile is ready'), findsOneWidget);
       });
 
-      testWidgets('shows start conversation hint', (tester) async {
+      testWidgets('shows welcome notice description', (tester) async {
         await pumpChatListScreen(tester);
 
+        expect(
+          find.textContaining('Find people'),
+          findsWidgets,
+        );
+      });
+
+      testWidgets('shows find people button', (tester) async {
+        await pumpChatListScreen(tester);
+
+        expect(find.byKey(const Key('find_people_button')), findsOneWidget);
+      });
+
+      testWidgets('shows share profile button', (tester) async {
+        await pumpChatListScreen(tester);
+
+        expect(find.byKey(const Key('share_profile_button')), findsOneWidget);
+      });
+
+      testWidgets('shows slogan in body', (tester) async {
+        await pumpChatListScreen(tester);
+
+        expect(find.byKey(const Key('welcome_slogan')), findsOneWidget);
+        expect(find.textContaining('Decentralized'), findsOneWidget);
+      });
+
+      testWidgets('tapping find people navigates to user search', (tester) async {
+        await pumpChatListScreen(tester);
+        await tester.tap(find.byKey(const Key('find_people_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(UserSearchScreen), findsOneWidget);
+      });
+
+      testWidgets('tapping share profile navigates to share profile', (tester) async {
+        await pumpChatListScreen(tester);
+        await tester.tap(find.byKey(const Key('share_profile_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(ShareProfileScreen), findsOneWidget);
+      });
+
+      testWidgets('dismissing welcome notice hides it', (tester) async {
+        await pumpChatListScreen(tester);
+
+        expect(find.byType(WnSystemNotice), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('systemNotice_actionIcon')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsNothing);
+      });
+
+      testWidgets('shows empty state text after dismissing notice', (tester) async {
+        await pumpChatListScreen(tester);
+        await tester.tap(find.byKey(const Key('systemNotice_actionIcon')));
+        await tester.pumpAndSettle();
+
+        expect(find.text('No chats yet'), findsOneWidget);
         expect(find.text('Start a conversation'), findsOneWidget);
+      });
+
+      testWidgets('welcome notice reappears after switching accounts', (tester) async {
+        final mockAuth = _SwitchableAuthNotifier();
+        await mountTestApp(
+          tester,
+          overrides: [authProvider.overrideWith(() => mockAuth)],
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsOneWidget);
+
+        await tester.tap(find.byKey(const Key('systemNotice_actionIcon')));
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsNothing);
+
+        mockAuth.switchTo(testPubkeyB);
+        await tester.pumpAndSettle();
+
+        expect(find.byType(WnSystemNotice), findsOneWidget);
       });
     });
 
@@ -194,7 +288,13 @@ void main() {
         expect(tiles.last.key, const Key(testPubkeyB));
       });
 
-      testWidgets('hides empty state', (tester) async {
+      testWidgets('hides welcome notice when chats exist', (tester) async {
+        await pumpChatListScreen(tester);
+
+        expect(find.byType(WnSystemNotice), findsNothing);
+      });
+
+      testWidgets('hides empty state when chats exist', (tester) async {
         await pumpChatListScreen(tester);
 
         expect(find.text('No chats yet'), findsNothing);

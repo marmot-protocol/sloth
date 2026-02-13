@@ -1,14 +1,19 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:whitenoise/hooks/use_chat_avatar.dart';
+import 'package:whitenoise/hooks/use_chat_profile.dart';
 import 'package:whitenoise/src/rust/api/groups.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/utils/avatar_color.dart';
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-const _pubkey = 'my_pubkey';
-const _groupId = 'group_123';
-const _otherPubkey = 'other_pubkey';
+const _pubkey = testPubkeyA;
+const _groupId = otherTestGroupId;
+const _otherPubkey = testPubkeyB;
+const _pubkeyColor = AvatarColor.violet;
+const _otherPubkeyColor = AvatarColor.amber;
+const _groupIdColor = AvatarColor.cyan;
 
 Group _group({required String name}) => Group(
   mlsGroupId: _groupId,
@@ -27,7 +32,7 @@ const _metadata = FlutterMetadata(
   custom: {},
 );
 
-class _MockApi implements RustLibApi {
+class _MockApi extends MockWnApi {
   bool isDm = false;
   String groupName = 'Test Group';
   List<String> members = [_pubkey, _otherPubkey];
@@ -66,17 +71,14 @@ class _MockApi implements RustLibApi {
     required String accountPubkey,
     required String groupId,
   }) => Future.value('https://example.com/group.jpg');
-
-  @override
-  dynamic noSuchMethod(Invocation invocation) => throw UnimplementedError();
 }
 
 final _api = _MockApi();
 
-late AsyncSnapshot<ChatAvatarData> Function() getResult;
+late AsyncSnapshot<ChatProfile> Function() getResult;
 
 Future<void> _mountHook(WidgetTester tester) async {
-  getResult = await mountHook(tester, () => useChatAvatar(_pubkey, _groupId));
+  getResult = await mountHook(tester, () => useChatProfile(_pubkey, _groupId));
   await tester.pump();
 }
 
@@ -91,18 +93,19 @@ void main() {
     _api.shouldError = false;
   });
 
-  group('useChatAvatar', () {
+  group('useChatProfile', () {
     group('when is DM', () {
       setUp(() => _api.isDm = true);
 
       group('when other member has metadata', () {
-        testWidgets('returns other member avatar data', (tester) async {
+        testWidgets('returns other member profile', (tester) async {
           await _mountHook(tester);
 
           expect(
             getResult().data,
-            const ChatAvatarData(
+            const ChatProfile(
               displayName: 'Alice',
+              color: _otherPubkeyColor,
               pictureUrl: 'https://example.com/alice.jpg',
               otherMemberPubkey: _otherPubkey,
             ),
@@ -115,20 +118,25 @@ void main() {
 
           expect(
             getResult().data,
-            const ChatAvatarData(displayName: 'bob', otherMemberPubkey: _otherPubkey),
+            const ChatProfile(
+              displayName: 'bob',
+              color: _otherPubkeyColor,
+              otherMemberPubkey: _otherPubkey,
+            ),
           );
         });
       });
 
       group('when other member has no metadata', () {
-        testWidgets('returns Unknown User avatar data', (tester) async {
+        testWidgets('returns Unknown User profile', (tester) async {
           _api.metadata = const FlutterMetadata(custom: {});
           await _mountHook(tester);
 
           expect(
             getResult().data,
-            const ChatAvatarData(
+            const ChatProfile(
               displayName: 'Unknown User',
+              color: _otherPubkeyColor,
               otherMemberPubkey: _otherPubkey,
             ),
           );
@@ -138,12 +146,15 @@ void main() {
       group('when there is no other member', () {
         setUp(() => _api.members = [_pubkey]);
 
-        testWidgets('returns Unknown User avatar data', (tester) async {
+        testWidgets('returns Unknown User profile', (tester) async {
           await _mountHook(tester);
 
           expect(
             getResult().data,
-            const ChatAvatarData(displayName: 'Unknown User'),
+            const ChatProfile(
+              displayName: 'Unknown User',
+              color: _groupIdColor,
+            ),
           );
         });
       });
@@ -152,14 +163,15 @@ void main() {
     group('when is not DM', () {
       setUp(() => _api.isDm = false);
 
-      testWidgets('returns group avatar data', (tester) async {
+      testWidgets('returns group profile', (tester) async {
         _api.groupName = 'Cool Group';
         await _mountHook(tester);
 
         expect(
           getResult().data,
-          const ChatAvatarData(
+          const ChatProfile(
             displayName: 'Cool Group',
+            color: _groupIdColor,
             pictureUrl: 'https://example.com/group.jpg',
           ),
         );
@@ -171,8 +183,9 @@ void main() {
 
         expect(
           getResult().data,
-          const ChatAvatarData(
+          const ChatProfile(
             displayName: 'Unknown group',
+            color: _groupIdColor,
             pictureUrl: 'https://example.com/group.jpg',
           ),
         );
@@ -192,65 +205,79 @@ void main() {
     });
   });
 
-  group('ChatAvatarData equality and hashCode', () {
+  group('ChatProfile equality and hashCode', () {
     test('equal objects have equal hash codes', () {
-      const avatar1 = ChatAvatarData(
+      const profile1 = ChatProfile(
         displayName: 'Alice',
+        color: _pubkeyColor,
         pictureUrl: 'https://example.com/alice.jpg',
         otherMemberPubkey: 'pubkey1',
       );
-      const avatar2 = ChatAvatarData(
+      const profile2 = ChatProfile(
         displayName: 'Alice',
+        color: _pubkeyColor,
         pictureUrl: 'https://example.com/alice.jpg',
         otherMemberPubkey: 'pubkey1',
       );
 
-      expect(avatar1, avatar2);
-      expect(avatar1.hashCode, avatar2.hashCode);
+      expect(profile1, profile2);
+      expect(profile1.hashCode, profile2.hashCode);
     });
 
     test('equal objects with null pictureUrl have equal hash codes', () {
-      const avatar1 = ChatAvatarData(displayName: 'Bob');
-      const avatar2 = ChatAvatarData(displayName: 'Bob');
+      const profile1 = ChatProfile(displayName: 'Bob', color: AvatarColor.blue);
+      const profile2 = ChatProfile(displayName: 'Bob', color: AvatarColor.blue);
 
-      expect(avatar1, avatar2);
-      expect(avatar1.hashCode, avatar2.hashCode);
+      expect(profile1, profile2);
+      expect(profile1.hashCode, profile2.hashCode);
     });
 
     test('different displayNames produce different hash codes', () {
-      const avatar1 = ChatAvatarData(displayName: 'Alice');
-      const avatar2 = ChatAvatarData(displayName: 'Bob');
+      const profile1 = ChatProfile(displayName: 'Alice', color: AvatarColor.blue);
+      const profile2 = ChatProfile(displayName: 'Bob', color: AvatarColor.blue);
 
-      expect(avatar1, isNot(avatar2));
-      expect(avatar1.hashCode, isNot(avatar2.hashCode));
+      expect(profile1, isNot(profile2));
+      expect(profile1.hashCode, isNot(profile2.hashCode));
     });
 
     test('different pictureUrls produce different hash codes', () {
-      const avatar1 = ChatAvatarData(
+      const profile1 = ChatProfile(
         displayName: 'Alice',
+        color: AvatarColor.blue,
         pictureUrl: 'https://example.com/pic1.jpg',
       );
-      const avatar2 = ChatAvatarData(
+      const profile2 = ChatProfile(
         displayName: 'Alice',
+        color: AvatarColor.blue,
         pictureUrl: 'https://example.com/pic2.jpg',
       );
 
-      expect(avatar1, isNot(avatar2));
-      expect(avatar1.hashCode, isNot(avatar2.hashCode));
+      expect(profile1, isNot(profile2));
+      expect(profile1.hashCode, isNot(profile2.hashCode));
     });
 
     test('different otherMemberPubkeys produce different hash codes', () {
-      const avatar1 = ChatAvatarData(
+      const profile1 = ChatProfile(
         displayName: 'Alice',
+        color: AvatarColor.blue,
         otherMemberPubkey: 'pubkey1',
       );
-      const avatar2 = ChatAvatarData(
+      const profile2 = ChatProfile(
         displayName: 'Alice',
+        color: AvatarColor.blue,
         otherMemberPubkey: 'pubkey2',
       );
 
-      expect(avatar1, isNot(avatar2));
-      expect(avatar1.hashCode, isNot(avatar2.hashCode));
+      expect(profile1, isNot(profile2));
+      expect(profile1.hashCode, isNot(profile2.hashCode));
+    });
+
+    test('different colors produce different hash codes', () {
+      const profile1 = ChatProfile(displayName: 'Alice', color: AvatarColor.blue);
+      const profile2 = ChatProfile(displayName: 'Alice', color: AvatarColor.amber);
+
+      expect(profile1, isNot(profile2));
+      expect(profile1.hashCode, isNot(profile2.hashCode));
     });
   });
 }

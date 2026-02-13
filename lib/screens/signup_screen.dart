@@ -14,7 +14,6 @@ import 'package:whitenoise/hooks/use_image_picker.dart';
 import 'package:whitenoise/hooks/use_signup.dart' show useSignup;
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/auth_provider.dart' show authProvider;
-import 'package:whitenoise/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:whitenoise/routes.dart' show Routes;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart' show WnAvatar, WnAvatarSize;
@@ -96,17 +95,12 @@ class SignupScreen extends HookConsumerWidget {
     }, [imagePickerError]);
 
     Future<void> onSubmit() async {
-      final wasAddingAccount = ref.read(isAddingAccountProvider);
       final success = await submit(
         displayName: displayNameController.text.trim(),
         bio: bioController.text.trim(),
       );
       if (success && context.mounted) {
-        if (wasAddingAccount) {
-          Routes.goToChatList(context);
-        } else {
-          Routes.goToOnboarding(context);
-        }
+        Routes.goToChatList(context);
       }
     }
 

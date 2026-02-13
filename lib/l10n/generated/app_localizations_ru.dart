@@ -303,6 +303,20 @@ class AppLocalizationsRu extends AppLocalizations {
   String get startConversation => 'Начните разговор';
 
   @override
+  String get welcomeNoticeTitle => 'Ваш профиль готов';
+
+  @override
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startANewChat) {
+    return 'Нажмите $findPeople, чтобы найти друзей. $shareProfile, чтобы связаться со знакомыми, или $startANewChat, используя иконку чата.';
+  }
+
+  @override
+  String get findPeople => 'Найти людей';
+
+  @override
+  String get startANewChat => 'начните новый чат';
+
+  @override
   String get noMessagesYet => 'Пока нет сообщений';
 
   @override

@@ -60,14 +60,16 @@ class WnButton extends StatelessWidget {
     final borderColor = disabled
         ? colors.borderTertiary.withValues(alpha: 0.25)
         : colors.borderTertiary;
-    final bgColor = disabled ? colors.fillSecondary.withValues(alpha: 0.25) : colors.fillSecondary;
+    final bgColor = disabled
+        ? colors.fillQuaternary.withValues(alpha: 0.25)
+        : colors.fillQuaternary;
     final contentColor = disabled
         ? colors.fillContentSecondary.withValues(alpha: 0.25)
         : colors.fillContentSecondary;
 
     return _buildButton(
       backgroundColor: bgColor,
-      overlayColor: colors.fillSecondaryHover,
+      overlayColor: colors.fillQuaternaryHover,
       contentColor: contentColor,
       borderSide: BorderSide(color: borderColor),
     );
