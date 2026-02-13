@@ -9,6 +9,8 @@ import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_copyable_field.dart' show WnCopyableField;
 import 'package:whitenoise/widgets/wn_icon.dart';
 
+import 'package:whitenoise/hooks/use_clipboard_guard.dart' show cancelClipboardGuardTimer;
+
 import '../mocks/mock_clipboard.dart' show clearClipboardMock, mockClipboard;
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
@@ -64,6 +66,10 @@ void main() {
   setUp(() {
     mockApi.setAccountType(AccountType.local);
     mockApi.setExportNsecThrows(false);
+  });
+
+  tearDown(() {
+    cancelClipboardGuardTimer();
   });
 
   Future<void> pumpProfileKeysScreen(WidgetTester tester) async {
@@ -160,6 +166,7 @@ void main() {
       await tester.tap(copyButtons.last);
       await tester.pump();
       expect(getClipboard(), startsWith('nsec1'));
+      cancelClipboardGuardTimer();
     });
 
     testWidgets('shows success message when copying public key', (tester) async {
@@ -178,6 +185,7 @@ void main() {
       await tester.tap(copyButtons.last);
       await tester.pump();
       expect(find.text('Private key copied to clipboard'), findsOneWidget);
+      cancelClipboardGuardTimer();
     });
 
     testWidgets('private key field remains after copying', (tester) async {
@@ -191,6 +199,7 @@ void main() {
       await tester.pump();
 
       expect(find.byType(WnCopyableField), findsNWidgets(2));
+      cancelClipboardGuardTimer();
     });
 
     testWidgets('tapping visibility toggle shows/hides private key', (tester) async {

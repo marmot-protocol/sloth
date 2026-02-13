@@ -14,6 +14,7 @@ void main() {
     });
 
     tearDown(() {
+      cancelClipboardGuardTimer();
       clearClipboardMock();
     });
 
@@ -85,7 +86,7 @@ void main() {
       expect(getClipboard(), '');
     });
 
-    testWidgets('cancels timer on dispose', (tester) async {
+    testWidgets('timer persists after widget disposal', (tester) async {
       late void Function() capturedSchedule;
       final showHook = ValueNotifier(true);
 
@@ -112,7 +113,7 @@ void main() {
       await tester.pump();
 
       await tester.pump(const Duration(seconds: 60));
-      expect(getClipboard(), isNull);
+      expect(getClipboard(), '');
     });
   });
 }
