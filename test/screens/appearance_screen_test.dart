@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' show AsyncData;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
@@ -8,34 +7,10 @@ import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_dropdown_selector.dart';
 
+import '../mocks/mock_auth_notifier.dart';
 import '../mocks/mock_secure_storage.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
-
-class _MockAuthNotifier extends AuthNotifier {
-  final String _overridePubkey = testPubkeyA;
-
-  @override
-  Future<String?> build() async {
-    final storage = ref.read(secureStorageProvider);
-    final storedPubkey = await storage.read(key: 'active_account_pubkey');
-
-    if (storedPubkey == null) {
-      await storage.write(key: 'active_account_pubkey', value: _overridePubkey);
-    }
-
-    final pubkey = storedPubkey ?? _overridePubkey;
-    state = AsyncData(pubkey);
-    return pubkey;
-  }
-
-  @override
-  Future<void> resetAuth() async {
-    final storage = ref.read(secureStorageProvider);
-    await storage.delete(key: 'active_account_pubkey');
-    state = const AsyncData(null);
-  }
-}
 
 void main() {
   late MockWnApi mockApi;
@@ -60,7 +35,7 @@ void main() {
     await mountTestApp(
       tester,
       overrides: [
-        authProvider.overrideWith(() => _MockAuthNotifier()),
+        authProvider.overrideWith(MockAuthNotifier.new),
         secureStorageProvider.overrideWithValue(MockSecureStorage()),
       ],
     );

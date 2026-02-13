@@ -109,7 +109,7 @@ class AppLocalizationsTr extends AppLocalizations {
   String get privacySecurityTitle => 'Gizlilik ve güvenlik';
 
   @override
-  String get deleteAllAppData => 'Tüm uygulama verilerini sil';
+  String get deleteAllAppData => 'Tüm Uygulama Verilerini Sil';
 
   @override
   String get deleteAppData => 'Uygulama verilerini sil';

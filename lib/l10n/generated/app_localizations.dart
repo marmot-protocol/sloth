@@ -309,7 +309,7 @@ abstract class AppLocalizations {
   /// Section title for delete all app data
   ///
   /// In en, this message translates to:
-  /// **'Delete all app data'**
+  /// **'Delete All App Data'**
   String get deleteAllAppData;
 
   /// Button text to delete all app data

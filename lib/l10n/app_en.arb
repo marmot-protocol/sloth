@@ -166,7 +166,7 @@
     "description": "Privacy and security screen title"
   },
 
-  "deleteAllAppData": "Delete all app data",
+  "deleteAllAppData": "Delete All App Data",
   "@deleteAllAppData": {
     "description": "Section title for delete all app data"
   },

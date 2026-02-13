@@ -109,7 +109,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get privacySecurityTitle => 'Privacy & security';
 
   @override
-  String get deleteAllAppData => 'Delete all app data';
+  String get deleteAllAppData => 'Delete All App Data';
 
   @override
   String get deleteAppData => 'Delete app data';
