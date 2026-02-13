@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:whitenoise/hooks/use_chat_list.dart';
 import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/theme.dart';
+import 'package:whitenoise/utils/chat_search.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
 import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
@@ -25,8 +27,10 @@ class ChatListScreen extends HookConsumerWidget {
     final chatListResult = useChatList(pubkey);
     final safeAreaTop = MediaQuery.of(context).padding.top;
     final notice = useSystemNotice();
+    final searchQuery = useState('');
 
     final chatList = chatListResult.chats;
+    final filteredChats = filterChatsBySearch(chatList, searchQuery.value);
     final isLoading = chatListResult.isLoading;
 
     return Scaffold(
@@ -34,13 +38,16 @@ class ChatListScreen extends HookConsumerWidget {
       body: Stack(
         children: [
           WnChatList(
-            itemCount: chatList.length,
+            itemCount: filteredChats.length,
             isLoading: isLoading,
+            isSearchActive: searchQuery.value.isNotEmpty,
             topPadding: safeAreaTop + _slateHeight.h,
-            header: const WnSearchAndFilters(),
+            header: WnSearchAndFilters(
+              onSearchChanged: (value) => searchQuery.value = value,
+            ),
             headerHeight: _searchAndFiltersHeight.h,
             itemBuilder: (context, index) {
-              final chatSummary = chatList[index];
+              final chatSummary = filteredChats[index];
               return ChatListTile(
                 key: Key(chatSummary.mlsGroupId),
                 chatSummary: chatSummary,

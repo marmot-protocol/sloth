@@ -19,9 +19,13 @@ import 'package:whitenoise/widgets/wn_slate.dart';
 import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
-ChatSummary _chatSummary({required String id, required bool pendingConfirmation}) => ChatSummary(
+ChatSummary _chatSummary({
+  required String id,
+  required bool pendingConfirmation,
+  String? name,
+}) => ChatSummary(
   mlsGroupId: id,
-  name: 'Chat $id',
+  name: name ?? 'Chat $id',
   groupType: GroupType.group,
   createdAt: DateTime(2024),
   pendingConfirmation: pendingConfirmation,
@@ -210,6 +214,88 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(find.byType(ChatScreen), findsOneWidget);
+      });
+    });
+
+    group('search', () {
+      Future<void> revealSearchBar(WidgetTester tester) async {
+        final gesture = await tester.startGesture(const Offset(200, 400));
+        await gesture.moveBy(const Offset(0, 200));
+        await tester.pump();
+        await gesture.up();
+        await tester.pumpAndSettle();
+      }
+
+      setUp(
+        () => _api.initialChats = [
+          _chatSummary(id: testPubkeyA, pendingConfirmation: false, name: 'Alice'),
+          _chatSummary(id: testPubkeyB, pendingConfirmation: false, name: 'Bob'),
+          _chatSummary(id: testPubkeyC, pendingConfirmation: false, name: 'Engineering Team'),
+        ],
+      );
+
+      testWidgets('filters chats by search query', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        await tester.enterText(find.byType(TextField), 'Alice');
+        await tester.pump();
+
+        expect(find.byType(ChatListTile), findsOneWidget);
+      });
+
+      testWidgets('shows all chats when search is cleared', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        await tester.enterText(find.byType(TextField), 'Alice');
+        await tester.pump();
+        expect(find.byType(ChatListTile), findsOneWidget);
+
+        await tester.enterText(find.byType(TextField), '');
+        await tester.pump();
+        expect(find.byType(ChatListTile), findsNWidgets(3));
+      });
+
+      testWidgets('search is case-insensitive', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        await tester.enterText(find.byType(TextField), 'alice');
+        await tester.pump();
+
+        expect(find.byType(ChatListTile), findsOneWidget);
+      });
+
+      testWidgets('shows no results message for non-matching query', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        await tester.enterText(find.byType(TextField), 'Zorro');
+        await tester.pump();
+
+        expect(find.byType(ChatListTile), findsNothing);
+        expect(find.text('No results'), findsOneWidget);
+        expect(find.text('No chats yet'), findsNothing);
+      });
+
+      testWidgets('search bar stays visible when no results match', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        await tester.enterText(find.byType(TextField), 'Zorro');
+        await tester.pump();
+
+        expect(find.byType(WnSearchAndFilters), findsOneWidget);
+        expect(find.byType(TextField), findsOneWidget);
+      });
+
+      testWidgets('passes onSearchChanged callback to WnSearchAndFilters', (tester) async {
+        await pumpChatListScreen(tester);
+        await revealSearchBar(tester);
+
+        final widget = tester.widget<WnSearchAndFilters>(find.byType(WnSearchAndFilters));
+        expect(widget.onSearchChanged, isNotNull);
       });
     });
   });

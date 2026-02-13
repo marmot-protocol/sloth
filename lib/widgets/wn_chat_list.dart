@@ -19,6 +19,7 @@ class WnChatList extends HookWidget {
     required this.itemCount,
     required this.itemBuilder,
     this.isLoading = false,
+    this.isSearchActive = false,
     this.topPadding = 0,
     this.header,
     this.headerHeight = 0,
@@ -27,6 +28,7 @@ class WnChatList extends HookWidget {
   final int itemCount;
   final Widget Function(BuildContext context, int index) itemBuilder;
   final bool isLoading;
+  final bool isSearchActive;
   final double topPadding;
   final Widget? header;
   final double headerHeight;
@@ -53,7 +55,7 @@ class WnChatList extends HookWidget {
       );
     }
 
-    if (itemCount == 0) {
+    if (itemCount == 0 && !isSearchActive) {
       final typography = context.typographyScaled;
       return Center(
         key: const Key('chat_list_empty'),
@@ -74,6 +76,14 @@ class WnChatList extends HookWidget {
         ),
       );
     }
+
+    useEffect(() {
+      if (isSearchActive && hasHeader) {
+        headerOpen.value = true;
+        headerRevealController.animateTo(1.0, curve: Curves.easeOut);
+      }
+      return null;
+    }, [isSearchActive, hasHeader]);
 
     void updateScrollState(ScrollMetrics metrics) {
       final newValue = metrics.extentBefore > 0;
@@ -182,20 +192,33 @@ class WnChatList extends HookWidget {
         onNotification: handleScrollNotification,
         child: Stack(
           children: [
-            ListView.builder(
-              key: const Key('chat_list'),
-              controller: scrollController,
-              padding: EdgeInsets.only(
-                top: topPadding + headerOffset + 16.h,
-                left: horizontalPadding,
-                right: horizontalPadding,
+            if (isSearchActive && itemCount == 0)
+              Positioned.fill(
+                key: const Key('chat_list_no_results'),
+                child: Center(
+                  child: Text(
+                    context.l10n.noResults,
+                    style: context.typographyScaled.medium18.copyWith(
+                      color: colors.backgroundContentPrimary,
+                    ),
+                  ),
+                ),
+              )
+            else
+              ListView.builder(
+                key: const Key('chat_list'),
+                controller: scrollController,
+                padding: EdgeInsets.only(
+                  top: topPadding + headerOffset + 16.h,
+                  left: horizontalPadding,
+                  right: horizontalPadding,
+                ),
+                physics: const AlwaysScrollableScrollPhysics(
+                  parent: BouncingScrollPhysics(),
+                ),
+                itemCount: itemCount,
+                itemBuilder: itemBuilder,
               ),
-              physics: const AlwaysScrollableScrollPhysics(
-                parent: BouncingScrollPhysics(),
-              ),
-              itemCount: itemCount,
-              itemBuilder: itemBuilder,
-            ),
             if (hasHeader && (headerOpen.value || headerRevealAnimation > 0))
               Positioned(
                 key: const Key('chat_list_header'),

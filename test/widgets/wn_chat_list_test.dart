@@ -42,6 +42,18 @@ void main() {
         expect(find.text('No chats yet'), findsOneWidget);
         expect(find.text('Start a conversation'), findsOneWidget);
       });
+
+      testWidgets('shows no results when search is active and no items match', (tester) async {
+        await mountWidget(
+          const WnChatList(itemCount: 0, isSearchActive: true, itemBuilder: _emptyBuilder),
+          tester,
+        );
+        await tester.pump();
+
+        expect(find.byKey(const Key('chat_list_no_results')), findsOneWidget);
+        expect(find.text('No results'), findsOneWidget);
+        expect(find.text('No chats yet'), findsNothing);
+      });
     });
 
     group('list state', () {
@@ -430,6 +442,23 @@ void main() {
           );
         },
       );
+
+      testWidgets('header is forced open when isSearchActive is true', (tester) async {
+        await mountWidget(
+          const WnChatList(
+            itemCount: 0,
+            isSearchActive: true,
+            itemBuilder: _emptyBuilder,
+            header: Text('Header'),
+            headerHeight: 142,
+          ),
+          tester,
+        );
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('chat_list_header')), findsOneWidget);
+        expect(find.text('Header'), findsOneWidget);
+      });
 
       testWidgets('does not render header when header is null', (tester) async {
         await mountWidget(
