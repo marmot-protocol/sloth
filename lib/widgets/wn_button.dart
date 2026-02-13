@@ -48,7 +48,6 @@ class WnButton extends StatelessWidget {
       overlayColor: colors.fillPrimaryHover,
       contentColor: colors.fillContentPrimary,
       borderSide: BorderSide.none,
-      applyContainerOpacity: disabled,
     );
   }
 
@@ -58,7 +57,6 @@ class WnButton extends StatelessWidget {
       overlayColor: colors.fillQuaternaryHover,
       contentColor: colors.fillContentSecondary,
       borderSide: BorderSide(color: colors.borderTertiary),
-      applyContainerOpacity: disabled,
     );
   }
 
@@ -68,7 +66,6 @@ class WnButton extends StatelessWidget {
       overlayColor: colors.fillTertiaryHover,
       contentColor: colors.fillContentSecondary,
       borderSide: BorderSide.none,
-      applyContainerOpacity: disabled,
     );
   }
 
@@ -78,7 +75,6 @@ class WnButton extends StatelessWidget {
       overlayColor: colors.fillQuaternaryHover,
       contentColor: colors.backgroundContentPrimary,
       borderSide: BorderSide.none,
-      applyContainerOpacity: disabled,
     );
   }
 
@@ -88,7 +84,6 @@ class WnButton extends StatelessWidget {
       overlayColor: colors.fillDestructiveHover,
       contentColor: colors.fillContentDestructive,
       borderSide: BorderSide.none,
-      applyContainerOpacity: disabled,
     );
   }
 
@@ -97,7 +92,6 @@ class WnButton extends StatelessWidget {
     required Color overlayColor,
     required Color contentColor,
     required BorderSide borderSide,
-    bool applyContainerOpacity = false,
   }) {
     final verticalPadding = _getVerticalPadding();
     final horizontalPadding = _getHorizontalPadding();
@@ -121,10 +115,6 @@ class WnButton extends StatelessWidget {
           ? _buildLoadingIndicator(contentColor)
           : _buildContent(contentColor, iconSize, fontSize, iconPadding),
     );
-
-    if (applyContainerOpacity) {
-      button = Opacity(opacity: 0.25, child: button);
-    }
 
     return button;
   }
