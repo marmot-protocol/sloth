@@ -59,6 +59,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Implement isFollowingUser method [PR #132](https://github.com/marmot-protocol/sloth/pull/132)
 - Npub formatting [PR #157](https://github.com/marmot-protocol/sloth/pull/157)
 - Migrate to whitenoise app bundle id [PR #163](https://github.com/marmot-protocol/sloth/pull/163)
+- Change chat header style to match slate design [PR #258](https://github.com/marmot-protocol/whitenoise/pull/258)
 
 ### Deprecated
 
