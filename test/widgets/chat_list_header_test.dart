@@ -70,7 +70,7 @@ void main() {
     await tester.pumpAndSettle();
   }
 
-  group('WnAccountBar', () {
+  group('ChatListHeader', () {
     testWidgets('displays avatar', (tester) async {
       await pumpChatListScreen(tester);
       expect(find.byKey(const Key('avatar_button')), findsOneWidget);

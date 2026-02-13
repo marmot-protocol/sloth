@@ -12,8 +12,8 @@ import 'package:whitenoise/src/rust/api/chat_list.dart';
 import 'package:whitenoise/src/rust/api/groups.dart';
 import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
 import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/chat_list_header.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
-import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
 import 'package:whitenoise/widgets/wn_search_and_filters.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
@@ -115,10 +115,10 @@ void main() {
   }
 
   group('ChatListScreen', () {
-    testWidgets('displays account bar', (tester) async {
+    testWidgets('displays header', (tester) async {
       await pumpChatListScreen(tester);
 
-      expect(find.byType(WnAccountBar), findsOneWidget);
+      expect(find.byType(ChatListHeader), findsOneWidget);
     });
 
     testWidgets('displays slate container', (tester) async {
