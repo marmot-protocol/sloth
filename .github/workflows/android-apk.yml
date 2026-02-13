@@ -1,0 +1,102 @@
+name: Android APK Build
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Build Staging APK
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.38.4'
+        channel: 'stable'
+        cache: true
+
+    - name: Setup Rust
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android
+
+    - name: Cache Flutter dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.pub-cache
+          ${{ github.workspace }}/.pub-cache
+        key: ${{ runner.os }}-pub-cache-${{ hashFiles('**/pubspec.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-pub-cache-
+
+    - name: Cache Rust dependencies
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.cargo/registry
+          ~/.cargo/git
+          rust/target
+        key: ${{ runner.os }}-cargo-android-${{ hashFiles('**/Cargo.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-cargo-android-
+
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+
+    - name: Install Android NDK
+      run: |
+        echo "y" | sdkmanager --install "ndk;27.0.12077973"
+        echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/27.0.12077973" >> $GITHUB_ENV
+
+    - name: Install Flutter dependencies
+      run: flutter pub get
+
+    - name: Build Rust libraries for Android
+      run: ./scripts/build_android.sh
+
+    - name: Build staging APK
+      run: flutter build apk --flavor staging --split-per-abi
+
+    - name: Set artifact name
+      run: |
+        echo "SHORT_SHA=${GITHUB_SHA::7}" >> $GITHUB_ENV
+        BRANCH_NAME="${GITHUB_REF_NAME//\//-}"
+        echo "BRANCH_NAME=$BRANCH_NAME" >> $GITHUB_ENV
+
+    - name: Upload APK artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: apk-staging-${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }}
+        path: build/app/outputs/flutter-apk/*-staging-*.apk
+        retention-days: 30
+        if-no-files-found: error
+
+    - name: Summary
+      run: |
+        cat >> "${GITHUB_STEP_SUMMARY}" <<SUMMARY
+        ## Android APK Build Complete
+
+        **Commit:** ${{ github.sha }}
+
+        ### Download APKs
+        1. Go to the **Actions** tab
+        2. Click on this workflow run
+        3. Scroll down to **Artifacts**
+        4. Download **apk-staging-${{ env.BRANCH_NAME }}-${{ env.SHORT_SHA }}**
+
+        ### APK Files
+        SUMMARY
+        ls -la build/app/outputs/flutter-apk/*-staging-*.apk >> "${GITHUB_STEP_SUMMARY}" 2>/dev/null || echo "APK listing not available" >> "${GITHUB_STEP_SUMMARY}"
