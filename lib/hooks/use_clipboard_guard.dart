@@ -1,8 +1,8 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter/services.dart';
 import 'package:logging/logging.dart';
-import 'package:meta/meta.dart';
 
 final _logger = Logger('useClipboardGuard');
 
