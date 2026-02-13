@@ -84,6 +84,7 @@ class WnConfirmationSlate extends StatelessWidget {
     return WnSlate(
       header: WnSlateNavigationHeader(
         title: title,
+        type: WnSlateNavigationType.back,
         onNavigate: onCancel,
       ),
       child: Padding(
