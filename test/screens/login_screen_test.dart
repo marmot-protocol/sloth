@@ -148,6 +148,7 @@ void main() {
       testWidgets('calls login method with entered nsec', (tester) async {
         await pumpLoginScreen(tester);
         await tester.enterText(find.byType(TextField), 'nsec1test');
+        await tester.pump();
         await tester.tap(find.byKey(const Key('login_button')));
         await tester.pump();
         expect(mockAuth.lastNsec, 'nsec1test');
@@ -158,6 +159,7 @@ void main() {
         testWidgets('redirects to chat list screen on success', (tester) async {
           await pumpLoginScreen(tester);
           await tester.enterText(find.byType(TextField), 'nsec1test');
+          await tester.pump();
           await tester.tap(find.byKey(const Key('login_button')));
           await tester.pumpAndSettle();
           expect(find.byType(ChatListScreen), findsOneWidget);
@@ -169,6 +171,7 @@ void main() {
           await pumpLoginScreen(tester);
           mockAuth.errorToThrow = Exception('Invalid key');
           await tester.enterText(find.byType(TextField), 'nsec1test');
+          await tester.pump();
           await tester.tap(find.byKey(const Key('login_button')));
           await tester.pumpAndSettle();
           expect(find.byType(ChatListScreen), findsNothing);
@@ -178,6 +181,7 @@ void main() {
           await pumpLoginScreen(tester);
           mockAuth.errorToThrow = Exception('Invalid key');
           await tester.enterText(find.byType(TextField), 'nsec1test');
+          await tester.pump();
           await tester.tap(find.byKey(const Key('login_button')));
           await tester.pumpAndSettle();
           expect(
@@ -217,29 +221,44 @@ void main() {
       });
     });
 
-    group('button type by signer and nsec', () {
+    group('button types and disabled state', () {
       testWidgets('login button is primary when signer is unavailable', (tester) async {
         await pumpLoginScreen(tester);
         final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
         expect(loginButton.type, WnButtonType.primary);
       });
 
+      testWidgets('login button is disabled when nsec is empty', (tester) async {
+        await pumpLoginScreen(tester);
+        final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+        expect(loginButton.disabled, isTrue);
+      });
+
+      testWidgets('login button is enabled when nsec is entered', (tester) async {
+        await pumpLoginScreen(tester);
+        await tester.enterText(find.byType(TextField), 'nsec1abc');
+        await tester.pump();
+        final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
+        expect(loginButton.disabled, isFalse);
+      });
+
       testWidgets(
-        'login is outline and signer is primary when signer available and nsec empty',
+        'login is primary and disabled, amber is outline when signer available and nsec empty',
         (tester) async {
           await pumpLoginScreen(tester, signerAvailable: true);
           final loginButton = tester.widget<WnButton>(find.byKey(const Key('login_button')));
           final signerButton = tester.widget<WnButton>(
             find.byKey(const Key('android_signer_login_button')),
           );
-          expect(loginButton.type, WnButtonType.outline);
-          expect(signerButton.type, WnButtonType.primary);
+          expect(loginButton.type, WnButtonType.primary);
+          expect(loginButton.disabled, isTrue);
+          expect(signerButton.type, WnButtonType.outline);
         },
         variant: TargetPlatformVariant.only(TargetPlatform.android),
       );
 
       testWidgets(
-        'login is primary and signer is outline when signer available and nsec entered',
+        'login is primary and enabled, amber is outline when signer available and nsec entered',
         (tester) async {
           await pumpLoginScreen(tester, signerAvailable: true);
           await tester.enterText(find.byType(TextField), 'nsec1abc');
@@ -249,6 +268,7 @@ void main() {
             find.byKey(const Key('android_signer_login_button')),
           );
           expect(loginButton.type, WnButtonType.primary);
+          expect(loginButton.disabled, isFalse);
           expect(signerButton.type, WnButtonType.outline);
         },
         variant: TargetPlatformVariant.only(TargetPlatform.android),
@@ -516,6 +536,7 @@ void main() {
         await pumpLoginScreen(tester);
         mockAuth.errorToThrow = Exception('Invalid key');
         await tester.enterText(find.byType(TextField), 'nsec1test');
+        await tester.pump();
         await tester.tap(find.byKey(const Key('login_button')));
         await tester.pumpAndSettle();
         expect(
@@ -546,6 +567,7 @@ void main() {
         mockAuth.loginCompleter = completer;
 
         await tester.enterText(find.byType(TextField), 'nsec1test');
+        await tester.pump();
         await tester.tap(find.byKey(const Key('login_button')));
         await tester.pump();
 
@@ -562,6 +584,7 @@ void main() {
           mockAuth.loginCompleter = Completer<void>();
 
           await tester.enterText(find.byType(TextField), 'nsec1test');
+          await tester.pump();
           await tester.tap(find.byKey(const Key('login_button')));
           await tester.pump();
 

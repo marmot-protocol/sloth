@@ -185,7 +185,7 @@
   "search": "Cerca",
   "filterChats": "Chat",
   "filterArchive": "Archivio",
-  "loginWithSigner": "Accedi con Signer",
+  "loginWithAmber": "Accedi con Amber",
   "signerConnectionError": "Impossibile connettersi al signer. Riprova.",
   "signerErrorUserRejected": "Accesso annullato",
   "signerErrorNotConnected": "Non connesso al signer. Riprova.",

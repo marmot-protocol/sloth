@@ -1200,11 +1200,11 @@ abstract class AppLocalizations {
   /// **'Dec'**
   String get monthDecShort;
 
-  /// Button text to login using an external signer app
+  /// Button text to login using the Amber signer app (Android only)
   ///
   /// In en, this message translates to:
-  /// **'Login with Signer'**
-  String get loginWithSigner;
+  /// **'Login with Amber'**
+  String get loginWithAmber;
 
   /// Error message when connection to external signer fails
   ///

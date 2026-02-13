@@ -980,9 +980,9 @@
     "description": "December short name"
   },
   
-  "loginWithSigner": "Login with Signer",
-  "@loginWithSigner": {
-    "description": "Button text to login using an external signer app"
+  "loginWithAmber": "Login with Amber",
+  "@loginWithAmber": {
+    "description": "Button text to login using the Amber signer app (Android only)"
   },
 
   "signerConnectionError": "Unable to connect to signer. Please try again.",

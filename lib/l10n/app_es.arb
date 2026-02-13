@@ -185,7 +185,7 @@
   "search": "Buscar",
   "filterChats": "Chats",
   "filterArchive": "Archivados",
-  "loginWithSigner": "Iniciar sesión con Signer",
+  "loginWithAmber": "Iniciar sesión con Amber",
   "signerConnectionError": "No se pudo conectar al signer. Por favor, inténtalo de nuevo.",
   "signerErrorUserRejected": "Inicio de sesión cancelado",
   "signerErrorNotConnected": "No conectado al signer. Por favor, inténtalo de nuevo.",

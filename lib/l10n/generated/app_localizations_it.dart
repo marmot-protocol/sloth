@@ -616,7 +616,7 @@ class AppLocalizationsIt extends AppLocalizations {
   String get monthDecShort => 'Dic';
 
   @override
-  String get loginWithSigner => 'Accedi con Signer';
+  String get loginWithAmber => 'Accedi con Amber';
 
   @override
   String get signerConnectionError => 'Impossibile connettersi al signer. Riprova.';

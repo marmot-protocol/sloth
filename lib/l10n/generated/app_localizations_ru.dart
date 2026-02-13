@@ -622,7 +622,7 @@ class AppLocalizationsRu extends AppLocalizations {
   String get monthDecShort => 'Дек';
 
   @override
-  String get loginWithSigner => 'Войти через Signer';
+  String get loginWithAmber => 'Войти через Amber';
 
   @override
   String get signerConnectionError => 'Не удалось подключиться к signer. Попробуйте снова.';

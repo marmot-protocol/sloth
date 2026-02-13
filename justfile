@@ -265,6 +265,14 @@ build-staging-apk:
     ./scripts/build_android.sh && flutter build apk --flavor staging
 
 when-apk: build-staging-apk
+
+# Run the app on a connected device (staging flavor by default)
+run flavor="staging":
+    flutter run --flavor {{flavor}}
+
+# Run the app on a connected device (production flavor)
+run-production:
+    flutter run --flavor production
 # ==============================================================================
 # HELPER RECIPES
 # ==============================================================================
