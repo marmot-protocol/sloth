@@ -18,12 +18,12 @@ import 'package:whitenoise/services/message_service.dart';
 import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/utils/avatar_color.dart';
-import 'package:whitenoise/widgets/wn_chat_header.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
 import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_chat_header.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 final _logger = Logger('ChatScreen');
@@ -202,13 +202,12 @@ class ChatScreen extends HookConsumerWidget {
                   SafeArea(
                     bottom: false,
                     child: WnSlate(
-                      padding: EdgeInsets.symmetric(vertical: 14.h),
-                      header: WnChatHeader(
+                      header: WnSlateChatHeader(
                         displayName: chatProfile.data?.displayName ?? '',
                         avatarColor: chatProfile.data?.color ?? AvatarColor.neutral,
                         pictureUrl: chatProfile.data?.pictureUrl,
                         onBack: () => Routes.goToChatList(context),
-                        onMenuTap: () {
+                        onAvatarTap: () {
                           final otherPubkey = chatProfile.data?.otherMemberPubkey;
                           if (otherPubkey != null) {
                             Routes.pushToChatInfo(context, otherPubkey);
