@@ -106,6 +106,8 @@ void main() {
 
       await tester.pump(const Duration(seconds: 60));
 
+      expect(tester.takeException(), isNull);
+
       clearClipboardMock();
       getClipboard = mockClipboard();
     });
@@ -113,6 +115,7 @@ void main() {
     testWidgets('timer persists after widget disposal', (tester) async {
       late void Function() capturedSchedule;
       final showHook = ValueNotifier(true);
+      addTearDown(showHook.dispose);
 
       await tester.pumpWidget(
         MaterialApp(
