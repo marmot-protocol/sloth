@@ -525,6 +525,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
   final Color fillContentPrimary;
   final Color fillContentSecondary;
   final Color fillContentTertiary;
+  final Color fillContentQuaternary;
   final Color fillContentDestructive;
   final Color borderPrimary;
   final Color borderSecondary;
@@ -575,6 +576,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     required this.fillContentPrimary,
     required this.fillContentSecondary,
     required this.fillContentTertiary,
+    required this.fillContentQuaternary,
     required this.fillContentDestructive,
     required this.borderPrimary,
     required this.borderSecondary,
@@ -626,6 +628,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     fillContentPrimary: _BaseColors.white,
     fillContentSecondary: _NeutralColors.neutral950,
     fillContentTertiary: _NeutralColors.neutral500,
+    fillContentQuaternary: _BaseColors.white,
     fillContentDestructive: _BaseColors.white,
     borderPrimary: _NeutralColors.neutral950,
     borderSecondary: _NeutralColors.neutral500,
@@ -677,6 +680,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     fillContentPrimary: _NeutralColors.neutral950,
     fillContentSecondary: _BaseColors.white,
     fillContentTertiary: _NeutralColors.neutral400,
+    fillContentQuaternary: _BaseColors.white,
     fillContentDestructive: _BaseColors.white,
     borderPrimary: _BaseColors.white,
     borderSecondary: _NeutralColors.neutral400,
@@ -729,6 +733,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
     Color? fillContentPrimary,
     Color? fillContentSecondary,
     Color? fillContentTertiary,
+    Color? fillContentQuaternary,
     Color? fillContentDestructive,
     Color? borderPrimary,
     Color? borderSecondary,
@@ -781,6 +786,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       fillContentPrimary: fillContentPrimary ?? this.fillContentPrimary,
       fillContentSecondary: fillContentSecondary ?? this.fillContentSecondary,
       fillContentTertiary: fillContentTertiary ?? this.fillContentTertiary,
+      fillContentQuaternary: fillContentQuaternary ?? this.fillContentQuaternary,
       fillContentDestructive: fillContentDestructive ?? this.fillContentDestructive,
       borderPrimary: borderPrimary ?? this.borderPrimary,
       borderSecondary: borderSecondary ?? this.borderSecondary,
@@ -860,6 +866,7 @@ class SemanticColors extends ThemeExtension<SemanticColors> {
       fillContentPrimary: Color.lerp(fillContentPrimary, other.fillContentPrimary, t)!,
       fillContentSecondary: Color.lerp(fillContentSecondary, other.fillContentSecondary, t)!,
       fillContentTertiary: Color.lerp(fillContentTertiary, other.fillContentTertiary, t)!,
+      fillContentQuaternary: Color.lerp(fillContentQuaternary, other.fillContentQuaternary, t)!,
       fillContentDestructive: Color.lerp(fillContentDestructive, other.fillContentDestructive, t)!,
       borderPrimary: Color.lerp(borderPrimary, other.borderPrimary, t)!,
       borderSecondary: Color.lerp(borderSecondary, other.borderSecondary, t)!,

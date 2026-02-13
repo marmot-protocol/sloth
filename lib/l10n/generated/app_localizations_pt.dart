@@ -725,4 +725,7 @@ class AppLocalizationsPt extends AppLocalizations {
 
   @override
   String get deleteAllDataError => 'Falha ao excluir todos os dados. Por favor, tente novamente.';
+
+  @override
+  String get retry => 'Tentar novamente';
 }

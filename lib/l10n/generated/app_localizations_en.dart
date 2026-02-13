@@ -720,4 +720,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get deleteAllDataError => 'Failed to delete all data. Please try again.';
+
+  @override
+  String get retry => 'Retry';
 }

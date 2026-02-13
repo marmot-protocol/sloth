@@ -215,5 +215,6 @@
   "deleteAllData": "Tüm Verileri Sil",
   "deleteAllDataConfirmation": "Tüm veriler silinsin mi?",
   "deleteAllDataWarning": "Bu işlem, bu cihazdaki tüm sohbetlerinizi, mesajlarınızı ve ayarlarınızı kalıcı olarak silecektir. Bu işlem geri alınamaz.",
-  "deleteAllDataError": "Tüm veriler silinemedi. Lütfen tekrar deneyin."
+  "deleteAllDataError": "Tüm veriler silinemedi. Lütfen tekrar deneyin.",
+  "retry": "Tekrar dene"
 }

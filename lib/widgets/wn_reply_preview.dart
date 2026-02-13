@@ -56,11 +56,29 @@ class WnReplyPreview extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                   ),
                   SizedBox(height: 2.h),
-                  Text(
-                    content,
-                    style: typography.medium12.copyWith(color: colors.backgroundContentPrimary),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                  Row(
+                    children: [
+                      if (data.hasMedia && !data.isNotFound) ...[
+                        WnIcon(
+                          key: const Key('reply_media_icon'),
+                          WnIcons.image,
+                          color: colors.backgroundContentPrimary,
+                          size: 12.sp,
+                        ),
+                        if (content.isNotEmpty) SizedBox(width: 4.w),
+                      ],
+                      if (content.isNotEmpty)
+                        Flexible(
+                          child: Text(
+                            content,
+                            style: typography.medium12.copyWith(
+                              color: colors.backgroundContentPrimary,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
                   ),
                 ],
               ),

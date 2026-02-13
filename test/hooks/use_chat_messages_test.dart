@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
+import 'package:whitenoise/src/rust/api/media_files.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
@@ -16,6 +17,7 @@ ChatMessage _message(
   String pubkey = testPubkeyA,
   bool isDeleted = false,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
+  List<MediaFile> mediaAttachments = const [],
 }) => ChatMessage(
   id: id,
   pubkey: pubkey,
@@ -26,8 +28,22 @@ ChatMessage _message(
   isDeleted: isDeleted,
   contentTokens: const [],
   reactions: reactions,
-  mediaAttachments: const [],
+  mediaAttachments: mediaAttachments,
   kind: 9,
+);
+
+MediaFile _mediaFile(String id) => MediaFile(
+  id: id,
+  mlsGroupId: testGroupId,
+  accountPubkey: testPubkeyA,
+  filePath: '/test/path/$id.jpg',
+  originalFileHash: 'hash$id',
+  encryptedFileHash: 'encrypted$id',
+  mimeType: 'image/jpeg',
+  mediaType: 'image',
+  blossomUrl: 'https://example.com/$id',
+  nostrKey: 'nostr$id',
+  createdAt: DateTime(2024),
 );
 
 const _emptyMetadata = FlutterMetadata(custom: {});
@@ -511,6 +527,7 @@ void main() {
         expect(preview.messageId, 'unknown');
         expect(preview.authorPubkey, '');
         expect(preview.content, '');
+        expect(preview.hasMedia, isFalse);
         expect(preview.authorMetadata, isNull);
       });
 
@@ -526,6 +543,7 @@ void main() {
         final preview = getResult().getReplyPreview('m2');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isTrue);
+        expect(preview.hasMedia, isFalse);
         expect(preview.messageId, 'm2');
       });
 
@@ -548,10 +566,33 @@ void main() {
         final preview = getResult().getReplyPreview('m1');
         expect(preview, isNotNull);
         expect(preview!.isNotFound, isFalse);
+        expect(preview.hasMedia, isFalse);
         expect(preview.messageId, 'm1');
         expect(preview.authorPubkey, authorPubkey);
         expect(preview.content, 'Original content');
         expect(preview.authorMetadata?.displayName, 'Original Author');
+      });
+
+      testWidgets('returns hasMedia true when message has media attachments', (tester) async {
+        _api.userMetadataResponse = const FlutterMetadata(custom: {});
+        final getResult = await _pump(tester, 'group1');
+
+        _api.emitInitialSnapshot([
+          _message(
+            'm1',
+            DateTime(2024),
+            content: 'With media',
+            mediaAttachments: [_mediaFile('file1')],
+          ),
+        ]);
+        await tester.pump();
+        getResult().getReplyPreview('m1');
+        await tester.pumpAndSettle();
+
+        final preview = getResult().getReplyPreview('m1');
+        expect(preview, isNotNull);
+        expect(preview!.hasMedia, isTrue);
+        expect(preview.content, 'With media');
       });
 
       testWidgets('rebuilds with author metadata after async fetch completes', (tester) async {

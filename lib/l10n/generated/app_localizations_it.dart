@@ -721,4 +721,7 @@ class AppLocalizationsIt extends AppLocalizations {
 
   @override
   String get deleteAllDataError => 'Impossibile eliminare tutti i dati. Riprova.';
+
+  @override
+  String get retry => 'Riprova';
 }

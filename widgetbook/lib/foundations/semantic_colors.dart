@@ -193,6 +193,11 @@ Widget allColors(BuildContext context) {
               darkColor: dark.fillContentTertiary,
             ),
             _ColorPairItem(
+              semanticName: 'Fill Content Quaternary',
+              lightColor: light.fillContentQuaternary,
+              darkColor: dark.fillContentQuaternary,
+            ),
+            _ColorPairItem(
               semanticName: 'Fill Content Destructive',
               lightColor: light.fillContentDestructive,
               darkColor: dark.fillContentDestructive,
