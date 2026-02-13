@@ -5,6 +5,7 @@ import 'package:flutter_rust_bridge/flutter_rust_bridge_for_generated.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/routes.dart';
+import 'package:whitenoise/screens/chat_info_screen.dart';
 import 'package:whitenoise/screens/chat_list_screen.dart';
 import 'package:whitenoise/screens/chat_screen.dart';
 import 'package:whitenoise/screens/wip_screen.dart';
@@ -23,6 +24,8 @@ import '../test_helpers.dart';
 
 const _testPubkey = testPubkeyA;
 const _testGroupId = testGroupId;
+const _groupIdColor = AvatarColor.violet;
+const _otherPubkeyColor = AvatarColor.amber;
 
 ChatMessage _message(
   String id, {
@@ -179,11 +182,32 @@ void main() {
   }
 
   group('ChatInviteScreen', () {
-    testWidgets('displays group name', (tester) async {
-      _api.groupName = 'My Group';
-      await pumpInviteScreen(tester);
+    group('display name', () {
+      group('when group', () {
+        testWidgets('shows group name', (tester) async {
+          _api.groupName = 'My Group';
+          await pumpInviteScreen(tester);
 
-      expect(find.text('My Group'), findsWidgets);
+          expect(find.text('My Group'), findsWidgets);
+        });
+      });
+
+      group('when DM', () {
+        setUp(() {
+          _api.isDm = true;
+          _api.groupMembers = [_testPubkey, testPubkeyB];
+          _api.userMetadataResponse = const FlutterMetadata(
+            displayName: 'Alice',
+            custom: {},
+          );
+        });
+
+        testWidgets('shows other member display name', (tester) async {
+          await pumpInviteScreen(tester);
+
+          expect(find.text('Alice'), findsWidgets);
+        });
+      });
     });
 
     testWidgets('displays back button', (tester) async {
@@ -192,10 +216,10 @@ void main() {
       expect(find.byKey(const Key('back_button')), findsOneWidget);
     });
 
-    testWidgets('displays menu button', (tester) async {
+    testWidgets('renders two avatars', (tester) async {
       await pumpInviteScreen(tester);
 
-      expect(find.byKey(const Key('menu_button')), findsOneWidget);
+      expect(find.byType(WnAvatar), findsNWidgets(2));
     });
 
     testWidgets('displays Accept button', (tester) async {
@@ -211,26 +235,33 @@ void main() {
     });
 
     group('avatar color', () {
-      testWidgets('uses group ID for non-DM', (tester) async {
-        await pumpInviteScreen(tester);
+      group('when group', () {
+        testWidgets('uses group ID', (tester) async {
+          await pumpInviteScreen(tester);
 
-        final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
-        expect(avatars.length, 2);
-        for (final avatar in avatars) {
-          expect(avatar.color, AvatarColor.fromPubkey(_testGroupId));
-        }
+          final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+          expect(avatars.length, 2);
+          for (final avatar in avatars) {
+            expect(avatar.color, _groupIdColor);
+          }
+        });
       });
 
-      testWidgets('uses other member pubkey for DM', (tester) async {
-        _api.isDm = true;
-        _api.groupMembers = [_testPubkey, testPubkeyB];
-        await pumpInviteScreen(tester);
+      group('when DM', () {
+        setUp(() {
+          _api.isDm = true;
+          _api.groupMembers = [_testPubkey, testPubkeyB];
+        });
 
-        final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
-        expect(avatars.length, 2);
-        for (final avatar in avatars) {
-          expect(avatar.color, AvatarColor.fromPubkey(testPubkeyB));
-        }
+        testWidgets('uses other member pubkey', (tester) async {
+          await pumpInviteScreen(tester);
+
+          final avatars = tester.widgetList<WnAvatar>(find.byType(WnAvatar)).toList();
+          expect(avatars.length, 2);
+          for (final avatar in avatars) {
+            expect(avatar.color, _otherPubkeyColor);
+          }
+        });
       });
     });
 
@@ -422,12 +453,45 @@ void main() {
         expect(find.byType(ChatListScreen), findsOneWidget);
       });
 
-      testWidgets('menu button navigates to WIP screen', (tester) async {
-        await pumpInviteScreen(tester);
-        await tester.tap(find.byKey(const Key('menu_button')));
-        await tester.pumpAndSettle();
+      group('when DM', () {
+        setUp(() {
+          _api.isDm = true;
+          _api.groupMembers = [_testPubkey, testPubkeyB];
+        });
 
-        expect(find.byType(WipScreen), findsOneWidget);
+        testWidgets('header avatar navigates to chat info', (tester) async {
+          await pumpInviteScreen(tester);
+          await tester.tap(find.byKey(const Key('header_avatar_tap_area')));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ChatInfoScreen), findsOneWidget);
+        });
+
+        testWidgets('large avatar navigates to chat info', (tester) async {
+          await pumpInviteScreen(tester);
+          await tester.tap(find.byKey(const Key('large_avatar_tap_area')));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(ChatInfoScreen), findsOneWidget);
+        });
+      });
+
+      group('when group', () {
+        testWidgets('header avatar navigates to WIP', (tester) async {
+          await pumpInviteScreen(tester);
+          await tester.tap(find.byKey(const Key('header_avatar_tap_area')));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(WipScreen), findsOneWidget);
+        });
+
+        testWidgets('large avatar navigates to WIP', (tester) async {
+          await pumpInviteScreen(tester);
+          await tester.tap(find.byKey(const Key('large_avatar_tap_area')));
+          await tester.pumpAndSettle();
+
+          expect(find.byType(WipScreen), findsOneWidget);
+        });
       });
     });
   });
