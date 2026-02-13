@@ -37,10 +37,11 @@ class WnSystemNotice extends HookWidget {
     this.onDismiss,
     this.onToggle,
     this.autoHideDuration,
+    this.animateEntrance = true,
   });
 
   final String title;
-  final String? description;
+  final Widget? description;
   final WnSystemNoticeType type;
   final WnSystemNoticeVariant variant;
   final Widget? primaryAction;
@@ -48,6 +49,7 @@ class WnSystemNotice extends HookWidget {
   final VoidCallback? onDismiss;
   final VoidCallback? onToggle;
   final Duration? autoHideDuration;
+  final bool animateEntrance;
 
   bool get _isCollapsed => variant == WnSystemNoticeVariant.collapsed;
   bool get _isExpanded => variant == WnSystemNoticeVariant.expanded;
@@ -59,7 +61,6 @@ class WnSystemNotice extends HookWidget {
     final colors = context.colors;
     final typography = context.typographyScaled;
     final (bgColor, contentColor, icon) = _getStyle(colors);
-    final descriptionColor = colors.backgroundContentQuaternary;
     final bool shouldShowDetails =
         !_isCollapsed &&
         !_isTemporary &&
@@ -113,7 +114,11 @@ class WnSystemNotice extends HookWidget {
     }
 
     useEffect(() {
-      slideController.forward();
+      if (animateEntrance) {
+        slideController.forward();
+      } else {
+        slideController.value = 1.0;
+      }
       return null;
     }, const []);
 
@@ -188,30 +193,19 @@ class WnSystemNotice extends HookWidget {
                             children: [
                               if (description != null) ...[
                                 Gap(4.h),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                  child: Text(
-                                    description!,
-                                    style: typography.medium14.copyWith(
-                                      color: descriptionColor,
-                                    ),
-                                  ),
-                                ),
+                                description!,
                               ],
                               if (primaryAction != null || secondaryAction != null) ...[
                                 Gap(8.h),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(horizontal: 8.w),
-                                  child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                                    children: [
-                                      if (secondaryAction != null) ...[
-                                        secondaryAction!,
-                                        Gap(8.h),
-                                      ],
-                                      if (primaryAction != null) primaryAction!,
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                                  children: [
+                                    if (secondaryAction != null) ...[
+                                      secondaryAction!,
+                                      Gap(8.h),
                                     ],
-                                  ),
+                                    if (primaryAction != null) primaryAction!,
+                                  ],
                                 ),
                               ],
                             ],

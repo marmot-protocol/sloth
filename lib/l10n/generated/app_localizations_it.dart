@@ -290,15 +290,15 @@ class AppLocalizationsIt extends AppLocalizations {
   String get welcomeNoticeTitle => 'Il tuo profilo è pronto';
 
   @override
-  String welcomeNoticeDescription(String findPeople, String shareProfile, String startNewChat) {
-    return 'Tocca $findPeople per trovare i tuoi amici. $shareProfile per connetterti con persone che conosci, o $startNewChat usando l\'icona chat.';
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startANewChat) {
+    return 'Tocca $findPeople per trovare i tuoi amici. $shareProfile per connetterti con persone che conosci, o $startANewChat usando l\'icona chat.';
   }
 
   @override
   String get findPeople => 'Trova persone';
 
   @override
-  String get startNewChat => 'Nuova chat';
+  String get startANewChat => 'inizia una nuova chat';
 
   @override
   String get noMessagesYet => 'Ancora nessun messaggio';
@@ -327,6 +327,9 @@ class AppLocalizationsIt extends AppLocalizations {
   String failedToDeclineInvitation(String error) {
     return 'Impossibile rifiutare l\'invito: $error';
   }
+
+  @override
+  String get startNewChat => 'Nuova chat';
 
   @override
   String get noResults => 'Nessun risultato';

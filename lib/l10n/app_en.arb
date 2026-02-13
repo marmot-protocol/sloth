@@ -450,13 +450,13 @@
     "description": "Title for welcome notice shown on empty chat list after signup"
   },
 
-  "welcomeNoticeDescription": "Tap {findPeople} to find your friends. {shareProfile} to connect with people you know, or {startNewChat} using the chat plus icon.",
+  "welcomeNoticeDescription": "Tap {findPeople} to find your friends. {shareProfile} to connect with people you know, or {startANewChat} using the chat plus icon.",
   "@welcomeNoticeDescription": {
     "description": "Description for welcome notice shown on empty chat list",
     "placeholders": {
       "findPeople": { "type": "String" },
       "shareProfile": { "type": "String" },
-      "startNewChat": { "type": "String" }
+      "startANewChat": { "type": "String" }
     }
   },
 
@@ -465,8 +465,8 @@
     "description": "Button text to find/search for people"
   },
 
-  "startNewChat": "start a new chat",
-  "@startNewChat": {
+  "startANewChat": "start a new chat",
+  "@startANewChat": {
     "description": "Text for starting a new chat action"
   },
 

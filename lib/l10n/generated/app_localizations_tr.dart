@@ -289,15 +289,15 @@ class AppLocalizationsTr extends AppLocalizations {
   String get welcomeNoticeTitle => 'Profiliniz hazır';
 
   @override
-  String welcomeNoticeDescription(String findPeople, String shareProfile, String startNewChat) {
-    return 'Arkadaşlarınızı bulmak için $findPeople\'a dokunun. Tanıdığınız kişilerle bağlantı kurmak için $shareProfile veya sohbet artı simgesini kullanarak $startNewChat.';
+  String welcomeNoticeDescription(String findPeople, String shareProfile, String startANewChat) {
+    return 'Arkadaşlarınızı bulmak için $findPeople\'a dokunun. Tanıdığınız kişilerle bağlantı kurmak için $shareProfile veya sohbet artı simgesini kullanarak $startANewChat.';
   }
 
   @override
   String get findPeople => 'Kişi bul';
 
   @override
-  String get startNewChat => 'Yeni sohbet';
+  String get startANewChat => 'yeni bir sohbet başlatın';
 
   @override
   String get noMessagesYet => 'Henüz mesaj yok';
@@ -326,6 +326,9 @@ class AppLocalizationsTr extends AppLocalizations {
   String failedToDeclineInvitation(String error) {
     return 'Davet reddedilemedi: $error';
   }
+
+  @override
+  String get startNewChat => 'Yeni sohbet';
 
   @override
   String get noResults => 'Sonuç yok';
