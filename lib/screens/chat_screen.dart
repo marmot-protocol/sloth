@@ -8,6 +8,7 @@ import 'package:whitenoise/hooks/use_chat_input.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/hooks/use_chat_profile.dart';
 import 'package:whitenoise/hooks/use_chat_scroll.dart';
+import 'package:whitenoise/hooks/use_media_upload.dart';
 import 'package:whitenoise/hooks/use_scroll_to_message.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/models/reply_preview.dart';
@@ -15,11 +16,13 @@ import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/message_actions_screen.dart';
 import 'package:whitenoise/services/message_service.dart';
+import 'package:whitenoise/src/rust/api/media_files.dart';
 import 'package:whitenoise/src/rust/api/messages.dart' show ChatMessage;
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/utils/avatar_color.dart';
 import 'package:whitenoise/widgets/wn_chat_header.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
+import 'package:whitenoise/widgets/wn_media_upload_preview.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
 import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart';
@@ -48,6 +51,7 @@ class ChatScreen extends HookConsumerWidget {
       :latestMessageId,
       :latestMessagePubkey,
       :getReplyPreview,
+      :getAuthorMetadata,
     ) = useChatMessages(
       groupId,
     );
@@ -57,6 +61,7 @@ class ChatScreen extends HookConsumerWidget {
     );
     final scrollController = scrollToMessageResult.scrollController;
     final input = useChatInput();
+    final mediaUpload = useMediaUpload(pubkey: pubkey, groupId: groupId);
     final messageService = useMemoized(
       () => MessageService(pubkey: pubkey, groupId: groupId),
       [pubkey, groupId],
@@ -79,13 +84,19 @@ class ChatScreen extends HookConsumerWidget {
       isLatestMessageOwn: latestMessagePubkey == pubkey,
     );
 
-    Future<void> sendMessage(String message, ChatMessage? replyingTo) async {
-      await messageService.sendTextMessage(
+    Future<void> sendMessage(
+      String message,
+      ChatMessage? replyingTo,
+      List<MediaFile> mediaFiles,
+    ) async {
+      await messageService.sendMessage(
         content: message,
         replyToMessageId: replyingTo?.id,
         replyToMessagePubkey: replyingTo?.pubkey,
         replyToMessageKind: replyingTo?.kind,
+        mediaFiles: mediaFiles,
       );
+      mediaUpload.clearAll();
     }
 
     Future<void> toggleReaction(ChatMessage message, String emoji) {
@@ -148,6 +159,7 @@ class ChatScreen extends HookConsumerWidget {
           final message = getMessage(index);
           final isOwnMessage = message.pubkey == pubkey;
           final replyPreview = message.isReply ? getReplyPreview(message.replyToId) : null;
+          final authorMetadata = getAuthorMetadata(message.pubkey);
 
           return AutoScrollTag(
             key: ValueKey(message.id),
@@ -163,6 +175,8 @@ class ChatScreen extends HookConsumerWidget {
               onReplyTap: replyPreview != null && !replyPreview.isNotFound
                   ? () => scrollToMessageResult.scrollToMessage(replyPreview.messageId)
                   : null,
+              senderName: authorMetadata?.displayName,
+              senderPictureUrl: authorMetadata?.picture,
             ),
           );
         },
@@ -226,6 +240,7 @@ class ChatScreen extends HookConsumerWidget {
               top: false,
               child: _ChatInput(
                 input: input,
+                mediaUpload: mediaUpload,
                 currentUserPubkey: pubkey,
                 onSend: sendMessage,
                 onError: showNotice,
@@ -242,6 +257,7 @@ class ChatScreen extends HookConsumerWidget {
 class _ChatInput extends StatelessWidget {
   const _ChatInput({
     required this.input,
+    required this.mediaUpload,
     required this.currentUserPubkey,
     required this.onSend,
     required this.onError,
@@ -249,8 +265,14 @@ class _ChatInput extends StatelessWidget {
   });
 
   final ChatInputState input;
+  final MediaUploadState mediaUpload;
   final String currentUserPubkey;
-  final Future<void> Function(String message, ChatMessage? replyingTo) onSend;
+  final Future<void> Function(
+    String message,
+    ChatMessage? replyingTo,
+    List<MediaFile> mediaFiles,
+  )
+  onSend;
   final void Function(String message) onError;
   final ReplyPreview? Function(String? replyId) getReplyPreview;
 
@@ -258,12 +280,15 @@ class _ChatInput extends StatelessWidget {
   Widget build(BuildContext context) {
     final colors = context.colors;
     final typography = context.typographyScaled;
+    final hasMedia = mediaUpload.items.isNotEmpty;
+    final canSend = input.hasContent || mediaUpload.canSend;
+    final sendEnabled = input.hasContent || (hasMedia && mediaUpload.canSend);
 
     Future<void> handleSend() async {
       final text = input.controller.text.trim();
-      if (text.isEmpty) return;
+      if (text.isEmpty && !mediaUpload.canSend) return;
       try {
-        await onSend(text, input.replyingTo);
+        await onSend(text, input.replyingTo, mediaUpload.uploadedFiles);
         input.clear();
       } catch (e, st) {
         _logger.severe('Failed to send message', e, st);
@@ -300,30 +325,64 @@ class _ChatInput extends StatelessWidget {
                       ),
                     ),
                   ],
-                  TextField(
-                    controller: input.controller,
-                    focusNode: input.focusNode,
-                    maxLines: 5,
-                    minLines: 1,
-                    textCapitalization: TextCapitalization.sentences,
-                    style: typography.medium14.copyWith(
-                      color: colors.backgroundContentPrimary,
+                  if (input.replyingTo != null && hasMedia) SizedBox(height: 8.h),
+                  if (hasMedia) ...[
+                    WnMediaUploadPreview(
+                      items: mediaUpload.items,
+                      onRemove: mediaUpload.removeItem,
+                      onAddMore: () {
+                        input.focusNode.unfocus();
+                        mediaUpload.pickImages();
+                      },
                     ),
-                    decoration: InputDecoration(
-                      hintText: context.l10n.messagePlaceholder,
-                      hintStyle: typography.medium14.copyWith(
-                        color: colors.backgroundContentTertiary,
+                  ],
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      if (!hasMedia && (input.hasFocus || input.replyingTo != null))
+                        GestureDetector(
+                          key: const Key('attach_button'),
+                          onTap: () {
+                            input.focusNode.unfocus();
+                            mediaUpload.pickImages();
+                          },
+                          child: Padding(
+                            padding: EdgeInsets.only(left: 12.w, bottom: 14.h),
+                            child: WnIcon(
+                              WnIcons.addLarge,
+                              color: colors.backgroundContentSecondary,
+                              size: 20.sp,
+                            ),
+                          ),
+                        ),
+                      Expanded(
+                        child: TextField(
+                          controller: input.controller,
+                          focusNode: input.focusNode,
+                          maxLines: 5,
+                          minLines: 1,
+                          textCapitalization: TextCapitalization.sentences,
+                          style: typography.medium14.copyWith(
+                            color: colors.backgroundContentPrimary,
+                          ),
+                          decoration: InputDecoration(
+                            hintText: context.l10n.messagePlaceholder,
+                            hintStyle: typography.medium14.copyWith(
+                              color: colors.backgroundContentTertiary,
+                            ),
+                            filled: true,
+                            fillColor: colors.backgroundTertiary,
+                            contentPadding: EdgeInsets.symmetric(
+                              horizontal: 14.w,
+                              vertical: 20.h,
+                            ),
+                            border: InputBorder.none,
+                            enabledBorder: InputBorder.none,
+                            focusedBorder: InputBorder.none,
+                          ),
+                        ),
                       ),
-                      filled: true,
-                      fillColor: colors.backgroundTertiary,
-                      contentPadding: EdgeInsets.symmetric(
-                        horizontal: 14.w,
-                        vertical: 20.h,
-                      ),
-                      border: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                    ),
+                    ],
                   ),
                 ],
               ),
@@ -332,23 +391,25 @@ class _ChatInput extends StatelessWidget {
           AnimatedSize(
             duration: const Duration(milliseconds: 150),
             curve: Curves.easeOut,
-            child: input.hasContent
+            child: canSend
                 ? Padding(
                     padding: EdgeInsets.only(left: 8.w),
                     child: GestureDetector(
                       key: const Key('send_button'),
-                      onTap: handleSend,
+                      onTap: sendEnabled ? handleSend : null,
                       child: Container(
                         width: 44.w,
                         height: 44.h,
                         decoration: BoxDecoration(
-                          color: colors.fillPrimary,
+                          color: sendEnabled ? colors.fillPrimary : colors.fillSecondary,
                           borderRadius: BorderRadius.circular(8.r),
                         ),
                         child: Center(
                           child: WnIcon(
                             WnIcons.arrowUp,
-                            color: colors.fillContentPrimary,
+                            color: sendEnabled
+                                ? colors.fillContentPrimary
+                                : colors.backgroundContentTertiary,
                             size: 20.sp,
                           ),
                         ),

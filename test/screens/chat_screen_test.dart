@@ -1015,5 +1015,49 @@ void main() {
         });
       });
     });
+
+    group('media attachment', () {
+      testWidgets('displays attach button when input is focused', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('attach_button')), findsOneWidget);
+      });
+
+      testWidgets('hides attach button when input is not focused', (tester) async {
+        await pumpChatScreen(tester);
+
+        expect(find.byKey(const Key('attach_button')), findsNothing);
+      });
+
+      testWidgets('displays attach button when reply preview is active', (tester) async {
+        _api.initialMessages = [
+          _message('m1', DateTime(2024)),
+        ];
+        await pumpChatScreen(tester);
+
+        await tester.longPress(find.text('Message m1'));
+        await tester.pumpAndSettle();
+        await tester.tap(find.byKey(const Key('reply_button')));
+        await tester.pumpAndSettle();
+
+        expect(find.byKey(const Key('attach_button')), findsOneWidget);
+      });
+
+      testWidgets('unfocuses input when attach button is tapped', (tester) async {
+        await pumpChatScreen(tester);
+        await tester.tap(find.byType(TextField));
+        await tester.pumpAndSettle();
+
+        final textField = tester.widget<TextField>(find.byType(TextField));
+        expect(textField.focusNode!.hasFocus, isTrue);
+
+        await tester.tap(find.byKey(const Key('attach_button')));
+        await tester.pumpAndSettle();
+
+        expect(textField.focusNode!.hasFocus, isFalse);
+      });
+    });
   });
 }
