@@ -86,6 +86,30 @@ void main() {
       expect(getClipboard(), '');
     });
 
+    testWidgets('handles clipboard failure gracefully', (tester) async {
+      late void Function() capturedSchedule;
+
+      await tester.pumpWidget(
+        MaterialApp(
+          home: HookBuilder(
+            builder: (context) {
+              capturedSchedule = useClipboardGuard();
+              return const SizedBox();
+            },
+          ),
+        ),
+      );
+
+      clearClipboardMock();
+      mockClipboardFailing();
+      capturedSchedule();
+
+      await tester.pump(const Duration(seconds: 60));
+
+      clearClipboardMock();
+      getClipboard = mockClipboard();
+    });
+
     testWidgets('timer persists after widget disposal', (tester) async {
       late void Function() capturedSchedule;
       final showHook = ValueNotifier(true);
