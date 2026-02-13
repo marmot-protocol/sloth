@@ -110,7 +110,9 @@ class ChatListScreen extends HookConsumerWidget {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 40.w),
                 child: Text(
-                  '${context.l10n.sloganDecentralized}, ${context.l10n.sloganUncensorable.toLowerCase()},\n${context.l10n.sloganSecureMessaging.toLowerCase()}.',
+                  '${context.l10n.sloganDecentralized}, '
+                  '${context.l10n.sloganUncensorable.toLowerCase()},\n'
+                  '${context.l10n.sloganSecureMessaging.toLowerCase()}.',
                   style: typography.medium16.copyWith(
                     color: colors.backgroundContentTertiary,
                   ),
@@ -153,7 +155,11 @@ class ChatListScreen extends HookConsumerWidget {
                       type: WnSystemNoticeType.neutral,
                       variant: WnSystemNoticeVariant.dismissible,
                       animateEntrance: false,
-                      onDismiss: () => welcomeNoticeDismissed.value = true,
+                      onDismiss: () {
+                        if (context.mounted) {
+                          welcomeNoticeDismissed.value = true;
+                        }
+                      },
                       secondaryAction: WnButton(
                         key: const Key('find_people_button'),
                         text: context.l10n.findPeople,
