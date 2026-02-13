@@ -270,7 +270,7 @@ class AndroidSignerPlugin :
         pendingResult = result
         currentRequestId = id
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:${Uri.encode(eventJson)}"))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:$eventJson"))
         intent.`package` = packageName
         intent.putExtra("type", "sign_event")
         intent.putExtra("id", id)
@@ -430,7 +430,7 @@ class AndroidSignerPlugin :
         pendingResult = result
         currentRequestId = id
 
-        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:${Uri.encode(content)}"))
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("$NOSTRSIGNER_SCHEME:$content"))
         intent.`package` = packageName
         intent.putExtra("type", type)
         intent.putExtra("pubkey", pubkey)
