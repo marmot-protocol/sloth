@@ -378,6 +378,27 @@ void main() {
       });
     });
 
+    group('dispose', () {
+      testWidgets('clears controller text on dispose', (tester) async {
+        late TextEditingController capturedController;
+
+        final widget = _TestWidget(
+          loginCallback: (_) async {},
+          onBuild: (controller, state, paste, submit, clearError) {
+            capturedController = controller;
+          },
+        );
+        await mountWidget(widget, tester);
+
+        await tester.enterText(find.byType(TextField), 'nsec1test');
+        expect(capturedController.text, 'nsec1test');
+
+        await tester.pumpWidget(const MaterialApp(home: SizedBox()));
+
+        expect(capturedController.text, isEmpty);
+      });
+    });
+
     group('clearError', () {
       testWidgets('clears error', (tester) async {
         late Future<bool> Function() capturedSubmit;

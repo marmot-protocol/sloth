@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:whitenoise/hooks/use_clipboard_guard.dart';
 import 'package:whitenoise/hooks/use_nsec.dart';
 import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/l10n/l10n.dart';
@@ -27,6 +28,7 @@ class SignOutScreen extends HookConsumerWidget {
     final (:nsecState) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
     final isLoggingOut = useState(false);
+    final scheduleClipboardClear = useClipboardGuard();
     final (:noticeMessage, :noticeType, :showSuccessNotice, :showErrorNotice, :dismissNotice) =
         useSystemNotice();
 
@@ -123,7 +125,10 @@ class SignOutScreen extends HookConsumerWidget {
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,
-                              onCopied: () => showSuccessNotice('privateKeyCopied'),
+                              onCopied: () {
+                                showSuccessNotice('privateKeyCopied');
+                                scheduleClipboardClear();
+                              },
                             ),
                           ],
                           Gap(32.h),

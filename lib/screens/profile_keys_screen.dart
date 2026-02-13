@@ -3,6 +3,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:gap/gap.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:whitenoise/hooks/use_clipboard_guard.dart';
 import 'package:whitenoise/hooks/use_nsec.dart';
 import 'package:whitenoise/hooks/use_system_notice.dart';
 import 'package:whitenoise/l10n/l10n.dart';
@@ -28,6 +29,7 @@ class ProfileKeysScreen extends HookConsumerWidget {
     final npub = npubFromHex(pubkey);
     final (:nsecState) = useNsec(pubkey);
     final obscurePrivateKey = useState(true);
+    final scheduleClipboardClear = useClipboardGuard();
     final (:noticeMessage, :noticeType, :showSuccessNotice, :showErrorNotice, :dismissNotice) =
         useSystemNotice();
 
@@ -97,7 +99,10 @@ class ProfileKeysScreen extends HookConsumerWidget {
                               obscurable: true,
                               obscured: obscurePrivateKey.value,
                               onToggleVisibility: togglePrivateKeyVisibility,
-                              onCopied: () => showSuccessNotice('privateKeyCopied'),
+                              onCopied: () {
+                                showSuccessNotice('privateKeyCopied');
+                                scheduleClipboardClear();
+                              },
                             ),
                             Gap(4.h),
                             Text(
