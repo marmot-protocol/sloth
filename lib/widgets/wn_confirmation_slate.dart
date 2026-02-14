@@ -43,24 +43,27 @@ class WnConfirmationSlate extends StatelessWidget {
         barrierColor: colors.backgroundPrimary.withValues(alpha: 0.8),
         pageBuilder: (context, _, _) {
           return SafeArea(
-            child: Column(
-              children: [
-                Expanded(
-                  child: GestureDetector(
-                    onTap: () => Navigator.of(context).pop(false),
-                    behavior: HitTestBehavior.opaque,
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 16.h),
+              child: Column(
+                children: [
+                  WnConfirmationSlate(
+                    title: title,
+                    message: message,
+                    confirmText: confirmText,
+                    cancelText: cancelText,
+                    onConfirm: () => Navigator.of(context).pop(true),
+                    onCancel: () => Navigator.of(context).pop(false),
+                    isDestructive: isDestructive,
                   ),
-                ),
-                WnConfirmationSlate(
-                  title: title,
-                  message: message,
-                  confirmText: confirmText,
-                  cancelText: cancelText,
-                  onConfirm: () => Navigator.of(context).pop(true),
-                  onCancel: () => Navigator.of(context).pop(false),
-                  isDestructive: isDestructive,
-                ),
-              ],
+                  Expanded(
+                    child: GestureDetector(
+                      onTap: () => Navigator.of(context).pop(false),
+                      behavior: HitTestBehavior.opaque,
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
@@ -81,6 +84,7 @@ class WnConfirmationSlate extends StatelessWidget {
     return WnSlate(
       header: WnSlateNavigationHeader(
         title: title,
+        type: WnSlateNavigationType.back,
         onNavigate: onCancel,
       ),
       child: Padding(
@@ -97,24 +101,21 @@ class WnConfirmationSlate extends StatelessWidget {
               ),
             ),
             Gap(24.h),
-            Row(
-              spacing: 12.w,
+            Column(
+              spacing: 8.h,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Expanded(
-                  child: WnButton(
-                    key: const Key('cancel_button'),
-                    onPressed: onCancel,
-                    text: cancelText,
-                    type: WnButtonType.outline,
-                  ),
+                WnButton(
+                  key: const Key('cancel_button'),
+                  onPressed: onCancel,
+                  text: cancelText,
+                  type: WnButtonType.outline,
                 ),
-                Expanded(
-                  child: WnButton(
-                    key: const Key('confirm_button'),
-                    onPressed: onConfirm,
-                    text: confirmText,
-                    type: isDestructive ? WnButtonType.destructive : WnButtonType.primary,
-                  ),
+                WnButton(
+                  key: const Key('confirm_button'),
+                  onPressed: onConfirm,
+                  text: confirmText,
+                  type: isDestructive ? WnButtonType.destructive : WnButtonType.primary,
                 ),
               ],
             ),

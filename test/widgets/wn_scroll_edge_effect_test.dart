@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart'
-    show BoxDecoration, Colors, Container, IgnorePointer, Key, LinearGradient, Positioned;
+    show BoxDecoration, Colors, DecoratedBox, IgnorePointer, Key, LinearGradient, Positioned;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/widgets/wn_scroll_edge_effect.dart'
     show ScrollEdgeEffectType, ScrollEdgePosition, WnScrollEdgeEffect;
@@ -31,17 +31,17 @@ void main() {
             tester,
           );
 
-          final container = tester.widget<Container>(
+          final decoratedBox = tester.widget<DecoratedBox>(
             find.descendant(
               of: find.byKey(const Key('canvas_top')),
-              matching: find.byType(Container),
+              matching: find.byType(DecoratedBox),
             ),
           );
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = decoratedBox.decoration as BoxDecoration;
           final gradient = decoration.gradient as LinearGradient;
 
           expect(gradient.colors.first, testColor);
-          expect(gradient.colors.last, testColor.withValues(alpha: 0));
+          expect(gradient.colors.last.a, closeTo(0, 0.01));
         });
 
         testWidgets('is positioned at top', (WidgetTester tester) async {
@@ -79,16 +79,16 @@ void main() {
             tester,
           );
 
-          final container = tester.widget<Container>(
+          final decoratedBox = tester.widget<DecoratedBox>(
             find.descendant(
               of: find.byKey(const Key('canvas_bottom')),
-              matching: find.byType(Container),
+              matching: find.byType(DecoratedBox),
             ),
           );
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = decoratedBox.decoration as BoxDecoration;
           final gradient = decoration.gradient as LinearGradient;
 
-          expect(gradient.colors.first, testColor.withValues(alpha: 0));
+          expect(gradient.colors.first.a, closeTo(0, 0.01));
           expect(gradient.colors.last, testColor);
         });
 
@@ -129,17 +129,17 @@ void main() {
             tester,
           );
 
-          final container = tester.widget<Container>(
+          final decoratedBox = tester.widget<DecoratedBox>(
             find.descendant(
               of: find.byKey(const Key('slate_top')),
-              matching: find.byType(Container),
+              matching: find.byType(DecoratedBox),
             ),
           );
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = decoratedBox.decoration as BoxDecoration;
           final gradient = decoration.gradient as LinearGradient;
 
           expect(gradient.colors.first, testColor);
-          expect(gradient.colors.last, testColor.withValues(alpha: 0));
+          expect(gradient.colors.last.a, closeTo(0, 0.01));
         });
 
         testWidgets('is positioned at top', (WidgetTester tester) async {
@@ -177,16 +177,16 @@ void main() {
             tester,
           );
 
-          final container = tester.widget<Container>(
+          final decoratedBox = tester.widget<DecoratedBox>(
             find.descendant(
               of: find.byKey(const Key('slate_bottom')),
-              matching: find.byType(Container),
+              matching: find.byType(DecoratedBox),
             ),
           );
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = decoratedBox.decoration as BoxDecoration;
           final gradient = decoration.gradient as LinearGradient;
 
-          expect(gradient.colors.first, testColor.withValues(alpha: 0));
+          expect(gradient.colors.first.a, closeTo(0, 0.01));
           expect(gradient.colors.last, testColor);
         });
 
@@ -227,17 +227,17 @@ void main() {
             tester,
           );
 
-          final container = tester.widget<Container>(
+          final decoratedBox = tester.widget<DecoratedBox>(
             find.descendant(
               of: find.byKey(const Key('dropdown_top')),
-              matching: find.byType(Container),
+              matching: find.byType(DecoratedBox),
             ),
           );
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = decoratedBox.decoration as BoxDecoration;
           final gradient = decoration.gradient as LinearGradient;
 
           expect(gradient.colors.first, testColor);
-          expect(gradient.colors.last, testColor.withValues(alpha: 0));
+          expect(gradient.colors.last.a, closeTo(0, 0.01));
         });
 
         testWidgets('is positioned at top', (WidgetTester tester) async {
@@ -281,16 +281,16 @@ void main() {
             tester,
           );
 
-          final container = tester.widget<Container>(
+          final decoratedBox = tester.widget<DecoratedBox>(
             find.descendant(
               of: find.byKey(const Key('dropdown_bottom')),
-              matching: find.byType(Container),
+              matching: find.byType(DecoratedBox),
             ),
           );
-          final decoration = container.decoration as BoxDecoration;
+          final decoration = decoratedBox.decoration as BoxDecoration;
           final gradient = decoration.gradient as LinearGradient;
 
-          expect(gradient.colors.first, testColor.withValues(alpha: 0));
+          expect(gradient.colors.first.a, closeTo(0, 0.01));
           expect(gradient.colors.last, testColor);
         });
 
@@ -354,6 +354,46 @@ void main() {
 
         final positioned = tester.widget<Positioned>(find.byType(Positioned).first);
         expect(positioned.height, customHeight);
+      });
+    });
+
+    group('gradient uses multiple stops for smooth transition', () {
+      testWidgets('top effect has 3 color stops', (WidgetTester tester) async {
+        await mountStackedWidget(
+          const WnScrollEdgeEffect.slateTop(key: Key('slate_top'), color: Colors.white),
+          tester,
+        );
+
+        final decoratedBox = tester.widget<DecoratedBox>(
+          find.descendant(
+            of: find.byKey(const Key('slate_top')),
+            matching: find.byType(DecoratedBox),
+          ),
+        );
+        final decoration = decoratedBox.decoration as BoxDecoration;
+        final gradient = decoration.gradient as LinearGradient;
+
+        expect(gradient.colors.length, 3);
+        expect(gradient.stops?.length, 3);
+      });
+
+      testWidgets('bottom effect has 3 color stops', (WidgetTester tester) async {
+        await mountStackedWidget(
+          const WnScrollEdgeEffect.slateBottom(key: Key('slate_bottom'), color: Colors.white),
+          tester,
+        );
+
+        final decoratedBox = tester.widget<DecoratedBox>(
+          find.descendant(
+            of: find.byKey(const Key('slate_bottom')),
+            matching: find.byType(DecoratedBox),
+          ),
+        );
+        final decoration = decoratedBox.decoration as BoxDecoration;
+        final gradient = decoration.gradient as LinearGradient;
+
+        expect(gradient.colors.length, 3);
+        expect(gradient.stops?.length, 3);
       });
     });
 

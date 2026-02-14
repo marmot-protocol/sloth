@@ -131,9 +131,14 @@
     "description": "Settings menu item"
   },
 
-  "appSettings": "App settings",
-  "@appSettings": {
-    "description": "Settings menu item"
+  "appearance": "Appearance",
+  "@appearance": {
+    "description": "Settings menu item for appearance"
+  },
+
+  "privacySecurity": "Privacy & security",
+  "@privacySecurity": {
+    "description": "Settings menu item for privacy and security"
   },
 
   "donateToWhiteNoise": "Donate to White Noise",
@@ -151,9 +156,39 @@
     "description": "Settings menu item and button"
   },
 
-  "appSettingsTitle": "App Settings",
-  "@appSettingsTitle": {
-    "description": "App settings screen title"
+  "appearanceTitle": "Appearance",
+  "@appearanceTitle": {
+    "description": "Appearance screen title"
+  },
+
+  "privacySecurityTitle": "Privacy & security",
+  "@privacySecurityTitle": {
+    "description": "Privacy and security screen title"
+  },
+
+  "deleteAllAppData": "Delete All App Data",
+  "@deleteAllAppData": {
+    "description": "Section title for delete all app data"
+  },
+
+  "deleteAppData": "Delete app data",
+  "@deleteAppData": {
+    "description": "Button text to delete all app data"
+  },
+
+  "deleteAllAppDataDescription": "Erase every profile, key, chat, and local file from this device.",
+  "@deleteAllAppDataDescription": {
+    "description": "Description for delete all app data action"
+  },
+
+  "deleteAllAppDataConfirmation": "Delete all app data?",
+  "@deleteAllAppDataConfirmation": {
+    "description": "Confirmation dialog title for deleting all app data"
+  },
+
+  "deleteAllAppDataWarning": "This will erase every profile, key, chat, and local file from this device. This cannot be undone.",
+  "@deleteAllAppDataWarning": {
+    "description": "Warning message in delete all app data confirmation dialog"
   },
 
   "theme": "Theme",

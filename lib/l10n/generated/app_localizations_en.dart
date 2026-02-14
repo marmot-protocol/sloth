@@ -88,7 +88,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String get networkRelays => 'Network relays';
 
   @override
-  String get appSettings => 'App settings';
+  String get appearance => 'Appearance';
+
+  @override
+  String get privacySecurity => 'Privacy & security';
 
   @override
   String get donateToWhiteNoise => 'Donate to White Noise';
@@ -100,7 +103,27 @@ class AppLocalizationsEn extends AppLocalizations {
   String get signOut => 'Sign out';
 
   @override
-  String get appSettingsTitle => 'App Settings';
+  String get appearanceTitle => 'Appearance';
+
+  @override
+  String get privacySecurityTitle => 'Privacy & security';
+
+  @override
+  String get deleteAllAppData => 'Delete All App Data';
+
+  @override
+  String get deleteAppData => 'Delete app data';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Erase every profile, key, chat, and local file from this device.';
+
+  @override
+  String get deleteAllAppDataConfirmation => 'Delete all app data?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'This will erase every profile, key, chat, and local file from this device. This cannot be undone.';
 
   @override
   String get theme => 'Theme';

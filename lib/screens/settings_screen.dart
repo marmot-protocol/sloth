@@ -13,6 +13,7 @@ import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
 import 'package:whitenoise/widgets/wn_menu.dart';
 import 'package:whitenoise/widgets/wn_menu_item.dart';
+import 'package:whitenoise/widgets/wn_separator.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
 import 'package:whitenoise/widgets/wn_slate_navigation_header.dart';
 
@@ -129,24 +130,36 @@ class SettingsScreen extends HookConsumerWidget {
                         onTap: () => Routes.pushToNetwork(context),
                       ),
                       WnMenuItem(
-                        icon: WnIcons.settings,
-                        label: context.l10n.appSettings,
-                        onTap: () => Routes.pushToAppSettings(context),
+                        icon: WnIcons.privacy,
+                        label: context.l10n.privacySecurity,
+                        onTap: () => Routes.pushToPrivacySecurity(context),
                       ),
                       WnMenuItem(
-                        icon: WnIcons.heart,
-                        label: context.l10n.donateToWhiteNoise,
-                        onTap: () => Routes.pushToDonate(context),
-                      ),
-                      WnMenuItem(
-                        icon: WnIcons.developerSettings,
-                        label: context.l10n.developerSettings,
-                        onTap: () => Routes.pushToDeveloperSettings(context),
+                        icon: WnIcons.appearance,
+                        label: context.l10n.appearance,
+                        onTap: () => Routes.pushToAppearance(context),
                       ),
                       WnMenuItem(
                         icon: WnIcons.logout,
                         label: context.l10n.signOut,
                         onTap: () => Routes.pushToSignOut(context),
+                      ),
+                    ],
+                  ),
+                  const WnSeparator(),
+                  WnMenu(
+                    children: [
+                      WnMenuItem(
+                        icon: WnIcons.heart,
+                        label: context.l10n.donate,
+                        type: WnMenuItemType.secondary,
+                        onTap: () => Routes.pushToDonate(context),
+                      ),
+                      WnMenuItem(
+                        icon: WnIcons.developerSettings,
+                        label: context.l10n.developerSettings,
+                        type: WnMenuItemType.secondary,
+                        onTap: () => Routes.pushToDeveloperSettings(context),
                       ),
                     ],
                   ),

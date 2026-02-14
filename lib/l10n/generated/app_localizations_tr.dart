@@ -88,7 +88,10 @@ class AppLocalizationsTr extends AppLocalizations {
   String get networkRelays => 'Ağ röleleri';
 
   @override
-  String get appSettings => 'Uygulama ayarları';
+  String get appearance => 'Görünüm';
+
+  @override
+  String get privacySecurity => 'Gizlilik ve güvenlik';
 
   @override
   String get donateToWhiteNoise => 'White Noise\'a bağış yap';
@@ -100,7 +103,27 @@ class AppLocalizationsTr extends AppLocalizations {
   String get signOut => 'Çıkış yap';
 
   @override
-  String get appSettingsTitle => 'Uygulama Ayarları';
+  String get appearanceTitle => 'Görünüm';
+
+  @override
+  String get privacySecurityTitle => 'Gizlilik ve güvenlik';
+
+  @override
+  String get deleteAllAppData => 'Tüm Uygulama Verilerini Sil';
+
+  @override
+  String get deleteAppData => 'Uygulama verilerini sil';
+
+  @override
+  String get deleteAllAppDataDescription =>
+      'Bu cihazdaki tüm profilleri, anahtarları, sohbetleri ve yerel dosyaları sil.';
+
+  @override
+  String get deleteAllAppDataConfirmation => 'Tüm uygulama verileri silinsin mi?';
+
+  @override
+  String get deleteAllAppDataWarning =>
+      'Bu cihazdaki tüm profiller, anahtarlar, sohbetler ve yerel dosyalar silinecektir. Bu işlem geri alınamaz.';
 
   @override
   String get theme => 'Tema';

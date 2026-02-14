@@ -264,11 +264,17 @@ abstract class AppLocalizations {
   /// **'Network relays'**
   String get networkRelays;
 
-  /// Settings menu item
+  /// Settings menu item for appearance
   ///
   /// In en, this message translates to:
-  /// **'App settings'**
-  String get appSettings;
+  /// **'Appearance'**
+  String get appearance;
+
+  /// Settings menu item for privacy and security
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & security'**
+  String get privacySecurity;
 
   /// Settings menu item
   ///
@@ -288,11 +294,47 @@ abstract class AppLocalizations {
   /// **'Sign out'**
   String get signOut;
 
-  /// App settings screen title
+  /// Appearance screen title
   ///
   /// In en, this message translates to:
-  /// **'App Settings'**
-  String get appSettingsTitle;
+  /// **'Appearance'**
+  String get appearanceTitle;
+
+  /// Privacy and security screen title
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy & security'**
+  String get privacySecurityTitle;
+
+  /// Section title for delete all app data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete All App Data'**
+  String get deleteAllAppData;
+
+  /// Button text to delete all app data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete app data'**
+  String get deleteAppData;
+
+  /// Description for delete all app data action
+  ///
+  /// In en, this message translates to:
+  /// **'Erase every profile, key, chat, and local file from this device.'**
+  String get deleteAllAppDataDescription;
+
+  /// Confirmation dialog title for deleting all app data
+  ///
+  /// In en, this message translates to:
+  /// **'Delete all app data?'**
+  String get deleteAllAppDataConfirmation;
+
+  /// Warning message in delete all app data confirmation dialog
+  ///
+  /// In en, this message translates to:
+  /// **'This will erase every profile, key, chat, and local file from this device. This cannot be undone.'**
+  String get deleteAllAppDataWarning;
 
   /// Theme selector label
   ///

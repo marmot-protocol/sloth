@@ -6,7 +6,7 @@ import 'package:whitenoise/hooks/use_route_refresh.dart' show routeObserver;
 import 'package:whitenoise/providers/auth_provider.dart' show authProvider;
 import 'package:whitenoise/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:whitenoise/screens/add_profile_screen.dart' show AddProfileScreen;
-import 'package:whitenoise/screens/app_settings_screen.dart' show AppSettingsScreen;
+import 'package:whitenoise/screens/appearance_screen.dart' show AppearanceScreen;
 import 'package:whitenoise/screens/chat_info_screen.dart' show ChatInfoScreen;
 import 'package:whitenoise/screens/chat_invite_screen.dart' show ChatInviteScreen;
 import 'package:whitenoise/screens/chat_list_screen.dart' show ChatListScreen;
@@ -17,6 +17,7 @@ import 'package:whitenoise/screens/edit_profile_screen.dart' show EditProfileScr
 import 'package:whitenoise/screens/home_screen.dart' show HomeScreen;
 import 'package:whitenoise/screens/login_screen.dart' show LoginScreen;
 import 'package:whitenoise/screens/network_screen.dart' show NetworkScreen;
+import 'package:whitenoise/screens/privacy_security_screen.dart' show PrivacySecurityScreen;
 import 'package:whitenoise/screens/profile_keys_screen.dart' show ProfileKeysScreen;
 import 'package:whitenoise/screens/scan_npub_screen.dart' show ScanNpubScreen;
 import 'package:whitenoise/screens/scan_nsec_screen.dart' show ScanNsecScreen;
@@ -40,7 +41,8 @@ abstract final class Routes {
   static const _chatList = '/chats';
   static const _settings = '/settings';
   static const _donate = '/donate';
-  static const _appSettings = '/app-settings';
+  static const _appearance = '/appearance';
+  static const _privacySecurity = '/privacy-security';
   static const _wip = '/wip';
   static const _developerSettings = '/developer-settings';
   static const _profileKeys = '/profile-keys';
@@ -129,10 +131,17 @@ abstract final class Routes {
           ),
         ),
         GoRoute(
-          path: _appSettings,
+          path: _appearance,
           pageBuilder: (context, state) => _navigationTransition(
             state: state,
-            child: const AppSettingsScreen(),
+            child: const AppearanceScreen(),
+          ),
+        ),
+        GoRoute(
+          path: _privacySecurity,
+          pageBuilder: (context, state) => _navigationTransition(
+            state: state,
+            child: const PrivacySecurityScreen(),
           ),
         ),
         GoRoute(
@@ -320,8 +329,12 @@ abstract final class Routes {
     GoRouter.of(context).push(_donate);
   }
 
-  static void pushToAppSettings(BuildContext context) {
-    GoRouter.of(context).push(_appSettings);
+  static void pushToAppearance(BuildContext context) {
+    GoRouter.of(context).push(_appearance);
+  }
+
+  static void pushToPrivacySecurity(BuildContext context) {
+    GoRouter.of(context).push(_privacySecurity);
   }
 
   static void pushToDeveloperSettings(BuildContext context) {
