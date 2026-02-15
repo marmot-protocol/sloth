@@ -6,5 +6,6 @@ typedef ReplyPreview = ({
   String authorPubkey,
   FlutterMetadata? authorMetadata,
   String content,
+  bool hasMedia,
   bool isNotFound,
 });

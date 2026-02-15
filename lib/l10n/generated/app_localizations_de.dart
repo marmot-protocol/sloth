@@ -760,4 +760,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get deleteAllDataError => 'Fehler beim Löschen aller Daten. Bitte versuche es erneut.';
+
+  @override
+  String get retry => 'Wiederholen';
 }

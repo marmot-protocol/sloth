@@ -33,6 +33,20 @@ void main() {
       expect(result.focusNode, isNotNull);
     });
 
+    testWidgets('hasFocus is false initially', (tester) async {
+      final result = (await mountHook(tester, useChatInput))();
+
+      expect(result.hasFocus, isFalse);
+    });
+
+    testWidgets('hasFocus is true when focus is requested', (tester) async {
+      final getResult = await mountHook(tester, useChatInput);
+      getResult().focusNode.requestFocus();
+      await tester.pump();
+
+      expect(getResult().hasFocus, isTrue);
+    });
+
     testWidgets('hasContent is false initially', (tester) async {
       final result = (await mountHook(tester, useChatInput))();
 

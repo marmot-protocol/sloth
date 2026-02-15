@@ -1172,5 +1172,10 @@
   "deleteAllDataError": "Failed to delete all data. Please try again.",
   "@deleteAllDataError": {
     "description": "Error message when data deletion fails"
+  },
+
+  "retry": "Retry",
+  "@retry": {
+    "description": "Button label to retry a failed operation"
   }
 }

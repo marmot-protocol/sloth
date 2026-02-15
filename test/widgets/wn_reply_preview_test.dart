@@ -10,12 +10,14 @@ ReplyPreview _replyData({
   String authorPubkey = testPubkeyA,
   FlutterMetadata? authorMetadata,
   String content = 'Reply content',
+  bool hasMedia = false,
   bool isNotFound = false,
 }) => (
   messageId: messageId,
   authorPubkey: authorPubkey,
   authorMetadata: authorMetadata,
   content: content,
+  hasMedia: hasMedia,
   isNotFound: isNotFound,
 );
 
@@ -154,6 +156,45 @@ void main() {
 
       final textWidget = tester.widget<Text>(find.text('Author'));
       expect((textWidget.maxLines, textWidget.overflow), (1, TextOverflow.ellipsis));
+    });
+
+    group('media icon', () {
+      testWidgets('shows media icon when hasMedia is true with content', (tester) async {
+        await mountWidget(
+          WnReplyPreview(data: _replyData(content: 'Some text', hasMedia: true)),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_media_icon')), findsOneWidget);
+        expect(find.text('Some text'), findsOneWidget);
+      });
+
+      testWidgets('shows media icon when hasMedia is true with empty content', (tester) async {
+        await mountWidget(
+          WnReplyPreview(data: _replyData(content: '', hasMedia: true)),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_media_icon')), findsOneWidget);
+      });
+
+      testWidgets('hides media icon when hasMedia is false', (tester) async {
+        await mountWidget(
+          WnReplyPreview(data: _replyData()),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_media_icon')), findsNothing);
+      });
+
+      testWidgets('hides media icon when isNotFound even if hasMedia is true', (tester) async {
+        await mountWidget(
+          WnReplyPreview(data: _replyData(hasMedia: true, isNotFound: true)),
+          tester,
+        );
+
+        expect(find.byKey(const Key('reply_media_icon')), findsNothing);
+      });
     });
 
     group('onTap', () {

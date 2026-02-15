@@ -1445,6 +1445,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to delete all data. Please try again.'**
   String get deleteAllDataError;
+
+  /// Button label to retry a failed operation
+  ///
+  /// In en, this message translates to:
+  /// **'Retry'**
+  String get retry;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

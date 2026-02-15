@@ -11,6 +11,7 @@ void main() {
         authorPubkey: testPubkeyA,
         authorMetadata: null,
         content: 'hi',
+        hasMedia: false,
         isNotFound: false,
       );
       expect(preview.messageId, 'msg-123');
@@ -22,6 +23,7 @@ void main() {
         authorPubkey: testPubkeyA,
         authorMetadata: null,
         content: 'hi',
+        hasMedia: false,
         isNotFound: false,
       );
       expect(preview.authorPubkey, testPubkeyA);
@@ -34,6 +36,7 @@ void main() {
         authorPubkey: testPubkeyA,
         authorMetadata: meta,
         content: 'hi',
+        hasMedia: false,
         isNotFound: false,
       );
       expect(preview.authorMetadata, meta);
@@ -45,6 +48,7 @@ void main() {
         authorPubkey: testPubkeyA,
         authorMetadata: null,
         content: 'hi',
+        hasMedia: false,
         isNotFound: false,
       );
       expect(preview.authorMetadata, isNull);
@@ -56,9 +60,22 @@ void main() {
         authorPubkey: testPubkeyA,
         authorMetadata: null,
         content: 'Reply text',
+        hasMedia: false,
         isNotFound: false,
       );
       expect(preview.content, 'Reply text');
+    });
+
+    test('has hasMedia', () {
+      const preview = (
+        messageId: 'msg-123',
+        authorPubkey: testPubkeyA,
+        authorMetadata: null,
+        content: 'hi',
+        hasMedia: true,
+        isNotFound: false,
+      );
+      expect(preview.hasMedia, isTrue);
     });
 
     test('has isNotFound boolean', () {
@@ -67,6 +84,7 @@ void main() {
         authorPubkey: testPubkeyA,
         authorMetadata: null,
         content: 'hi',
+        hasMedia: false,
         isNotFound: true,
       );
       expect(preview.isNotFound, isTrue);

@@ -13,6 +13,7 @@ typedef ChatMessagesResult = ({
   String? latestMessageId,
   String? latestMessagePubkey,
   ReplyPreview? Function(String? replyId) getReplyPreview,
+  FlutterMetadata? Function(String pubkey) getAuthorMetadata,
 });
 
 ChatMessagesResult useChatMessages(String groupId) {
@@ -127,6 +128,7 @@ ChatMessagesResult useChatMessages(String groupId) {
         authorPubkey: '',
         authorMetadata: null,
         content: '',
+        hasMedia: false,
         isNotFound: true,
       );
     }
@@ -135,6 +137,7 @@ ChatMessagesResult useChatMessages(String groupId) {
       authorPubkey: message.pubkey,
       authorMetadata: getAuthorMetadata(message.pubkey),
       content: message.content,
+      hasMedia: message.mediaAttachments.isNotEmpty,
       isNotFound: false,
     );
   }
@@ -147,5 +150,6 @@ ChatMessagesResult useChatMessages(String groupId) {
     latestMessageId: snapshot.data?.latestMessageId,
     latestMessagePubkey: snapshot.data?.latestMessagePubkey,
     getReplyPreview: getReplyPreview,
+    getAuthorMetadata: getAuthorMetadata,
   );
 }

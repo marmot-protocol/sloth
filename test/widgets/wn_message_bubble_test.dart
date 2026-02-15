@@ -1,11 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/models/reply_preview.dart';
+import 'package:whitenoise/src/rust/api/media_files.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/api/metadata.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
+import 'package:whitenoise/widgets/wn_message_media.dart';
 import 'package:whitenoise/widgets/wn_message_reactions.dart';
 import 'package:whitenoise/widgets/wn_reply_preview.dart';
+
+import '../mocks/mock_wn_api.dart';
 import '../test_helpers.dart';
 
 ReplyPreview _replyPreview({
@@ -13,6 +18,7 @@ ReplyPreview _replyPreview({
   String authorPubkey = testPubkeyB,
   FlutterMetadata? authorMetadata,
   String content = 'Original message content',
+  bool hasMedia = false,
   bool isNotFound = false,
 }) => (
   messageId: messageId,
@@ -21,7 +27,22 @@ ReplyPreview _replyPreview({
       authorMetadata ??
       const FlutterMetadata(displayName: 'Original Author', name: 'author', custom: {}),
   content: content,
+  hasMedia: hasMedia,
   isNotFound: isNotFound,
+);
+
+MediaFile _mediaFile(String id) => MediaFile(
+  id: id,
+  mlsGroupId: testGroupId,
+  accountPubkey: testPubkeyA,
+  filePath: '/test/path/$id.jpg',
+  originalFileHash: 'hash$id',
+  encryptedFileHash: 'encrypted$id',
+  mimeType: 'image/jpeg',
+  mediaType: 'image',
+  blossomUrl: 'https://example.com/$id',
+  nostrKey: 'nostr$id',
+  createdAt: DateTime(2024),
 );
 
 ChatMessage _message({
@@ -30,6 +51,7 @@ ChatMessage _message({
   bool isReply = false,
   String? replyToId,
   ReactionSummary reactions = const ReactionSummary(byEmoji: [], userReactions: []),
+  List<MediaFile> mediaAttachments = const [],
 }) => ChatMessage(
   id: 'msg1',
   pubkey: 'pubkey',
@@ -41,11 +63,13 @@ ChatMessage _message({
   isDeleted: isDeleted,
   contentTokens: const [],
   reactions: reactions,
-  mediaAttachments: const [],
+  mediaAttachments: mediaAttachments,
   kind: 9,
 );
 
 void main() {
+  setUpAll(() => RustLib.initMock(api: MockWnApi()));
+
   group('WnMessageBubble', () {
     testWidgets('displays message content', (tester) async {
       await mountWidget(
@@ -284,6 +308,132 @@ void main() {
         );
 
         expect(find.byKey(const Key('reply_preview_tap_area')), findsNothing);
+      });
+    });
+
+    group('maxWidth', () {
+      testWidgets('defaults to 3/4 of screen width', (tester) async {
+        await mountWidget(
+          WnMessageBubble(message: _message(), isOwnMessage: false),
+          tester,
+        );
+
+        final constrainedBox = tester.widget<ConstrainedBox>(
+          find.byType(ConstrainedBox).first,
+        );
+        expect(constrainedBox.constraints.maxWidth, 390 * 0.75);
+      });
+
+      testWidgets('uses explicit maxWidth when provided', (tester) async {
+        await mountWidget(
+          WnMessageBubble(message: _message(), isOwnMessage: false, maxWidth: 200),
+          tester,
+        );
+
+        final constrainedBox = tester.widget<ConstrainedBox>(
+          find.byType(ConstrainedBox).first,
+        );
+        expect(constrainedBox.constraints.maxWidth, 200);
+      });
+
+      testWidgets('allows full width when maxWidth is infinity', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(),
+            isOwnMessage: false,
+            maxWidth: double.infinity,
+          ),
+          tester,
+        );
+
+        final constrainedBox = tester.widget<ConstrainedBox>(
+          find.byType(ConstrainedBox).first,
+        );
+        expect(constrainedBox.constraints.maxWidth, double.infinity);
+      });
+    });
+
+    group('media attachments', () {
+      testWidgets('shows media grid when mediaAttachments is not empty', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(mediaAttachments: [_mediaFile('1')]),
+            isOwnMessage: false,
+          ),
+          tester,
+        );
+
+        expect(find.byKey(const Key('message_media')), findsOneWidget);
+        expect(find.byType(WnMessageMedia), findsOneWidget);
+      });
+
+      testWidgets('does not show media grid when mediaAttachments is empty', (tester) async {
+        await mountWidget(
+          WnMessageBubble(message: _message(), isOwnMessage: false),
+          tester,
+        );
+
+        expect(find.byKey(const Key('message_media')), findsNothing);
+        expect(find.byType(WnMessageMedia), findsNothing);
+      });
+
+      testWidgets('shows both media and text when both present', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(
+              content: 'Caption text',
+              mediaAttachments: [_mediaFile('1')],
+            ),
+            isOwnMessage: false,
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnMessageMedia), findsOneWidget);
+        expect(find.text('Caption text'), findsOneWidget);
+      });
+
+      testWidgets('hides message text when content is empty', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(
+              content: '',
+              mediaAttachments: [_mediaFile('1')],
+            ),
+            isOwnMessage: false,
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnMessageMedia), findsOneWidget);
+        expect(find.text(''), findsNothing);
+      });
+
+      testWidgets('media grid has onMediaTap callback configured', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(mediaAttachments: [_mediaFile('1')]),
+            isOwnMessage: false,
+          ),
+          tester,
+        );
+
+        final mediaGrid = tester.widget<WnMessageMedia>(find.byType(WnMessageMedia));
+        expect(mediaGrid.onMediaTap, isNotNull);
+      });
+
+      testWidgets('accepts senderName and senderPictureUrl', (tester) async {
+        await mountWidget(
+          WnMessageBubble(
+            message: _message(mediaAttachments: [_mediaFile('1')]),
+            isOwnMessage: false,
+            senderName: 'Alice',
+            senderPictureUrl: 'https://example.com/avatar.jpg',
+          ),
+          tester,
+        );
+
+        expect(find.byType(WnMessageMedia), findsOneWidget);
       });
     });
   });

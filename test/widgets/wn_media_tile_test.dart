@@ -1,0 +1,234 @@
+import 'dart:async';
+import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/src/rust/api/media_files.dart';
+import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_media_tile.dart';
+
+import '../mocks/mock_wn_api.dart';
+import '../test_helpers.dart';
+
+MediaFile _mediaFile({
+  String id = 'media1',
+  String filePath = '',
+  String? originalFileHash = 'hash123',
+  String? blurhash,
+}) => MediaFile(
+  id: id,
+  mlsGroupId: testGroupId,
+  accountPubkey: testPubkeyA,
+  filePath: filePath,
+  originalFileHash: originalFileHash,
+  encryptedFileHash: 'encrypted123',
+  mimeType: 'image/jpeg',
+  mediaType: 'image',
+  blossomUrl: 'https://example.com/media',
+  nostrKey: 'nostr123',
+  createdAt: DateTime(2024),
+  fileMetadata: blurhash != null ? FileMetadata(blurhash: blurhash) : null,
+);
+
+class _MockApi extends MockWnApi {
+  Completer<MediaFile>? downloadCompleter;
+  bool shouldFail = false;
+
+  @override
+  Future<MediaFile> crateApiMediaFilesDownloadChatMedia({
+    required String accountPubkey,
+    required String groupId,
+    required String originalFileHash,
+  }) async {
+    if (shouldFail) throw Exception('Download failed');
+    if (downloadCompleter != null) return downloadCompleter!.future;
+    return _mediaFile(filePath: '/downloaded/path.jpg');
+  }
+
+  void resetDownload() {
+    downloadCompleter = null;
+    shouldFail = false;
+  }
+}
+
+final _api = _MockApi();
+
+void main() {
+  setUpAll(() => RustLib.initMock(api: _api));
+  setUp(() => _api.resetDownload());
+
+  group('WnMediaTile', () {
+    testWidgets('shows blurhash placeholder while loading', (tester) async {
+      _api.downloadCompleter = Completer<MediaFile>();
+      await mountWidget(
+        WnMediaTile(
+          mediaFile: _mediaFile(blurhash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj'),
+          width: 100,
+          height: 100,
+        ),
+        tester,
+      );
+
+      expect(find.byKey(const Key('loading_placeholder')), findsOneWidget);
+      expect(find.byKey(const Key('media_image')), findsNothing);
+      expect(find.byKey(const Key('error_placeholder')), findsNothing);
+    });
+
+    testWidgets('shows error placeholder when download fails', (tester) async {
+      _api.shouldFail = true;
+      await mountWidget(
+        WnMediaTile(mediaFile: _mediaFile(), width: 100, height: 100),
+        tester,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('error_placeholder')), findsOneWidget);
+      expect(find.byKey(const Key('media_image')), findsNothing);
+    });
+
+    testWidgets('shows error when originalFileHash is null', (tester) async {
+      await mountWidget(
+        WnMediaTile(
+          mediaFile: _mediaFile(originalFileHash: null),
+          width: 100,
+          height: 100,
+        ),
+        tester,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('error_placeholder')), findsOneWidget);
+    });
+
+    testWidgets('shows image with fade transition when file exists locally', (tester) async {
+      final tempDir = Directory.systemTemp.createTempSync('media_tile_test');
+      final tempFile = File('${tempDir.path}/test.png');
+      tempFile.writeAsBytesSync(_minimalPng);
+      addTearDown(() => tempDir.deleteSync(recursive: true));
+
+      await mountWidget(
+        WnMediaTile(
+          mediaFile: _mediaFile(filePath: tempFile.path),
+          width: 100,
+          height: 100,
+        ),
+        tester,
+      );
+      await tester.pumpAndSettle();
+
+      expect(find.byKey(const Key('fade_transition')), findsOneWidget);
+      expect(find.byKey(const Key('media_image')), findsOneWidget);
+    });
+
+    testWidgets('fade transition animates from 0 to 1', (tester) async {
+      _api.downloadCompleter = Completer<MediaFile>();
+      final tempDir = Directory.systemTemp.createTempSync('media_tile_fade_test');
+      final tempFile = File('${tempDir.path}/test.png');
+      tempFile.writeAsBytesSync(_minimalPng);
+      addTearDown(() => tempDir.deleteSync(recursive: true));
+
+      await mountWidget(
+        WnMediaTile(
+          mediaFile: _mediaFile(
+            blurhash: 'LEHV6nWB2yk8pyo0adR*.7kCMdnj',
+          ),
+          width: 100,
+          height: 100,
+        ),
+        tester,
+      );
+
+      expect(find.byKey(const Key('fade_transition')), findsNothing);
+
+      _api.downloadCompleter!.complete(
+        _mediaFile(filePath: tempFile.path),
+      );
+      await tester.pump();
+      await tester.pump();
+
+      final fadeTransition = tester.widget<FadeTransition>(
+        find.byKey(const Key('fade_transition')),
+      );
+      expect(fadeTransition.opacity.value, lessThan(1.0));
+
+      await tester.pumpAndSettle();
+
+      final completedFade = tester.widget<FadeTransition>(
+        find.byKey(const Key('fade_transition')),
+      );
+      expect(completedFade.opacity.value, equals(1.0));
+    });
+  });
+}
+
+const _minimalPng = <int>[
+  0x89,
+  0x50,
+  0x4E,
+  0x47,
+  0x0D,
+  0x0A,
+  0x1A,
+  0x0A,
+  0x00,
+  0x00,
+  0x00,
+  0x0D,
+  0x49,
+  0x48,
+  0x44,
+  0x52,
+  0x00,
+  0x00,
+  0x00,
+  0x01,
+  0x00,
+  0x00,
+  0x00,
+  0x01,
+  0x08,
+  0x02,
+  0x00,
+  0x00,
+  0x00,
+  0x90,
+  0x77,
+  0x53,
+  0xDE,
+  0x00,
+  0x00,
+  0x00,
+  0x0C,
+  0x49,
+  0x44,
+  0x41,
+  0x54,
+  0x08,
+  0xD7,
+  0x63,
+  0xF8,
+  0xCF,
+  0xC0,
+  0x00,
+  0x00,
+  0x00,
+  0x02,
+  0x00,
+  0x01,
+  0xE2,
+  0x21,
+  0xBC,
+  0x33,
+  0x00,
+  0x00,
+  0x00,
+  0x00,
+  0x49,
+  0x45,
+  0x4E,
+  0x44,
+  0xAE,
+  0x42,
+  0x60,
+  0x82,
+];

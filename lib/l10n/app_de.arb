@@ -222,5 +222,6 @@
   "deleteAllData": "Alle Daten löschen",
   "deleteAllDataConfirmation": "Alle Daten löschen?",
   "deleteAllDataWarning": "Dies wird alle deine Chats, Nachrichten und Einstellungen von diesem Gerät dauerhaft löschen. Diese Aktion kann nicht rückgängig gemacht werden.",
-  "deleteAllDataError": "Fehler beim Löschen aller Daten. Bitte versuche es erneut."
+  "deleteAllDataError": "Fehler beim Löschen aller Daten. Bitte versuche es erneut.",
+  "retry": "Wiederholen"
 }
