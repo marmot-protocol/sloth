@@ -12,6 +12,7 @@ import 'package:path_provider/path_provider.dart' show getApplicationDocumentsDi
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/auth_provider.dart' show authProvider;
 import 'package:whitenoise/providers/locale_provider.dart';
+import 'package:whitenoise/providers/notification_provider.dart' show notificationListenerProvider;
 import 'package:whitenoise/providers/theme_provider.dart' show themeProvider;
 import 'package:whitenoise/routes.dart' show Routes;
 import 'package:whitenoise/src/rust/api.dart' as rust_api;
@@ -77,6 +78,7 @@ class _WnAppState extends ConsumerState<WnApp> {
   Widget build(BuildContext context) {
     final themeMode = ref.watch(themeProvider).value ?? ThemeMode.system;
     ref.watch(localeProvider);
+    ref.watch(notificationListenerProvider);
     final locale = ref.read(localeProvider.notifier).resolveLocale();
 
     return ScreenUtilInit(
