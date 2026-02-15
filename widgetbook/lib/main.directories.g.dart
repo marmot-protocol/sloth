@@ -32,6 +32,8 @@ import 'package:whitenoise_widgetbook/components/list.dart'
     as _whitenoise_widgetbook_components_list;
 import 'package:whitenoise_widgetbook/components/menu.dart'
     as _whitenoise_widgetbook_components_menu;
+import 'package:whitenoise_widgetbook/components/message_quote.dart'
+    as _whitenoise_widgetbook_components_message_quote;
 import 'package:whitenoise_widgetbook/components/spinner.dart'
     as _whitenoise_widgetbook_components_spinner;
 import 'package:whitenoise_widgetbook/components/structure.dart'
@@ -220,6 +222,16 @@ final directories = <_widgetbook.WidgetbookNode>[
           _widgetbook.WidgetbookUseCase(
             name: 'Menu Container',
             builder: _whitenoise_widgetbook_components_menu.wnMenuShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnMessageQuoteStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Message Quote',
+            builder: _whitenoise_widgetbook_components_message_quote
+                .wnMessageQuoteShowcase,
           ),
         ],
       ),
