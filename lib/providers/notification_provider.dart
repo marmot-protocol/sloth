@@ -1,11 +1,14 @@
 import 'dart:async';
 import 'dart:io' show Platform;
 
+import 'package:flutter/foundation.dart' show visibleForTesting;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logging/logging.dart';
+import 'package:whitenoise/l10n/generated/app_localizations.dart';
 import 'package:whitenoise/providers/active_chat_provider.dart';
 import 'package:whitenoise/providers/auth_provider.dart';
 import 'package:whitenoise/providers/foreground_service_provider.dart';
+import 'package:whitenoise/providers/locale_provider.dart';
 import 'package:whitenoise/services/foreground_service.dart';
 import 'package:whitenoise/services/notification_service.dart';
 import 'package:whitenoise/src/rust/api/notifications.dart' as notifications_api;
@@ -75,7 +78,9 @@ void _handleNotificationUpdate(
     return;
   }
 
-  final (title, body, isInvite) = _formatNotification(update);
+  final locale = ref.read(localeProvider.notifier).resolveLocale();
+  final l10n = lookupAppLocalizations(locale);
+  final (title, body, isInvite) = formatNotification(update, l10n);
 
   notificationService.show(
     groupId: update.mlsGroupId,
@@ -85,25 +90,27 @@ void _handleNotificationUpdate(
   );
 }
 
-(String title, String body, bool isInvite) _formatNotification(
+@visibleForTesting
+(String title, String body, bool isInvite) formatNotification(
   notifications_api.NotificationUpdate update,
+  AppLocalizations l10n,
 ) {
-  final senderName = update.sender.displayName ?? 'Unknown';
+  final senderName = update.sender.displayName ?? l10n.unknownUser;
 
   switch (update.trigger) {
     case notifications_api.NotificationTrigger.newMessage:
       if (update.isDm) {
         return (senderName, update.content, false);
       } else {
-        final groupName = update.groupName ?? 'Group';
+        final groupName = update.groupName ?? l10n.unknownGroup;
         return (groupName, '$senderName: ${update.content}', false);
       }
     case notifications_api.NotificationTrigger.groupInvite:
       if (update.isDm) {
-        return ('New Message Request', '$senderName wants to chat', true);
+        return (senderName, l10n.hasInvitedYouToSecureChat, true);
       } else {
-        final groupName = update.groupName ?? 'a group';
-        return ('Group Invitation', '$senderName invited you to $groupName', true);
+        final groupName = update.groupName ?? l10n.unknownGroup;
+        return (groupName, l10n.userInvitedYouToSecureChat(senderName), true);
       }
   }
 }

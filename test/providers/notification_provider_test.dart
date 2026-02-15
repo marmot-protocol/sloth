@@ -1,7 +1,11 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:whitenoise/l10n/generated/app_localizations_en.dart';
+import 'package:whitenoise/providers/notification_provider.dart';
 import 'package:whitenoise/src/rust/api/notifications.dart';
 
 void main() {
+  final l10n = AppLocalizationsEn();
+
   group('Notification formatting', () {
     test('formats DM new message correctly', () {
       final update = NotificationUpdate(
@@ -14,7 +18,7 @@ void main() {
         timestamp: DateTime.now(),
       );
 
-      final (title, body, isInvite) = formatNotification(update);
+      final (title, body, isInvite) = formatNotification(update, l10n);
 
       expect(title, equals('Alice'));
       expect(body, equals('Hello there'));
@@ -33,7 +37,7 @@ void main() {
         timestamp: DateTime.now(),
       );
 
-      final (title, body, isInvite) = formatNotification(update);
+      final (title, body, isInvite) = formatNotification(update, l10n);
 
       expect(title, equals('Friends Group'));
       expect(body, equals('Bob: Hey everyone'));
@@ -51,10 +55,10 @@ void main() {
         timestamp: DateTime.now(),
       );
 
-      final (title, body, isInvite) = formatNotification(update);
+      final (title, body, isInvite) = formatNotification(update, l10n);
 
-      expect(title, equals('New Message Request'));
-      expect(body, equals('Carol wants to chat'));
+      expect(title, equals('Carol'));
+      expect(body, equals('Has invited you to a secure chat'));
       expect(isInvite, isTrue);
     });
 
@@ -70,14 +74,14 @@ void main() {
         timestamp: DateTime.now(),
       );
 
-      final (title, body, isInvite) = formatNotification(update);
+      final (title, body, isInvite) = formatNotification(update, l10n);
 
-      expect(title, equals('Group Invitation'));
-      expect(body, equals('Dave invited you to New Project'));
+      expect(title, equals('New Project'));
+      expect(body, equals('Dave has invited you to a secure chat'));
       expect(isInvite, isTrue);
     });
 
-    test('uses Unknown for sender without display name', () {
+    test('uses Unknown user for sender without display name', () {
       final update = NotificationUpdate(
         trigger: NotificationTrigger.newMessage,
         mlsGroupId: 'group123',
@@ -88,12 +92,12 @@ void main() {
         timestamp: DateTime.now(),
       );
 
-      final (title, _, _) = formatNotification(update);
+      final (title, _, _) = formatNotification(update, l10n);
 
-      expect(title, equals('Unknown'));
+      expect(title, equals('Unknown user'));
     });
 
-    test('uses Group for group without name', () {
+    test('uses Unknown group for group without name', () {
       final update = NotificationUpdate(
         trigger: NotificationTrigger.newMessage,
         mlsGroupId: 'group123',
@@ -104,31 +108,45 @@ void main() {
         timestamp: DateTime.now(),
       );
 
-      final (title, _, _) = formatNotification(update);
+      final (title, _, _) = formatNotification(update, l10n);
 
-      expect(title, equals('Group'));
+      expect(title, equals('Unknown group'));
+    });
+
+    test('uses Unknown group for group invite without name', () {
+      final update = NotificationUpdate(
+        trigger: NotificationTrigger.groupInvite,
+        mlsGroupId: 'group123',
+        isDm: false,
+        receiver: const NotificationUser(pubkey: 'receiver123'),
+        sender: const NotificationUser(pubkey: 'sender123', displayName: 'Frank'),
+        content: '',
+        timestamp: DateTime.now(),
+      );
+
+      final (title, body, isInvite) = formatNotification(update, l10n);
+
+      expect(title, equals('Unknown group'));
+      expect(body, equals('Frank has invited you to a secure chat'));
+      expect(isInvite, isTrue);
+    });
+
+    test('uses Unknown user for DM invite without sender name', () {
+      final update = NotificationUpdate(
+        trigger: NotificationTrigger.groupInvite,
+        mlsGroupId: 'group123',
+        isDm: true,
+        receiver: const NotificationUser(pubkey: 'receiver123'),
+        sender: const NotificationUser(pubkey: 'sender123'),
+        content: '',
+        timestamp: DateTime.now(),
+      );
+
+      final (title, body, isInvite) = formatNotification(update, l10n);
+
+      expect(title, equals('Unknown user'));
+      expect(body, equals('Has invited you to a secure chat'));
+      expect(isInvite, isTrue);
     });
   });
-}
-
-/// Test helper that mirrors the formatting logic from notification_provider.dart
-(String title, String body, bool isInvite) formatNotification(NotificationUpdate update) {
-  final senderName = update.sender.displayName ?? 'Unknown';
-
-  switch (update.trigger) {
-    case NotificationTrigger.newMessage:
-      if (update.isDm) {
-        return (senderName, update.content, false);
-      } else {
-        final groupName = update.groupName ?? 'Group';
-        return (groupName, '$senderName: ${update.content}', false);
-      }
-    case NotificationTrigger.groupInvite:
-      if (update.isDm) {
-        return ('New Message Request', '$senderName wants to chat', true);
-      } else {
-        final groupName = update.groupName ?? 'a group';
-        return ('Group Invitation', '$senderName invited you to $groupName', true);
-      }
-  }
 }
