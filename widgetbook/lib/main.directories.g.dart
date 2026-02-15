@@ -46,6 +46,8 @@ import 'package:whitenoise_widgetbook/components/wn_copy_card.dart'
     as _whitenoise_widgetbook_components_wn_copy_card;
 import 'package:whitenoise_widgetbook/components/wn_profile_switcher_item.dart'
     as _whitenoise_widgetbook_components_wn_profile_switcher_item;
+import 'package:whitenoise_widgetbook/components/wn_slate_headers.dart'
+    as _whitenoise_widgetbook_components_wn_slate_headers;
 import 'package:whitenoise_widgetbook/foundations/semantic_colors.dart'
     as _whitenoise_widgetbook_foundations_semantic_colors;
 import 'package:whitenoise_widgetbook/foundations/typography.dart'
@@ -258,6 +260,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Separator',
             builder:
                 _whitenoise_widgetbook_components_structure.wnSeparatorShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnSlateHeadersStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Slate Headers',
+            builder: _whitenoise_widgetbook_components_wn_slate_headers
+                .wnSlateHeadersShowcase,
           ),
         ],
       ),

@@ -59,5 +59,46 @@ void main() {
       final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
       expect(avatar.pictureUrl, 'https://example.com/avatar.png');
     });
+
+    testWidgets('passes avatarColor to WnAvatar', (tester) async {
+      await mountWidget(
+        const WnSlateAvatarHeader(
+          avatarColor: AvatarColor.violet,
+        ),
+        tester,
+      );
+
+      final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+      expect(avatar.color, AvatarColor.violet);
+    });
+
+    testWidgets('passes avatarKey to GestureDetector', (tester) async {
+      await mountWidget(
+        const WnSlateAvatarHeader(
+          avatarKey: Key('test_avatar_key'),
+        ),
+        tester,
+      );
+
+      expect(find.byKey(const Key('test_avatar_key')), findsOneWidget);
+    });
+
+    testWidgets('wraps action in padded container', (tester) async {
+      await mountWidget(
+        const WnSlateAvatarHeader(
+          action: Icon(Icons.add, key: Key('wn_slate_avatar_action')),
+        ),
+        tester,
+      );
+
+      final icon = find.byKey(const Key('wn_slate_avatar_action'));
+      expect(icon, findsOneWidget);
+
+      final container = tester.widget<Container>(
+        find.ancestor(of: icon, matching: find.byType(Container)).first,
+      );
+      final padding = container.padding! as EdgeInsets;
+      expect(padding.right, greaterThan(0));
+    });
   });
 }

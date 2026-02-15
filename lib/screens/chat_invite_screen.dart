@@ -11,9 +11,9 @@ import 'package:whitenoise/src/rust/api/account_groups.dart' as account_groups_a
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
-import 'package:whitenoise/widgets/wn_chat_header.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
 import 'package:whitenoise/widgets/wn_slate.dart';
+import 'package:whitenoise/widgets/wn_slate_chat_header.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
 
 class ChatInviteScreen extends HookConsumerWidget {
@@ -42,6 +42,15 @@ class ChatInviteScreen extends HookConsumerWidget {
 
     final chatProfile = useChatProfile(pubkey, mlsGroupId);
     final chatMessages = useChatMessages(mlsGroupId);
+
+    void handleAvatarTap() {
+      final otherPubkey = chatProfile.data?.otherMemberPubkey;
+      if (otherPubkey != null) {
+        Routes.pushToChatInfo(context, otherPubkey);
+      } else {
+        Routes.pushToWip(context);
+      }
+    }
 
     Future<void> handleAccept() async {
       isAccepting.value = true;
@@ -93,21 +102,28 @@ class ChatInviteScreen extends HookConsumerWidget {
                 type: WnSystemNoticeType.error,
                 onDismiss: dismissNotice,
               ),
+            WnSlate(
+              tag: 'wn-slate-invite-header',
+              header: WnSlateChatHeader(
+                displayName: chatProfile.data?.displayName ?? '',
+                avatarColor: chatProfile.data?.color ?? AvatarColor.neutral,
+                pictureUrl: chatProfile.data?.pictureUrl,
+                onBack: () => Routes.goToChatList(context),
+                onAvatarTap: handleAvatarTap,
+              ),
+            ),
             Column(
               children: [
-                WnChatHeader(
-                  displayName: chatProfile.data?.displayName ?? '',
-                  avatarColor: chatProfile.data?.color ?? AvatarColor.neutral,
-                  pictureUrl: chatProfile.data?.pictureUrl,
-                  onBack: () => Routes.goToChatList(context),
-                  onMenuTap: () => Routes.pushToWip(context),
-                ),
                 SizedBox(height: 48.h),
-                WnAvatar(
-                  pictureUrl: chatProfile.data?.pictureUrl,
-                  displayName: chatProfile.data?.displayName,
-                  size: WnAvatarSize.large,
-                  color: chatProfile.data?.color ?? AvatarColor.neutral,
+                GestureDetector(
+                  key: const Key('large_avatar_tap_area'),
+                  onTap: handleAvatarTap,
+                  child: WnAvatar(
+                    pictureUrl: chatProfile.data?.pictureUrl,
+                    displayName: chatProfile.data?.displayName,
+                    size: WnAvatarSize.large,
+                    color: chatProfile.data?.color ?? AvatarColor.neutral,
+                  ),
                 ),
                 SizedBox(height: 16.h),
                 Text(

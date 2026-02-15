@@ -7,12 +7,16 @@ class WnSlateAvatarHeader extends StatelessWidget {
     super.key,
     this.avatarUrl,
     this.displayName,
+    this.avatarColor,
+    this.avatarKey,
     this.onAvatarTap,
     this.action,
   });
 
   final String? avatarUrl;
   final String? displayName;
+  final AvatarColor? avatarColor;
+  final Key? avatarKey;
   final VoidCallback? onAvatarTap;
   final Widget? action;
 
@@ -24,19 +28,27 @@ class WnSlateAvatarHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           GestureDetector(
+            key: avatarKey,
             onTap: onAvatarTap,
             behavior: HitTestBehavior.opaque,
             child: Container(
               height: 80.h,
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: EdgeInsets.fromLTRB(16.w, 0, 24.w, 0),
               alignment: Alignment.center,
               child: WnAvatar(
                 pictureUrl: avatarUrl,
                 displayName: displayName,
+                color: avatarColor ?? AvatarColor.neutral,
               ),
             ),
           ),
-          if (action != null) action!,
+          if (action != null)
+            Container(
+              height: 80.h,
+              padding: EdgeInsets.only(left: 16.w, right: 24.w),
+              alignment: Alignment.centerRight,
+              child: action!,
+            ),
         ],
       ),
     );

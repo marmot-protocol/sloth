@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:whitenoise/widgets/wn_avatar.dart';
-import 'package:whitenoise/widgets/wn_chat_header.dart';
+import 'package:whitenoise/widgets/wn_slate_chat_header.dart';
 
 import '../test_helpers.dart';
 
 void main() {
-  group('WnChatHeader', () {
+  group('WnSlateChatHeader', () {
     late bool backPressed;
-    late bool menuPressed;
+    late bool avatarTapped;
 
     setUp(() {
       backPressed = false;
-      menuPressed = false;
+      avatarTapped = false;
     });
 
     Future<void> pumpHeader(
@@ -22,12 +22,12 @@ void main() {
       String? pictureUrl,
     }) async {
       await mountWidget(
-        WnChatHeader(
+        WnSlateChatHeader(
           displayName: displayName,
           avatarColor: avatarColor,
           pictureUrl: pictureUrl,
           onBack: () => backPressed = true,
-          onMenuTap: () => menuPressed = true,
+          onAvatarTap: () => avatarTapped = true,
         ),
         tester,
       );
@@ -43,12 +43,6 @@ void main() {
       await pumpHeader(tester);
 
       expect(find.byKey(const Key('back_button')), findsOneWidget);
-    });
-
-    testWidgets('displays menu button', (tester) async {
-      await pumpHeader(tester);
-
-      expect(find.byKey(const Key('menu_button')), findsOneWidget);
     });
 
     testWidgets('displays avatar', (tester) async {
@@ -87,12 +81,12 @@ void main() {
       });
     });
 
-    group('menu button', () {
-      testWidgets('triggers onMenuTap callback', (tester) async {
+    group('avatar tap', () {
+      testWidgets('triggers onAvatarTap callback', (tester) async {
         await pumpHeader(tester);
-        await tester.tap(find.byKey(const Key('menu_button')));
+        await tester.tap(find.byKey(const Key('header_avatar_tap_area')));
 
-        expect(menuPressed, isTrue);
+        expect(avatarTapped, isTrue);
       });
     });
   });

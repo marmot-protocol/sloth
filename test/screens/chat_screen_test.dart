@@ -11,6 +11,7 @@ import 'package:whitenoise/screens/wip_screen.dart';
 import 'package:whitenoise/src/rust/api/groups.dart';
 import 'package:whitenoise/src/rust/api/messages.dart';
 import 'package:whitenoise/src/rust/frb_generated.dart';
+import 'package:whitenoise/widgets/wn_avatar.dart';
 import 'package:whitenoise/widgets/wn_message_bubble.dart';
 import 'package:whitenoise/widgets/wn_reply_preview.dart';
 import 'package:whitenoise/widgets/wn_system_notice.dart';
@@ -242,10 +243,35 @@ void main() {
       expect(find.byKey(const Key('back_button')), findsOneWidget);
     });
 
-    testWidgets('displays menu button', (tester) async {
+    testWidgets('displays avatar', (tester) async {
       await pumpChatScreen(tester);
 
-      expect(find.byKey(const Key('menu_button')), findsOneWidget);
+      expect(find.byType(WnAvatar), findsOneWidget);
+    });
+
+    group('avatar color', () {
+      group('when group', () {
+        testWidgets('uses group ID color', (tester) async {
+          await pumpChatScreen(tester);
+
+          final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+          expect(avatar.color, AvatarColor.violet);
+        });
+      });
+
+      group('when DM', () {
+        setUp(() {
+          _api.isDm = true;
+          _api.groupMembers = [_testPubkey, testPubkeyC];
+        });
+
+        testWidgets('uses other member pubkey color', (tester) async {
+          await pumpChatScreen(tester);
+
+          final avatar = tester.widget<WnAvatar>(find.byType(WnAvatar));
+          expect(avatar.color, AvatarColor.blue);
+        });
+      });
     });
 
     group('with no messages', () {
@@ -295,18 +321,18 @@ void main() {
         expect(find.byType(ChatListScreen), findsOneWidget);
       });
 
-      testWidgets('menu button navigates to wip screen for group chat', (tester) async {
+      testWidgets('avatar navigates to wip screen for group chat', (tester) async {
         await pumpChatScreen(tester);
-        await tester.tap(find.byKey(const Key('menu_button')));
+        await tester.tap(find.byKey(const Key('header_avatar_tap_area')));
         await tester.pumpAndSettle();
         expect(find.byType(WipScreen), findsOneWidget);
       });
 
-      testWidgets('menu button navigates to chat info screen for DM', (tester) async {
+      testWidgets('avatar navigates to chat info screen for DM', (tester) async {
         _api.isDm = true;
         _api.groupMembers = [_testPubkey, testPubkeyC];
         await pumpChatScreen(tester);
-        await tester.tap(find.byKey(const Key('menu_button')));
+        await tester.tap(find.byKey(const Key('header_avatar_tap_area')));
         await tester.pumpAndSettle();
         expect(find.byType(ChatInfoScreen), findsOneWidget);
       });

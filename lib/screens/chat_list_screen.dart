@@ -9,8 +9,8 @@ import 'package:whitenoise/providers/account_pubkey_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/theme.dart';
 import 'package:whitenoise/utils/chat_search.dart';
+import 'package:whitenoise/widgets/chat_list_header.dart';
 import 'package:whitenoise/widgets/chat_list_tile.dart';
-import 'package:whitenoise/widgets/wn_account_bar.dart';
 import 'package:whitenoise/widgets/wn_button.dart';
 import 'package:whitenoise/widgets/wn_chat_list.dart';
 import 'package:whitenoise/widgets/wn_icon.dart';
@@ -177,7 +177,7 @@ class ChatListScreen extends HookConsumerWidget {
                       ),
                     )
                   : null,
-              header: const WnAccountBar(),
+              header: const ChatListHeader(),
             ),
           ),
           if (notice.noticeMessage != null)
