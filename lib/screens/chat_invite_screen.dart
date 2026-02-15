@@ -2,10 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:whitenoise/hooks/use_active_chat.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/hooks/use_chat_profile.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/providers/active_chat_provider.dart';
+import 'package:whitenoise/providers/notification_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/src/rust/api/account_groups.dart' as account_groups_api;
 import 'package:whitenoise/theme.dart';
@@ -42,6 +45,13 @@ class ChatInviteScreen extends HookConsumerWidget {
 
     final chatProfile = useChatProfile(pubkey, mlsGroupId);
     final chatMessages = useChatMessages(mlsGroupId);
+
+    useActiveChat(
+      groupId: mlsGroupId,
+      setActiveChat: ref.read(activeChatProvider.notifier).set,
+      clearActiveChat: ref.read(activeChatProvider.notifier).clear,
+      cancelGroupNotifications: ref.read(notificationServiceProvider).cancelForGroup,
+    );
 
     void handleAvatarTap() {
       final otherPubkey = chatProfile.data?.otherMemberPubkey;
