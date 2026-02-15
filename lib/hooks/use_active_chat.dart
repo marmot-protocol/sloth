@@ -8,9 +8,8 @@ void useActiveChat({
   required void Function(String) cancelGroupNotifications,
 }) {
   useEffect(() {
-    setActiveChat(groupId);
     cancelGroupNotifications(groupId);
-    return clearActiveChat;
+    return null;
   }, [groupId]);
 
   useOnAppLifecycleStateChange((previous, current) {
