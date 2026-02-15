@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' show WidgetRef;
 import 'package:go_router/go_router.dart'
     show CustomTransitionPage, GoRoute, GoRouter, GoRouterState;
 import 'package:whitenoise/hooks/use_route_refresh.dart' show routeObserver;
+import 'package:whitenoise/observers/active_chat_route_observer.dart' show ActiveChatRouteObserver;
+import 'package:whitenoise/providers/active_chat_provider.dart' show activeChatProvider;
 import 'package:whitenoise/providers/auth_provider.dart' show authProvider;
 import 'package:whitenoise/providers/is_adding_account_provider.dart' show isAddingAccountProvider;
 import 'package:whitenoise/screens/add_profile_screen.dart' show AddProfileScreen;
@@ -62,7 +64,7 @@ abstract final class Routes {
   static GoRouter build(WidgetRef ref) {
     return GoRouter(
       initialLocation: _home,
-      observers: [routeObserver],
+      observers: [routeObserver, ActiveChatRouteObserver(ref.read(activeChatProvider.notifier))],
       redirect: (context, state) {
         final pubkey = ref.read(authProvider).value;
         final isOnPublicPage = _publicRoutes.contains(state.matchedLocation);
@@ -260,6 +262,7 @@ abstract final class Routes {
   }) {
     return CustomTransitionPage<void>(
       key: state.pageKey,
+      name: state.uri.path,
       child: child,
       transitionDuration: WnSlateContentTransition.duration,
       reverseTransitionDuration: WnSlateContentTransition.duration,

@@ -19,6 +19,7 @@ import 'api/groups.dart';
 import 'api/media_files.dart';
 import 'api/messages.dart';
 import 'api/metadata.dart';
+import 'api/notifications.dart';
 import 'api/relays.dart';
 import 'api/signer.dart';
 import 'api/user_search.dart';
@@ -219,6 +220,9 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   RustStreamSink<MessageStreamItem> dco_decode_StreamSink_message_stream_item_Sse(dynamic raw);
 
   @protected
+  RustStreamSink<NotificationUpdate> dco_decode_StreamSink_notification_update_Sse(dynamic raw);
+
+  @protected
   RustStreamSink<UserSearchUpdate> dco_decode_StreamSink_user_search_update_Sse(
     dynamic raw,
   );
@@ -416,6 +420,15 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
 
   @protected
   MessageWithTokens dco_decode_message_with_tokens(dynamic raw);
+
+  @protected
+  NotificationTrigger dco_decode_notification_trigger(dynamic raw);
+
+  @protected
+  NotificationUpdate dco_decode_notification_update(dynamic raw);
+
+  @protected
+  NotificationUser dco_decode_notification_user(dynamic raw);
 
   @protected
   String? dco_decode_opt_String(dynamic raw);
@@ -664,6 +677,11 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   );
 
   @protected
+  RustStreamSink<NotificationUpdate> sse_decode_StreamSink_notification_update_Sse(
+    SseDeserializer deserializer,
+  );
+
+  @protected
   RustStreamSink<UserSearchUpdate> sse_decode_StreamSink_user_search_update_Sse(
     SseDeserializer deserializer,
   );
@@ -903,6 +921,19 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   MessageWithTokens sse_decode_message_with_tokens(
     SseDeserializer deserializer,
   );
+
+  @protected
+  NotificationTrigger sse_decode_notification_trigger(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  NotificationUpdate sse_decode_notification_update(
+    SseDeserializer deserializer,
+  );
+
+  @protected
+  NotificationUser sse_decode_notification_user(SseDeserializer deserializer);
 
   @protected
   String? sse_decode_opt_String(SseDeserializer deserializer);
@@ -1192,6 +1223,12 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_StreamSink_message_stream_item_Sse(
     RustStreamSink<MessageStreamItem> self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_StreamSink_notification_update_Sse(
+    RustStreamSink<NotificationUpdate> self,
     SseSerializer serializer,
   );
 
@@ -1492,6 +1529,24 @@ abstract class RustLibApiImplPlatform extends BaseApiImpl<RustLibWire> {
   @protected
   void sse_encode_message_with_tokens(
     MessageWithTokens self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_notification_trigger(
+    NotificationTrigger self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_notification_update(
+    NotificationUpdate self,
+    SseSerializer serializer,
+  );
+
+  @protected
+  void sse_encode_notification_user(
+    NotificationUser self,
     SseSerializer serializer,
   );
 

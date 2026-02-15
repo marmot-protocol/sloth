@@ -4,6 +4,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:logging/logging.dart';
 import 'package:scroll_to_index/scroll_to_index.dart';
+import 'package:whitenoise/hooks/use_active_chat.dart';
 import 'package:whitenoise/hooks/use_chat_input.dart';
 import 'package:whitenoise/hooks/use_chat_messages.dart';
 import 'package:whitenoise/hooks/use_chat_profile.dart';
@@ -12,6 +13,8 @@ import 'package:whitenoise/hooks/use_scroll_to_message.dart';
 import 'package:whitenoise/l10n/l10n.dart';
 import 'package:whitenoise/models/reply_preview.dart';
 import 'package:whitenoise/providers/account_pubkey_provider.dart';
+import 'package:whitenoise/providers/active_chat_provider.dart';
+import 'package:whitenoise/providers/notification_provider.dart';
 import 'package:whitenoise/routes.dart';
 import 'package:whitenoise/screens/message_actions_screen.dart';
 import 'package:whitenoise/services/message_service.dart';
@@ -60,6 +63,12 @@ class ChatScreen extends HookConsumerWidget {
     final messageService = useMemoized(
       () => MessageService(pubkey: pubkey, groupId: groupId),
       [pubkey, groupId],
+    );
+    useActiveChat(
+      groupId: groupId,
+      setActiveChat: ref.read(activeChatProvider.notifier).set,
+      clearActiveChat: ref.read(activeChatProvider.notifier).clear,
+      cancelGroupNotifications: ref.read(notificationServiceProvider).cancelForGroup,
     );
 
     final noticeMessage = useState<String?>(null);
