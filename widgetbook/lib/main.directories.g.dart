@@ -34,6 +34,8 @@ import 'package:whitenoise_widgetbook/components/menu.dart'
     as _whitenoise_widgetbook_components_menu;
 import 'package:whitenoise_widgetbook/components/message_quote.dart'
     as _whitenoise_widgetbook_components_message_quote;
+import 'package:whitenoise_widgetbook/components/reaction.dart'
+    as _whitenoise_widgetbook_components_reaction;
 import 'package:whitenoise_widgetbook/components/spinner.dart'
     as _whitenoise_widgetbook_components_spinner;
 import 'package:whitenoise_widgetbook/components/structure.dart'
@@ -252,6 +254,16 @@ final directories = <_widgetbook.WidgetbookNode>[
             name: 'Profile Switcher Item',
             builder: _whitenoise_widgetbook_components_wn_profile_switcher_item
                 .wnProfileSwitcherItemShowcase,
+          ),
+        ],
+      ),
+      _widgetbook.WidgetbookComponent(
+        name: 'WnReactionStory',
+        useCases: [
+          _widgetbook.WidgetbookUseCase(
+            name: 'Reaction',
+            builder:
+                _whitenoise_widgetbook_components_reaction.wnReactionShowcase,
           ),
         ],
       ),
