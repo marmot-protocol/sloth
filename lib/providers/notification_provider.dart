@@ -11,6 +11,7 @@ import 'package:whitenoise/providers/foreground_service_provider.dart';
 import 'package:whitenoise/providers/locale_provider.dart';
 import 'package:whitenoise/services/foreground_service.dart';
 import 'package:whitenoise/services/notification_service.dart';
+import 'package:whitenoise/src/rust/api/accounts.dart' as accounts_api;
 import 'package:whitenoise/src/rust/api/notifications.dart' as notifications_api;
 
 final _logger = Logger('NotificationProvider');
@@ -46,32 +47,46 @@ Future<void> _initializeAndListen(
   Ref ref,
   void Function(StreamSubscription<notifications_api.NotificationUpdate>) onSubscription,
 ) async {
-  await notificationService.initialize();
-  await notificationService.requestPermission();
+  try {
+    await notificationService.initialize();
+    await notificationService.requestPermission();
 
-  await foregroundService.start();
+    await foregroundService.start();
+    await foregroundService.requestBatteryOptimizationExemption();
 
-  final stream = notifications_api.subscribeToNotifications();
+    final accounts = await accounts_api.getAccounts();
+    final accountCount = accounts.length;
 
-  final subscription = stream.listen(
-    (update) => _handleNotificationUpdate(update, notificationService, ref),
-    onError: (error) {
-      _logger.severe('Notification stream error', error);
-    },
-    onDone: () {
-      _logger.info('Notification stream closed');
-    },
-  );
+    final stream = notifications_api.subscribeToNotifications();
 
-  onSubscription(subscription);
-  _logger.info('Notification listener started');
+    final subscription = stream.listen(
+      (update) => _handleNotificationUpdate(
+        update,
+        notificationService,
+        ref,
+        accountCount: accountCount,
+      ),
+      onError: (error) {
+        _logger.severe('Notification stream error', error);
+      },
+      onDone: () {
+        _logger.info('Notification stream closed');
+      },
+    );
+
+    onSubscription(subscription);
+    _logger.info('Notification listener started');
+  } catch (error, stackTrace) {
+    _logger.severe('Failed to initialize notification listener', error, stackTrace);
+  }
 }
 
 void _handleNotificationUpdate(
   notifications_api.NotificationUpdate update,
   NotificationService notificationService,
-  Ref ref,
-) {
+  Ref ref, {
+  required int accountCount,
+}) {
   final activeChat = ref.read(activeChatProvider);
   if (activeChat == update.mlsGroupId) {
     _logger.fine('Skipping notification for active chat ${update.mlsGroupId}');
@@ -80,7 +95,16 @@ void _handleNotificationUpdate(
 
   final locale = ref.read(localeProvider.notifier).resolveLocale();
   final l10n = lookupAppLocalizations(locale);
-  final (title, body, isInvite) = formatNotification(update, l10n);
+
+  final String? receiverName = accountCount > 1
+      ? (update.receiver.displayName ?? l10n.unknownUser)
+      : null;
+
+  final (title, body, isInvite) = formatNotification(
+    update,
+    l10n,
+    receiverName: receiverName,
+  );
 
   notificationService.show(
     groupId: update.mlsGroupId,
@@ -93,24 +117,30 @@ void _handleNotificationUpdate(
 @visibleForTesting
 (String title, String body, bool isInvite) formatNotification(
   notifications_api.NotificationUpdate update,
-  AppLocalizations l10n,
-) {
+  AppLocalizations l10n, {
+  String? receiverName,
+}) {
   final senderName = update.sender.displayName ?? l10n.unknownUser;
+
+  String applyReceiver(String title) {
+    if (receiverName == null) return title;
+    return '$title ($receiverName)';
+  }
 
   switch (update.trigger) {
     case notifications_api.NotificationTrigger.newMessage:
       if (update.isDm) {
-        return (senderName, update.content, false);
+        return (applyReceiver(senderName), update.content, false);
       } else {
         final groupName = update.groupName ?? l10n.unknownGroup;
-        return (groupName, '$senderName: ${update.content}', false);
+        return (applyReceiver(groupName), '$senderName: ${update.content}', false);
       }
     case notifications_api.NotificationTrigger.groupInvite:
       if (update.isDm) {
-        return (senderName, l10n.hasInvitedYouToSecureChat, true);
+        return (applyReceiver(senderName), l10n.hasInvitedYouToSecureChat, true);
       } else {
         final groupName = update.groupName ?? l10n.unknownGroup;
-        return (groupName, l10n.userInvitedYouToSecureChat(senderName), true);
+        return (applyReceiver(groupName), l10n.userInvitedYouToSecureChat(senderName), true);
       }
   }
 }

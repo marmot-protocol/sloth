@@ -22,7 +22,7 @@ void main() {
     void clearActiveChat() => clearActiveChatCallCount++;
     void cancelGroupNotifications(String groupId) => cancelNotificationsCalls.add(groupId);
 
-    testWidgets('sets active chat and cancels notifications on mount', (tester) async {
+    testWidgets('cancels notifications on mount without setting active chat', (tester) async {
       await mountHook(tester, () {
         useActiveChat(
           groupId: 'group123',
@@ -32,7 +32,7 @@ void main() {
         );
       });
 
-      expect(setActiveChatCalls, ['group123']);
+      expect(setActiveChatCalls, isEmpty);
       expect(cancelNotificationsCalls, ['group123']);
       expect(clearActiveChatCallCount, 0);
     });
@@ -150,7 +150,7 @@ void main() {
       expect(cancelNotificationsCalls, ['group123']);
     });
 
-    testWidgets('clears active chat on unmount', (tester) async {
+    testWidgets('does not clear active chat on unmount', (tester) async {
       await mountHook(tester, () {
         useActiveChat(
           groupId: 'group123',
@@ -168,7 +168,7 @@ void main() {
       await tester.pump();
 
       expect(setActiveChatCalls, isEmpty);
-      expect(clearActiveChatCallCount, 1);
+      expect(clearActiveChatCallCount, 0);
     });
   });
 }
